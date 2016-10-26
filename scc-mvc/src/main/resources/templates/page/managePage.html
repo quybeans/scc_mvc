@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:fb="http://www.facebook.com/2008/fbml">
+<head>
+   <title>Manage page</title>
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+    <header class="main-header" th:include="Head::header"></header>
+
+    <aside class="main-sidebar" th:include="SideBar::aside">
+    </aside>
+
+    <div class="content-wrapper">
+
+        <section class="content">
+
+
+                <div>
+                    <table class="table table-hover" style="background-color: white">
+                        <thead>
+                        <tr>
+                            <th>Page Picture</th>
+                            <th>Page Name</th>
+                            <th>Type</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="page: ${pages}">
+                            <form id="managePageForm" action="deactivatePage">
+                                <input type="hidden" name="pageId" th:value="${page.pageid}"></input>
+                                <td>
+                                    <img th:src="@{'https://graph.facebook.com/' + ${page.pageid}+ '/picture'}"/>
+                                </td>
+                                <td>
+                                    <a th:href="@{'http://www.fb.com/' + ${page.pageid}}" th:text="${page.name}"></a>
+                                </td>
+                                <td th:text="${page.type}"></td>
+                                <td th:switch="${page.active}">
+                                    <button class="btn btn-danger" type="submit" name="btnAction" id="btnDeactive" value="Deactive"
+                                            th:case="true">Deactive
+                                    </button>
+                                    <button class="btn btn-primary" type="submit" name="btnAction" value="Active" th:case="false">Active
+                                    </button>
+                                </td>
+                            </form>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <a href="create.html">Add page</a>
+                </div>
+            </section>
+
+    </div>
+
+</div>
+
+</body>
+</html>

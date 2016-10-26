@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/scc-post.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}"/>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script th:src="@{/js/jquery_dateFormat.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script>
+        //Reply to comment
+        function replyToComment(objId) {
+
+
+            $('#myModal').modal('toggle');
+
+            $('#btnReply').unbind().click(function () {
+                if ($('#txtReply').val().length>0){
+                    sendComment(objId,$('#txtReply').val());}
+                else {alert("Enter some thing to comment..")}
+            });
+        }
+
+        //Hard page id
+        var pageID = 177872845972148;
+
+        //Get post every 5s
+        getAllPosts();
+        setInterval(function () { getAllPosts(); },5000);
+
+
+        //Get all posts
+        function getAllPosts() {
+            $.ajax({
+                url: '/posts',
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    $('#post-box').empty();
+                    $.each(data,function (index) {
+                        $('#post-box').append(
+                                '<div class="item" onclick="getCommentById('+data[index].id+')">'
+                                +'<img onload="http://localhost:8080/img/user_img.jpg" src="http://graph.facebook.com/177872845972148/picture" alt="user image">'
+                                +'<p class="message">'
+                                +'<a class="name">'
+                                +'<small class="text-muted pull-right">'
+                                +jQuery.format.prettyDate( new Date(data[index].createdAt))
+                                +'</small>'
+                                +'Kitty Bang Bang'
+                                +' </a>'
+                                +data[index].content
+                                +'</p></div>')
+                    });
+                }
+            });
+
+        }
+
+
+        //Get comments for posts
+        function getCommentById(postId) {
+            $('#comment-box').empty();
+            $('#comment-box').html('Loading....');
+            getPostById(postId);
+            $.ajax({
+                url: '/newcommentbypost',
+                type: "GET",
+                data: { postId: postId },
+                dataType: "json",
+                success: function (data){
+                    $('#comment-box').empty();
+                    $.each(data,function (index)
+                    {
+                        var cmtId= "'"+postId+"_"+data[index].id+"'";
+                        $('#comment-box').append(
+                                '<div class="item" style="cursor:pointer" onclick="replyToComment('+cmtId+')">'
+                                +'<img onload="http://localhost:8080/img/user_img.jpg" src="http://graph.facebook.com/'+data[index].createdBy+'/picture" alt="user image">'
+                                +'<p class="message">'
+                                +'<a class="name">'
+                                +'<small class="text-muted pull-right">'
+                                +jQuery.format.prettyDate( new Date(data[index].createdAt))
+                                +'</small>'
+                                +data[index].createdByName
+                                +' </a>'
+                                +data[index].content
+                                //+'</p> <div class="btn btn-sm btn-primary pull-right" onclick="$(this).parent().append((createReply()))">Reply</div></div>')
+                                +'</p></div>')
+                    });
+                }
+            })
+        }
+
+
+        //Get post by id
+        function getPostById(postId) {
+            $.ajax({
+                url: '/postById',
+                type: "GET",
+                data: { postId: postId },
+                dataType: "json",
+                success: function (data){
+
+                    $('#post-detail').html(
+                            '<div class="item"> <img src="http://localhost:8080/img/user_img.jpg" alt="user image"> <p class="message">'
+                            +'<a class="name">'
+                            +'<small class="text-muted pull-right">'
+                            +jQuery.format.date( new Date(data.createdAt),'dd/MM/yyyy')+' at '+jQuery.format.date( new Date(data.createdAt),'HH:mm')
+                            +'</small>'+
+                            'Author Name'
+                            +'</a>' +
+                            data.content+'</p></div>'
+                    );
+
+                    //Set onClick command for comment button
+                    $('#btnSendComment').unbind().click( function ()
+                    {
+                        var objId=(pageID+"_"+postId);
+                        if ($('#txtComment').val().length>0){
+                            sendComment(objId,$('#txtComment').val());}
+                        else {alert("Enter some thing to comment..")}
+                    });
+                }
+            })
+        }
+
+        //Send comment button
+        function sendComment(objId, message) {
+            $.ajax({
+                url: '/commentOnObj',
+                type: "POST",
+                data: { objId: objId,message:message },
+                dataType: "json",
+                success: function (data)
+                {
+
+                    $('#txtComment').val('');
+                    $('#txtReply').val('');
+                    $('#myModal').modal('hide');
+                }
+            });}
+    </script>
+</head>
+
+<body style="background-color:#e6e6ff">
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Reply to comment</h4>
+            </div>
+            <div class="modal-body">
+                <textarea  placeholder="Write a reply...." type="text" class="form-control" rows="3"  id="txtReply"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary " id="btnReply">Reply</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+    <section class="col-lg-3 postlist">
+
+        <div class="box box-success">
+
+
+            <div class="box-body chat" id="post-box">
+
+                <div class="item" >
+                    <img src="http://graph.facebook.com/'+data[index].createdBy+'/picture" alt="user image"></img>
+                    <p class="message">
+                        <a class="name">
+                            <small class="text-muted pull-right">
+                                Hôm qua
+                            </small>
+                            Sơn Tùng
+                        </a>
+                        post on Kitty Bang Bang
+                    </p>
+                    <p>Tao là số 1 Tao là số 1Tao là sất nhiều u chữrất nhiều chữrất nhiều chữrất nhiều chữ</p>
+                </div>
+                <div class="text-center lcs" >
+               30 &nbsp;<span class="glyphicon glyphicon-thumbs-up" style="font-size:15px; color: gray "></span>
+                  20&nbsp;<span class="glyphicon glyphicon-comment" style="font-size:15px;color: darkgray  "></span>
+                  50 &nbsp<span class="glyphicon glyphicon-share-alt" ></span>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+<section class="col-lg-9 cmtbox"  >
+    <div class="box box-success">
+        <div class="box-header">
+            <i class="fa fa-comments-o"></i>
+            <h3 class="box-title">All Comments from <font color="blue"> Page Name</font></h3>
+        </div>
+        <div class="box-body chat">
+        <div  id="post-detail" >
+
+            <!-- This is posts detail -->
+        </div>
+        <div id="comment-box" class="cmtList" style="margin-left: 20px">
+            <!-- This is posts list -->
+        </div>
+        </div>
+    </div>
+    <div class="box-footer" style="bottom: 0; position: relative">
+        <div class="input-group">
+            <input class="form-control" placeholder="Write a comment..." id="txtComment">
+            <div class="input-group-btn">
+                <button id="btnSendComment" type="button"  class="btn btn-primary"><i class="glyphicon glyphicon-send"></i>&nbsp</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+</body>
+
+</html>

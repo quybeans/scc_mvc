@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:fb="http://www.facebook.com/2008/fbml">
+<head lang="en">
+
+    <title>Title</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+</head>
+<body>
+<form id="form" action="processPageAccessToken" method="post">
+    <input type="hidden" name="pageAccessToken" id="pageAccessToken" value=""/>
+    <input type="hidden" name="pageName" id="pageName" value=""/>
+    <input type="text" name="pageId" id="pageId" value="" required="true"/>
+    <button type="button" onclick="getToken()">Add</button>
+</form>
+<script>
+    function onAuthResponse(response) {
+//        var accessToken = response.authResponse.accessToken;
+//        var uid = response.authResponse.userID;
+
+        $('#form').submit();
+    }
+
+
+    // This is called with the results from from FB.getLoginStatus().
+    function statusChangeCallback(response) {
+        if (response.status === 'connected') {
+            // Logged into your app and Facebook.
+            // getToken();
+            $("#fbLoginButton").hide();
+        } else if (response.status === 'not_authorized') {
+            // The person is logged into Facebook, but not your app.
+            $("#fbLoginButton").show();
+            document.getElementById('status').innerHTML = 'Please log ' +
+                    'into this app.';
+        } else {
+            // The person is not logged into Facebook, so we're not sure if
+            // they are logged into this app or not.
+            $("#fbLoginButton").show();
+            document.getElementById('status').innerHTML = 'Please log ' +
+                    'into Facebook.';
+        }
+    }
+
+    // This function is called when someone finishes with the Login
+    // Button.  See the onlogin handler attached to it in the sample
+    // code below.
+    function checkLoginState() {
+        FB.getLoginStatus(function (response) {
+            //statusChangeCallback(response);
+            if (response.status === 'connected') {
+                onAuthResponse(response);
+            } else {
+                FB.login(onAuthResponse, {
+                    scope: 'manage_pages'
+                });
+            }
+        });
+
+    }
+
+    window.fbAsyncInit = function () {
+        FB.init({
+            appId: '341786092825787',
+            cookie: true,  // enable cookies to allow the server to access
+                           // the session
+            xfbml: true,  // parse social plugins on this page
+            version: 'v2.5' // use graph api version 2.5
+        });
+
+
+        FB.getLoginStatus(function (response) {
+            statusChangeCallback(response);
+        });
+
+    };
+
+    // Load the SDK asynchronously
+    (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+    // Here we run a very simple test of the Graph API after login is
+    // successful.  See statusChangeCallback() for when this call is made.
+    function getToken() {
+        console.log('Welcome!  Fetching your information.... ');
+        FB.api('/me/accounts', function (response) {
+            var isAuthorize = false;
+            $.each(response.data, function (i) {
+                if (response.data[i].id == $('#pageId').val()) {
+                    console.log('Successful login for: ' + response.data[i].access_token);
+                    $('#pageAccessToken').val(response.data[i].access_token);
+                    $('#pageName').val(response.data[i].name);
+                    checkLoginState();
+                    isAuthorize = true;
+                }
+            });
+            if (!isAuthorize) {
+                alert("Your account have no authorization of that page. Please contact page's administrator");
+
+            }
+
+
+//       console.log('Successful login for: ' + response.data[1].access_token);
+//            if (response.data[1].id == $('#pageId').val()){
+//                console.log('Successful login for: ' + response.data[1].access_token);
+//                $('#pageAccessToken').val(response.data[1].access_token);
+//                $('#pageName').val(response.data[1].name);
+//            }else {
+//                console.log("wrong");
+//            }
+
+        });
+    }
+
+</script>
+<div id="fbLoginButton" style="visibility: hidden">
+    <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+    </fb:login-button>
+</div>
+
+<div id="status"></div>
+</body>
+</html>
+
+
