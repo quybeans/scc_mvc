@@ -51,19 +51,16 @@
                                 +'<small class="text-muted pull-right">'
                                 +jQuery.format.prettyDate( new Date(data[index].createdAt))
                                 +'</small>'
-                               +data[index].createdByName
+                                +data[index].createdByName
                                 +' </a>'
-                                +'<small class="pull-right">' +
-//                                'SETNIMENT' +
-                                '</small>'
                                 +'</p>'
-                                +'<br><p>'+data[index].content+'</p>'
+                                +'<p style="margin-top: 30px;height: 35px;overflow: hidden">'+data[index].content+'</p>'
+                                +'<div style="color: gray; bottom: 0px;text-align: center; ">'
+                                +'<div class="inline"  style="margin-right: 10px"><span class="glyphicon glyphicon-thumbs-up"></span>&nbsp;'+data[index].likesCount+'</div>'
+                                +'<div class="inline"style="margin-right: 10px"><span class="glyphicon glyphicon-comment"></span>&nbsp;'+data[index].commentsCount+' </div>'
+                                +'<div class="inline" style="margin-right: 10px"> <span class="glyphicon glyphicon-share-alt"></span>&nbsp;'+data[index].sharesCount+'</div>'
                                 +'</div>'
-                                +'<div class="lcs " style="height: 20px;">' +
-                                '<p >'+data[index].likesCount+' <span class="glyphicon glyphicon-thumbs-up"></span></p>' +
-                                '<p >'+data[index].commentsCount+' <span class="glyphicon glyphicon-comment"></span></p>' +
-                                '<p >'+data[index].sharesCount+' <span class="glyphicon glyphicon-share-alt"></span></p>'+
-                                '</div>'
+                                +'</div>'
 
 
                         )
@@ -91,20 +88,24 @@
 
                         var cmtId= "'"+postId+"_"+data[index].id+"'";
                         $('#comment-box').append(
-                                '<div class="item" style="cursor:pointer;border-right: none; border-bottom: 1px solid lightgray; height:12vh " onclick="replyToComment('+cmtId+')">'
-                                +'<img style="height: 50px; width: 50px" onload="http://localhost:8080/img/user_img.jpg" src="http://graph.facebook.com/'+data[index].createdBy+'/picture" alt="user image">'
+                                    '<div  class="cmt" onclick="replyToComment('+cmtId+')">'
+                                +'<div class="col-lg-10 cmtContent">' +
+                                '<img onload="http://localhost:8080/img/user_img.jpg" src="http://graph.facebook.com/'+data[index].createdBy+'/picture" alt="user image">'
                                 +'<p class="message">'
-                                +'<a class="name">'
+                                +'<a>'
                                 +data[index].createdByName
                                 +'<small class="text-muted" style="margin-left: 10px">'
                                 +jQuery.format.prettyDate( new Date(data[index].createdAt))
                                 +'</small>'
                                 +' </a>'
-                                +'<small class="pull-right">Sentiment rate:'+data[index].sentimentScore+'</small>'
-                                +'<p style="margin-left: 70px ">'+data[index].content+'</p>'
+//                                +'<small class="fa fa-smile-o">'+data[index].sentimentScore+'</small>'
+
+                                +'<p style="margin-left: 65px;margin-top: -10px ">'+data[index].content+'</p>'
                                 //+'</p> <div class="btn btn-sm btn-primary pull-right" onclick="$(this).parent().append((createReply()))">Reply</div></div>')
                                 +'</p>'
-
+                                +'</div>'
+                                +'<div class="col-lg-2" style="margin-top: 30px">' +'<small class="fa fa-smile-o pull-right" style="font-size: 20px; color: #50D050"></small>'
+                                +'</div>'
                                 +'</div>')
                     });
                 }
@@ -219,7 +220,7 @@
                                 <div class="inline" style="margin-right: 15px" id="post-share-count"><span class="glyphicon glyphicon-share-alt"></span>10 shares</div>
                             </div>
                         </div>
-                        <div id="comment-box" class="cmtList" style="margin-left: 20px">
+                        <div id="comment-box" class="cmtList" style="">
                             <!-- This is posts list -->
                         </div>
                     </div>
