@@ -17,21 +17,22 @@ public class FacebookaccountImp implements FacebookaccountService {
      FacebookaccountRepository repo;
 
     @Override
-    public void createFacebookaccount(String facebookUserId, String accessToken, int userId) {
-        FacebookaccountEntity entity = null;
+    public void createFacebookaccount(String facebookUserId, String accessToken, int userId, String username) {
+        FacebookaccountEntity facebookAccount = null;
         try {
-            entity = this.getFacebookAccountByUid(facebookUserId);
+            facebookAccount = this.getFacebookAccountByUid(facebookUserId);
 
-            if (entity == null) {
-                entity = new FacebookaccountEntity();
-                entity.setFacebookuserid(facebookUserId);
-                entity.setAccesstoken(accessToken);
-                entity.setUserid(userId);
-                entity.setActive(true);
+            if (facebookAccount == null) {
+                facebookAccount = new FacebookaccountEntity();
+                facebookAccount.setFacebookuserid(facebookUserId);
+                facebookAccount.setAccesstoken(accessToken);
+                facebookAccount.setUserid(userId);
+                facebookAccount.setFacebookusername(username);
+                facebookAccount.setActive(true);
             }else {
-                entity.setAccesstoken(accessToken);
+                facebookAccount.setAccesstoken(accessToken);
             }
-            repo.save(entity);
+            repo.save(facebookAccount);
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -48,7 +49,7 @@ public class FacebookaccountImp implements FacebookaccountService {
 
     @Override
     public List<FacebookaccountEntity> getFacebookaccountsByUserID(Integer userId) {
-        return repo.getFacebookaccountByUser(userId);
+        return repo.getFacebookaccountByUserId(userId);
     }
 
     @Override

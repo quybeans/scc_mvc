@@ -9,9 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.naming.AuthenticationException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
@@ -32,20 +34,21 @@ public class PageController {
         return "page/getPageAccessToken";
     }
 
-    @RequestMapping("/page/managePage")
-    public String managePage(Model model) {
+    @RequestMapping("/page/index")
+    public String index(Model model) {
         List<PageEntity> pages = pageService.getAllPages();
         model.addAttribute("pages", pages);
-        return "page/managePage";
+        return "page/index";
     }
 
     @RequestMapping(value = "page/processPageAccessToken")
-    public String processPageAccessToken(HttpSession session,
+    public String processPageAccessToken(HttpServletRequest request,
                                          @RequestParam("pageAccessToken") String pageToken,
                                          @RequestParam("pageName") String pageName,
                                          @RequestParam("pageId") String pageId,
                                          @RequestParam("pageCategory") String pageCategory) {
         //get Brand Id here
+        HttpSession session =  request.getSession(false);
         int brandId = this.getCurrentUserBrandId(session);
 
         System.out.println(pageCategory);
@@ -57,7 +60,7 @@ public class PageController {
 
                 String longLivedToken = AccessTokenUtility.getExtendedAccessToken(pageToken);
                 System.out.println(longLivedToken);
-                pageService.createPage(pageName, pageId, longLivedToken);
+                pageService.createPage(pageName, pageId, longLivedToken,pageCategory);
                 brandPageService.addBrandPage(brandId, pageId);
             } catch (AuthenticationException e) {
                 e.printStackTrace();
@@ -67,23 +70,35 @@ public class PageController {
             }
 
         }
-        return "redirect:/page/managePage";
+        return "redirect:/page/index";
     }
 
-    @RequestMapping("/page/deactivatePage")
-    public String managePage(HttpSession session,
+    @RequestMapping(value = "/page/deactivatePage", method = RequestMethod.POST)
+    public String index(HttpServletRequest request,
                              @RequestParam("pageId") String pageId,
                              @RequestParam("btnAction") String button) {
-        int brandId = this.getCurrentUserBrandId(session);
+        int brandId = 0;
+        HttpSession session = request.getSession(false);
+        if (session != null){
+             brandId = this.getCurrentUserBrandId(session);
+            System.out.println(brandId);
+            if (brandId == 0){
+                return "redirect:/login";
+            }
+        }else {
+            return "redirect:/login";
+        }
 
-        if (button.equals("Deactive")) {
+
+
+        if (button.equals("Deactivate")) {
             pageService.deactivatePage(pageId);
             brandPageService.removeBrandPage(brandId, pageId);
-        } else if (button.equals("Active")) {
+        } else if (button.equals("Activate")) {
             pageService.activatePage(pageId);
             brandPageService.addBrandPage(brandId, pageId);
         }
-        return "redirect:/page/managePage";
+        return "redirect:/page/index";
     }
 
     @RequestMapping("/page/create")
@@ -99,9 +114,10 @@ public class PageController {
     }
 
     private int getCurrentUserBrandId(HttpSession session) {
-        String username = "admin";
-        //String username = (String) session.getAttribute("brand");
-        //return userService.getBrandIdByUsername(username);
-        return 1;
+        String username = (String) session.getAttribute("username");
+        if (username == null){
+            return 0;
+        }
+        return userService.getBrandIdByUsername(username);
     }
 }

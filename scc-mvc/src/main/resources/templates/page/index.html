@@ -17,7 +17,9 @@
 
         <section class="content">
 
-
+            <div style="text-align: center">
+                <h1>Manage Page</h1>
+            </div>
                 <div>
                     <table class="table table-hover" style="background-color: white">
                         <thead>
@@ -25,12 +27,13 @@
                             <th>Page Picture</th>
                             <th>Page Name</th>
                             <th>Type</th>
+                            <th>Category</th>
                             <th>Action</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr th:each="page: ${pages}">
-                            <form id="managePageForm" action="deactivatePage">
+                            <form id="managePageForm" action="deactivatePage" method="post">
                                 <input type="hidden" name="pageId" th:value="${page.pageid}"></input>
                                 <td>
                                     <img th:src="@{'https://graph.facebook.com/' + ${page.pageid}+ '/picture'}"/>
@@ -39,11 +42,12 @@
                                     <a th:href="@{'http://www.fb.com/' + ${page.pageid}}" th:text="${page.name}"></a>
                                 </td>
                                 <td th:text="${page.type}"></td>
+                                <td th:text="${page.category}"></td>
                                 <td th:switch="${page.active}">
-                                    <button class="btn btn-danger" type="submit" name="btnAction" id="btnDeactive" value="Deactive"
-                                            th:case="true">Deactive
+                                    <button class="btn btn-danger" type="submit" name="btnAction" id="btnDeactive" value="Deactivate"
+                                            th:case="true">Deactivate
                                     </button>
-                                    <button class="btn btn-primary" type="submit" name="btnAction" value="Active" th:case="false">Active
+                                    <button class="btn btn-primary" type="submit" name="btnAction" value="Activate" th:case="false">Activate
                                     </button>
                                 </td>
                             </form>

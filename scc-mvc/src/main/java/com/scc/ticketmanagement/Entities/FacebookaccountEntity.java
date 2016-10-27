@@ -13,6 +13,7 @@ public class FacebookaccountEntity {
     private String accesstoken;
     private boolean active;
     private int userid;
+    private String facebookusername;
 
     @Id
     @Column(name = "facebookaccountid")
@@ -87,5 +88,15 @@ public class FacebookaccountEntity {
 
     public void setUserid(int userid) {
         this.userid = userid;
+    }
+
+    @Basic
+    @Column(name = "facebookusername")
+    public String getFacebookusername() {
+        return facebookusername;
+    }
+
+    public void setFacebookusername(String facebookusername) {
+        this.facebookusername = facebookusername;
     }
 }

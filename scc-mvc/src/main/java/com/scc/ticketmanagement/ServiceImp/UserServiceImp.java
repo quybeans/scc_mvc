@@ -25,8 +25,18 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public UserEntity findUser(String username, String password) {
+    public UserEntity getUserByUsername(String username, String password) {
         return userRepository.findUserByUsernameAndPassword(username, password);
+    }
+
+    @Override
+    public UserEntity getUserByUsername(String username) {
+        return userRepository.findUserByUsername(username);
+    }
+
+    @Override
+    public Integer getBrandIdByUsername(String username) {
+        return userRepository.getBrandIdByUsername(username);
     }
 
     @Override

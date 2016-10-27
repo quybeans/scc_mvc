@@ -3,7 +3,7 @@ package com.scc.ticketmanagement.Entities;
 import javax.persistence.*;
 
 /**
- * Created by QuyBean on 10/26/2016.
+ * Created by Thien on 10/27/2016.
  */
 @Entity
 @Table(name = "page", schema = "scc", catalog = "")
@@ -12,7 +12,8 @@ public class PageEntity {
     private String name;
     private String accesstoken;
     private String type;
-    private Boolean active;
+    private boolean active;
+    private String category;
 
     @Id
     @Column(name = "pageid")
@@ -56,12 +57,22 @@ public class PageEntity {
 
     @Basic
     @Column(name = "active")
-    public Boolean getActive() {
+    public boolean isActive() {
         return active;
     }
 
-    public void setActive(Boolean active) {
+    public void setActive(boolean active) {
         this.active = active;
+    }
+
+    @Basic
+    @Column(name = "category")
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     @Override
@@ -71,11 +82,12 @@ public class PageEntity {
 
         PageEntity that = (PageEntity) o;
 
+        if (active != that.active) return false;
         if (pageid != null ? !pageid.equals(that.pageid) : that.pageid != null) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (accesstoken != null ? !accesstoken.equals(that.accesstoken) : that.accesstoken != null) return false;
         if (type != null ? !type.equals(that.type) : that.type != null) return false;
-        if (active != null ? !active.equals(that.active) : that.active != null) return false;
+        if (category != null ? !category.equals(that.category) : that.category != null) return false;
 
         return true;
     }
@@ -86,7 +98,8 @@ public class PageEntity {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (accesstoken != null ? accesstoken.hashCode() : 0);
         result = 31 * result + (type != null ? type.hashCode() : 0);
-        result = 31 * result + (active != null ? active.hashCode() : 0);
+        result = 31 * result + (active ? 1 : 0);
+        result = 31 * result + (category != null ? category.hashCode() : 0);
         return result;
     }
 }

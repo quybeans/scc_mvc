@@ -18,7 +18,7 @@ public interface FacebookaccountRepository extends JpaRepository<Facebookaccount
     FacebookaccountEntity getFacebookaccountByUid(@Param("uid") String uid);
 
     @Query("select f from FacebookaccountEntity f where f.userid = :userid")
-    List<FacebookaccountEntity> getFacebookaccountByUser(@Param("userid") Integer userid);
+    List<FacebookaccountEntity> getFacebookaccountByUserId(@Param("userid") Integer userid);
 
     @Query("update FacebookaccountEntity f set f.active = false where f.facebookuserid =:uid")
     @Modifying

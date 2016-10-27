@@ -15,9 +15,12 @@ import java.util.List;
  */
 public interface UserRepository extends JpaRepository<UserEntity, Integer> {
 
-    //find user by username
+    //find user brand by username
     @Query("SELECT u.brandid FROM UserEntity u WHERE u.username = :username")
-    int findBrandByUser(@Param("username") String username);
+    Integer getBrandIdByUsername(@Param("username") String username);
+
+    @Query("SELECT u FROM UserEntity u WHERE u.username = :username")
+    UserEntity findUserByUsername(@Param("username") String username);
 
     //find user by username and password
     @Query("SELECT u FROM UserEntity u WHERE u.username = :username AND u.password = :password")

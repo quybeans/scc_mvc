@@ -18,21 +18,23 @@ public class PageImp implements PageService {
 
 
     @Override
-    public void createPage(String pageName, String pageId, String pageAccessToken) {
-        PageEntity entity = null;
+    public void createPage(String pageName, String pageId, String pageAccessToken, String category) {
+        PageEntity page = null;
         try {
-            entity = this.getPageById(pageId);
-            if (entity == null) {
-                entity = new PageEntity();
-                entity.setPageid(pageId);
-                entity.setName(pageName);
-                entity.setAccesstoken(pageAccessToken);
-                entity.setActive(true);
+            page = this.getPageById(pageId);
+            if (page == null) {
+                page = new PageEntity();
+                page.setPageid(pageId);
+                page.setName(pageName);
+                page.setAccesstoken(pageAccessToken);
+                page.setCategory(category);
+                page.setType("Facebook");
+                page.setActive(true);
             } else {
-                entity.setAccesstoken(pageAccessToken);
-                entity.setActive(true);
+                page.setAccesstoken(pageAccessToken);
+                page.setActive(true);
             }
-            pageRepository.save(entity);
+            pageRepository.save(page);
         } catch (NullPointerException e) {
             e.printStackTrace();
         } catch (Exception e){

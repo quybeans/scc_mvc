@@ -9,22 +9,26 @@ import java.util.List;
  */
 public interface UserService {
     //get all user
-     List<UserEntity> findAll();
+    List<UserEntity> findAll();
 
     //check login
-     UserEntity findUser(String username, String password);
+    UserEntity getUserByUsername(String username, String password);
 
-     void Delete(int id);
+    UserEntity getUserByUsername(String username);
 
-     void updateUser(Integer id, String username, String password, Integer roleid);
+    Integer getBrandIdByUsername(String username);
 
-     void createUser(String username, String password, Integer roleid, Boolean active);
+    void Delete(int id);
 
-     List<UserEntity> searchUser(String name);
+    void updateUser(Integer id, String username, String password, Integer roleid);
 
-     List<UserEntity> getUsersByRole(Integer roleId);
+    void createUser(String username, String password, Integer roleid, Boolean active);
+
+    List<UserEntity> searchUser(String name);
+
+    List<UserEntity> getUsersByRole(Integer roleId);
 
     UserEntity getUserByID(Integer id);
 
-    void changeActive(Integer userid,boolean active);
+    void changeActive(Integer userid, boolean active);
 }

@@ -18,11 +18,9 @@
     var accessTokenElement = document.getElementById('access-token');
 
     function onAuthResponse(response) {
-        console.log(response);
         var accessToken = response.authResponse.accessToken;
         var uid = response.authResponse.userID;
         $('#fbUsername').val(username);
-        alert(username);
         $('#shortLivedToken').val(accessToken);
         $('#uid').val(uid);
 
@@ -39,7 +37,7 @@
         // for FB.getLoginStatus().
         if (response.status === 'connected') {
             // Logged into your app and Facebook.
-            //testAPI();
+            testAPI();
             getUsername();
         } else if (response.status === 'not_authorized') {
             // The person is logged into Facebook, but not your app.
@@ -64,7 +62,9 @@
                 getUsername();
                 $('#form').submit();
             } else {
-                FB.login(onAuthResponse, {scope: 'manage_pages, publish_actions'});
+                FB.login(onAuthResponse, {
+                    scope: 'manage_pages'
+                });
 
             }
         });
@@ -80,6 +80,9 @@
             version: 'v2.5' // use graph api version 2.5
         });
 
+        FB.logout(function(response) {
+            // user is now logged out
+        });
 
         FB.getLoginStatus(function (response) {
             statusChangeCallback(response);
@@ -112,7 +115,7 @@
         FB.api('/me', function (response) {
             alert("getUsername");
             username = response.name;
-            //$('#fbUsername').val(username);
+            $('#fbUsername').val(username);
         });
     }
 

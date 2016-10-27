@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.sql.Timestamp;
 import java.util.*;
 
 /**
@@ -47,7 +46,7 @@ public class WebServiceController {
         if (session!=null){
         String username = (String)session.getAttribute("username");
        // List<PostEntity> listP =  postRepository.findByCreatedBy(pageid);
-        int brandid = userRepository.findBrandByUser(username);
+        int brandid = userRepository.getBrandIdByUsername(username);
         List<String> listPage =  brandPageRepository.getAllPagesByBrandid(brandid);
             List<ExPost> rs = new ArrayList<>();
             for(String pageid : listPage)
