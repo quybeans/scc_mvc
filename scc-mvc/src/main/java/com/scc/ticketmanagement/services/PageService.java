@@ -11,6 +11,7 @@ public interface PageService {
     void createPage(String pageName, String pageId, String pageAccessToken, String category);
     PageEntity getPageById(String uid);
     List<PageEntity> getAllPages();
+    List<PageEntity> getPagesByBrandId(int brandId);
     void deactivatePage(String pageUid);
     void activatePage(String pageUid);
 }

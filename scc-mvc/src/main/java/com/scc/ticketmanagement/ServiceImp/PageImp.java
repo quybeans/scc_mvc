@@ -55,6 +55,11 @@ public class PageImp implements PageService {
     }
 
     @Override
+    public List<PageEntity> getPagesByBrandId(int brandId) {
+        return pageRepository.getAllPageByBrandId(brandId);
+    }
+
+    @Override
     public void deactivatePage(String pageUid) {
         PageEntity page = pageRepository.findOne(pageUid);
         page.setActive(false);

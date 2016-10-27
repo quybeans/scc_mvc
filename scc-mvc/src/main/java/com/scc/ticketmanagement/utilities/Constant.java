@@ -7,9 +7,11 @@ public class Constant {
 
     public static final String APP_ID = "341786092825787";
     public static final String APP_SECRET = "c07230dd847bc69613a4aa0104d422a8";
-    public static final int ROLE_ADMIN = 3;
-    public static final int ROLE_STAFF = 1;
-    public static final int ROLE_SUPERVISOR = 2;
+
+    public static final int ROLE_ADMIN = 1;
+    public static final int ROLE_BRAND = 2;
+    public static final int ROLE_SUPERVISOR = 3;
+    public static final int ROLE_STAFF = 4;
 
     public static final int STATUS_UNASSIGN=1;
     public static final int STATUS_ASSIGN=2;
