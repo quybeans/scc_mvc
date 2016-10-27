@@ -8,6 +8,10 @@
 
     <script th:src="@{/js/jquery_dateFormat.js}"></script>
     <script>
+        //VAR FOR ICON
+        var happyicon = 'fa fa-smile-o pull-right happy';
+        var sadicon = 'fa fa-frown-o pull-right sad';
+        
         //Reply to comment
         function replyToComment(objId) {
             $('#replyModal').modal('toggle');
@@ -112,6 +116,12 @@
                     $('#comment-box').empty();
                     $.each(data,function (index)
                     {
+                        var senIcon = sadicon;
+                        if (data[index].sentimentScore==1)
+                        {
+                             senIcon = happyicon;
+                        }
+
 
                         var cmtId= "'"+postId+"_"+data[index].id+"'";
                         var commentisticket="";
@@ -164,7 +174,7 @@
 //                                +'<button onclick="replyToComment('+cmtId+')" class="btn btn-default btn-xs inline" style="margin-left: 65px;margin-top: -10px; "><span class="glyphicon glyphicon-send" style="color:gray "  title="Reply to this comment"   data-placement="bottom" data-toggle="tooltip" ></span></button>'
                                 +commentisticket
                                 +'</div>'
-                                +'<div class="col-lg-2" style="margin-top: 30px">' +'<small class="fa fa-smile-o pull-right" style="font-size: 20px; color: #50D050"></small>'
+                                +'<div class="col-lg-2" style="margin-top: 30px">' +'<small class="'+senIcon+'" style="font-size: 20px;"></small>'
                                 +'</div>'
                                 +'</div>')
                     });

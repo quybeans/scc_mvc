@@ -178,6 +178,16 @@ overflow: scroll;
   margin-top: -45px;
   margin-left: 65px;
 }
+
+.sad
+{
+  color: indianred;
+}
+
+.happy
+{
+  color: #50D050
+}
 /*.cmtList .cmt  .message {*/
   /*margin-left: 65px;*/
   /*margin-top: 0px;*/
