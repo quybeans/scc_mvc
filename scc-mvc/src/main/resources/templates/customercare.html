@@ -51,19 +51,16 @@
                                 +'<small class="text-muted pull-right">'
                                 +jQuery.format.prettyDate( new Date(data[index].createdAt))
                                 +'</small>'
-                               +data[index].createdByName
+                                +data[index].createdByName
                                 +' </a>'
-                                +'<small class="pull-right">' +
-//                                'SETNIMENT' +
-                                '</small>'
                                 +'</p>'
-                                +'<br><p>'+data[index].content+'</p>'
+                                +'<p style="margin-top: 30px;height: 35px;overflow: hidden">'+data[index].content+'</p>'
+                                +'<div style="color: gray; bottom: 0px;text-align: center; ">'
+                                +'<div class="inline"  style="margin-right: 10px"><span class="glyphicon glyphicon-thumbs-up"></span>&nbsp;'+data[index].likesCount+'</div>'
+                                +'<div class="inline"style="margin-right: 10px"><span class="glyphicon glyphicon-comment"></span>&nbsp;'+data[index].commentsCount+' </div>'
+                                +'<div class="inline" style="margin-right: 10px"> <span class="glyphicon glyphicon-share-alt"></span>&nbsp;'+data[index].sharesCount+'</div>'
                                 +'</div>'
-                                +'<div class="lcs " style="height: 20px;">' +
-                                '<p >'+data[index].likesCount+' <span class="glyphicon glyphicon-thumbs-up"></span></p>' +
-                                '<p >'+data[index].commentsCount+' <span class="glyphicon glyphicon-comment"></span></p>' +
-                                '<p >'+data[index].sharesCount+' <span class="glyphicon glyphicon-share-alt"></span></p>'+
-                                '</div>'
+                                +'</div>'
 
 
                         )
@@ -91,20 +88,22 @@
 
                         var cmtId= "'"+postId+"_"+data[index].id+"'";
                         $('#comment-box').append(
-                                '<div class="item" style="cursor:pointer;border-right: none; border-bottom: 1px solid lightgray; height:12vh " onclick="replyToComment('+cmtId+')">'
-                                +'<img style="height: 50px; width: 50px" onload="http://localhost:8080/img/user_img.jpg" src="http://graph.facebook.com/'+data[index].createdBy+'/picture" alt="user image">'
+                                '<div  class="cmt">'
+                                +'<div class="col-lg-10 cmtContent">' +
+                                '<img onload="http://localhost:8080/img/user_img.jpg" src="http://graph.facebook.com/'+data[index].createdBy+'/picture" alt="user image">'
                                 +'<p class="message">'
-                                +'<a class="name">'
+                                +'<a>'
                                 +data[index].createdByName
                                 +'<small class="text-muted" style="margin-left: 10px">'
                                 +jQuery.format.prettyDate( new Date(data[index].createdAt))
                                 +'</small>'
                                 +' </a>'
-                                +'<small class="pull-right">Sentiment rate:'+data[index].sentimentScore+'</small>'
-                                +'<p style="margin-left: 70px ">'+data[index].content+'</p>'
-                                //+'</p> <div class="btn btn-sm btn-primary pull-right" onclick="$(this).parent().append((createReply()))">Reply</div></div>')
+                                +'<p style="margin-left: 65px;margin-top: -10px ">'+data[index].content+'</p>'
                                 +'</p>'
-
+                                +'<button  onclick="replyToComment('+cmtId+')" class="btn btn-default btn-xs inline" style="margin-left: 65px;margin-top: -10px; "><span class="glyphicon glyphicon-send" style="color:gray "  title="Reply to this comment"   data-placement="bottom" data-toggle="tooltip" ></span></button>'
+                                +'</div>'
+                                +'<div class="col-lg-2" style="margin-top: 30px">' +'<small class="fa fa-smile-o pull-right" style="font-size: 20px; color: #50D050"></small>'
+                                +'</div>'
                                 +'</div>')
                     });
                 }
@@ -120,18 +119,6 @@
                 data: { postId: postId },
                 dataType: "json",
                 success: function (data){
-
-//                    $('#post-detail').html(
-//                            '<div class="item"> <img src="http://localhost:8080/img/user_img.jpg" alt="user image"> <p class="message">'
-//                            +'<a class="name">'
-//                            +'<small class="text-muted pull-right">'
-//                            +jQuery.format.date( new Date(data.createdAt),'dd/MM/yyyy')+' at '+jQuery.format.date( new Date(data.createdAt),'HH:mm')
-//                            +'</small>'+
-//                            'Author Name'
-//                            +'</a>' +
-//                            data.content+'</p></div>'
-//                    );
-
                     $('#post-content').html(data.content);
                     $('#post-author').html(data.createdByName);
                     $('#post-like-count').html('<span class="glyphicon glyphicon-thumbs-up"></span>&nbsp;'+data.likesCount+'&nbsp;Likes');
@@ -203,7 +190,7 @@
                 </div>
             </section>
 
-            <section class="col-lg-7 cmtbox"  style="background-color: gray  ; border-left: 1px solid lightgray">
+            <section class="col-lg-6 cmtbox"  style="background-color: gray  ; border-left: 1px solid lightgray">
                 <div>
                     <div class="box-body chat">
                         <div  id="postx-detail" class="postdetail">
@@ -219,13 +206,34 @@
                                 <div class="inline" style="margin-right: 15px" id="post-share-count"><span class="glyphicon glyphicon-share-alt"></span>10 shares</div>
                             </div>
                         </div>
-                        <div id="comment-box" class="cmtList" style="margin-left: 20px">
+                        <div id="comment-box" class="cmtList" style="">
                             <!-- This is posts list -->
                         </div>
                     </div>
                 </div>
             </section>
-        <section class="col-lg-2">
+        <section class="col-lg-2"style="padding: 0; margin:0px 0px 0px 0px; border-left: 1px solid lightgray;height: 100vh">
+            <div>
+            <ul class="nav nav-tabs" style="overflow: hidden;width: 100vh;display: inline-block; margin-top: 10px">
+                <li class="active"><a data-toggle="tab" href="#home">Ticket Detail</a></li>
+                <li><a data-toggle="tab" href="#menu1">History</a></li>
+                <li><a data-toggle="tab" href="#menu1">Reply</a></li>
+            </ul>
+            <div class="tab-content" style="height: 100vh;background-color: white; width: 100vh; margin-top: -5px">
+                <div class="tab-pane active" id="tab_1" style="max-height: 100%">
+
+
+                </div>
+
+                <div class="tab-pane" id="tab_2" style="max-height: 100%">
+                </div>
+
+                <div class="tab-pane" id="tab_3" style="max-height: 100%">
+
+                </div>
+
+            </div>
+            </div>
 
         </section>
 
