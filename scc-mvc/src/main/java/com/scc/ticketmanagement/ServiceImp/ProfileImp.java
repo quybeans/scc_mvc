@@ -20,7 +20,7 @@ public class ProfileImp implements ProfileService {
     }
 
     @Override
-    public void createProfile(String firstname, String lastname, String address, String gender, String phone, String email) {
+    public ProfileEntity createProfile(String firstname, String lastname, String address, String gender, String phone, String email) {
         ProfileEntity profileEntity = new ProfileEntity();
         profileEntity.setFirstname(firstname);
         profileEntity.setLastname(lastname);
@@ -28,7 +28,7 @@ public class ProfileImp implements ProfileService {
         profileEntity.setGender(gender);
         profileEntity.setPhone(phone);
         profileEntity.setEmail(email);
-        profileRepository.save(profileEntity);
+        return profileRepository.save(profileEntity);
     }
 
     @Override

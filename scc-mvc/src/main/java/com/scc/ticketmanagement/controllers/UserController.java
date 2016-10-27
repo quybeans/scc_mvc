@@ -1,6 +1,10 @@
 package com.scc.ticketmanagement.controllers;
 
+import com.scc.ticketmanagement.Entities.ProfileEntity;
 import com.scc.ticketmanagement.Entities.UserEntity;
+import com.scc.ticketmanagement.exentities.User;
+import com.scc.ticketmanagement.repositories.ProfileRepository;
+import com.scc.ticketmanagement.repositories.UserRepository;
 import com.scc.ticketmanagement.services.ProfileService;
 import com.scc.ticketmanagement.services.UserService;
 import com.scc.ticketmanagement.utilities.Constant;
@@ -8,28 +12,52 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Thien on 9/27/2016.
  */
 @Controller
-public class AdminController {
+public class UserController {
+    @Autowired
+    UserRepository userRepository;
+
     @Autowired
     ProfileService profileService;
 
     @Autowired
     UserService userService;
 
-    @RequestMapping("/admin")
-    public String admin(Model model) {
+    @Autowired
+    ProfileRepository profileRepository;
+
+    @RequestMapping( value = "/getuser",method = RequestMethod.GET,produces = "application/json")
+    @ResponseBody
+    public List<UserEntity> admin(Model model) {
         List<UserEntity> entity = userService.findAll();
-        model.addAttribute("entity", entity);
-        return "Admin";
+        return entity;
     }
 
+    @RequestMapping( value = "/getalluser")
+    @ResponseBody
+    public List<User> getalluser(Model model) {
+        List<UserEntity> entity = userService.findAll();
+        List<User> userlist = new ArrayList<User>();
+        for (UserEntity u: entity) {
+            ProfileEntity p = profileRepository.findOne(u.getProfileid());
+            User user = new User();
+            user.setUserid(u.getUserid());
+            user.setFirstname(p.getFirstname());
+            user.setLastname(p.getLastname());
+            userlist.add(user);
+        }
+        return userlist;
+    }
     @RequestMapping("/delete")
     public String deleteUser(@RequestParam("userid") Integer id) {
 
@@ -47,17 +75,18 @@ public class AdminController {
         return "redirect:admin";
     }
 
-    @RequestMapping("/Create")
-    public String createUser(@RequestParam("txtUsername") String username,
-                             @RequestParam("txtPassword") String password,
-                             @RequestParam("slRoleId") Integer roleId ) {
-       // profileService.createProfile("","","","","","");
-        userService.createUser(username, password, roleId, true);
-        return "redirect:admin";
-    }
 
+    @RequestMapping("/createuser")
+    @ResponseBody
+    public UserEntity create(@RequestParam("txtUsername") String username,
+                             @RequestParam("txtPassword") String password,
+                             @RequestParam("slRoleId") Integer roleId){
+        ProfileEntity profileEntity= profileService.createProfile("","","","","","");
+        UserEntity user = userService.createUser(username, password, roleId,profileEntity.getProfileid(),true);
+        return user;
+    }
     @RequestMapping("/Search")
-    public String search(Model model,@RequestParam("txtSearch") String name) {
+    public String search(Model model, @RequestParam("txtSearch") String name) {
         List<UserEntity> lst= userService.searchUser(name);
         model.addAttribute("entity", lst);
         return "Admin";
@@ -66,7 +95,6 @@ public class AdminController {
     @RequestMapping("GetStaffs")
     public String getStaffs(Model model) {
         List<UserEntity> lst= userService.getUsersByRole(Constant.ROLE_STAFF);
-
         model.addAttribute("entity", lst);
         return "Admin";
     }
@@ -87,15 +115,18 @@ public class AdminController {
     }
 
     @RequestMapping("/ChangeActive")
-    public String deactiveUser(@RequestParam("txtUserid") Integer userid,
-                               @RequestParam("btnActive") String btnActive){
-        if(btnActive.equals("Deactive")){
-            System.out.println("DEACTIVE");
-            userService.changeActive(userid,false);
-        }else {
-            System.out.println("ACTIVE");
-            userService.changeActive(userid,true);
-        }
-        return "redirect:admin";
+    @ResponseBody
+    public String deactiveUser(@RequestParam("txtUserid") Integer userid){
+        UserEntity user = userRepository.findOne(userid);
+        //set user active = true khi active = false va nguoc lai
+        user.setActive(!user.isActive());
+        userRepository.save(user);
+        return "success";
+    }
+
+    @RequestMapping("/GetUser")
+    @ResponseBody
+    public UserEntity getUser(@RequestParam("txtUserid") Integer userid){
+        return userRepository.findOne(userid);
     }
 }

@@ -38,8 +38,8 @@
                     </thead>
                     <tbody>
                     <tr th:each="account: ${facebookAccounts}">
-                        <form id="managePageForm" action="deactivatePage">
-                            <input type="hidden" name="pageId" th:value="${account.facebookuserid}"></input>
+                        <form id="managePageForm" action="deactivateFbAccount" method="post">
+                            <input type="hidden" name="facebookAccountId" th:value="${account.facebookuserid}"></input>
                             <td>
                                 <img th:src="@{'https://graph.facebook.com/' + ${account.facebookuserid}+ '/picture'}"/>
                             </td>
@@ -50,10 +50,10 @@
 
                             <td th:switch="${account.active}">
                                 <button class="btn btn-danger" type="submit" name="btnAction" id="btnDeactive"
-                                        value="Deactive"
+                                        value="Deactivate"
                                         th:case="true">Deactivate
                                 </button>
-                                <button class="btn btn-primary" type="submit" name="btnAction" value="Active"
+                                <button class="btn btn-primary" type="submit" name="btnAction" value="Activate"
                                         th:case="false">Activate
                                 </button>
                             </td>

@@ -63,33 +63,60 @@ public class HomeController {
         return "success";
     }
 
-    @RequestMapping("/doLogin")
-    public String doLogin(Model model,
-                          HttpSession session,
-                          @RequestParam("txtUsername") String username,
-                          @RequestParam("txtPassword") String password) {
+//    @RequestMapping("/doLogin")
+//    public String doLogin(Model model,
+//                          HttpSession session,
+//                          @RequestParam("txtUsername") String username,
+//                          @RequestParam("txtPassword") String password) {
+//
+//        UserEntity user = userService.getUserByUsername(username, password);
+//        if (user == null) {
+//            model.addAttribute("error", "Incorrect username or password");
+//            return "login";
+//        }
+//
+//        session.setAttribute("username", user.getUsername());
+//
+//        if (user.getProfileid() != null) {
+//            ProfileEntity profileEntity = profileService.getProfileByID(user.getProfileid());
+//
+//            session.setAttribute("fullname", profileEntity.getFirstname() + " " + profileEntity.getLastname());
+//
+//
+//        }
+//        if (user.getRoleid() == Constant.ROLE_ADMIN) {
+//            return "redirect:admin";
+//        } else if (user.getRoleid() == Constant.ROLE_STAFF) {
+//            return "redirect:customercare";
+//        } else if (user.getRoleid() == Constant.ROLE_SUPERVISOR) {
+//            return "redirect:Report";
+//        }
+//        return "404";
+//    }
 
-        UserEntity user = userService.getUserByUsername(username, password);
-        if (user == null) {
-            model.addAttribute("error", "Incorrect username or password");
+    @RequestMapping("/doLogin")
+    public String loginacc(HttpSession session
+            , @RequestParam("txtUsername") String username, @RequestParam("txtPassword") String password) {
+        UserEntity userEntity = userService.findUser(username, password);
+        if(userEntity==null){
             return "login";
         }
 
-        session.setAttribute("username", user.getUsername());
+        session.setAttribute("username", userEntity.getUsername());
 
-        if (user.getProfileid() != null) {
-            ProfileEntity profileEntity = profileService.getProfileByID(user.getProfileid());
+        if (userEntity.getProfileid()!=null) {
+            ProfileEntity profileEntity = profileService.getProfileByID(userEntity.getProfileid());
 
             session.setAttribute("fullname", profileEntity.getFirstname() + " " + profileEntity.getLastname());
 
 
         }
-        if (user.getRoleid() == Constant.ROLE_ADMIN) {
+        if(userEntity.getRoleid()== Constant.ROLE_ADMIN){
             return "redirect:admin";
-        } else if (user.getRoleid() == Constant.ROLE_STAFF) {
+        }else if (userEntity.getRoleid() == Constant.ROLE_STAFF) {
             return "CustomerCare";
-        } else if (user.getRoleid() == Constant.ROLE_SUPERVISOR) {
-            return "Report";
+        }else if (userEntity.getRoleid() == Constant.ROLE_SUPERVISOR) {
+            return "customercare";
         }
         return "404";
     }
@@ -106,7 +133,7 @@ public class HomeController {
                     case Constant.ROLE_ADMIN:
                         return "redirect:admin";
                     case Constant.ROLE_STAFF:
-                        return "CustomerCare";
+                        return "redirect:customercare";
                     case Constant.ROLE_SUPERVISOR:
                         return "Report";
                 }//end switch
@@ -124,40 +151,7 @@ public class HomeController {
         return "login";
     }
 
-//    @RequestMapping("/loginViaFB")
-//    public String loginViaFB(HttpServletRequest request) {
-//        HttpSession session = request.getSession(false);
-//        if (session  == null){
-//            return "redirect:/login";
-//        }
-//        return "loginViaFB";
-//    }
-//
-//    @RequestMapping(value = "/loginViaFacebook", method = RequestMethod.POST)
-//    String loginFb(HttpServletRequest request,
-//            @RequestParam("shortLivedToken") String token,
-//                   @RequestParam("uid") String uid,
-//                   @RequestParam("fbUsername") String username) {
-//        String longLivedToken = "";
-//
-//        HttpSession session = request.getSession(false);
-//        if (session  == null){
-//            return "redirect:/login";
-//        }
-//        String currentUser = (String) session.getAttribute("username");
-//        UserEntity user = userService.getUserByUsername(currentUser);
-//        int userId =  user.getUserid();
-//
-//        System.out.println("USername: " + username);
-//        try {
-//            longLivedToken = AccessTokenUtility.getExtendedAccessToken(token);
-//            fbService.createFacebookaccount(uid, longLivedToken, userId,username);
-//        } catch (AuthenticationException e) {
-//            e.printStackTrace();
-//        }
-//        System.out.println(longLivedToken);
-//        return "redirect:admin";
-//    }
+
 
     @RequestMapping("/engagement")
     public String home() {

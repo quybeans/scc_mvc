@@ -14,6 +14,8 @@ public interface UserService {
     //check login
     UserEntity getUserByUsername(String username, String password);
 
+    UserEntity findUser(String username, String password);
+
     UserEntity getUserByUsername(String username);
 
     Integer getBrandIdByUsername(String username);
@@ -23,6 +25,8 @@ public interface UserService {
     void updateUser(Integer id, String username, String password, Integer roleid);
 
     void createUser(String username, String password, Integer roleid, Boolean active);
+
+    UserEntity createUser(String username, String password, Integer roleid,Integer profileid,Boolean active);
 
     List<UserEntity> searchUser(String name);
 

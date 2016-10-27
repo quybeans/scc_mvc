@@ -4,48 +4,59 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 /**
- * Created by QuyBeans on 10-Oct-16.
+ * Created by QuyBean on 10/27/2016.
  */
 @Entity
 @Table(name = "ticketstatuschange", schema = "scc", catalog = "")
-@IdClass(TicketstatuschangeEntityPK.class)
 public class TicketstatuschangeEntity {
-    private int ticketid;
-    private int userid;
-    private int statusid;
+    private int id;
+    private Integer ticketid;
+    private Integer changeby;
+    private Integer statusid;
     private Timestamp createdat;
+    private Integer assignee;
 
     @Id
+    @Column(name = "id")
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @Basic
     @Column(name = "ticketid")
-    public int getTicketid() {
+    public Integer getTicketid() {
         return ticketid;
     }
 
-    public void setTicketid(int ticketid) {
+    public void setTicketid(Integer ticketid) {
         this.ticketid = ticketid;
     }
 
-    @Id
-    @Column(name = "userid")
-    public int getUserid() {
-        return userid;
+    @Basic
+    @Column(name = "changeby")
+    public Integer getChangeby() {
+        return changeby;
     }
 
-    public void setUserid(int userid) {
-        this.userid = userid;
+    public void setChangeby(Integer changeby) {
+        this.changeby = changeby;
     }
 
     @Basic
     @Column(name = "statusid")
-    public int getStatusid() {
+    public Integer getStatusid() {
         return statusid;
     }
 
-    public void setStatusid(int statusid) {
+    public void setStatusid(Integer statusid) {
         this.statusid = statusid;
     }
 
-    @Id
+    @Basic
     @Column(name = "createdat")
     public Timestamp getCreatedat() {
         return createdat;
@@ -55,6 +66,16 @@ public class TicketstatuschangeEntity {
         this.createdat = createdat;
     }
 
+    @Basic
+    @Column(name = "assignee")
+    public Integer getAssignee() {
+        return assignee;
+    }
+
+    public void setAssignee(Integer assignee) {
+        this.assignee = assignee;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -62,20 +83,24 @@ public class TicketstatuschangeEntity {
 
         TicketstatuschangeEntity that = (TicketstatuschangeEntity) o;
 
-        if (ticketid != that.ticketid) return false;
-        if (userid != that.userid) return false;
-        if (statusid != that.statusid) return false;
+        if (id != that.id) return false;
+        if (ticketid != null ? !ticketid.equals(that.ticketid) : that.ticketid != null) return false;
+        if (changeby != null ? !changeby.equals(that.changeby) : that.changeby != null) return false;
+        if (statusid != null ? !statusid.equals(that.statusid) : that.statusid != null) return false;
         if (createdat != null ? !createdat.equals(that.createdat) : that.createdat != null) return false;
+        if (assignee != null ? !assignee.equals(that.assignee) : that.assignee != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = ticketid;
-        result = 31 * result + userid;
-        result = 31 * result + statusid;
+        int result = id;
+        result = 31 * result + (ticketid != null ? ticketid.hashCode() : 0);
+        result = 31 * result + (changeby != null ? changeby.hashCode() : 0);
+        result = 31 * result + (statusid != null ? statusid.hashCode() : 0);
         result = 31 * result + (createdat != null ? createdat.hashCode() : 0);
+        result = 31 * result + (assignee != null ? assignee.hashCode() : 0);
         return result;
     }
 }

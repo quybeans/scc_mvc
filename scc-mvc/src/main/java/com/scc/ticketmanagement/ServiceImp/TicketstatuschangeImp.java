@@ -28,7 +28,7 @@ public class TicketstatuschangeImp implements TicketStatusChangeService {
     @Override
     public void assignTicket(Integer userid, Integer ticketID) {
         TicketstatuschangeEntity ticketstatuschangeEntity = new TicketstatuschangeEntity();
-        ticketstatuschangeEntity.setUserid(userid);
+        ticketstatuschangeEntity.setChangeby(userid);
         ticketstatuschangeEntity.setTicketid(ticketID);
         ticketstatuschangeEntity.setStatusid(1);
         ticketstatuschangeEntity.setCreatedat(new Timestamp(new Date().getTime()));
@@ -38,7 +38,7 @@ public class TicketstatuschangeImp implements TicketStatusChangeService {
     @Override
     public void createStatusChange(Integer userid, Integer ticketID, Integer statusid) {
         TicketstatuschangeEntity ticketstatuschangeEntity = new TicketstatuschangeEntity();
-        ticketstatuschangeEntity.setUserid(userid);
+        ticketstatuschangeEntity.setChangeby(userid);
         ticketstatuschangeEntity.setTicketid(ticketID);
         ticketstatuschangeEntity.setStatusid(statusid);
         ticketstatuschangeEntity.setCreatedat(new Timestamp(new Date().getTime()));

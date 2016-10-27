@@ -17,8 +17,10 @@ public interface TicketRepository extends JpaRepository<TicketEntity,Integer> {
     @Query("update TicketEntity set assignee=:assignee WHERE id=:id")
     @Modifying
     @Transactional
-     void assignTicket(@Param("id") Integer id,@Param("assignee")Integer assignee);
+    void assignTicket(@Param("id") Integer id,@Param("assignee")Integer assignee);
 
     @Query("select t from TicketEntity t where t.assignee=:userid")
     List<TicketEntity> getTicketUser(@Param("userid") Integer userid);
+
+    TicketEntity findBycommentid(String commentid);
 }

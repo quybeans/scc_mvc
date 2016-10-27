@@ -15,6 +15,7 @@ public class PostEntity {
     private int likesCount;
     private int sharesCount;
     private String createdBy;
+    private String attachment;
 
     @Id
     @Column(name = "id")
@@ -114,5 +115,15 @@ public class PostEntity {
         result = 31 * result + sharesCount;
         result = 31 * result + (createdBy != null ? createdBy.hashCode() : 0);
         return result;
+    }
+
+    @Basic
+    @Column(name = "attachment")
+    public String getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(String attachment) {
+        this.attachment = attachment;
     }
 }

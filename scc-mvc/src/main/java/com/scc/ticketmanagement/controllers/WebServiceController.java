@@ -2,6 +2,10 @@ package com.scc.ticketmanagement.controllers;
 
 
 import com.scc.ticketmanagement.Entities.*;
+import com.scc.ticketmanagement.exentities.ExComment;
+import com.scc.ticketmanagement.exentities.ExPost;
+import com.scc.ticketmanagement.exentities.ExtendComments;
+import com.scc.ticketmanagement.exentities.FaceBookPage;
 import com.scc.ticketmanagement.repositories.*;
 import com.scc.ticketmanagement.utilities.FacebookUtility;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,20 +38,26 @@ public class WebServiceController {
     private UserRepository userRepository;
 
     @Autowired
+    private FacebookaccountRepository facebookaccountRepository;
+
+    @Autowired
     private BrandPageRepository brandPageRepository;
 
     @Autowired
     private PageRepository pageRepository;
+
+    @Autowired
+    private TicketRepository ticketRepository;
 
     @RequestMapping("allPostsByBrand")
     public List<ExPost> postsByByBrand(HttpServletRequest request)
     {
         HttpSession session = request.getSession(false);
         if (session!=null){
-        String username = (String)session.getAttribute("username");
-       // List<PostEntity> listP =  postRepository.findByCreatedBy(pageid);
-        int brandid = userRepository.getBrandIdByUsername(username);
-        List<String> listPage =  brandPageRepository.getAllPagesByBrandid(brandid);
+            String username = (String)session.getAttribute("username");
+            // List<PostEntity> listP =  postRepository.findByCreatedBy(pageid);
+            int brandid = userRepository.getBrandIdByUsername(username);
+            List<String> listPage =  brandPageRepository.getAllPagesByBrandid(brandid);
             List<ExPost> rs = new ArrayList<>();
             for(String pageid : listPage)
             {
@@ -70,13 +80,13 @@ public class WebServiceController {
 
             }
             Collections.reverse(rs);
-        return rs;
+            return rs;
         }
         return null;
     }
 
     @RequestMapping("posts")
-        public List<PostEntity> posts(){
+    public List<PostEntity> posts(){
 
         List<PostEntity> listP =  postRepository.findAll();
         Collections.reverse(listP);
@@ -88,8 +98,26 @@ public class WebServiceController {
         return commentRepository.findCommentByPostId(postId);
     }
     @RequestMapping("commentbypostWithSen")
-    public List<CommentEntity> commentbypostWithSen(@RequestParam("postId") String postId){
-        return commentRepository.findCommentByPostIdSen(postId);
+    public List<ExtendComments> commentbypostWithSen(@RequestParam("postId") String postId){
+        List<ExtendComments> showcomments = new ArrayList<ExtendComments>();
+        List<CommentEntity> commentlist =commentRepository.findCommentByPostIdSen(postId);
+        for (CommentEntity c: commentlist) {
+            ExtendComments cmt = new ExtendComments();
+            cmt.setContent(c.getContent());
+            cmt.setCreatedAt(c.getCreatedAt());
+            cmt.setCreatedBy(c.getCreatedBy());
+            cmt.setCreatedByName(c.getCreatedByName());
+            cmt.setId(c.getId());
+            cmt.setPostId(c.getPostId());
+            cmt.setSentimentScore(c.getSentimentScore());
+            if (ticketRepository.findBycommentid(cmt.getId())!=null){
+                cmt.setIsticket(true);
+            }
+
+            showcomments.add(cmt);
+
+        }
+        return showcomments;
     }
     //This one include createdByName, NO LONGER USE
     @RequestMapping("newcommentbypost")
@@ -143,9 +171,24 @@ public class WebServiceController {
     }
     //Post a comment
     @RequestMapping("commentOnObj")
-    public boolean postsById(@RequestParam("objId") String objId, @RequestParam("message") String message){
-        return FacebookUtility.commentOnObj(objId,message,page.getPageToken());
+    public boolean postsById(@RequestParam("objId") String objId,
+                             @RequestParam("message") String message,
+                             @RequestParam("token") String token){
+        return FacebookUtility.commentOnObj(objId,message,token);
     }
 
+    @RequestMapping("allFbAccount")
+    public List<FacebookaccountEntity> allFbAccount(HttpServletRequest request)
+    {
+        HttpSession session = request.getSession(false);
+        if (session!=null) {
+            String username = (String) session.getAttribute("username");
+            int userid = userRepository.findUseridByUser(username);
+            List<FacebookaccountEntity> accounts = facebookaccountRepository.getFacebookaccountByUserId(userid);
+            return accounts;
+
+        }
+        return null;
+    }
 
 }

@@ -18,6 +18,7 @@ public class ProfileEntity {
     private String image;
 
     @Id
+    @GeneratedValue
     @Column(name = "profileid")
     public int getProfileid() {
         return profileid;

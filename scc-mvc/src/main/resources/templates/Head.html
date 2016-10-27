@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
 
 </head>
@@ -34,7 +34,7 @@
                 <!-- User Account: style can be found in dropdown.less -->
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <span class="hidden-xs">Welcome,</span>
+                        <span class="hidden-xs" th:text="${session.fullname}"></span>
                     </a>
                     <ul class="dropdown-menu">
                         <!-- User image -->

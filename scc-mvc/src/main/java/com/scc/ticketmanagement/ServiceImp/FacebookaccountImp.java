@@ -31,6 +31,7 @@ public class FacebookaccountImp implements FacebookaccountService {
                 facebookAccount.setActive(true);
             }else {
                 facebookAccount.setAccesstoken(accessToken);
+                facebookAccount.setActive(true);
             }
             repo.save(facebookAccount);
         } catch (NullPointerException e) {

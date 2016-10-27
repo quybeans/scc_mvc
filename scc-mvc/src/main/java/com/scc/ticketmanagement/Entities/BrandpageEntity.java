@@ -14,6 +14,7 @@ public class BrandpageEntity {
     private boolean active;
 
     @Id
+    @GeneratedValue
     @Column(name = "brandpageid")
     public int getBrandpageid() {
         return brandpageid;

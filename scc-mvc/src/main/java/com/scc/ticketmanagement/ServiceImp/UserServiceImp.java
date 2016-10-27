@@ -25,6 +25,11 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
+    public UserEntity findUser(String username, String password) {
+        return userRepository.findUserByUsernameAndPassword(username, password);
+    }
+
+    @Override
     public UserEntity getUserByUsername(String username, String password) {
         return userRepository.findUserByUsernameAndPassword(username, password);
     }
@@ -72,6 +77,16 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
+    public UserEntity createUser(String username, String password, Integer roleid,Integer profileid,Boolean active) {
+        UserEntity userEntity = new UserEntity();
+        userEntity.setUsername(username);
+        userEntity.setPassword(password);
+        userEntity.setRoleid(roleid);
+        userEntity.setActive(true);
+        return userRepository.save(userEntity);
+    }
+
+    @Override
     public List<UserEntity> searchUser(String name) {
 
         return userRepository.searchUser(name);
@@ -91,4 +106,6 @@ public class UserServiceImp implements UserService {
     public void changeActive(Integer userid,boolean active) {
         userRepository.changeActive(userid,active);
     }
+
+
 }

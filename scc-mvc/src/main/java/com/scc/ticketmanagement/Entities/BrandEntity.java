@@ -16,6 +16,7 @@ public class BrandEntity {
     private String description;
 
     @Id
+    @GeneratedValue
     @Column(name = "id")
     public int getId() {
         return id;

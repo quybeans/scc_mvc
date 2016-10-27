@@ -67,9 +67,9 @@ public class FacebookAccountController {
         return "redirect:/facebook-account/index";
     }
 
-    @RequestMapping("/deactivateFbAccount")
-    public String deactivate(@RequestParam("uid") String uid){
-        fbService.deactivateFbAccount(uid);
-        return "manageFacebookAccount";
+    @RequestMapping(value = "/facebook-account/deactivateFbAccount", method = RequestMethod.POST)
+    public String deactivate(@RequestParam("facebookAccountId") String accountId){
+        fbService.deactivateFbAccount(accountId);
+        return "redirect:/facebook-account/index";
     }
 }

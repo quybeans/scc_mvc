@@ -16,6 +16,7 @@ public class PageEntity {
     private String category;
 
     @Id
+    @GeneratedValue
     @Column(name = "pageid")
     public String getPageid() {
         return pageid;

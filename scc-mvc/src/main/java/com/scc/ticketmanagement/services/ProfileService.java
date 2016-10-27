@@ -9,8 +9,8 @@ public interface ProfileService {
 
     ProfileEntity getProfileByID(Integer id);
 
-    void createProfile(String firstname,String lastname,String address,String gender,
-                       String phone,String email);
+    ProfileEntity createProfile(String firstname,String lastname,String address,String gender,
+                                String phone,String email);
 
     void updateProfile(Integer profileID,String firstname,String lastname,String address,String gender,
                        String phone,String email);

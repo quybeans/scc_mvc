@@ -1,23 +1,26 @@
 package com.scc.ticketmanagement.Entities;
 
 import javax.persistence.*;
+import java.sql.Date;
 import java.sql.Timestamp;
 
 /**
- * Created by QuyBeans on 10-Oct-16.
+ * Created by QuyBean on 10/27/2016.
  */
 @Entity
 @Table(name = "ticket", schema = "scc", catalog = "")
 public class TicketEntity {
     private int id;
-    private int commentid;
-    private int createdby;
+    private String commentid;
+    private Integer createdby;
     private Timestamp createdtime;
-    private int statusid;
-    private boolean active;
+    private Integer statusid;
+    private Boolean active;
     private Integer assignee;
+    private String deadline;
 
     @Id
+    @GeneratedValue
     @Column(name = "id")
     public int getId() {
         return id;
@@ -29,21 +32,21 @@ public class TicketEntity {
 
     @Basic
     @Column(name = "commentid")
-    public int getCommentid() {
+    public String getCommentid() {
         return commentid;
     }
 
-    public void setCommentid(int commentid) {
+    public void setCommentid(String commentid) {
         this.commentid = commentid;
     }
 
     @Basic
     @Column(name = "createdby")
-    public int getCreatedby() {
+    public Integer getCreatedby() {
         return createdby;
     }
 
-    public void setCreatedby(int createdby) {
+    public void setCreatedby(Integer createdby) {
         this.createdby = createdby;
     }
 
@@ -59,21 +62,21 @@ public class TicketEntity {
 
     @Basic
     @Column(name = "statusid")
-    public int getStatusid() {
+    public Integer getStatusid() {
         return statusid;
     }
 
-    public void setStatusid(int statusid) {
+    public void setStatusid(Integer statusid) {
         this.statusid = statusid;
     }
 
     @Basic
     @Column(name = "active")
-    public boolean isActive() {
+    public Boolean getActive() {
         return active;
     }
 
-    public void setActive(boolean active) {
+    public void setActive(Boolean active) {
         this.active = active;
     }
 
@@ -87,6 +90,16 @@ public class TicketEntity {
         this.assignee = assignee;
     }
 
+    @Basic
+    @Column(name = "deadline")
+    public String getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(String deadline) {
+        this.deadline = deadline;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -95,12 +108,13 @@ public class TicketEntity {
         TicketEntity that = (TicketEntity) o;
 
         if (id != that.id) return false;
-        if (commentid != that.commentid) return false;
-        if (createdby != that.createdby) return false;
-        if (statusid != that.statusid) return false;
-        if (active != that.active) return false;
+        if (commentid != null ? !commentid.equals(that.commentid) : that.commentid != null) return false;
+        if (createdby != null ? !createdby.equals(that.createdby) : that.createdby != null) return false;
         if (createdtime != null ? !createdtime.equals(that.createdtime) : that.createdtime != null) return false;
+        if (statusid != null ? !statusid.equals(that.statusid) : that.statusid != null) return false;
+        if (active != null ? !active.equals(that.active) : that.active != null) return false;
         if (assignee != null ? !assignee.equals(that.assignee) : that.assignee != null) return false;
+        if (deadline != null ? !deadline.equals(that.deadline) : that.deadline != null) return false;
 
         return true;
     }
@@ -108,12 +122,13 @@ public class TicketEntity {
     @Override
     public int hashCode() {
         int result = id;
-        result = 31 * result + commentid;
-        result = 31 * result + createdby;
+        result = 31 * result + (commentid != null ? commentid.hashCode() : 0);
+        result = 31 * result + (createdby != null ? createdby.hashCode() : 0);
         result = 31 * result + (createdtime != null ? createdtime.hashCode() : 0);
-        result = 31 * result + statusid;
-        result = 31 * result + (active ? 1 : 0);
+        result = 31 * result + (statusid != null ? statusid.hashCode() : 0);
+        result = 31 * result + (active != null ? active.hashCode() : 0);
         result = 31 * result + (assignee != null ? assignee.hashCode() : 0);
+        result = 31 * result + (deadline != null ? deadline.hashCode() : 0);
         return result;
     }
 }

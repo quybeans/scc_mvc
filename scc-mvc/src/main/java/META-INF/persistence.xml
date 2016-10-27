@@ -4,6 +4,16 @@
     <persistence-unit name="NewPersistenceUnit">
         <class>com.scc.ticketmanagement.Entities.PageEntity</class>
         <class>com.scc.ticketmanagement.Entities.FacebookaccountEntity</class>
+        <class>com.scc.ticketmanagement.Entities.BrandEntity</class>
+        <class>com.scc.ticketmanagement.Entities.BrandpageEntity</class>
+        <class>com.scc.ticketmanagement.Entities.CommentEntity</class>
+        <class>com.scc.ticketmanagement.Entities.PostEntity</class>
+        <class>com.scc.ticketmanagement.Entities.ProfileEntity</class>
+        <class>com.scc.ticketmanagement.Entities.TicketEntity</class>
+        <class>com.scc.ticketmanagement.Entities.TicketconversationEntity</class>
+        <class>com.scc.ticketmanagement.Entities.TicketstatuschangeEntity</class>
+        <class>com.scc.ticketmanagement.Entities.UserEntity</class>
+        <class>com.scc.ticketmanagement.Entities.TicketrequestEntity</class>
         <properties>
             <property name="eclipselink.jdbc.url" value="jdbc:mysql://localhost:3306/scc"/>
             <property name="eclipselink.jdbc.driver" value="com.mysql.jdbc.Driver"/>
