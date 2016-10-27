@@ -158,4 +158,8 @@ public class HomeController {
         return "engagement";
     }
 
+    @RequestMapping("/customercare")
+    public String customercare() {
+        return "customercare";
+    }
 }

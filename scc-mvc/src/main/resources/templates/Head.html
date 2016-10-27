@@ -36,40 +36,23 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <span class="hidden-xs" th:text="${session.fullname}"></span>
                     </a>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu" style="width: 20vh; border: 1px solid lightgray" >
                         <!-- User image -->
                         <li class="user-header">
                             <img src="img/user2-160x160.jpg" class="img-circle" alt="User Image"/>
 
-                            <p>
-                                Alexander Pierce - Web Developer
-                                <small>Member since Nov. 2012</small>
-                            </p>
+                            <p th:text="${session.fullname}">
+                           </p><p  style="margin-top: -10px" th:text=" 'username: '+${session.username}">
+                        </p>
                         </li>
-                        <!-- Menu Body -->
-                        <li class="user-body">
-                            <div class="row">
-                                <div class="col-xs-4 text-center">
-                                    <a href="#">Followers</a>
-                                </div>
-                                <div class="col-xs-4 text-center">
-                                    <a href="#">Sales</a>
-                                </div>
-                                <div class="col-xs-4 text-center">
-                                    <a href="#">Friends</a>
-                                </div>
-                            </div>
-                            <!-- /.row -->
+
+                        <li class="user-footer ">
+                            <a href="/LogOut" class="btn btn-default btn-flat">Profile</a>
+                            <a href="/LogOut" class="btn btn-danger" style="color: white">Sign out</a>
                         </li>
-                        <!-- Menu Footer-->
-                        <li class="user-footer">
-                            <div class="pull-left">
-                                <a href="#" class="btn btn-default btn-flat">Profile</a>
-                            </div>
-                            <div class="pull-right">
-                                <a href="#" class="btn btn-default btn-flat">Sign out</a>
-                            </div>
-                        </li>
+
+
+                    </li>
                     </ul>
                 </li>
 
