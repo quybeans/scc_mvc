@@ -58,7 +58,7 @@ overflow: scroll;
 }
 .chat .item:hover
 {
-  background-color: #F2F2F2;
+  background-color: lightblue;
 
 }
 .chat .item:before,
@@ -154,7 +154,7 @@ overflow: scroll;
 
 .cmtList .cmt{
   cursor:pointer;
-  height: 12vh;
+  height: 14vh;
   border-bottom: 1px solid lightgray;
   margin-bottom: 0px;
   margin-top: 0px;
@@ -163,7 +163,7 @@ overflow: scroll;
 }
 .cmtList :hover
 {
-    background-color: lightblue;
+    background-color: #F2F2F2;
 }
 .cmtList .cmtContent > img {
   width: 50px;
