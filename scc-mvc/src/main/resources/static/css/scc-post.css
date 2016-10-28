@@ -122,8 +122,6 @@ overflow: scroll;
   margin: 10px 20px 10px 20px;
   background-color: white;
   height: auto;
-
-
     padding: 10px 10px 10px 15px;
   border-radius: 3px;
 }
@@ -181,11 +179,13 @@ overflow: scroll;
 
 .sad
 {
+  font-size: 20px;
   color: indianred;
 }
 
 .happy
 {
+  font-size: 20px;
   color: #50D050
 }
 /*.cmtList .cmt  .message {*/

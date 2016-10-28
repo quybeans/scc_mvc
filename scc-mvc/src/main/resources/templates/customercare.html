@@ -12,7 +12,6 @@
         var happyicon = 'fa fa-smile-o pull-right happy';
         var sadicon = 'fa fa-frown-o pull-right sad';
 
-
         //Hard page id
         var pageID = 177872845972148;
 
@@ -36,6 +35,8 @@
                 else {alert("Enter some thing to comment..")}
             });
         }
+
+
 
         //Set onclick account
         function setOnclickReplyAccount(imgsrc,name,token)
@@ -153,6 +154,8 @@
         }
         //Get comments for posts
         function getCommentById(postId) {
+            var happycount =0;
+            var sadcount =0;
             $('#comment-box').empty();
             $('#comment-box').html('Loading....');
             getPostById(postId);
@@ -169,7 +172,8 @@
                         if (data[index].sentimentScore==1)
                         {
                              senIcon = happyicon;
-                        }
+                            happycount = happycount+1;
+                        } else sadcount =sadcount+1;
 
 
                         var cmtId= "'"+postId+"_"+data[index].id+"'";
@@ -227,8 +231,11 @@
                                 +'</div>'
                                 +'</div>')
                     });
+                    $("#happy-count").html(happycount);
+                    $("#sad-count").html(sadcount);
                 }
-            })
+            });
+
         }
 
 
@@ -240,12 +247,15 @@
                 data: { postId: postId },
                 dataType: "json",
                 success: function (data){
+                    var date = $.format.date(data.createdAt,"ddd, dd-MM-yyyy");
+                    var time = $.format.date(data.createdAt,"HH:mm");
                     $('#post-content').html(data.content);
                     $('#post-author').html(data.createdByName);
                     $('#post-like-count').html('<span class="glyphicon glyphicon-thumbs-up"></span>&nbsp;'+data.likesCount+'&nbsp;Likes');
                     $('#post-comment-count').html('<span class="glyphicon glyphicon-comment"></span>&nbsp;'+data.commentsCount+'&nbsp;Comments');
                     $('#post-share-count').html('<span class="glyphicon glyphicon-share-alt"></span>&nbsp;'+data.sharesCount+'&nbsp;Shares');
-                    $('#post-image').attr('src','http://graph.facebook.com/'+data.createdBy+'/picture')
+                    $('#post-image').attr('src','http://graph.facebook.com/'+data.createdBy+'/picture');
+                    $('#post-time').html(date+' at '+time);
                     //Set onClick command for comment button
                     $('#btnSendComment').unbind().click( function ()
                     {
@@ -579,11 +589,13 @@
         <section class="col-lg-6 cmtbox"  style="background-color: gray  ; border-left: 1px solid lightgray">
             <div>
                 <div class="box-body chat">
-                    <div  id="postx-detail" class="postdetail">
+                    <div class="postdetail">
+
                         <img src="http://localhost:8080/img/user_img.jpg" alt="user image" id="post-image">
                         <p class="author" id="post-author">Kitty Bang Bang</p>
-                        <p style="margin-top: 40px; overflow: hidden" id="post-content">
-                            shortSomething   shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething shortSomething
+                        <div id="post-time" class="text-muted" style="margin-left: 60px; margin-top: -10px">sss</div>
+                        <p style="margin-top: 10px; overflow: hidden" id="post-content">
+                            Content
                         </p>
 
                         <div style="color: gray">
@@ -591,6 +603,13 @@
                             <div class="inline" style="margin-right: 15px" id="post-comment-count"><span class="glyphicon glyphicon-comment"></span>100 comments</div>
                             <div class="inline" style="margin-right: 15px" id="post-share-count"><span class="glyphicon glyphicon-share-alt"></span>10 shares</div>
                         </div>
+                        <div style="width: 10%; top: 15px; right: -5px; position: absolute">
+
+                                <div style="padding: 0"><div id="happy-count">16</div><span class="fa fa-smile-o happy"></span></div>
+                                <div style="padding: 0"><div id="sad-count">20</div><span class="fa fa fa-frown-o sad"></span></div>
+                        </div>
+
+
                     </div>
                     <div id="comment-box" class="cmtList" style="">
                         <!-- This is posts list -->
