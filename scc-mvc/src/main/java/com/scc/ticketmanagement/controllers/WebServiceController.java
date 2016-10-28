@@ -115,7 +115,6 @@ public class WebServiceController {
             }
 
             showcomments.add(cmt);
-
         }
         return showcomments;
     }
@@ -185,6 +184,21 @@ public class WebServiceController {
             String username = (String) session.getAttribute("username");
             int userid = userRepository.findUseridByUser(username);
             List<FacebookaccountEntity> accounts = facebookaccountRepository.getFacebookaccountByUserId(userid);
+            return accounts;
+
+        }
+        return null;
+    }
+
+    @RequestMapping("allPageAccount")
+    public List<PageEntity> allPageAccount(HttpServletRequest request)
+    {
+        HttpSession session = request.getSession(false);
+        if (session!=null) {
+            String username = (String) session.getAttribute("username");
+            int userid = userRepository.findUseridByUser(username);
+            UserEntity user = userRepository.findOne(userid);
+            List<PageEntity> accounts = pageRepository.getAllPageByBrandId(user.getBrandid());
             return accounts;
 
         }

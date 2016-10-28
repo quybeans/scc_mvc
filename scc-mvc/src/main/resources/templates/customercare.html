@@ -11,9 +11,23 @@
         //VAR FOR ICON
         var happyicon = 'fa fa-smile-o pull-right happy';
         var sadicon = 'fa fa-frown-o pull-right sad';
-        
+
+
+        //Hard page id
+        var pageID = 177872845972148;
+
+        //Get post every 5s
+        getAllPosts();
+        setInterval(function () { getAllPosts(); },5000);
+
+        $('#list-fb-account').empty();
+        getAllFBAccount();
+        getAllPageAccount();
+
+
         //Reply to comment
         function replyToComment(objId) {
+            $('#send-progress').attr('class','fa fa-paper-plane');
             $('#replyModal').modal('toggle');
             $('#btnReply').unbind().click(function () {
                 var token = $('#reply-token').val();
@@ -22,15 +36,6 @@
                 else {alert("Enter some thing to comment..")}
             });
         }
-
-        //Hard page id
-        var pageID = 177872845972148;
-
-        //Get post every 5s
-        getAllPosts();
-        setInterval(function () { getAllPosts(); },5000);
-        getAllFBAccount();
-
 
         //Set onclick account
         function setOnclickReplyAccount(imgsrc,name,token)
@@ -61,7 +66,26 @@
                 }
             });
         }
+        //get All Facebook account belong to user
+        function getAllPageAccount()
+        {
+            $.ajax({
+                url: '/allPageAccount',
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    $('#list-fb-account').append( '<li class="dropdown-header" style="text-align: center">Page account</li>');
+                    $.each(data, function (index) {
+                        $('#list-fb-account').append(
+                                '<li onclick="setOnclickReplyAccount('+data[index].pageid+',\''+data[index].name+'\',\''+data[index].accesstoken+'\')">'
+                                +'<a><img height="30px" width="30px" style="border-radius: 3px" src="http://graph.facebook.com/'+data[index].pageid+'/picture" alt="user image"> &nbsp;'+data[index].name+'</a>' +
+                                '</li>'
 
+                        )
+                    })
+                }
+            });
+        }
 
         //Get all posts
         function getAllPosts() {
@@ -71,12 +95,9 @@
                 dataType: "json",
                 success: function (data) {
 
-
                     $('#post-box').empty();
                     $.each(data,function (index) {
-
                         $('#post-box').append(
-
                                 '<div class="item" onclick="getCommentById('+data[index].id+')">'
                                 +'<img onload="http://localhost:8080/img/user_img.jpg" src="http://graph.facebook.com/'+data[index].createdBy+'/picture" alt="user image">'
                                 +'<p class="message">'
@@ -101,7 +122,35 @@
 
         }
 
+        //Ger reply for comment
+        function getReplyByCommentId(commentId) {
 
+            $('#reply-list').empty();
+            $('#reply-list').html('Loading....');
+            $.ajax({
+                url: '/commentbypost',
+                type: "GET",
+                data: { postId: commentId },
+                dataType: "json",
+                success: function (data){
+                    $('#reply-list').empty();
+                    $.each(data,function (index) {
+                        $('#reply-list').append(
+                        '<div class="cmt" style="max-height:10vh;">'
+                        +'<div class="cmtContent">'
+                        +'<img src="http://graph.facebook.com/'+data[index].createdBy+'/picture" height="50px" width="50px">'
+                        +'<p class="message">'
+                        +'<a>'+data[index].createdByName+'</a>'
+                        +'<p style="margin-left: 65px; margin-top: -10px">'+data[index].content+'</p>'
+                        +'</p>'
+                        +'</div>'
+                        +'</div>'
+                        )
+                    })
+
+                }
+            })
+        }
         //Get comments for posts
         function getCommentById(postId) {
             $('#comment-box').empty();
@@ -129,7 +178,7 @@
                         if(data[index].ticket){
                             commentisticket=
                                     //Day la button send commend cua Bean GOD
-                                    '<button  onclick="replyToComment('+cmtId+')" class="btn btn-default btn-xs inline"' +
+                                    '<button  onclick="replyToComment('+cmtId+');getReplyByCommentId('+data[index].id+');" class="btn btn-default btn-xs inline"' +
                                     ' style="margin-left: 65px;margin-top: -10px; "><span class="glyphicon glyphicon-send"' +
                                     ' style="color:gray "  title="Reply to this comment"   data-placement="bottom" ' +
                                     'data-toggle="tooltip" ></span></button>'
@@ -152,7 +201,7 @@
                                     'title="Create new ticket" data-toggle="tooltip"  data-placement="bottom" ' +
                                     ' class="fa fa-plus"></span></button>'
 
-                                    +'<button  onclick="replyToComment('+cmtId+')" class="btn btn-default btn-xs inline"' +
+                            +'<button  onclick="replyToComment('+cmtId+');getReplyByCommentId('+data[index].id+');" class="btn btn-default btn-xs inline"' +
                                     ' style="margin-top: -10px; "><span class="glyphicon glyphicon-send"' +
                                     ' style="color:gray "  title="Reply to this comment"   data-placement="bottom" ' +
                                     'data-toggle="tooltip" ></span></button>'
@@ -160,7 +209,7 @@
                         $('#comment-box').append(
                                 '<div  class="cmt" onclick="getticket('+data[index].id+','+postId+')">'
                                 +'<div class="col-lg-10 cmtContent">' +
-                                '<img onload="http://localhost:8080/img/user_img.jpg" src="http://graph.facebook.com/'+data[index].createdBy+'/picture" alt="user image">'
+                                '<img onload="http://localhost:9000/img/user_img.jpg" src="http://graph.facebook.com/'+data[index].createdBy+'/picture" alt="user image">'
                                 +'<p class="message">'
                                 +'<a>'
                                 +data[index].createdByName
@@ -210,6 +259,7 @@
         }
         //Send comment button
         function sendComment(objId, message,token) {
+            $('#send-progress').attr('class','fa fa-spin fa-spinner');
             $.ajax({
                 url: '/commentOnObj',
                 type: "POST",
@@ -217,7 +267,7 @@
                 dataType: "json",
                 success: function (data)
                 {
-
+                    $('#send-progress').attr('class','fa fa-check');
                     $('#txtComment').val('');
                     $('#txtReply').val('');
                     $('#replyModal').modal('hide');
@@ -383,8 +433,8 @@
             })
 
             $.ajax({
-                url:"/getconversation",
-                data:{"commentid":comID},
+                url:"/commentbypost",
+                data:{"postId":comID},
                 type:"POST",
                 success:function (data) {
                     $('#tab_3').html("");
@@ -420,26 +470,28 @@
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <h4 class="modal-title">Reply to comment</h4>
                     </div>
-                    <div class="modal-body">
-                        <div class="inline"> Reply as:</div>
+                    <div class="modal-body" style=" height: auto;">
+
+                        <div id="reply-list"  class="cmtList" style="max-height: 45vh; overflow-y: scroll;">
+
+                        </div>
                         <input type="hidden" id="reply-token" value="">
                         <div class="dropdown">
-                            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                            <button class="btn btn-info dropdown-toggle" style="width: 180px; margin-top: 10px" type="button" data-toggle="dropdown">
                                 <img width="30px" id='reply-img'height="30px" style="border-radius: 3px" src="http://globalgamejam.org/sites/default/files/styles/game_sidebar__normal/public/game/featured_image/promo_5.png?itok=9dymM8JD" alt="user image">
-                                <p class="inline" id="reply-name"> Choose an account </p>  <span class="caret"></span>
+                                <p class="inline" id="reply-name"> Reply as... </p>  <span class="caret"></span>
                             </button>
-                            <ul class="dropdown-menu " id="list-fb-account">
+                            <ul class="dropdown-menu" id="list-fb-account">
                                 <li class="dropdown-header" style="text-align: center">Page account</li>
                                 <li><a><img height="30px" width="30px" style="border: 1px solid gray; border-radius: 3px" src="http://imgsv.imaging.nikon.com/lineup/lens/zoom/normalzoom/af-s_dx_18-140mmf_35-56g_ed_vr/img/sample/sample1_l.jpg" alt="user image"> &nbsp; Quy Beans</a></li>
                                 <li class="divider"></li>
                                 <li class="dropdown-header" style="text-align: center" id="list-user-account">User account</li>
                             </ul>
                         </div>
-                        </br>
-                        <textarea  placeholder="Write a reply...." type="text" class="form-control" rows="3"  id="txtReply"></textarea>
+                        <textarea  style="margin-top: 10px" placeholder="Write a reply...." type="text" class="form-control" rows="3"  id="txtReply"></textarea>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-primary " id="btnReply">Reply</button>
+                        <button class="btn btn-primary " id="btnReply"> <i id="send-progress" class="fa fa-paper-plane"></i>&nbsp;Reply</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     </div>
                 </div>
