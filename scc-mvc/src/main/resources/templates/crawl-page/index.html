@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:fb="http://www.facebook.com/2008/fbml">
 <head>
-    <title>Manage page</title>
+    <title>Manage crawl page</title>
 
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -18,10 +18,10 @@
         <section class="content">
 
             <div style="text-align: center">
-                <h1>Manage Page</h1>
+                <h1>Manage Crawl Page</h1>
             </div>
 
-            <div id="pageToManage">
+            <div id="pageToCrawl">
                 <table class="table table-hover" style="background-color: white">
                     <thead>
                     <tr>
@@ -33,19 +33,19 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="page: ${pages}">
-                        <form id="accountPageFrom" action="deactivatePage" method="post">
-                            <input type="hidden" name="pageId" th:value="${page.pageid}"></input>
+                    <tr th:each="pagesCrawler: ${crawlerPages}">
+                        <form id="managePageForm" action="deactivateCrawlerPage" method="post">
+                            <input type="hidden" name="pageId" th:value="${pagesCrawler.pageid}"></input>
                             <td>
-                                <img th:src="@{'https://graph.facebook.com/' + ${page.pageid}+ '/picture'}"/>
+                                <img th:src="@{'https://graph.facebook.com/' + ${pagesCrawler.pageid}+ '/picture'}"/>
                             </td>
                             <td>
-                                <a th:href="@{'http://www.fb.com/' + ${page.pageid}}" th:text="${page.name}"></a>
+                                <a th:href="@{'http://www.fb.com/' + ${pagesCrawler.pageid}}" th:text="${pagesCrawler.name}"></a>
                             </td>
-                            <td th:text="${page.type}"></td>
-                            <td th:text="${page.category}"></td>
-                            <td th:switch="${page.active}">
-                                <button class="btn btn-danger" type="submit" name="btnAction" id="btnDeactive"
+                            <td th:text="${pagesCrawler.type}"></td>
+                            <td th:text="${pagesCrawler.category}"></td>
+                            <td th:switch="${pagesCrawler.crawler}">
+                                <button class="btn btn-danger" type="submit" name="btnAction"
                                         value="Deactivate"
                                         th:case="true">Deactivate
                                 </button>
