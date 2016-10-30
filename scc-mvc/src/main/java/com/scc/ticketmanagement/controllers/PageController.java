@@ -13,13 +13,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.naming.AuthenticationException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Created by Thien on 10/12/2016.
@@ -34,10 +33,10 @@ public class PageController {
     @Autowired
     BrandPageService brandPageService;
 
-    @RequestMapping("/page/getPageAccessToken")
+    @RequestMapping("/page/addPageToCrawl")
     public String getPageAccessToken() {
 
-        return "page/getPageAccessToken";
+        return "page/addPageToCrawl";
     }
 
     @RequestMapping("/page/index")
@@ -51,7 +50,24 @@ public class PageController {
 
         List<PageEntity> pages = pageService.getPagesByBrandId(brandId);
         model.addAttribute("pages", pages);
+
+        List<PageEntity> crawlerPages = pageService.getCrawlerPagesByBrandId(brandId);
+        model.addAttribute("crawlerPages", crawlerPages);
         return "page/index";
+    }
+
+    @RequestMapping("/crawl-page/index")
+    public String crawlIndex(HttpServletRequest request, Model model) {
+
+        if (!this.isCurrentUserAuthorized(request)) {
+            return "page/403";
+        }
+        HttpSession session = request.getSession(false);
+        int brandId = this.getCurrentUserBrandId(session);
+
+        List<PageEntity> crawlerPages = pageService.getCrawlerPagesByBrandId(brandId);
+        model.addAttribute("crawlerPages", crawlerPages);
+        return "crawl-page/index";
     }
 
     @RequestMapping(value = "page/processPageAccessToken")
@@ -91,6 +107,26 @@ public class PageController {
         return "redirect:/page/index";
     }
 
+    @RequestMapping(value = "page/addPageToCrawl", method = RequestMethod.POST)
+    @ResponseBody
+    public String getPage(HttpServletRequest request,
+                          @RequestParam("pageId") String pageId,
+                          @RequestParam("pageName") String pageName) {
+
+        if (!this.isCurrentUserAuthorized(request)) {
+            return "Unauthorized";
+        }
+
+        HttpSession session = request.getSession(false);
+        int brandId = this.getCurrentUserBrandId(session);
+
+        System.out.println(pageId);
+        System.out.println(pageName);
+        pageService.createPage(pageName, pageId, "", "");
+        brandPageService.addBrandPage(brandId, pageId);
+        return "Ok";
+    }
+
     @RequestMapping(value = "/page/deactivatePage", method = RequestMethod.POST)
     public String index(HttpServletRequest request,
                         @RequestParam("pageId") String pageId,
@@ -112,6 +148,26 @@ public class PageController {
             brandPageService.addBrandPage(brandId, pageId);
         }
         return "redirect:/page/index";
+    }
+
+    @RequestMapping(value = "/crawl-page/deactivateCrawlerPage", method = RequestMethod.POST)
+    public String deactivateCrawlerPage(HttpServletRequest request,
+                        @RequestParam("pageId") String pageId,
+                        @RequestParam("btnAction") String button) {
+
+        if (!this.isCurrentUserAuthorized(request)) {
+            return "page/403";
+        }
+        HttpSession session = request.getSession(false);
+        int brandId = this.getCurrentUserBrandId(session);
+
+
+        if (button.equals("Deactivate")) {
+            pageService.deactivateCrawlerPage(pageId);
+        } else if (button.equals("Activate")) {
+            pageService.activateCrawlerPage(pageId);
+        }
+        return "redirect:/crawl-page/index";
     }
 
     @RequestMapping("/page/create")

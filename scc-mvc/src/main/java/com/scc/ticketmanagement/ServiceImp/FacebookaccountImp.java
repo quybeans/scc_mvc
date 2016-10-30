@@ -3,6 +3,7 @@ package com.scc.ticketmanagement.ServiceImp;
 import com.scc.ticketmanagement.Entities.FacebookaccountEntity;
 import com.scc.ticketmanagement.repositories.FacebookaccountRepository;
 import com.scc.ticketmanagement.services.FacebookaccountService;
+import com.scc.ticketmanagement.services.UserfacebookaccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,9 @@ public class FacebookaccountImp implements FacebookaccountService {
     @Autowired
      FacebookaccountRepository repo;
 
+    @Autowired
+    UserfacebookaccountService userfacebookaccountService;
+
     @Override
     public void createFacebookaccount(String facebookUserId, String accessToken, int userId, String username) {
         FacebookaccountEntity facebookAccount = null;
@@ -26,14 +30,14 @@ public class FacebookaccountImp implements FacebookaccountService {
                 facebookAccount = new FacebookaccountEntity();
                 facebookAccount.setFacebookuserid(facebookUserId);
                 facebookAccount.setAccesstoken(accessToken);
-                facebookAccount.setUserid(userId);
                 facebookAccount.setFacebookusername(username);
                 facebookAccount.setActive(true);
             }else {
                 facebookAccount.setAccesstoken(accessToken);
                 facebookAccount.setActive(true);
             }
-            repo.save(facebookAccount);
+            repo.saveAndFlush(facebookAccount);
+            userfacebookaccountService.create(userId, facebookAccount.getFacebookaccountid());
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -48,13 +52,15 @@ public class FacebookaccountImp implements FacebookaccountService {
         return repo.getFacebookaccountByUid(uid);
     }
 
-    @Override
-    public List<FacebookaccountEntity> getFacebookaccountsByUserID(Integer userId) {
-        return repo.getFacebookaccountByUserId(userId);
-    }
 
     @Override
     public void deactivateFbAccount(String uid) {
         repo.deactivateFacebookAccount(uid);
     }
+
+    @Override
+    public List<FacebookaccountEntity> getFacebookAccountsByUserId(int userId) {
+        return repo.getFacebookAccountsByUserId(userId);
+    }
+
 }

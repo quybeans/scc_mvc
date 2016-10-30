@@ -28,10 +28,13 @@ public class PageImp implements PageService {
                 page.setName(pageName);
                 page.setAccesstoken(pageAccessToken);
                 page.setCategory(category);
+                page.setCrawler(true);
                 page.setType("Facebook");
                 page.setActive(true);
             } else {
                 page.setAccesstoken(pageAccessToken);
+                page.setCategory(category);
+                page.setType("Facebook");
                 page.setActive(true);
             }
             pageRepository.save(page);
@@ -60,6 +63,11 @@ public class PageImp implements PageService {
     }
 
     @Override
+    public List<PageEntity> getCrawlerPagesByBrandId(int brandId) {
+        return pageRepository.getAllCrawlerPageByBrandId(brandId);
+    }
+
+    @Override
     public void deactivatePage(String pageUid) {
         PageEntity page = pageRepository.findOne(pageUid);
         page.setActive(false);
@@ -67,9 +75,23 @@ public class PageImp implements PageService {
     }
 
     @Override
+    public void deactivateCrawlerPage(String pageUid) {
+        PageEntity page = pageRepository.findOne(pageUid);
+        page.setCrawler(false);
+        pageRepository.save(page);
+    }
+
+    @Override
     public void activatePage(String pageUid) {
         PageEntity page = pageRepository.findOne(pageUid);
         page.setActive(true);
+        pageRepository.save(page);
+    }
+
+    @Override
+    public void activateCrawlerPage(String pageUid) {
+        PageEntity page = pageRepository.findOne(pageUid);
+        page.setCrawler(true);
         pageRepository.save(page);
     }
 }
