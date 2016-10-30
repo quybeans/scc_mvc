@@ -17,7 +17,7 @@ public class CommentImp implements CommentService{
     CommentRepository commentRepository;
 
     @Override
-    public CommentEntity getCommentByID(Integer id) {
+    public CommentEntity getCommentByID(String id) {
         return commentRepository.findOne(id);
     }
 

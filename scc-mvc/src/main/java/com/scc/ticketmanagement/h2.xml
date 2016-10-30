@@ -13,6 +13,9 @@
     <mapping class="com.scc.ticketmanagement.Entities.BrandEntity"/>
     <mapping class="com.scc.ticketmanagement.Entities.BrandpageEntity"/>
       <mapping class="com.scc.ticketmanagement.Entities.UserEntity"/>
+      <mapping class="com.scc.ticketmanagement.Entities.TicketEntity"/>
+    <mapping class="com.scc.ticketmanagement.Entities.AttributeEntity"/>
+      <mapping class="com.scc.ticketmanagement.Entities.PriorityEntity"/>
       <!-- DB schema will be updated if needed -->
     <!-- <property name="hbm2ddl.auto">update</property> -->
   </session-factory>

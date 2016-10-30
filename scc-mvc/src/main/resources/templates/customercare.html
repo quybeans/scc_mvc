@@ -90,6 +90,8 @@
 
         //Get all posts
         function getAllPosts() {
+
+
             $.ajax({
                 url: '/allPostsByBrand',
                 type: "GET",
@@ -199,7 +201,7 @@
                                     'title="Assign this ticket to staff" data-toggle="tooltip"  data-placement="bottom" ' +
                                     ' class="fa fa-navicon"></span></button>'
                         }else{
-                            //khi comment chua phai la ticket thi chi co nut create ticket
+                            //khi comment chua phai la ticket thi chi co nut create ticket va send ticket
                             commentisticket='<button class="btn btn-default btn-xs inline" onclick="createticket('+data[index].id+','+postId+')"' +
                                     ' style="margin-left: 65px;margin-top: -10px; "><span style="color:gray " ' +
                                     'title="Create new ticket" data-toggle="tooltip"  data-placement="bottom" ' +
@@ -209,9 +211,14 @@
                                     ' style="margin-top: -10px; "><span class="glyphicon glyphicon-send"' +
                                     ' style="color:gray "  title="Reply to this comment"   data-placement="bottom" ' +
                                     'data-toggle="tooltip" ></span></button>'
+
+                                    +'<button  onclick="" class="btn btn-default btn-xs inline"' +
+                                    ' style="margin-top: -10px; "><span class="glyphicon glyphicon-send"' +
+                                    ' style="color:gray "  title="Reply to this comment"   data-placement="bottom" ' +
+                                    'data-toggle="tooltip" ></span></button>'
                         }
                         $('#comment-box').append(
-                                '<div  class="cmt" onclick="getticket('+data[index].id+','+postId+')">'
+                                '<div  class="cmt" >'
                                 +'<div class="col-lg-10 cmtContent">' +
                                 '<img onload="http://localhost:9000/img/user_img.jpg" src="http://graph.facebook.com/'+data[index].createdBy+'/picture" alt="user image">'
                                 +'<p class="message">'
@@ -221,7 +228,7 @@
                                 +jQuery.format.prettyDate( new Date(data[index].createdAt))
                                 +'</small>'
                                 +' </a>'
-                                +'<p style="margin-left: 65px;margin-top: -10px ">'+data[index].content+'</p>'
+                                +'<p style="margin-left: 65px;margin-top: -10px " onclick="getticket('+data[index].id+','+postId+')">'+data[index].content+'</p>'
                                 +'</p>'
                                 //Day la nut reply
 //                                +'<button onclick="replyToComment('+cmtId+')" class="btn btn-default btn-xs inline" style="margin-left: 65px;margin-top: -10px; "><span class="glyphicon glyphicon-send" style="color:gray "  title="Reply to this comment"   data-placement="bottom" data-toggle="tooltip" ></span></button>'
@@ -296,7 +303,6 @@
                                 '<option value="'+data[i].userid+'">'+data[i].firstname+' '+data[i].lastname+'</option>'
                         );
                     }
-                    getCommentById(postID);
                 },
                 error:function () {
                     alert("Fail to load list user");
@@ -388,22 +394,27 @@
                 data:{"commentid":comID},
                 type:"POST",
                 success:function (data) {
-                    var date = new Date(data.createdtime).getDate();
-                    var month = new Date(data.createdtime).getMonth()+1;
-                    var year = new Date(data.createdtime).getFullYear();
-                    var deadlineDate = new Date(data.deadline).getDate();
-                    var deadlineMonth = new Date(data.deadline).getMonth()+1;
-                    var deadlineYear = new Date(data.deadline).getFullYear();
-                    $('#tab_1').html(
-                            '<p><b>Ticket ID: </b>'+data.id+'</p>'
-                            +'<p><b>Comment ID: </b>'+data.commentid+'</p>'
-                            +'<p><b>Createby: </b>'+data.createby+'</p>'
-                            +'<p><b>Create At: </b>'+date+'/'+month+'/'+year+'</p>'
-                            +'<p><b>Status: </b>'+data.statusid+'</p>'
-                            +'<p><b>Active: </b>'+data.active+'</p>'
-                            +'<p><b>Assignee: </b>'+data.assignee+'</p>'
-                            +'<p><b>Deadline: </b>'+deadlineDate+'/'+deadlineMonth+'/'+deadlineYear+'</p>'
-                    );
+                    if(data === null){
+                        $('#tab_1').html("");
+                    }else{
+                        var date = new Date(data.createdtime).getDate();
+                        var month = new Date(data.createdtime).getMonth()+1;
+                        var year = new Date(data.createdtime).getFullYear();
+                        var deadlineDate = new Date(data.deadline).getDate();
+                        var deadlineMonth = new Date(data.deadline).getMonth()+1;
+                        var deadlineYear = new Date(data.deadline).getFullYear();
+                        $('#tab_1').html(
+                                '<p><b>Ticket ID: </b>'+data.id+'</p>'
+                                +'<p><b>Comment ID: </b>'+data.commentid+'</p>'
+                                +'<p><b>Createby: </b>'+data.createby+'</p>'
+                                +'<p><b>Create At: </b>'+date+'/'+month+'/'+year+'</p>'
+                                +'<p><b>Status: </b>'+data.statusid+'</p>'
+                                +'<p><b>Active: </b>'+data.active+'</p>'
+                                +'<p><b>Assignee: </b>'+data.assignee+'</p>'
+                                +'<p><b>Deadline: </b>'+deadlineDate+'/'+deadlineMonth+'/'+deadlineYear+'</p>'
+                        );
+                    }
+
                 },
                 error:function () {
                     $('#tab_1').html("");
@@ -423,7 +434,7 @@
                         var status = data[i].statusid;
                         switch (status){
                             case 1: status="change "+data[i].ticketid+" to unassign"; break;
-                            case 2: status= "assign "+data[i].ticketid + " to " + data[i].assignee; break;
+                            case 2: status="assign "+data[i].ticketid + " to " + data[i].assignee; break;
                             case 3: status="change "+data[i].ticketid+" to open"; break;
                             case 4: status="change "+data[i].ticketid+" to inprogess"; break;
                             case 5: status="change "+data[i].ticketid+" to solving"; break;
@@ -560,12 +571,10 @@
                     </div>
                     <div class="modal-body">
                         <select id="status">
-                            <option value="2">Assign</option>
                             <option value="3">Open</option>
                             <option value="4">Inprocess</option>
                             <option value="5">Solving</option>
                             <option value="6">Solved</option>
-                            <option value="7">Closed</option>
                         </select>
                     </div>
                     <div class="modal-footer">
@@ -618,7 +627,7 @@
             </div>
         </section>
         <section class="col-lg-2"style="padding: 0; margin:0px 0px 0px 0px; border-left: 1px solid lightgray;height: 100vh">
-            <div>
+            <div style="height: 50vh">
                 <ul class="nav nav-tabs" style="overflow: hidden;width: 100vh;display: inline-block; margin-top: 10px">
                     <li class="active"><a data-toggle="tab" href="#tab_1">Ticket Detail</a></li>
                     <li><a data-toggle="tab" href="#tab_2">History</a></li>
@@ -626,8 +635,6 @@
                 </ul>
                 <div class="tab-content" style="height: 100vh;background-color: white; width: 100vh; margin-top: -5px">
                     <div class="tab-pane active" id="tab_1" style="max-height: 100%">
-
-
                     </div>
 
                     <div class="tab-pane" id="tab_2" style="max-height: 100%">
@@ -639,7 +646,11 @@
 
                 </div>
             </div>
+            <div style="height: 50vh">
+                <div id="realtedcomment">
 
+                </div>
+            </div>
         </section>
 
     </div>

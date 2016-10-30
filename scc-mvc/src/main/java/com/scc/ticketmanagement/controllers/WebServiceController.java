@@ -7,6 +7,7 @@ import com.scc.ticketmanagement.exentities.ExPost;
 import com.scc.ticketmanagement.exentities.ExtendComments;
 import com.scc.ticketmanagement.exentities.FaceBookPage;
 import com.scc.ticketmanagement.repositories.*;
+import com.scc.ticketmanagement.utilities.Constant;
 import com.scc.ticketmanagement.utilities.FacebookUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -97,25 +98,31 @@ public class WebServiceController {
     public List<CommentEntity> commentsByPost(@RequestParam("postId") String postId){
         return commentRepository.findCommentByPostId(postId);
     }
+
     @RequestMapping("commentbypostWithSen")
-    public List<ExtendComments> commentbypostWithSen(@RequestParam("postId") String postId){
+    public List<ExtendComments> commentbypostWithSen(@RequestParam("postId") String postId,HttpServletRequest request){
         List<ExtendComments> showcomments = new ArrayList<ExtendComments>();
+        HttpSession session = request.getSession();
+        String loginUser = (String) session.getAttribute("username");
+        UserEntity user = userRepository.findUserByUsername(loginUser);
         List<CommentEntity> commentlist =commentRepository.findCommentByPostIdSen(postId);
-        for (CommentEntity c: commentlist) {
-            ExtendComments cmt = new ExtendComments();
-            cmt.setContent(c.getContent());
-            cmt.setCreatedAt(c.getCreatedAt());
-            cmt.setCreatedBy(c.getCreatedBy());
-            cmt.setCreatedByName(c.getCreatedByName());
-            cmt.setId(c.getId());
-            cmt.setPostId(c.getPostId());
-            cmt.setSentimentScore(c.getSentimentScore());
-            if (ticketRepository.findBycommentid(cmt.getId())!=null){
-                cmt.setIsticket(true);
+
+
+            for (CommentEntity c: commentlist) {
+                ExtendComments cmt = new ExtendComments();
+                cmt.setContent(c.getContent());
+                cmt.setCreatedAt(c.getCreatedAt());
+                cmt.setCreatedBy(c.getCreatedBy());
+                cmt.setCreatedByName(c.getCreatedByName());
+                cmt.setId(c.getId());
+                cmt.setPostId(c.getPostId());
+                cmt.setSentimentScore(c.getSentimentScore());
+                if (ticketRepository.findBycommentid(cmt.getId())!=null){
+                    cmt.setIsticket(true);
+                }
+                showcomments.add(cmt);
             }
 
-            showcomments.add(cmt);
-        }
         return showcomments;
     }
     //This one include createdByName, NO LONGER USE
