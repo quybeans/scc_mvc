@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>Social Customer Care</title>
+    <header class="main-header" th:include="head::header"></header>
+    <aside class="main-sidebar" th:include="sidebar::aside"></aside>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css"/>
+
+    <script src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    <script src="js/moment.min.js"></script>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+
+    </aside>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                Ticket management
+            </h1>
+            <span class="pull-right">
+                  <button class="btn btn-info btn-md " type="button" onclick="configpriority()">
+                   <i class="fa fa-cogs" aria-hidden="true"></i> <strong>Config Priority</strong>
+                  </button>
+                 <button class="btn btn-info btn-md " type="button" >
+                   <i class="fa fa-wrench" aria-hidden="true"></i> <strong>Config Attribute</strong>
+                  </button>
+       </span>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+
+            <div class="modal fade" id="assignModal" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Assign Ticket</h4>
+                        </div>
+                        <div class="modal-body">
+                            <select id="assign">
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-primary " id="btnAssign">Assign</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="modal fade" id="statusModal" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Change Ticket Status</h4>
+                        </div>
+                        <div class="modal-body">
+                            <select id="status">
+                                <option value="3">Open</option>
+                                <option value="4">Inprocess</option>
+                                <option value="5">Solving</option>
+                                <option value="6">Solved</option>
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-primary " id="btnStatus">Change Status</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="modal fade" id="changeticketModal" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Update Ticket</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form group">
+                                <label for="ticketnote">Note</label>
+                                <textarea class="form-control" id="ticketnote"></textarea>
+                            </div>
+                            <div class="form group">
+                            <label for="ticketpriority"> Priority</label>
+                            <select id="ticketpriority" class="form-control" >
+
+                            </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-primary " id="btnChangeTicket">Update Ticket</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <section class="col-lg-12">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="box">
+
+                                <!-- /.box-header -->
+                                <div class="box-body table-responsive no-padding">
+                                    <table id="table" class="table table-striped table-bordered" style="width:100%">
+
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+                <section class="col-lg-5 connectedSortable">
+
+                </section>
+            </div>
+            <div class="modal fade" id="configPriorityModal" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Config Priority</h4>
+                        </div>
+                        <div class="modal-body" id="brandpriority">
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <div class="form-inline" style="text-align: left">
+                            <input type="text" placeholder="New Priority" class="form-control" id="newpriorityname" style="width: 20%"/>
+                            <input type="number" placeholder="Duration" class="form-control" id="newpriorityduration" style="width: 60%" />
+                            <input type="button"  class="btn btn-success btn-xs" value="Create" onclick="createpriority()"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+    <footer class="main-footer">
+        <div class="pull-right hidden-xs">
+            <b>Version</b> 2.3.6
+        </div>
+        <strong>Copyright &copy; 2014-2016 <a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong> All rights
+        reserved.
+    </footer>
+    <aside class="control-sidebar control-sidebar-dark">
+        <!-- Create the tabs -->
+        <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
+            <li><a href="#control-sidebar-home-tab" data-toggle="tab"><i class="fa fa-home"></i></a></li>
+            <li><a href="#control-sidebar-settings-tab" data-toggle="tab"><i class="fa fa-gears"></i></a></li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <!-- Home tab content -->
+            <div class="tab-pane" id="control-sidebar-home-tab">
+                <h3 class="control-sidebar-heading">Recent Activity</h3>
+                <ul class="control-sidebar-menu">
+                    <li>
+                        <a href="javascript:void(0)">
+                            <i class="menu-icon fa fa-birthday-cake bg-red"></i>
+
+                            <div class="menu-info">
+                                <h4 class="control-sidebar-subheading">Langdon's Birthday</h4>
+
+                                <p>Will be 23 on April 24th</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)">
+                            <i class="menu-icon fa fa-user bg-yellow"></i>
+
+                            <div class="menu-info">
+                                <h4 class="control-sidebar-subheading">Frodo Updated His Profile</h4>
+
+                                <p>New phone +1(800)555-1234</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)">
+                            <i class="menu-icon fa fa-envelope-o bg-light-blue"></i>
+
+                            <div class="menu-info">
+                                <h4 class="control-sidebar-subheading">Nora Joined Mailing List</h4>
+
+                                <p>nora@example.com</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)">
+                            <i class="menu-icon fa fa-file-code-o bg-green"></i>
+
+                            <div class="menu-info">
+                                <h4 class="control-sidebar-subheading">Cron Job 254 Executed</h4>
+
+                                <p>Execution time 5 seconds</p>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+                <!-- /.control-sidebar-menu -->
+
+                <h3 class="control-sidebar-heading">Tasks Progress</h3>
+                <ul class="control-sidebar-menu">
+                    <li>
+                        <a href="javascript:void(0)">
+                            <h4 class="control-sidebar-subheading">
+                                Custom Template Design
+                                <span class="label label-danger pull-right">70%</span>
+                            </h4>
+
+                            <div class="progress progress-xxs">
+                                <div class="progress-bar progress-bar-danger" style="width: 70%"></div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)">
+                            <h4 class="control-sidebar-subheading">
+                                Update Resume
+                                <span class="label label-success pull-right">95%</span>
+                            </h4>
+
+                            <div class="progress progress-xxs">
+                                <div class="progress-bar progress-bar-success" style="width: 95%"></div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)">
+                            <h4 class="control-sidebar-subheading">
+                                Laravel Integration
+                                <span class="label label-warning pull-right">50%</span>
+                            </h4>
+
+                            <div class="progress progress-xxs">
+                                <div class="progress-bar progress-bar-warning" style="width: 50%"></div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)">
+                            <h4 class="control-sidebar-subheading">
+                                Back End Framework
+                                <span class="label label-primary pull-right">68%</span>
+                            </h4>
+
+                            <div class="progress progress-xxs">
+                                <div class="progress-bar progress-bar-primary" style="width: 68%"></div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+                <!-- /.control-sidebar-menu -->
+
+            </div>
+            <!-- /.tab-pane -->
+            <!-- Stats tab content -->
+            <div class="tab-pane" id="control-sidebar-stats-tab">Stats Tab Content</div>
+            <!-- /.tab-pane -->
+            <!-- Settings tab content -->
+            <div class="tab-pane" id="control-sidebar-settings-tab">
+                <form method="post">
+                    <h3 class="control-sidebar-heading">General Settings</h3>
+
+                    <div class="form-group">
+                        <label class="control-sidebar-subheading">
+                            Report panel usage
+                            <input type="checkbox" class="pull-right" />
+                        </label>
+
+                        <p>
+                            Some information about this general settings option
+                        </p>
+                    </div>
+                    <!-- /.form-group -->
+
+                    <div class="form-group">
+                        <label class="control-sidebar-subheading">
+                            Allow mail redirect
+                            <input type="checkbox" class="pull-right" />
+                        </label>
+
+                        <p>
+                            Other sets of options are available
+                        </p>
+                    </div>
+                    <!-- /.form-group -->
+
+                    <div class="form-group">
+                        <label class="control-sidebar-subheading">
+                            Expose author name in posts
+                            <input type="checkbox" class="pull-right" />
+                        </label>
+
+                        <p>
+                            Allow the user to show his name in blog posts
+                        </p>
+                    </div>
+                    <!-- /.form-group -->
+
+                    <h3 class="control-sidebar-heading">Chat Settings</h3>
+
+                    <div class="form-group">
+                        <label class="control-sidebar-subheading">
+                            Show me as online
+                            <input type="checkbox" class="pull-right" />
+                        </label>
+                    </div>
+                    <!-- /.form-group -->
+
+                    <div class="form-group">
+                        <label class="control-sidebar-subheading">
+                            Turn off notifications
+                            <input type="checkbox" class="pull-right"/>
+                        </label>
+                    </div>
+                    <!-- /.form-group -->
+
+                    <div class="form-group">
+                        <label class="control-sidebar-subheading">
+                            Delete chat history
+                            <a href="javascript:void(0)" class="text-red pull-right"><i class="fa fa-trash-o"></i></a>
+                        </label>
+                    </div>
+                    <!-- /.form-group -->
+                </form>
+            </div>
+            <!-- /.tab-pane -->
+        </div>
+    </aside>
+    <div class="control-sidebar-bg"></div>
+</div>
+<script>
+    var table = null;
+    $(document).ready(function () {
+
+        table= $("#table").DataTable({
+            ajax: {
+                url:"/getallticket",
+                type: "GET"
+            },
+            sAjaxDataProp : "",
+            columns: [
+                {title: "ID", data:"id"},
+                {title: "commentid", data:"commentid", visible:false },
+                {title: "Comment content",data:"content" },
+                {title: "Created By",data:"createbyuser"},
+                {title: "Assignee",data:"assigneeuser"},
+                {title: "Status",data:"currentstatus"},
+                {title: "Created Time",data:"createdtime"},
+                {title: "active",data:"active",visible:false},
+                {title: "Deadline",data:"deadline"},
+                {title: "Priority", data:"priority"},
+                {title: "createby", data:"createdby", visible:false },
+                {title: "assignee", data:"assignee", visible:false },
+                {title:"Action"}
+            ],
+            columnDefs:[
+                {
+                    targets: 8,
+                    render: (data, type, row) => {
+                    return moment(row.deadline).format("d/MM/YYYY");
+                },
+        },
+                {
+                    width:'20%',
+                    targets: 2,
+                    render: (data, type, row) => {
+                    return '<h5 style="overflow: hidden; max-height: 100px"><a href="getcurrentticket?ticketid='+row.id+'">'+row.content+'</a></h5>'
+                },
+        },
+                {
+                    targets: 6,
+                    render: (data, type, row) => {
+                    return moment(row.createdtime).format("d/MM/YYYY h:mm:ss");
+                     },
+                },
+                {
+                    width:'9%',
+                    targets: 12,
+                    render: (data, type, row) => {
+                    return '<div class="btn-group btn-xs">'
+                    +'<button type="button" class="btn btn-success btn-xs" onclick="assign('+row.commentid+')"><i class="fa fa-tag"></i></button>'
+                    +'<button type="button" class="btn btn-danger btn-xs" onclick="status('+row.commentid+')"><i class="fa fa-navicon"></i></button>'
+                    +'<button type="button" class="btn btn-primary btn-xs" onclick="updateticket('+row.id+')"><i class="fa fa-pencil"></i></button>'
+                    +'</div>'
+                     },
+                },
+                {
+                    width:'10%',
+                    targets: 5,
+                    render: (data, type, row) => {
+                    var statuscolor;
+                    switch (row.statusid){
+                        case 1: statuscolor='color:#db8b0b'; break;
+                        case 2: statuscolor='color:#ffff00'; break;
+                        case 3: statuscolor='color:#00a7d0'; break;
+                        case 4: statuscolor='color:#00a65a'; break;
+                        case 5: statuscolor='color:#500a6f'; break;
+                        case 6: statuscolor='color:#01ff70'; break;
+                        case 7: statuscolor='color:#000000'; break;
+                    }
+                    return '<p><i class="fa fa-circle" aria-hidden="true" style="'+statuscolor+'"></i>'+'  ' +row.currentstatus+'</p>'
+                                                },
+                },
+//        {
+//
+//                targets:6,
+//                render:(data,type,row)=> {
+//            return `<button class='btn btn-${row.active?"danger":"success"} status' data-id='${row.userid}' style='width: 100px'>${row.active?"Deactive":"Active"}</button>`
+//
+//        },
+//        },
+//        {
+//      targets:7,
+//              render:(data,type,row)=> {
+//      return `<button class='btn btn-primary' id='update' data-id='${row.userid}' >
+//             <i class='fa fa-edit' aria-hidden='true' ></i>
+//</button>`
+//        },
+//        },
+        ],
+
+    });
+    });
+
+    //assign ticket
+    function assign(comID) {
+        //Load list user de assign
+        $.ajax({
+            url:"getalluser",
+            type:"GET",
+            success:function (data) {
+                $("#assign").html("");
+                for (var i =0;i<data.length;i++)
+                    $("#assign").append(
+                            '<option value="'+data[i].userid+'">'+data[i].firstname+ ' ' +data[i].lastname +'</option>'
+                    );
+            },
+            error:function () {
+                alert("Fail to load list user");
+            }
+        })
+
+        //assign ticket
+        $('#assignModal').modal('toggle');
+        $('#btnAssign').unbind().click(function () {
+            var assignee = $('#assign').val();
+            $.ajax({
+                url:"/assignticket",
+                data:{"commentid":comID,"assignee":assignee},
+                type:"POST",
+                success:function (data) {
+                    alert("assign ticket successful"+data.commentid);
+                    $('#assignModal').modal('toggle');
+                    table.ajax.reload();
+                },
+                error:function () {
+                    alert("fail to assign ticket");
+                }
+            })
+        })
+    }
+
+    //change status
+    function status(comID,postID) {
+        $('#statusModal').modal('toggle');
+        $('#btnStatus').unbind().click(function () {
+            var status = $('#status').val();
+            $.ajax({
+                url:"/changeticketstatus",
+                data:{"commentid":comID,"status":status},
+                type:"POST",
+                success:function (data) {
+                    $('#statusModal').modal('toggle');
+                    alert("change status successfull!");
+                    table.ajax.reload();
+                },
+                error:function () {
+                    alert("fail to change ticket status");
+                }
+            })
+        })
+    }
+
+    //change priority,note
+    function updateticket(ticketid) {
+        $('#changeticketModal').modal('toggle');
+
+        $.ajax({
+            url: "/getallpriorityofbrand",
+            type: "GET",
+            success: function (data) {
+                $("#ticketpriority").html("");
+                for (var i = 0; i < data.length; i++) {
+                    $("#ticketpriority").append(
+                            '<option value="'+ data[i].id +'">'+ data[i].name+'</option>'
+                    )
+                }
+            },
+            error: function () {
+                alert("fail to load priority for update")
+            }
+        })
+
+        $.ajax({
+            url: "/getupdateticket",
+            type: "POST",
+            data: {"ticketid": ticketid},
+            success: function (data) {
+                $("#ticketnote").val(data.note);
+            },
+            error: function () {
+                alert("Fail ne");
+            }
+        })
+    }
+
+        //show config priority modal
+        function configpriority() {
+            $('#configPriorityModal').modal('toggle');
+            getallpriority();
+        }
+
+        //load all priority
+        function getallpriority() {
+
+            $.ajax({
+                url: "/getallpriorityofbrand",
+                type: "GET",
+                success: function (data) {
+                    $('#brandpriority').html('');
+                    for (var i = 0; i < data.length; i++) {
+                        $('#brandpriority').append(
+                                '<div class="form-inline">'
+                                + '<input type="text" style="width: 20%" class="form-control" id="name' + data[i].id + '" value="' + data[i].name + '">'
+                                + '<input type="number" style="width: 60%" class="form-control" id="duration' + data[i].id + '" value="' + data[i].duration + '"/>'
+                                + '<input type="button" class="btn btn-primary btn-xs" value="Update" onclick="updatepriority(' + data[i].id + ')" /> '
+                                + '<input type="button" class="btn btn-danger btn-xs" value="Delete" onclick="deletepriority(' + data[i].id + ')" /> '
+                                + '</div>'
+                        )
+                    }
+                },
+                error: function () {
+                    alert("Fail to load brand priority");
+                }
+            })
+        }
+
+        //update priority
+        function updatepriority(id) {
+            var prioritynameelementid = "name" + id + "";
+            var priorityedurationlementid = "duration" + id + "";
+            var name = $("#" + prioritynameelementid + "").val();
+            var duration = $("#" + priorityedurationlementid + "").val();
+            $.ajax({
+                url: "/updatepriority",
+                type: "POST",
+                data: {"priorityid": id, "priorityduration": duration, "priorityname": name},
+                success: function (data) {
+                    alert("update priority successfully" + data.duration);
+                },
+                error: function () {
+                    alert("fail to update priority");
+                }
+            })
+        }
+
+        //create priority
+        function createpriority() {
+            var priorityname = $('#newpriorityname').val();
+            var priorityduration = $('#newpriorityduration').val();
+            alert(priorityname + "  " + priorityduration)
+            $.ajax({
+                url: "/createpriority",
+                type: "POST",
+                data: {"priorityname": priorityname, "priorityduration": priorityduration},
+                success: function (data) {
+                    alert("create priority " + data.name + " successfull!")
+                    getallpriority();
+                    $('#newpriorityname').val("");
+                    $('#newpriorityduration').val("");
+                },
+                error: function () {
+                    alert("Fail to create priority")
+                    $('#newpriorityname').val("");
+                    $('#newpriorityduration').val("");
+                }
+            })
+        }
+
+        //delete priority
+        function deletepriority(id) {
+            $.ajax({
+                url: "/deletepriority",
+                type: "POST",
+                data: {"priorityid": id},
+                success: function () {
+                    alert("Delete priotiry" + id + " successfull");
+                    getallpriority();
+                },
+                error: function () {
+                    alert("Fail to delete priority");
+                }
+            })
+        }
+
+</script>
+</body>
+</html>

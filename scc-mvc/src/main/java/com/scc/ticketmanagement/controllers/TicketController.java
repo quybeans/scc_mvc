@@ -2,17 +2,14 @@ package com.scc.ticketmanagement.controllers;
 
 
 import com.scc.ticketmanagement.Entities.*;
-import com.scc.ticketmanagement.exentities.TicketDetail;
-import com.scc.ticketmanagement.exentities.TicketHistory;
+import com.scc.ticketmanagement.exentities.*;
 import com.scc.ticketmanagement.repositories.*;
 import com.scc.ticketmanagement.utilities.Constant;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.sql.Timestamp;
@@ -23,7 +20,7 @@ import java.util.List;
 /**
  * Created by user on 9/30/2016.
  */
-@Controller
+@RestController
 public class TicketController {
     @Autowired
     private  ProfileRepository profileRepository;
@@ -43,8 +40,56 @@ public class TicketController {
     @Autowired
     private TicketRequestRepository ticketRequestRepository;
 
+    @RequestMapping(value = "/getallticket",method = RequestMethod.GET,produces = "application/json")
+    public List<ExtendTicket> getallticket(){
+        List<TicketEntity> listticket = ticketRepository.findAll();
+        List<ExtendTicket> listextendticket = new ArrayList<ExtendTicket>();
+        //Tao mot extendticket list de show len bang
+        for (TicketEntity tk: listticket) {
+            ExtendTicket extendticket = new ExtendTicket();
+
+            extendticket.setAssignee(tk.getAssignee());
+            extendticket.setCommentid(tk.getCommentid());
+            extendticket.setActive(tk.getActive());
+            extendticket.setCreatedby(tk.getCreatedby());
+            extendticket.setId(tk.getId());
+            extendticket.setStatusid(tk.getStatusid());
+            extendticket.setCreatedtime(tk.getCreatedtime());
+            extendticket.setDeadline(tk.getDeadline());
+
+            //Get content cua comment theo commentid va set vao extendticket
+            CommentEntity cmt= commentRepository.findOne(extendticket.getCommentid());
+            extendticket.setContent(cmt.getContent());
+
+            //Get UserEntity cua ng tao ra ticket
+            UserEntity createTicketUser =userRepository.findOne(extendticket.getCreatedby());
+            //Get ProfileEntity cua ng tao ra ticket
+            ProfileEntity createTicketProfile = profileRepository.findOne(createTicketUser.getProfileid());
+            //Get Fullname cua ng ta ticket de set vao extendTicket
+            extendticket.setCreatebyuser(createTicketProfile.getFirstname() + " " +createTicketProfile.getLastname());
+
+            //Get UserEntity cua ng duoc assign  ticket
+            UserEntity assigneeUser =userRepository.findOne(extendticket.getAssignee());
+            //Get ProfileEntity cua ng duoc assign  ticket
+            ProfileEntity assigneeTicketProfile = profileRepository.findOne(assigneeUser.getProfileid());
+            //Get Fullname cua ng ta ticket de set vao extendTicket
+            extendticket.setAssigneeuser(assigneeTicketProfile.getFirstname() + " " + assigneeTicketProfile.getLastname());
+
+            switch (extendticket.getStatusid()){
+                case Constant.STATUS_UNASSIGN: extendticket.setCurrentstatus("Unassign"); break;
+                case Constant.STATUS_ASSIGN: extendticket.setCurrentstatus("Assign"); break;
+                case Constant.STATUS_OPEN: extendticket.setCurrentstatus("Open"); break;
+                case Constant.STATUS_INPROCESS: extendticket.setCurrentstatus("Inprocess"); break;
+                case Constant.STATUS_SOLVING: extendticket.setCurrentstatus("Solving"); break;
+                case Constant.STATUS_SOLVED: extendticket.setCurrentstatus("Solved"); break;
+                case Constant.STATUS_CLOSE: extendticket.setCurrentstatus("Close"); break;
+            }
+            listextendticket.add(extendticket);
+        }
+        return listextendticket;
+    }
+
     @RequestMapping("/createticket")
-    @ResponseBody
     public TicketEntity createTicket(HttpServletRequest request,
                                      @RequestParam("commentid") String commentid,
                                      @RequestParam("deadline") String deadline,
@@ -81,7 +126,6 @@ public class TicketController {
 
 
     @RequestMapping("/assignticket")
-    @ResponseBody
     public TicketEntity assignTicket(@RequestParam("commentid") String commentid,
                                      @RequestParam("assignee") Integer assignee, HttpServletRequest request){
         //Lay userid cua account dang login vao he thong
@@ -118,7 +162,6 @@ public class TicketController {
     }
 
     @RequestMapping("/changeticketstatus")
-    @ResponseBody
     public TicketEntity changeTicketStatus(@RequestParam("commentid") String commentid,
                                            @RequestParam("status") Integer status, HttpServletRequest request){
         HttpSession session = request.getSession();
@@ -140,57 +183,49 @@ public class TicketController {
         return ticketRepository.save(ticket);
     }
 
-
-
-    @RequestMapping("/TicketDetail")
-    public String ticketDetail(@RequestParam("ticketid") Integer ticketid, Model model){
-
-        return "TicketDetail";
-    }
-
-
-
     @RequestMapping("/getticket")
-    @ResponseBody
     public TicketDetail getTicket(@RequestParam("commentid") String commentid){
         TicketEntity ticket = ticketRepository.findBycommentid(commentid);
-        TicketDetail detail = new TicketDetail();
+        if(ticket!=null){
 
-        //Get Full name cua nguoi tao ra ticket
-        ProfileEntity profileEntity = new ProfileEntity();
-        if(ticket.getCreatedby()!=null){
-            profileEntity = profileRepository.findOne(userRepository.findOne(ticket.getCreatedby()).getProfileid());
-            detail.setCreateby(profileEntity.getFirstname()+ " " + profileEntity.getLastname());
+            TicketDetail detail = new TicketDetail();
+
+            //Get Full name cua nguoi tao ra ticket
+            ProfileEntity profileEntity = new ProfileEntity();
+            if(ticket.getCreatedby()!=null){
+                profileEntity = profileRepository.findOne(userRepository.findOne(ticket.getCreatedby()).getProfileid());
+                detail.setCreateby(profileEntity.getFirstname()+ " " + profileEntity.getLastname());
+            }
+
+            //Get Full name cua nguoi duoc assign ticket
+            if(ticket.getAssignee()!=null){
+                profileEntity= profileRepository.findOne(userRepository.findOne(ticket.getAssignee()).getProfileid());
+
+                detail.setAssignee(profileEntity.getFirstname() + " " + profileEntity.getLastname());
+            }
+
+            detail.setActive(ticket.getActive());
+            detail.setCommentid(ticket.getCommentid());
+            detail.setCreatedtime(ticket.getCreatedtime());
+            detail.setDeadline(ticket.getDeadline());
+            detail.setId(ticket.getId());
+
+            switch (ticket.getStatusid()){
+                case Constant.STATUS_UNASSIGN: detail.setStatusid("Unassign"); break;
+                case Constant.STATUS_ASSIGN: detail.setStatusid("Assign"); break;
+                case Constant.STATUS_OPEN: detail.setStatusid("Open"); break;
+                case Constant.STATUS_INPROCESS: detail.setStatusid("Inprocess"); break;
+                case Constant.STATUS_SOLVING: detail.setStatusid("Solving"); break;
+                case Constant.STATUS_SOLVED: detail.setStatusid("Solved"); break;
+                case Constant.STATUS_CLOSE: detail.setStatusid("Close"); break;
+            }
+
+            return detail;
         }
-
-        //Get Full name cua nguoi duoc assign ticket
-        if(ticket.getAssignee()!=null){
-            profileEntity= profileRepository.findOne(userRepository.findOne(ticket.getAssignee()).getProfileid());
-
-            detail.setAssignee(profileEntity.getFirstname() + " " + profileEntity.getLastname());
-        }
-
-        detail.setActive(ticket.getActive());
-        detail.setCommentid(ticket.getCommentid());
-        detail.setCreatedtime(ticket.getCreatedtime());
-        detail.setDeadline(ticket.getDeadline());
-        detail.setId(ticket.getId());
-
-        switch (ticket.getStatusid()){
-            case Constant.STATUS_UNASSIGN: detail.setStatusid("Unassign"); break;
-            case Constant.STATUS_ASSIGN: detail.setStatusid("Assign"); break;
-            case Constant.STATUS_OPEN: detail.setStatusid("Open"); break;
-            case Constant.STATUS_INPROCESS: detail.setStatusid("Inprocess"); break;
-            case Constant.STATUS_SOLVING: detail.setStatusid("Solving"); break;
-            case Constant.STATUS_SOLVED: detail.setStatusid("Solved"); break;
-            case Constant.STATUS_CLOSE: detail.setStatusid("Close"); break;
-        }
-
-        return detail;
+        return null;
     }
 
     @RequestMapping("/gettickethistory")
-    @ResponseBody
     public List<TicketHistory> getTickethistory(@RequestParam("commentid") String commentid){
         TicketEntity ticket = ticketRepository.findBycommentid(commentid);
         if(ticket!=null){
@@ -228,9 +263,13 @@ public class TicketController {
     }
 
     @RequestMapping("/getconversation")
-    @ResponseBody
     public List<CommentEntity> getConversation(@RequestParam("commentid") String commentid){
         List<CommentEntity> list = commentRepository.findCommentByPostId(commentid);
         return list;
+    }
+
+    @RequestMapping("/getupdateticket")
+    public TicketEntity getupdateticket(@RequestParam("ticketid") Integer ticketid){
+        return ticketRepository.findOne(ticketid);
     }
 }

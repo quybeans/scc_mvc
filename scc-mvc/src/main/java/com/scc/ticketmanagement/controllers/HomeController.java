@@ -63,6 +63,11 @@ public class HomeController {
         return "success";
     }
 
+    @RequestMapping("/manageticket")
+    public String manageticket(){
+        return "manageticket";
+    }
+
 //    @RequestMapping("/doLogin")
 //    public String doLogin(Model model,
 //                          HttpSession session,
@@ -160,6 +165,12 @@ public class HomeController {
 
     @RequestMapping("/customercare")
     public String customercare() {
+        return "customercare";
+    }
+
+    @RequestMapping("/getcurrentticket")
+    public String getcurrentticket(@RequestParam("ticketid") Integer ticketid){
+
         return "customercare";
     }
 }

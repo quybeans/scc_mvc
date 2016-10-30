@@ -5,7 +5,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 
 /**
- * Created by QuyBean on 10/27/2016.
+ * Created by user on 10/29/2016.
  */
 @Entity
 @Table(name = "ticket", schema = "scc", catalog = "")
@@ -18,9 +18,10 @@ public class TicketEntity {
     private Boolean active;
     private Integer assignee;
     private String deadline;
+    private String note;
+    private Integer priority;
 
     @Id
-    @GeneratedValue
     @Column(name = "id")
     public int getId() {
         return id;
@@ -100,6 +101,26 @@ public class TicketEntity {
         this.deadline = deadline;
     }
 
+    @Basic
+    @Column(name = "note")
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    @Basic
+    @Column(name = "priority")
+    public Integer getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -115,6 +136,8 @@ public class TicketEntity {
         if (active != null ? !active.equals(that.active) : that.active != null) return false;
         if (assignee != null ? !assignee.equals(that.assignee) : that.assignee != null) return false;
         if (deadline != null ? !deadline.equals(that.deadline) : that.deadline != null) return false;
+        if (note != null ? !note.equals(that.note) : that.note != null) return false;
+        if (priority != null ? !priority.equals(that.priority) : that.priority != null) return false;
 
         return true;
     }
@@ -129,6 +152,8 @@ public class TicketEntity {
         result = 31 * result + (active != null ? active.hashCode() : 0);
         result = 31 * result + (assignee != null ? assignee.hashCode() : 0);
         result = 31 * result + (deadline != null ? deadline.hashCode() : 0);
+        result = 31 * result + (note != null ? note.hashCode() : 0);
+        result = 31 * result + (priority != null ? priority.hashCode() : 0);
         return result;
     }
 }

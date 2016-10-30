@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by user on 10/1/2016.
  */
-public interface CommentRepository extends JpaRepository<CommentEntity,Integer> {
+public interface CommentRepository extends JpaRepository<CommentEntity,String> {
 
     //find user by username and password
     @Query("SELECT u FROM CommentEntity u WHERE u.postId = :postId")
@@ -18,4 +18,6 @@ public interface CommentRepository extends JpaRepository<CommentEntity,Integer> 
 
     @Query("SELECT u FROM CommentEntity u WHERE u.postId = :postId order by u.sentimentScore")
     List<CommentEntity> findCommentByPostIdSen(@Param("postId") String postId);
+
+
 }
