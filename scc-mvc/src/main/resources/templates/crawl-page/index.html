@@ -22,6 +22,9 @@
             </div>
 
             <div id="pageToCrawl">
+                <button type="button" class="btn btn-info btn-lg" data-toggle="modal"
+                        data-target="#myModal">Add page to crawl
+                </button>
                 <table class="table table-hover" style="background-color: white">
                     <thead>
                     <tr>
@@ -57,15 +60,144 @@
                     </tr>
                     </tbody>
                 </table>
-                <a href="create.html">Add page</a>
             </div>
 
+            <!--modal-->
+            <div class="container">
+
+                <!-- Modal -->
+                <div class="modal fade" id="myModal" role="dialog">
+                    <div class="modal-dialog">
+
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Add page to crawl</h4>
+                            </div>
+                            <div class="modal-body">
+                                <form id="form" action="processPageAccessToken" method="post">
+                                    <input type="hidden" name="pageAccessToken" id="pageAccessToken" value=""/>
+                                    <input type="hidden" name="pageName" id="pageName" value=""/>
+                                    <input type="text" name="pageId" id="pageId" value="" required="true"/>
+                                    <button type="button" onclick="addPageToCrawl()">Add</button>
+                                </form>
+
+                                <div id="fbLoginButton" style="visibility: hidden">
+                                    <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+                                    </fb:login-button>
+                                </div>
+
+                                <div id="status"></div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
 
         </section>
 
     </div>
 
 </div>
+<script>
+    function onAuthResponse(response) {
+        $('#form').submit();
+    }
 
+
+    // This is called with the results from from FB.getLoginStatus().
+    function statusChangeCallback(response) {
+        if (response.status === 'connected') {
+            // Logged into your app and Facebook.
+            // addPageToCrawl();
+            $("#fbLoginButton").hide();
+        } else if (response.status === 'not_authorized') {
+            // The person is logged into Facebook, but not your app.
+            $("#fbLoginButton").show();
+            document.getElementById('status').innerHTML = 'Please log ' +
+                    'into this app.';
+        } else {
+            // The person is not logged into Facebook, so we're not sure if
+            // they are logged into this app or not.
+            $("#fbLoginButton").show();
+            document.getElementById('status').innerHTML = 'Please log ' +
+                    'into Facebook.';
+        }
+    }
+
+    // This function is called when someone finishes with the Login
+    // Button.  See the onlogin handler attached to it in the sample
+    // code below.
+    function checkLoginState() {
+        FB.getLoginStatus(function (response) {
+            //statusChangeCallback(response);
+            if (response.status === 'connected') {
+                onAuthResponse(response);
+            } else {
+                FB.login(onAuthResponse, {
+                    scope: 'manage_pages'
+                });
+            }
+        });
+
+    }
+
+    window.fbAsyncInit = function () {
+        FB.init({
+            appId: '341786092825787',
+            cookie: true,  // enable cookies to allow the server to access
+                           // the session
+            xfbml: true,  // parse social plugins on this page
+            version: 'v2.5' // use graph api version 2.5
+        });
+
+
+        FB.getLoginStatus(function (response) {
+            statusChangeCallback(response);
+        });
+
+    };
+
+    // Load the SDK asynchronously
+    (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+    // Here we run a very simple test of the Graph API after login is
+    // successful.  See statusChangeCallback() for when this call is made.
+    function addPageToCrawl() {
+        var pageName = $('#pageId').val();
+
+        FB.api('/' + pageName , function (response) {
+            submitPageId(response.id, response.name);
+        });
+    }
+
+    function submitPageId(pageId, pageName) {
+        $.ajax({
+            url: '/page/addPageToCrawl',
+            type: "POST",
+            data: { pageId: pageId,
+                pageName: pageName},
+            dataType: "text",
+            success: function (data){
+                alert(data);
+            }
+        })
+    }
+
+</script>
 </body>
 </html>
