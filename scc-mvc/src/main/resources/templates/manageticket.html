@@ -368,26 +368,19 @@
                 {title: "Status",data:"currentstatus"},
                 {title: "Created Time",data:"createdtime"},
                 {title: "active",data:"active",visible:false},
-                {title: "Deadline",data:"deadline"},
-                {title: "Priority", data:"priority"},
+                {title: "Priority", data:"currentpriority"},
                 {title: "createby", data:"createdby", visible:false },
                 {title: "assignee", data:"assignee", visible:false },
                 {title:"Action"}
             ],
             columnDefs:[
                 {
-                    targets: 8,
-                    render: (data, type, row) => {
-                    return moment(row.deadline).format("d/MM/YYYY");
-                },
-        },
-                {
                     width:'20%',
                     targets: 2,
                     render: (data, type, row) => {
                     return '<h5 style="overflow: hidden; max-height: 100px"><a href="getcurrentticket?ticketid='+row.id+'">'+row.content+'</a></h5>'
+                                                },
                 },
-        },
                 {
                     targets: 6,
                     render: (data, type, row) => {
@@ -396,7 +389,7 @@
                 },
                 {
                     width:'9%',
-                    targets: 12,
+                    targets: 11,
                     render: (data, type, row) => {
                     return '<div class="btn-group btn-xs">'
                     +'<button type="button" class="btn btn-success btn-xs" onclick="assign('+row.commentid+')"><i class="fa fa-tag"></i></button>'
@@ -418,7 +411,7 @@
                         case 5: statuscolor='color:#500a6f'; break;
                         case 6: statuscolor='color:#01ff70'; break;
                         case 7: statuscolor='color:#000000'; break;
-                    }
+                                        }
                     return '<p><i class="fa fa-circle" aria-hidden="true" style="'+statuscolor+'"></i>'+'  ' +row.currentstatus+'</p>'
                                                 },
                 },

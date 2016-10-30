@@ -311,17 +311,16 @@
 
             $('#createModal').modal('toggle');
             $('#btnCreate').unbind().click(function () {
-                var deadline = $('#deadline').val();
+
                 var assignee = $('#assignee').val();
                 $.ajax({
                     url:"/createticket",
-                    data:{"commentid":comtID,"deadline":deadline,"assignee":assignee},
+                    data:{"commentid":comtID,"assignee":assignee},
                     type:"POST",
                     success:function () {
                         $('#createModal').modal('toggle');
                         alert("create ticket successful");
                         getCommentById(postID);
-                        $('#deadline').val('dd/MM/YYYY');
                     },
                     error:function () {
                         alert("fail to create ticket");
@@ -400,9 +399,6 @@
                         var date = new Date(data.createdtime).getDate();
                         var month = new Date(data.createdtime).getMonth()+1;
                         var year = new Date(data.createdtime).getFullYear();
-                        var deadlineDate = new Date(data.deadline).getDate();
-                        var deadlineMonth = new Date(data.deadline).getMonth()+1;
-                        var deadlineYear = new Date(data.deadline).getFullYear();
                         $('#tab_1').html(
                                 '<p><b>Ticket ID: </b>'+data.id+'</p>'
                                 +'<p><b>Comment ID: </b>'+data.commentid+'</p>'
@@ -411,7 +407,6 @@
                                 +'<p><b>Status: </b>'+data.statusid+'</p>'
                                 +'<p><b>Active: </b>'+data.active+'</p>'
                                 +'<p><b>Assignee: </b>'+data.assignee+'</p>'
-                                +'<p><b>Deadline: </b>'+deadlineDate+'/'+deadlineMonth+'/'+deadlineYear+'</p>'
                         );
                     }
 
@@ -528,8 +523,7 @@
                         <h4 class="modal-title">Create Ticket</h4>
                     </div>
                     <div class="modal-body">
-                        <label for="deadline">Deadline</label>
-                        <input type="date" id="deadline"/>
+
                         <select id="assignee">
                         </select>
                     </div>

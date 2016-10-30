@@ -23,6 +23,9 @@ import java.util.List;
 @RestController
 public class TicketController {
     @Autowired
+    PriorityReposioty priorityReposioty;
+
+    @Autowired
     private  ProfileRepository profileRepository;
 
     @Autowired
@@ -55,7 +58,6 @@ public class TicketController {
             extendticket.setId(tk.getId());
             extendticket.setStatusid(tk.getStatusid());
             extendticket.setCreatedtime(tk.getCreatedtime());
-            extendticket.setDeadline(tk.getDeadline());
 
             //Get content cua comment theo commentid va set vao extendticket
             CommentEntity cmt= commentRepository.findOne(extendticket.getCommentid());
@@ -84,6 +86,10 @@ public class TicketController {
                 case Constant.STATUS_SOLVED: extendticket.setCurrentstatus("Solved"); break;
                 case Constant.STATUS_CLOSE: extendticket.setCurrentstatus("Close"); break;
             }
+
+            //lay ten priority cua ticket
+            PriorityEntity priority = priorityReposioty.findOne(tk.getPriority());
+            extendticket.setCurrentpriority(priority.getName());
             listextendticket.add(extendticket);
         }
         return listextendticket;
@@ -92,7 +98,6 @@ public class TicketController {
     @RequestMapping("/createticket")
     public TicketEntity createTicket(HttpServletRequest request,
                                      @RequestParam("commentid") String commentid,
-                                     @RequestParam("deadline") String deadline,
                                      @RequestParam("assignee") Integer assignee){
         HttpSession session = request.getSession();
         String loginUser = (String) session.getAttribute("username");
@@ -105,7 +110,6 @@ public class TicketController {
             ticketEntity.setCommentid(commentid);
             ticketEntity.setStatusid(1);
             ticketEntity.setAssignee(assignee);
-            ticketEntity.setDeadline(deadline);
             ticketEntity.setActive(true);
             ticketEntity.setStatusid(2);
             ticketEntity.setCreatedtime(new Timestamp(new Date().getTime()));
@@ -207,7 +211,6 @@ public class TicketController {
             detail.setActive(ticket.getActive());
             detail.setCommentid(ticket.getCommentid());
             detail.setCreatedtime(ticket.getCreatedtime());
-            detail.setDeadline(ticket.getDeadline());
             detail.setId(ticket.getId());
 
             switch (ticket.getStatusid()){
