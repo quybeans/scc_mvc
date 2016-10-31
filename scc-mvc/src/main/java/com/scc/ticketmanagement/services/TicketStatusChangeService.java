@@ -1,7 +1,6 @@
 package com.scc.ticketmanagement.services;
 
 import com.scc.ticketmanagement.Entities.TicketstatuschangeEntity;
-import com.scc.ticketmanagement.Entities.TicketstatuschangeEntityPK;
 
 import java.util.List;
 

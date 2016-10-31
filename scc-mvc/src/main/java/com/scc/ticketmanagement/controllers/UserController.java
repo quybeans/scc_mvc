@@ -94,14 +94,14 @@ public class UserController {
     @RequestMapping("/Search")
     public String search(Model model, @RequestParam("txtSearch") String name) {
         List<UserEntity> lst= userService.searchUser(name);
-        model.addAttribute("entity", lst);
+        model.addAttribute("Entities", lst);
         return "Admin";
     }
 
     @RequestMapping("GetStaffs")
     public String getStaffs(Model model) {
         List<UserEntity> lst= userService.getUsersByRole(Constant.ROLE_STAFF);
-        model.addAttribute("entity", lst);
+        model.addAttribute("Entities", lst);
         return "Admin";
     }
 
@@ -109,14 +109,14 @@ public class UserController {
     public String getAdmins(Model model) {
         List<UserEntity> lst= userService.getUsersByRole(Constant.ROLE_ADMIN);
 
-        model.addAttribute("entity", lst);
+        model.addAttribute("Entities", lst);
         return "Admin";
     }
 
     @RequestMapping("GetSupervisors")
     public String getSupervisors(Model model) {
         List<UserEntity> supervisorList  = userService.getUsersByRole(Constant.ROLE_SUPERVISOR);
-        model.addAttribute("entity", supervisorList);
+        model.addAttribute("Entities", supervisorList);
         return "Admin";
     }
 

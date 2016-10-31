@@ -1,6 +1,5 @@
 package com.scc.ticketmanagement.repositories;
 
-import com.scc.ticketmanagement.Entities.TicketconversationEntityPK;
 import com.scc.ticketmanagement.Entities.TicketstatuschangeEntity;
 import com.scc.ticketmanagement.Entities.TicketstatuschangeEntityPK;
 import org.springframework.data.jpa.repository.JpaRepository;

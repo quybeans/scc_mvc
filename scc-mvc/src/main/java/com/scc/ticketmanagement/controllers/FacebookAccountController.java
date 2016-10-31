@@ -2,6 +2,7 @@ package com.scc.ticketmanagement.controllers;
 
 import com.scc.ticketmanagement.Entities.FacebookaccountEntity;
 import com.scc.ticketmanagement.Entities.UserEntity;
+import com.scc.ticketmanagement.Entities.UserfacebookaccountEntity;
 import com.scc.ticketmanagement.services.FacebookaccountService;
 import com.scc.ticketmanagement.services.UserService;
 import com.scc.ticketmanagement.services.UserfacebookaccountService;
@@ -13,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.naming.AuthenticationException;
 import javax.servlet.http.HttpSession;
@@ -38,7 +40,17 @@ public class FacebookAccountController {
 
         String username = (String) session.getAttribute("username");
         UserEntity user = userService.getUserByUsername(username);
-        List<FacebookaccountEntity> facebookAccounts =  fbService.getFacebookAccountsByUserId(user.getUserid());
+        List<FacebookaccountEntity> facebookAccounts = fbService.getFacebookAccountsByUserId(user.getUserid());
+        List<UserfacebookaccountEntity> fbAccountMappings = userfacebookaccountService.get(user.getUserid());
+
+        for (FacebookaccountEntity facebookAccount : facebookAccounts) {
+            for (UserfacebookaccountEntity fbAccountMapping : fbAccountMappings) {
+                if (facebookAccount.getFacebookaccountid() == fbAccountMapping.getFacebookaccountid())
+                    facebookAccount.setActive(fbAccountMapping.isActive());
+            }
+
+        }
+
         model.addAttribute("facebookAccounts", facebookAccounts);
 
 
@@ -46,11 +58,16 @@ public class FacebookAccountController {
     }
 
     @RequestMapping(value = "/facebook-account/loginViaFacebook", method = RequestMethod.POST)
+    @ResponseBody
     String loginFb(HttpServletRequest request,
                    @RequestParam("shortLivedToken") String token,
                    @RequestParam("uid") String uid,
                    @RequestParam("fbUsername") String username) {
         String longLivedToken = "";
+
+        System.out.println(token);
+        System.out.println(uid);
+        System.out.println(username);
 
         HttpSession session = request.getSession(false);
         if (session == null) {
@@ -66,9 +83,10 @@ public class FacebookAccountController {
             fbService.createFacebookaccount(uid, longLivedToken, userId, username);
         } catch (AuthenticationException e) {
             e.printStackTrace();
+            return "Add failed, please try again";
         }
         System.out.println(longLivedToken);
-        return "redirect:/facebook-account/index";
+        return "Add successfully";
     }
 
     @RequestMapping(value = "/facebook-account/deactivateFbAccount", method = RequestMethod.POST)
@@ -78,7 +96,7 @@ public class FacebookAccountController {
         System.out.println(button);
         HttpSession session = request.getSession(false);
         int userId = -1;
-        if (session!=null){
+        if (session != null) {
             String username = (String) session.getAttribute("username");
             UserEntity user = userService.getUserByUsername(username);
             userId = user.getUserid();

@@ -111,7 +111,8 @@ public class PageController {
     @ResponseBody
     public String getPage(HttpServletRequest request,
                           @RequestParam("pageId") String pageId,
-                          @RequestParam("pageName") String pageName) {
+                          @RequestParam("pageName") String pageName,
+                          @RequestParam("pageCategory") String pageCategory) {
 
         if (!this.isCurrentUserAuthorized(request)) {
             return "Unauthorized";
@@ -122,7 +123,9 @@ public class PageController {
 
         System.out.println(pageId);
         System.out.println(pageName);
-        pageService.createPage(pageName, pageId, "", "");
+        System.out.println(pageCategory);
+
+        pageService.createPage(pageName, pageId, "", pageCategory);
         brandPageService.addBrandPage(brandId, pageId);
         return "Ok";
     }

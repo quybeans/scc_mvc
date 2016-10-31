@@ -2,7 +2,6 @@ package com.scc.ticketmanagement.utilities;
 
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
-import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
