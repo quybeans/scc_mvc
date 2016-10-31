@@ -13,6 +13,23 @@
     <script src="/js/jquery-ui.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/app.min.js"></script>
+    <script>
+        getCurrentBrandInfo();
+        function getCurrentBrandInfo() {
+            $.ajax({
+                url: '/brand/getBrandInfo',
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+
+                    $('#brand-logo').attr("src",data.image);
+                    $('#brand-name').html(data.name);
+                    $('#brand-sologan').html(data.sologan);
+                }
+            });
+
+        }
+    </script>
     <!-- Logo -->
     <a href="index2.html" class="logo">
         <!-- mini logo for sidebar mini 50x50 pixels -->
