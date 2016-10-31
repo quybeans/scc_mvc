@@ -4,16 +4,17 @@
 <head>
     <title>Manage crawl page</title>
     <header class="main-header" th:include="Head::header"></header>
-    <aside class="main-sidebar" th:include="SideBar::aside"> </aside>
+    <aside class="main-sidebar" th:include="SideBar::aside"></aside>
 
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
 
-    <div class="content-wrapper" >
+    <div class="content-wrapper">
 
         <section class="content">
-            <div id="pageToCrawl" style="margin-top: 10px;margin-bottom: 10px;margin-left: 10px; background-color: white; padding: 10px 20px 20px 20px">
+            <div id="pageToCrawl"
+                 style="margin-top: 10px;margin-bottom: 10px;margin-left: 10px; background-color: white; padding: 10px 20px 20px 20px">
                 <div style="text-align: left;margin-bottom: 20px">
                     <h2>Manage Crawl Page</h2>
                 </div>
@@ -36,7 +37,8 @@
                                 <img th:src="@{'https://graph.facebook.com/' + ${pagesCrawler.pageid}+ '/picture'}"/>
                             </td>
                             <td>
-                                <a th:href="@{'http://www.fb.com/' + ${pagesCrawler.pageid}}" th:text="${pagesCrawler.name}"></a>
+                                <a th:href="@{'http://www.fb.com/' + ${pagesCrawler.pageid}}"
+                                   th:text="${pagesCrawler.name}"></a>
                             </td>
                             <td th:text="${pagesCrawler.type}"></td>
                             <td th:text="${pagesCrawler.category}"></td>
@@ -53,7 +55,8 @@
                     </tr>
                     </tbody>
                 </table>
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Add page to crawl
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Add page to
+                    crawl
                 </button>
             </div>
 
@@ -84,20 +87,20 @@
                                 </div>
 
                                 <div id="status"></div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                </div>
                             </div>
-
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
                         </div>
-                    </div>
 
+                    </div>
                 </div>
+
+            </div>
 
         </section>
     </div>
-    </div>
+</div>
 
 </div>
 <script>
@@ -174,20 +177,26 @@
     function addPageToCrawl() {
         var pageName = $('#pageId').val();
 
-        FB.api('/' + pageName , function (response) {
-            submitPageId(response.id, response.name);
+        FB.api('/' + pageName + '?fields=category,name,id', function (response) {
+            submitPageId(response.id, response.name, response.category);
         });
     }
 
-    function submitPageId(pageId, pageName) {
+    function submitPageId(pageId, pageName, pageCategory) {
         $.ajax({
             url: '/page/addPageToCrawl',
             type: "POST",
-            data: { pageId: pageId,
-                pageName: pageName},
+            data: {
+                pageId: pageId,
+                pageName: pageName,
+                pageCategory: pageCategory
+            },
             dataType: "text",
-            success: function (data){
+            success: function (data) {
                 alert(data);
+            },
+            error: function (data) {
+                alert("Invalid link");
             }
         })
     }

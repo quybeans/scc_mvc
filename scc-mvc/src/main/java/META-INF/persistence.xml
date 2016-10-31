@@ -2,18 +2,18 @@
 <persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0">
 
     <persistence-unit name="NewPersistenceUnit">
-        <class>com.scc.ticketmanagement.Entities.PageEntity</class>
-        <class>com.scc.ticketmanagement.Entities.FacebookaccountEntity</class>
-        <class>com.scc.ticketmanagement.Entities.BrandEntity</class>
-        <class>com.scc.ticketmanagement.Entities.BrandpageEntity</class>
-        <class>com.scc.ticketmanagement.Entities.CommentEntity</class>
-        <class>com.scc.ticketmanagement.Entities.PostEntity</class>
-        <class>com.scc.ticketmanagement.Entities.ProfileEntity</class>
-        <class>com.scc.ticketmanagement.Entities.TicketEntity</class>
-        <class>com.scc.ticketmanagement.Entities.TicketconversationEntity</class>
-        <class>com.scc.ticketmanagement.Entities.TicketstatuschangeEntity</class>
-        <class>com.scc.ticketmanagement.Entities.UserEntity</class>
-        <class>com.scc.ticketmanagement.Entities.TicketrequestEntity</class>
+        <class>com.scc.ticketmanagement.entity.PageEntity</class>
+        <class>com.scc.ticketmanagement.entity.FacebookaccountEntity</class>
+        <class>com.scc.ticketmanagement.entity.BrandEntity</class>
+        <class>com.scc.ticketmanagement.entity.BrandpageEntity</class>
+        <class>com.scc.ticketmanagement.entity.CommentEntity</class>
+        <class>com.scc.ticketmanagement.entity.PostEntity</class>
+        <class>com.scc.ticketmanagement.entity.ProfileEntity</class>
+        <class>com.scc.ticketmanagement.entity.TicketEntity</class>
+        <class>com.scc.ticketmanagement.entity.TicketconversationEntity</class>
+        <class>com.scc.ticketmanagement.entity.TicketstatuschangeEntity</class>
+        <class>com.scc.ticketmanagement.entity.UserEntity</class>
+        <class>com.scc.ticketmanagement.entity.TicketrequestEntity</class>
         <properties>
             <property name="eclipselink.jdbc.url" value="jdbc:mysql://localhost:3306/scc"/>
             <property name="eclipselink.jdbc.driver" value="com.mysql.jdbc.Driver"/>

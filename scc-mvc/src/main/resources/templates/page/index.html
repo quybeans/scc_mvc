@@ -55,9 +55,54 @@
                     </tr>
                     </tbody>
                 </table>
-                <a href="create.html" class="btn btn-primary"><span class="fa fa-plus" style="margin-right: 8px"></span>Add page account</a>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+                    <span class="fa fa-plus" style="margin-right: 8px"></span>Add page account
+                </button>
+                <!--<a href="create.html" class="btn btn-primary"><span class="fa fa-plus" style="margin-right: 8px"></span>Add page account</a>-->
             </div>
 
+            <div class="container">
+
+                <!-- Modal -->
+                <div class="modal fade" id="myModal" role="dialog">
+                    <div class="modal-dialog">
+
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Add page to manage</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div style="margin-top: 10px;margin-bottom: 10px;margin-left: 10px; background-color: white; padding: 10px 20px 20px 20px">
+                                    <div>
+                                        <form id="form" action="processPageAccessToken" method="post">
+                                            <input type="hidden" name="pageAccessToken" id="pageAccessToken" value=""/>
+                                            <input type="hidden" name="pageName" id="pageName" value=""/>
+                                            <input type="hidden" name="pageCategory" id="pageCategory" value=""/>
+                                            <input type="hidden" name="pageId" id="pageId" value="" required="true"/>
+                                        </form>
+                                        <div id="here_table"></div>
+
+                                        <div id="fbLoginButton" style="visibility: hidden">
+
+                                            <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+                                            </fb:login-button>
+                                        </div>
+
+                                        <div id="status"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
 
         </section>
 
@@ -67,3 +112,108 @@
 
 </body>
 </html>
+<script>
+    function onAuthResponse(response) {
+        $('#form').submit();
+    }
+
+
+    // This is called with the results from from FB.getLoginStatus().
+    function statusChangeCallback(response) {
+        if (response.status === 'connected') {
+            // Logged into your app and Facebook.
+            // getToken();
+            getListPage();
+            $("#fbLoginButton").hide();
+
+        } else if (response.status === 'not_authorized') {
+            // The person is logged into Facebook, but not your app.
+            $("#fbLoginButton").show();
+            document.getElementById('status').innerHTML = 'Please log ' +
+                    'into this app to continue';
+        } else {
+            // The person is not logged into Facebook, so we're not sure if
+            // they are logged into this app or not.
+            $("#fbLoginButton").show();
+            document.getElementById('status').innerHTML = 'Please log ' +
+                    'into Facebook to continue';
+        }
+    }
+
+    // This function is called when someone finishes with the Login
+    // Button.  See the onlogin handler attached to it in the sample
+    // code below.
+    function checkLoginState() {
+        FB.getLoginStatus(function (response) {
+            //statusChangeCallback(response);
+            if (response.status === 'connected') {
+                onAuthResponse(response);
+            } else {
+                FB.login(onAuthResponse, {
+                    scope: 'manage_pages'
+                });
+            }
+        });
+
+    }
+
+    window.fbAsyncInit = function () {
+        FB.init({
+            appId: '341786092825787',
+            cookie: true,  // enable cookies to allow the server to access
+                           // the session
+            xfbml: true,  // parse social plugins on this page
+            version: 'v2.5' // use graph api version 2.5
+        });
+
+
+        FB.getLoginStatus(function (response) {
+            statusChangeCallback(response);
+        });
+
+    };
+
+    // Load the SDK asynchronously
+    (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+    // Here we run a very simple test of the Graph API after login is
+    // successful.  See statusChangeCallback() for when this call is made.
+    function getToken(i) {
+        console.log('Welcome!  Fetching your information.... ');
+        FB.api('/me/accounts', function (response) {
+            console.log('Adding page: ' + response.data[i].name);
+
+            $('#pageId').val(response.data[i].id);
+            $('#pageAccessToken').val(response.data[i].access_token);
+            $('#pageName').val(response.data[i].name);
+            $('#pageCategory').val(response.data[i].category);
+            checkLoginState();
+        });
+    }
+
+    function getListPage() {
+        console.log('Welcome!  Fetching your information.... ');
+        FB.api('/me/accounts', function (response) {
+            var isAuthorize = false;
+            var table = $('<table class="table table-hover" style="background-color: white"></table>');
+            $.each(response.data, function (i) {
+                var row = $('<tr>' +
+                        '<td><img src="https://graph.facebook.com/' + response.data[i].id + '/picture"/></td>' +
+                        '<td>' + response.data[i].name + '</td>' +
+                        '<td><button class="btn btn-primary" type="button" onclick="getToken(\'' + i + '\')">Add</button></td>' +
+                        '</tr>');
+                table.append(row);
+            });
+            $('#here_table').append(table);
+
+        });
+    }
+
+</script>

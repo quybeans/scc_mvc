@@ -1,0 +1,17 @@
+package com.scc.ticketmanagement.service;
+
+import com.scc.ticketmanagement.entity.ProfileEntity;
+
+/**
+ * Created by user on 9/30/2016.
+ */
+public interface ProfileService {
+
+    ProfileEntity getProfileByID(Integer id);
+
+    ProfileEntity createProfile(String firstname,String lastname,String address,String gender,
+                                String phone,String email);
+
+    void updateProfile(Integer profileID,String firstname,String lastname,String address,String gender,
+                       String phone,String email);
+}
