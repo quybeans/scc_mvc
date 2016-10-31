@@ -6,16 +6,16 @@
   <session-factory>
     <property name="connection.url">jdbc:mysql://localhost:3306/scc</property>
     <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-      <mapping class="com.scc.ticketmanagement.entity.CommentEntity"/>
-      <mapping class="com.scc.ticketmanagement.entity.PostEntity"/>
-      <mapping class="com.scc.ticketmanagement.entity.Page"/>
-    <mapping class="com.scc.ticketmanagement.entity.PageEntity"/>
-    <mapping class="com.scc.ticketmanagement.entity.BrandEntity"/>
-    <mapping class="com.scc.ticketmanagement.entity.BrandpageEntity"/>
-      <mapping class="com.scc.ticketmanagement.entity.UserEntity"/>
-      <mapping class="com.scc.ticketmanagement.entity.TicketEntity"/>
-    <mapping class="com.scc.ticketmanagement.entity.AttributeEntity"/>
-      <mapping class="com.scc.ticketmanagement.entity.PriorityEntity"/>
+      <mapping class="com.scc.ticketmanagement.Entities.CommentEntity"/>
+      <mapping class="com.scc.ticketmanagement.Entities.PostEntity"/>
+      <mapping class="com.scc.ticketmanagement.Entities.Page"/>
+    <mapping class="com.scc.ticketmanagement.Entities.PageEntity"/>
+    <mapping class="com.scc.ticketmanagement.Entities.BrandEntity"/>
+    <mapping class="com.scc.ticketmanagement.Entities.BrandpageEntity"/>
+      <mapping class="com.scc.ticketmanagement.Entities.UserEntity"/>
+      <mapping class="com.scc.ticketmanagement.Entities.TicketEntity"/>
+    <mapping class="com.scc.ticketmanagement.Entities.AttributeEntity"/>
+      <mapping class="com.scc.ticketmanagement.Entities.PriorityEntity"/>
       <!-- DB schema will be updated if needed -->
     <!-- <property name="hbm2ddl.auto">update</property> -->
   </session-factory>
