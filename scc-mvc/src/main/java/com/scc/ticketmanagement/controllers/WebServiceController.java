@@ -7,6 +7,7 @@ import com.scc.ticketmanagement.exentities.ExPost;
 import com.scc.ticketmanagement.exentities.ExtendComments;
 import com.scc.ticketmanagement.exentities.FaceBookPage;
 import com.scc.ticketmanagement.repositories.*;
+import com.scc.ticketmanagement.utilities.Constant;
 import com.scc.ticketmanagement.utilities.FacebookUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -119,7 +120,7 @@ public class WebServiceController {
                 if (ticketRepository.findBycommentid(cmt.getId())!=null){
                     cmt.setIsticket(true);
                 }
-                if(user.getRoleid()==Constant.ROLE_STAFF){
+                if(user.getRoleid()== Constant.ROLE_STAFF){
                     cmt.setStaff(true);
                 }
                 showcomments.add(cmt);
