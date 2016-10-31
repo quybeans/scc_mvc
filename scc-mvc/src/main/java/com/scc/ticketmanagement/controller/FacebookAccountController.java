@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.naming.AuthenticationException;
 import javax.servlet.http.HttpSession;
@@ -57,11 +58,16 @@ public class FacebookAccountController {
     }
 
     @RequestMapping(value = "/facebook-account/loginViaFacebook", method = RequestMethod.POST)
+    @ResponseBody
     String loginFb(HttpServletRequest request,
                    @RequestParam("shortLivedToken") String token,
                    @RequestParam("uid") String uid,
                    @RequestParam("fbUsername") String username) {
         String longLivedToken = "";
+
+        System.out.println(token);
+        System.out.println(uid);
+        System.out.println(username);
 
         HttpSession session = request.getSession(false);
         if (session == null) {
@@ -77,9 +83,10 @@ public class FacebookAccountController {
             fbService.createFacebookaccount(uid, longLivedToken, userId, username);
         } catch (AuthenticationException e) {
             e.printStackTrace();
+            return "Add failed, please try again";
         }
         System.out.println(longLivedToken);
-        return "redirect:/facebook-account/index";
+        return "Add successfully";
     }
 
     @RequestMapping(value = "/facebook-account/deactivateFbAccount", method = RequestMethod.POST)

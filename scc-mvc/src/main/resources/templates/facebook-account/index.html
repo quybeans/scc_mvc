@@ -18,15 +18,11 @@
         <section class="content">
 
 
-            <div>
-                <div style="text-align: center">
+            <div style="margin-top: 10px;margin-bottom: 10px;margin-left: 10px; background-color: white; padding: 10px 20px 20px 20px">
+                <div>
                     <h1>Manage Facebook Account</h1>
                 </div>
-                <div>
-                    <button type="button" class="btn btn-info btn-lg" data-toggle="modal"
-                            data-target="#myModal">Add Facebook account
-                    </button>
-                </div>
+
 
                 <table class="table table-hover" style="background-color: white">
                     <thead>
@@ -39,7 +35,8 @@
                     <tbody>
                     <tr th:each="account: ${facebookAccounts}">
                         <form id="managePageForm" action="deactivateFbAccount" method="post">
-                            <input type="hidden" name="facebookAccountId" th:value="${account.facebookaccountid}"></input>
+                            <input type="hidden" name="facebookAccountId"
+                                   th:value="${account.facebookaccountid}"></input>
                             <td>
                                 <img th:src="@{'https://graph.facebook.com/' + ${account.facebookuserid}+ '/picture'}"/>
                             </td>
@@ -60,6 +57,12 @@
                     </tr>
                     </tbody>
                 </table>
+
+                <div>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Add
+                        Facebook account
+                    </button>
+                </div>
 
             </div>
         </section>
@@ -106,12 +109,28 @@
         function onAuthResponse(response) {
             var accessToken = response.authResponse.accessToken;
             var uid = response.authResponse.userID;
-            // $('#fbUsername').val("username hard code");
-            $('#shortLivedToken').val(accessToken);
-            $('#uid').val(uid);
-            $('#form').submit();
+            getUsername(uid, accessToken);
         }
 
+        function submit(uid, accessToken, username) {
+            $.ajax({
+                url: '/facebook-account/loginViaFacebook',
+                type: "POST",
+                data: {
+                    uid: uid,
+                    shortLivedToken: accessToken,
+                    fbUsername: username
+                },
+                dataType: "text",
+                success: function (data) {
+                    alert(data);
+                    location.reload();
+                },
+                error: function (data) {
+                    alert("Invalid link");
+                }
+            })
+        }
 
         // This is called with the results from from FB.getLoginStatus().
         function statusChangeCallback(response) {
@@ -123,8 +142,7 @@
             // for FB.getLoginStatus().
 
             if (response.status === 'connected') {
-                // Logged into your app and Facebook.
-                getUsername();
+
             } else if (response.status === 'not_authorized') {
                 // The person is logged into Facebook, but not your app.
                 document.getElementById('status').innerHTML = 'Please log ' +
@@ -185,14 +203,17 @@
 
         // Here we run a very simple test of the Graph API after login is
         // successful.  See statusChangeCallback() for when this call is made.
-        function getUsername() {
+        function getUsername(uid,accessToken ) {
             console.log('Welcome!  Fetching your information.... ');
             FB.api('/me', function (response) {
                 console.log('Successful login for: ' + response.name);
                 $('#fbUsername').val(response.name);
                 document.getElementById('status').innerHTML =
                         'Thanks for logging in, ' + response.name + '!';
+                submit(uid, accessToken,response.name);
             });
+
+
         }
 
 
