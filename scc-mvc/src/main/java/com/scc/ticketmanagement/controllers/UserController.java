@@ -8,6 +8,7 @@ import com.scc.ticketmanagement.repositories.UserRepository;
 import com.scc.ticketmanagement.services.ProfileService;
 import com.scc.ticketmanagement.services.UserService;
 import com.scc.ticketmanagement.utilities.Constant;
+import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,8 +47,12 @@ public class UserController {
 
     @RequestMapping( value = "/getalluser")
     @ResponseBody
-    public List<User> getalluser(Model model) {
-        List<UserEntity> entity = userService.findAll();
+    public List<User> getalluser(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        String loginUser = (String) session.getAttribute("username");
+        UserEntity loginuser = userRepository.findUserByUsername(loginUser);
+
+        List<UserEntity> entity = userRepository.getAllUserInBrand(loginuser.getBrandid());
         List<User> userlist = new ArrayList<User>();
         for (UserEntity u: entity) {
             ProfileEntity p = profileRepository.findOne(u.getProfileid());

@@ -8,6 +8,7 @@ import com.scc.ticketmanagement.Entities.CommentEntity;
 public class ExtendComments extends CommentEntity {
 
     private boolean isticket;
+    private boolean staff;
 
     public boolean isticket() {
         return isticket;
@@ -15,5 +16,13 @@ public class ExtendComments extends CommentEntity {
 
     public void setIsticket(boolean isticket) {
         this.isticket = isticket;
+    }
+
+    public boolean isStaff() {
+        return staff;
+    }
+
+    public void setStaff(boolean staff) {
+        this.staff = staff;
     }
 }

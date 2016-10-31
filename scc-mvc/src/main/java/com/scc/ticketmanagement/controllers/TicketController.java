@@ -98,7 +98,8 @@ public class TicketController {
     @RequestMapping("/createticket")
     public TicketEntity createTicket(HttpServletRequest request,
                                      @RequestParam("commentid") String commentid,
-                                     @RequestParam("assignee") Integer assignee){
+                                     @RequestParam("assignee") Integer assignee,
+                                     @RequestParam("priority") Integer priority){
         HttpSession session = request.getSession();
         String loginUser = (String) session.getAttribute("username");
         UserEntity user = userRepository.findUserByUsername(loginUser);
@@ -112,7 +113,9 @@ public class TicketController {
             ticketEntity.setAssignee(assignee);
             ticketEntity.setActive(true);
             ticketEntity.setStatusid(2);
+            ticketEntity.setPriority(priority);
             ticketEntity.setCreatedtime(new Timestamp(new Date().getTime()));
+
             TicketEntity ticket= ticketRepository.save(ticketEntity);
 
             //Tao 1 ticket history
@@ -136,9 +139,8 @@ public class TicketController {
         HttpSession session = request.getSession();
         String loginUser = (String) session.getAttribute("username");
         UserEntity user = userRepository.findUserByUsername(loginUser);
+
         TicketEntity ticket =ticketRepository.findBycommentid(commentid);
-        //Khi role = supervisor
-        if(user.getRoleid()==Constant.ROLE_SUPERVISOR){
             //Thay doi assignee
             ticket.setAssignee(assignee);
 
@@ -150,17 +152,6 @@ public class TicketController {
             status.setAssignee(assignee);
             status.setCreatedat(new Timestamp(new Date().getTime()));
             ticketStatusChangeRepository.save(status);
-
-        }//Khi role = staff(vi admin khong vao trang nay nen chi else)
-        else{
-            TicketrequestEntity ticketrequestEntity = new TicketrequestEntity();
-            ticketrequestEntity.setAssigner(user.getUserid());
-            ticketrequestEntity.setAssignee(assignee);
-            ticketrequestEntity.setRequestat(new Timestamp(new Date().getTime()));
-            ticketrequestEntity.setTicketid(ticket.getId());
-            ticketRequestRepository.save(ticketrequestEntity);
-        }
-
 
         return ticketRepository.save(ticket);
     }
@@ -274,5 +265,26 @@ public class TicketController {
     @RequestMapping("/getupdateticket")
     public TicketEntity getupdateticket(@RequestParam("ticketid") Integer ticketid){
         return ticketRepository.findOne(ticketid);
+    }
+
+    @RequestMapping("forwardticket")
+    public TicketrequestEntity forwardticket(@RequestParam("commentid") String commentid,
+                                             @RequestParam("forwarduser") Integer forwarduser,
+                                             @RequestParam("forwardnote") String forwardnote,
+                                             HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String loginUser = (String) session.getAttribute("username");
+        UserEntity user = userRepository.findUserByUsername(loginUser);
+
+        TicketEntity ticket =ticketRepository.findBycommentid(commentid);
+
+        TicketrequestEntity ticketrequest = new TicketrequestEntity();
+        ticketrequest.setRequestat(new Timestamp(new Date().getTime()));
+        ticketrequest.setAssigner(user.getUserid());
+        ticketrequest.setAssignee(forwarduser);
+        ticketrequest.setNote(forwardnote);
+        ticketrequest.setTicketid(ticket.getId());
+        return ticketRequestRepository.save(ticketrequest);
+
     }
 }

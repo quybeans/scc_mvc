@@ -179,43 +179,61 @@
 
 
                         var cmtId= "'"+postId+"_"+data[index].id+"'";
-                        var commentisticket="";
-                        //khi comment la mot ticket thi se co 3 nut: send,assign,change status
+                        // groupbutton chua 2 nut là reply, danh tag
+                        var groupbutton='<button  onclick="replyToComment('+cmtId+');getReplyByCommentId('+data[index].id+');" class="btn btn-default btn-xs inline"' +
+                                ' style="margin-left: 65px;margin-top: -10px; "><span class="glyphicon glyphicon-send"' +
+                                ' style="color:gray "  title="Reply to this comment"   data-placement="bottom" ' +
+                                'data-toggle="tooltip" ></span></button>'
+
+                                +'<button  onclick="showtagcomment('+data[index].id+')" class="btn btn-default btn-xs inline"' +
+                                ' style="margin-top: -10px;" ><span class="fa fa-tag"' +
+                                ' style="color:gray "  title="Tag this comment to attribute"   data-placement="bottom" ' +
+                                'data-toggle="popover" ></span></button>';
+
+                        //khi comment la mot ticket
                         if(data[index].ticket){
-                            commentisticket=
-                                    //Day la button send commend cua Bean GOD
-                                    '<button  onclick="replyToComment('+cmtId+');getReplyByCommentId('+data[index].id+');" class="btn btn-default btn-xs inline"' +
-                                    ' style="margin-left: 65px;margin-top: -10px; "><span class="glyphicon glyphicon-send"' +
-                                    ' style="color:gray "  title="Reply to this comment"   data-placement="bottom" ' +
-                                    'data-toggle="tooltip" ></span></button>'
 
-                                    //Day la nut assign
-                                    +'<button class="btn btn-default btn-xs inline" onclick="assign('+data[index].id+')"' +
+                            //Them nut change stt
+                            groupbutton+='<button class="btn btn-default btn-xs inline" onclick="status('+data[index].id+')"' +
                                     ' style="margin-top: -10px; "><span style="color:gray " ' +
-                                    'title="Assign this ticket to staff" data-toggle="tooltip"  data-placement="bottom" ' +
-                                    ' class="fa fa-tag"></span></button>'
-
-                                    //Day la nut change status
-                                    +'<button class="btn btn-default btn-xs inline" onclick="status('+data[index].id+')"' +
-                                    ' style="margin-top: -10px; "><span style="color:gray " ' +
-                                    'title="Assign this ticket to staff" data-toggle="tooltip"  data-placement="bottom" ' +
+                                    'title="Change ticket status" data-toggle="tooltip"  data-placement="bottom" ' +
                                     ' class="fa fa-navicon"></span></button>'
+
+                            //khi nguoi dang nhap duoi quyen staff
+                            if(data[index].staff){
+                                //them nut forward ticket
+                                groupbutton+=   '<button class="btn btn-default btn-xs inline" onclick="forwardticket('+data[index].id+')"' +
+                                        ' style="margin-top: -10px; "><span style="color:gray " ' +
+                                        'title="Forward this ticket to another staff" data-toggle="tooltip"  data-placement="bottom" ' +
+                                        ' class="fa fa-group"></span></button>'
+
+                            //khi nguoi dang nhap duoi quyen khac
+                            }else{
+                                //Them nut assign
+                                groupbutton+=   '<button class="btn btn-default btn-xs inline" onclick="assign('+data[index].id+')"' +
+                                        ' style="margin-top: -10px; "><span style="color:gray " ' +
+                                        'title="Assign this ticket to staff" data-toggle="tooltip"  data-placement="bottom" ' +
+                                        ' class="fa fa-ticket"></span></button>'
+                            }
+
+                        //khi comment chua phai la ticket
                         }else{
-                            //khi comment chua phai la ticket thi chi co nut create ticket va send ticket
-                            commentisticket='<button class="btn btn-default btn-xs inline" onclick="createticket('+data[index].id+','+postId+')"' +
-                                    ' style="margin-left: 65px;margin-top: -10px; "><span style="color:gray " ' +
-                                    'title="Create new ticket" data-toggle="tooltip"  data-placement="bottom" ' +
-                                    ' class="fa fa-plus"></span></button>'
+                            //khi nguoi dang nhap duoi quyen staff
+                            if(data[index].staff){
+                                //them nut assign cho ban than no
+                                groupbutton+='<button class="btn btn-default btn-xs inline" onclick="createTicketForTheStaff('+data[index].id+')" ' +
+                                        ' style="margin-top: -10px; "><span style="color:gray " ' +
+                                        'title="Create new ticket for yourself" data-toggle="tooltip"  data-placement="bottom" ' +
+                                        ' class="fa fa-plus-square"></span></button>'
 
-                            +'<button  onclick="replyToComment('+cmtId+');getReplyByCommentId('+data[index].id+');" class="btn btn-default btn-xs inline"' +
-                                    ' style="margin-top: -10px; "><span class="glyphicon glyphicon-send"' +
-                                    ' style="color:gray "  title="Reply to this comment"   data-placement="bottom" ' +
-                                    'data-toggle="tooltip" ></span></button>'
-
-                                    +'<button  onclick="" class="btn btn-default btn-xs inline"' +
-                                    ' style="margin-top: -10px; "><span class="glyphicon glyphicon-send"' +
-                                    ' style="color:gray "  title="Reply to this comment"   data-placement="bottom" ' +
-                                    'data-toggle="tooltip" ></span></button>'
+                            //khi nguoi dang nhap duoi quyen khac
+                            }else{
+                                //them nut create ticket
+                                groupbutton+='<button  onclick="createticket('+data[index].id+','+data[index].postId+');" class="btn btn-default btn-xs inline"' +
+                                        ' style="margin-top: -10px; "><span class="fa fa-plus"' +
+                                        ' style="color:gray "  title="Reply to this comment"   data-placement="bottom" ' +
+                                        'data-toggle="tooltip" ></span></button>'
+                            }
                         }
                         $('#comment-box').append(
                                 '<div  class="cmt" >'
@@ -232,7 +250,7 @@
                                 +'</p>'
                                 //Day la nut reply
 //                                +'<button onclick="replyToComment('+cmtId+')" class="btn btn-default btn-xs inline" style="margin-left: 65px;margin-top: -10px; "><span class="glyphicon glyphicon-send" style="color:gray "  title="Reply to this comment"   data-placement="bottom" data-toggle="tooltip" ></span></button>'
-                                +commentisticket
+                                +groupbutton
                                 +'</div>'
                                 +'<div class="col-lg-2" style="margin-top: 30px">' +'<small class="'+senIcon+'" style="font-size: 20px;"></small>'
                                 +'</div>'
@@ -293,6 +311,23 @@
 
         //create ticket
         function createticket(comtID,postID) {
+
+            $.ajax({
+                url: "/getallpriorityofbrand",
+                type: "GET",
+                success: function (data) {
+                    $("#priority").html("");
+                    for (var i = 0; i < data.length; i++) {
+                        $("#priority").append(
+                                '<option value="'+ data[i].id +'">'+ data[i].name+'</option>'
+                        )
+                    }
+                },
+                error: function () {
+                    alert("fail to load priority for update")
+                }
+            })
+
             $.ajax({
                 url:"getalluser",
                 type:"GET",
@@ -311,11 +346,11 @@
 
             $('#createModal').modal('toggle');
             $('#btnCreate').unbind().click(function () {
-
+                var priority = $('#priority').val();
                 var assignee = $('#assignee').val();
                 $.ajax({
                     url:"/createticket",
-                    data:{"commentid":comtID,"assignee":assignee},
+                    data:{"commentid":comtID,"assignee":assignee,"priority":priority},
                     type:"POST",
                     success:function () {
                         $('#createModal').modal('toggle');
@@ -384,6 +419,44 @@
                     }
                 })
             })
+        }
+
+        //forward ticket
+        function forwardticket(comID) {
+            $("#forwardModal").modal('toggle');
+            $.ajax({
+                url:"getalluser",
+                type:"GET",
+                success:function (data) {
+                    $("#forward").html("");
+                    for (var i =0;i<data.length;i++)
+                        $("#forward").append(
+                                '<option value="'+data[i].userid+'">'+data[i].firstname+ ' ' +data[i].lastname +'</option>'
+                        );
+                },
+                error:function () {
+                    alert("Fail to load list user");
+                }
+            })
+            $('#btnForward').unbind().click(function () {
+                var forwardnote=$('#forwardnote').val();
+                var forwarduser=$('#forward').val();
+                $.ajax({
+                    url:"forwardticket",
+                    type:"POST",
+                    data:{"commentid":comID,"forwarduser":forwarduser,"forwardnote":forwardnote},
+                    success:function (data) {
+                        alert("Forward ticket: "+data.ticketid+" to user: "+data.assignee)
+                    },
+                    error:function () {
+                        alert("Fail to forward ticket")
+                    }
+                })
+            })
+        }
+
+        function createTicketForTheStaff(comID){
+
         }
 
         //get ticket detail
@@ -469,12 +542,65 @@
             })
 
         }
+
+        //showtag comment modal
+        function showtagcomment(cmtid) {
+            //Lay tat ca cac tag cua brand cho user dung
+            $("#tagcommentModal").modal('toggle');
+            loadcommenttag(cmtid);
+        }
+
+        //load tag of comment
+        function loadcommenttag(cmtid) {
+
+            $.ajax({
+                url:"/getallbrandtags",
+                type:"GET",
+                data:{"commentid":cmtid},
+                success:function (data) {
+                    $('#tagss').html("");
+                    for(var i=0;i<data.length;i++){
+                        var commenttag;
+                        var btnclass;
+                        if(data[i].commentatt){
+                            commenttag='fa fa-check';
+                            btnclass='btn btn-success btn-xs';
+                        }else{
+                            commenttag='fa fa-remove';
+                            btnclass='btn btn-danger btn-xs';
+                        }
+                        $('#tagss').append(
+                                '<div class="btn-group" role="group" style="margin-left: 10px">'
+                                +'<button class="btn btn-default btn-xs" >'+data[i].name+'</button>'
+                                +'<button class="'+btnclass +'" style="width: 25px" id="tagbtn" onclick="tagcomment('+cmtid+','+data[i].id+')"><i class="'+commenttag+'"></i></button>'
+                                +'</div>'
+                        );
+                    }
+                },
+                error:function () {
+                    alert("Fail to load tags");
+                }
+            })
+        }
+
+        function tagcomment(cmtid,attid) {
+            $.ajax({
+                url:"/tagcomment",
+                type:"POST",
+                data:{"commentid":cmtid,"tagid":attid},
+                success:function (data) {
+                    alert("Tag comment: "+data.commentid+" to attribuet:" + data.attributeid)
+                    loadcommenttag(cmtid);
+                },
+                error:function () {
+                    alert("Tag comment fail")
+                }
+            })
+        }
     </script>
     <link rel="stylesheet" th:href="@{/css/scc-post.css}"/>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
-
-
 <div class="wrapper">
     <div class="content-wrapper"  style="max-height: 90vh;overflow: hidden">
 
@@ -523,9 +649,16 @@
                         <h4 class="modal-title">Create Ticket</h4>
                     </div>
                     <div class="modal-body">
-
-                        <select id="assignee">
+                        <div class="form-group">
+                            <label for="priority">Priority</label>
+                            <select class="form-control" id="priority">
+                            </select>
+                        </div>
+                        <div class="form-group">
+                        <label for="assignee">Assignee</label>
+                        <select class="form-control" id="assignee">
                         </select>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-primary " id="btnCreate">Create</button>
@@ -544,8 +677,12 @@
                         <h4 class="modal-title">Assign Ticket</h4>
                     </div>
                     <div class="modal-body">
-                        <select id="assign">
-                        </select>
+                        <div class="form group">
+                            <label for="assign">Assignee</label>
+                            <select class="form control" id="assign">
+                            </select>
+                        </div>
+
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-primary " id="btnAssign">Assign</button>
@@ -564,12 +701,16 @@
                         <h4 class="modal-title">Change Ticket Status</h4>
                     </div>
                     <div class="modal-body">
-                        <select id="status">
-                            <option value="3">Open</option>
-                            <option value="4">Inprocess</option>
-                            <option value="5">Solving</option>
-                            <option value="6">Solved</option>
-                        </select>
+                        <div class="form group">
+                            <label for="status">Status</label>
+                            <select id="status" class="form-control">
+                                <option value="3">Open</option>
+                                <option value="4">Inprocess</option>
+                                <option value="5">Solving</option>
+                                <option value="6">Solved</option>
+                            </select>
+                        </div>
+
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-primary " id="btnStatus">Change Status</button>
@@ -578,6 +719,82 @@
 
             </div>
         </div>
+
+        <div class="modal fade" id="tagcommentModal" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Tag Comment </h4>
+                    </div>
+                    <div class="modal-body" id="tagss">
+
+                    </div>
+                    <div class="modal-footer">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="New Attribute"/>
+                            <span class="input-group-btn">
+                            <button class="btn btn-primary" id="btnManageTag" style="text-align: center">Add </button>
+                                </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="modal fade" id="forwardModal" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Assign Ticket</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form group">
+                            <label for="forwardnote">Note</label>
+                            <textarea class="form-control" id="forwardnote"></textarea>
+                        </div>
+                        <div class="form group">
+                            <label for="forward">Assignee</label>
+                            <select class="form-control" id="forward">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary " id="btnForward">Forward</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="modal fade" id="staffcreateticketModal" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Create Ticket</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="staffpriority">Priority</label>
+                            <select class="form-control" id="staffpriority">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary " id="btnStaffCreate">Create</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
         <section class="col-lg-3 postlist">
 
             <div >
