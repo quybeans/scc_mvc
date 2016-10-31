@@ -6,6 +6,8 @@ import com.scc.ticketmanagement.service.UserfacebookaccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created by Thien on 10/29/2016.
  */
@@ -18,6 +20,11 @@ public class UserFacebookAccountServiceImp implements UserfacebookaccountService
     @Override
     public UserfacebookaccountEntity get(int userId, int facebookAccountId) {
         return repository.getUserfacebookaccount(userId, facebookAccountId);
+    }
+
+    @Override
+    public List<UserfacebookaccountEntity> get(int userId) {
+        return repository.getUserfacebookaccountsByUserId(userId);
     }
 
     @Override

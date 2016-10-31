@@ -2,6 +2,7 @@ package com.scc.ticketmanagement.controller;
 
 import com.scc.ticketmanagement.entity.FacebookaccountEntity;
 import com.scc.ticketmanagement.entity.UserEntity;
+import com.scc.ticketmanagement.entity.UserfacebookaccountEntity;
 import com.scc.ticketmanagement.service.FacebookaccountService;
 import com.scc.ticketmanagement.service.UserService;
 import com.scc.ticketmanagement.service.UserfacebookaccountService;
@@ -38,7 +39,17 @@ public class FacebookAccountController {
 
         String username = (String) session.getAttribute("username");
         UserEntity user = userService.getUserByUsername(username);
-        List<FacebookaccountEntity> facebookAccounts =  fbService.getFacebookAccountsByUserId(user.getUserid());
+        List<FacebookaccountEntity> facebookAccounts = fbService.getFacebookAccountsByUserId(user.getUserid());
+        List<UserfacebookaccountEntity> fbAccountMappings = userfacebookaccountService.get(user.getUserid());
+
+        for (FacebookaccountEntity facebookAccount : facebookAccounts) {
+            for (UserfacebookaccountEntity fbAccountMapping : fbAccountMappings) {
+                if (facebookAccount.getFacebookaccountid() == fbAccountMapping.getFacebookaccountid())
+                    facebookAccount.setActive(fbAccountMapping.isActive());
+            }
+
+        }
+
         model.addAttribute("facebookAccounts", facebookAccounts);
 
 
@@ -78,7 +89,7 @@ public class FacebookAccountController {
         System.out.println(button);
         HttpSession session = request.getSession(false);
         int userId = -1;
-        if (session!=null){
+        if (session != null) {
             String username = (String) session.getAttribute("username");
             UserEntity user = userService.getUserByUsername(username);
             userId = user.getUserid();
