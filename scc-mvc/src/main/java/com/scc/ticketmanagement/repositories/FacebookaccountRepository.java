@@ -14,17 +14,18 @@ import java.util.List;
  */
 
 public interface FacebookaccountRepository extends JpaRepository<FacebookaccountEntity, Integer> {
+
     @Query("select f from FacebookaccountEntity f where f.facebookuserid = :uid")
     FacebookaccountEntity getFacebookaccountByUid(@Param("uid") String uid);
 
-    @Query("select f from FacebookaccountEntity f where f.userid = :userid and f.active = true")
-    List<FacebookaccountEntity> getFacebookaccountByUserId(@Param("userid") Integer userid);
+    @Query("select f from FacebookaccountEntity f WHERE f.facebookaccountid IN" +
+            "(SELECT m.facebookaccountid FROM UserEntity u, UserfacebookaccountEntity m WHERE u.userid = m.userid and m.userid = :userId)")
+    List<FacebookaccountEntity> getFacebookAccountsByUserId(@Param("userId") Integer userId);
+
 
     @Query("update FacebookaccountEntity f set f.active = false where f.facebookuserid =:uid")
     @Modifying
     @Transactional
     void deactivateFacebookAccount(@Param("uid") String uid);
 
-//    @Query("update FacebookaccountEntity f set f.active = false where f.userid =: uid")
-//    FacebookaccountEntity updateFacebookAccount(@Param("uid") String uid);
 }

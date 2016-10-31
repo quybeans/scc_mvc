@@ -3,7 +3,7 @@ package com.scc.ticketmanagement.Entities;
 import javax.persistence.*;
 
 /**
- * Created by Thien on 10/27/2016.
+ * Created by Thien on 10/29/2016.
  */
 @Entity
 @Table(name = "page", schema = "scc", catalog = "")
@@ -12,11 +12,11 @@ public class PageEntity {
     private String name;
     private String accesstoken;
     private String type;
-    private boolean active;
     private String category;
+    private boolean crawler;
+    private boolean active;
 
     @Id
-    @GeneratedValue
     @Column(name = "pageid")
     public String getPageid() {
         return pageid;
@@ -57,16 +57,6 @@ public class PageEntity {
     }
 
     @Basic
-    @Column(name = "active")
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    @Basic
     @Column(name = "category")
     public String getCategory() {
         return category;
@@ -76,6 +66,26 @@ public class PageEntity {
         this.category = category;
     }
 
+    @Basic
+    @Column(name = "crawler")
+    public boolean isCrawler() {
+        return crawler;
+    }
+
+    public void setCrawler(boolean crawler) {
+        this.crawler = crawler;
+    }
+
+    @Basic
+    @Column(name = "active")
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -83,6 +93,7 @@ public class PageEntity {
 
         PageEntity that = (PageEntity) o;
 
+        if (crawler != that.crawler) return false;
         if (active != that.active) return false;
         if (pageid != null ? !pageid.equals(that.pageid) : that.pageid != null) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
@@ -99,8 +110,9 @@ public class PageEntity {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (accesstoken != null ? accesstoken.hashCode() : 0);
         result = 31 * result + (type != null ? type.hashCode() : 0);
-        result = 31 * result + (active ? 1 : 0);
         result = 31 * result + (category != null ? category.hashCode() : 0);
+        result = 31 * result + (crawler ? 1 : 0);
+        result = 31 * result + (active ? 1 : 0);
         return result;
     }
 }

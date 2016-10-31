@@ -3,7 +3,7 @@ package com.scc.ticketmanagement.Entities;
 import javax.persistence.*;
 
 /**
- * Created by QuyBeans on 10-Oct-16.
+ * Created by Thien on 10/29/2016.
  */
 @Entity
 @Table(name = "facebookaccount", schema = "scc", catalog = "")
@@ -12,11 +12,9 @@ public class FacebookaccountEntity {
     private String facebookuserid;
     private String accesstoken;
     private boolean active;
-    private int userid;
     private String facebookusername;
 
     @Id
-    @GeneratedValue
     @Column(name = "facebookaccountid")
     public int getFacebookaccountid() {
         return facebookaccountid;
@@ -56,6 +54,16 @@ public class FacebookaccountEntity {
         this.active = active;
     }
 
+    @Basic
+    @Column(name = "facebookusername")
+    public String getFacebookusername() {
+        return facebookusername;
+    }
+
+    public void setFacebookusername(String facebookusername) {
+        this.facebookusername = facebookusername;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -68,6 +76,8 @@ public class FacebookaccountEntity {
         if (facebookuserid != null ? !facebookuserid.equals(that.facebookuserid) : that.facebookuserid != null)
             return false;
         if (accesstoken != null ? !accesstoken.equals(that.accesstoken) : that.accesstoken != null) return false;
+        if (facebookusername != null ? !facebookusername.equals(that.facebookusername) : that.facebookusername != null)
+            return false;
 
         return true;
     }
@@ -78,26 +88,7 @@ public class FacebookaccountEntity {
         result = 31 * result + (facebookuserid != null ? facebookuserid.hashCode() : 0);
         result = 31 * result + (accesstoken != null ? accesstoken.hashCode() : 0);
         result = 31 * result + (active ? 1 : 0);
+        result = 31 * result + (facebookusername != null ? facebookusername.hashCode() : 0);
         return result;
-    }
-
-    @Basic
-    @Column(name = "userid")
-    public int getUserid() {
-        return userid;
-    }
-
-    public void setUserid(int userid) {
-        this.userid = userid;
-    }
-
-    @Basic
-    @Column(name = "facebookusername")
-    public String getFacebookusername() {
-        return facebookusername;
-    }
-
-    public void setFacebookusername(String facebookusername) {
-        this.facebookusername = facebookusername;
     }
 }

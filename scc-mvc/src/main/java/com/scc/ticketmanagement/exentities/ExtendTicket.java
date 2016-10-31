@@ -10,6 +10,7 @@ public class ExtendTicket extends TicketEntity {
     private String createbyuser;
     private String assigneeuser;
     private String currentstatus;
+    private String currentpriority;
 
     public String getContent() {
         return content;
@@ -41,5 +42,13 @@ public class ExtendTicket extends TicketEntity {
 
     public void setCurrentstatus(String currentstatus) {
         this.currentstatus = currentstatus;
+    }
+
+    public String getCurrentpriority() {
+        return currentpriority;
+    }
+
+    public void setCurrentpriority(String currentpriority) {
+        this.currentpriority = currentpriority;
     }
 }

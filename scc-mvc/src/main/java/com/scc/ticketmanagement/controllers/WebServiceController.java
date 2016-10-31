@@ -190,7 +190,7 @@ public class WebServiceController {
         if (session!=null) {
             String username = (String) session.getAttribute("username");
             int userid = userRepository.findUseridByUser(username);
-            List<FacebookaccountEntity> accounts = facebookaccountRepository.getFacebookaccountByUserId(userid);
+            List<FacebookaccountEntity> accounts = facebookaccountRepository.getFacebookAccountsByUserId(userid);
             return accounts;
 
         }

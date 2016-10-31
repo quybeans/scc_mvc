@@ -39,7 +39,7 @@
                     <tbody>
                     <tr th:each="account: ${facebookAccounts}">
                         <form id="managePageForm" action="deactivateFbAccount" method="post">
-                            <input type="hidden" name="facebookAccountId" th:value="${account.facebookuserid}"></input>
+                            <input type="hidden" name="facebookAccountId" th:value="${account.facebookaccountid}"></input>
                             <td>
                                 <img th:src="@{'https://graph.facebook.com/' + ${account.facebookuserid}+ '/picture'}"/>
                             </td>
@@ -49,8 +49,7 @@
                             </td>
 
                             <td th:switch="${account.active}">
-                                <button class="btn btn-danger" type="submit" name="btnAction" id="btnDeactive"
-                                        value="Deactivate"
+                                <button class="btn btn-danger" type="submit" name="btnAction" value="Deactivate"
                                         th:case="true">Deactivate
                                 </button>
                                 <button class="btn btn-primary" type="submit" name="btnAction" value="Activate"
@@ -107,7 +106,7 @@
         function onAuthResponse(response) {
             var accessToken = response.authResponse.accessToken;
             var uid = response.authResponse.userID;
-            $('#fbUsername').val("username hard code");
+            // $('#fbUsername').val("username hard code");
             $('#shortLivedToken').val(accessToken);
             $('#uid').val(uid);
             $('#form').submit();
@@ -124,8 +123,8 @@
             // for FB.getLoginStatus().
 
             if (response.status === 'connected') {
-               // Logged into your app and Facebook.
-                testAPI();
+                // Logged into your app and Facebook.
+                getUsername();
             } else if (response.status === 'not_authorized') {
                 // The person is logged into Facebook, but not your app.
                 document.getElementById('status').innerHTML = 'Please log ' +
@@ -142,16 +141,13 @@
         // Button.  See the onlogin handler attached to it in the sample
         // code below.
         function checkLoginState() {
-
             FB.getLoginStatus(function (response) {
-
                 //statusChangeCallback(response);
                 if (response.status === 'connected') {
-
                     onAuthResponse(response);
                 } else {
                     FB.login(onAuthResponse, {
-                        scope: 'manage_pages'
+                        scope: 'manage_pages, publish_actions'
                     });
 
                 }
@@ -169,8 +165,9 @@
             });
 
 
-
+//
             FB.getLoginStatus(function (response) {
+                console.log(response);
                 statusChangeCallback(response);
             });
 
@@ -188,10 +185,11 @@
 
         // Here we run a very simple test of the Graph API after login is
         // successful.  See statusChangeCallback() for when this call is made.
-        function testAPI() {
+        function getUsername() {
             console.log('Welcome!  Fetching your information.... ');
             FB.api('/me', function (response) {
                 console.log('Successful login for: ' + response.name);
+                $('#fbUsername').val(response.name);
                 document.getElementById('status').innerHTML =
                         'Thanks for logging in, ' + response.name + '!';
             });

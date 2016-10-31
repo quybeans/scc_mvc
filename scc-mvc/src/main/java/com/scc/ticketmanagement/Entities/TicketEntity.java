@@ -1,11 +1,10 @@
 package com.scc.ticketmanagement.Entities;
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.sql.Timestamp;
 
 /**
- * Created by user on 10/29/2016.
+ * Created by user on 10/30/2016.
  */
 @Entity
 @Table(name = "ticket", schema = "scc", catalog = "")
@@ -17,7 +16,6 @@ public class TicketEntity {
     private Integer statusid;
     private Boolean active;
     private Integer assignee;
-    private String deadline;
     private String note;
     private Integer priority;
 
@@ -92,16 +90,6 @@ public class TicketEntity {
     }
 
     @Basic
-    @Column(name = "deadline")
-    public String getDeadline() {
-        return deadline;
-    }
-
-    public void setDeadline(String deadline) {
-        this.deadline = deadline;
-    }
-
-    @Basic
     @Column(name = "note")
     public String getNote() {
         return note;
@@ -135,7 +123,6 @@ public class TicketEntity {
         if (statusid != null ? !statusid.equals(that.statusid) : that.statusid != null) return false;
         if (active != null ? !active.equals(that.active) : that.active != null) return false;
         if (assignee != null ? !assignee.equals(that.assignee) : that.assignee != null) return false;
-        if (deadline != null ? !deadline.equals(that.deadline) : that.deadline != null) return false;
         if (note != null ? !note.equals(that.note) : that.note != null) return false;
         if (priority != null ? !priority.equals(that.priority) : that.priority != null) return false;
 
@@ -151,7 +138,6 @@ public class TicketEntity {
         result = 31 * result + (statusid != null ? statusid.hashCode() : 0);
         result = 31 * result + (active != null ? active.hashCode() : 0);
         result = 31 * result + (assignee != null ? assignee.hashCode() : 0);
-        result = 31 * result + (deadline != null ? deadline.hashCode() : 0);
         result = 31 * result + (note != null ? note.hashCode() : 0);
         result = 31 * result + (priority != null ? priority.hashCode() : 0);
         return result;

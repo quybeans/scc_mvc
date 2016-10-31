@@ -10,6 +10,7 @@ import java.util.List;
 public interface FacebookaccountService {
     void createFacebookaccount(String facebookUserId, String accessToken, int userId, String username);
     FacebookaccountEntity getFacebookAccountByUid(String uid);
-    List<FacebookaccountEntity> getFacebookaccountsByUserID(Integer userId);
     void deactivateFbAccount(String uid);
+
+    List<FacebookaccountEntity> getFacebookAccountsByUserId(int userId);
 }
