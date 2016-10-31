@@ -3,30 +3,28 @@
       xmlns:fb="http://www.facebook.com/2008/fbml">
 <head>
     <title>Manage page</title>
-
+    <header class="main-header" th:include="Head::header"></header>
+    <aside class="main-sidebar" th:include="SideBar::aside"> </aside>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
-
-    <header class="main-header" th:include="Head::header"></header>
-
-    <aside class="main-sidebar" th:include="SideBar::aside">
-    </aside>
 
     <div class="content-wrapper">
 
         <section class="content">
 
-            <div style="text-align: center">
-                <h1>Manage Page</h1>
-            </div>
+            <div id="pageToManage" style="margin-top: 10px;margin-bottom: 10px;margin-left: 10px; background-color: white; padding: 10px 20px 20px 20px">
 
-            <div id="pageToManage">
+                <div style="text-align: left; margin-bottom: 20px">
+                    <h2>Manage Facebook page account</h2>
+                </div >
+
+                *Note: All page account here can be used by Brand's staff
                 <table class="table table-hover" style="background-color: white">
-                    <thead>
+                    <thead style="border-top: 1px solid lightgray">
                     <tr>
                         <th>Page Picture</th>
-                        <th>Page Name</th>
+                        <th>Name</th>
                         <th>Type</th>
                         <th>Category</th>
                         <th>Action</th>
@@ -57,7 +55,7 @@
                     </tr>
                     </tbody>
                 </table>
-                <a href="create.html">Add page</a>
+                <a href="create.html" class="btn btn-primary"><span class="fa fa-plus" style="margin-right: 8px"></span>Add page account</a>
             </div>
 
 

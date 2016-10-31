@@ -3,30 +3,23 @@
       xmlns:fb="http://www.facebook.com/2008/fbml">
 <head>
     <title>Manage crawl page</title>
+    <header class="main-header" th:include="Head::header"></header>
+    <aside class="main-sidebar" th:include="SideBar::aside"> </aside>
 
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
 
-    <header class="main-header" th:include="Head::header"></header>
-
-    <aside class="main-sidebar" th:include="SideBar::aside">
-    </aside>
-
-    <div class="content-wrapper">
+    <div class="content-wrapper" >
 
         <section class="content">
-
-            <div style="text-align: center">
-                <h1>Manage Crawl Page</h1>
-            </div>
-
-            <div id="pageToCrawl">
-                <button type="button" class="btn btn-info btn-lg" data-toggle="modal"
-                        data-target="#myModal">Add page to crawl
-                </button>
+            <div id="pageToCrawl" style="margin-top: 10px;margin-bottom: 10px;margin-left: 10px; background-color: white; padding: 10px 20px 20px 20px">
+                <div style="text-align: left;margin-bottom: 20px">
+                    <h2>Manage Crawl Page</h2>
+                </div>
+                *Note: All Brand's staff are going to see all Posts and Comments from these Page.
                 <table class="table table-hover" style="background-color: white">
-                    <thead>
+                    <thead style="border-top: 1px solid lightgray">
                     <tr>
                         <th>Page Picture</th>
                         <th>Page Name</th>
@@ -60,6 +53,8 @@
                     </tr>
                     </tbody>
                 </table>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Add page to crawl
+                </button>
             </div>
 
             <!--modal-->
@@ -99,10 +94,9 @@
                     </div>
 
                 </div>
-            </div>
 
         </section>
-
+    </div>
     </div>
 
 </div>
