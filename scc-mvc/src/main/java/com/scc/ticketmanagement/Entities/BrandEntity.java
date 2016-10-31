@@ -3,7 +3,7 @@ package com.scc.ticketmanagement.Entities;
 import javax.persistence.*;
 
 /**
- * Created by QuyBeans on 10-Oct-16.
+ * Created by QuyBean on 10/31/2016.
  */
 @Entity
 @Table(name = "brand", schema = "scc", catalog = "")
@@ -14,9 +14,10 @@ public class BrandEntity {
     private String phone;
     private String email;
     private String description;
+    private String sologan;
+    private String image;
 
     @Id
-    @GeneratedValue
     @Column(name = "id")
     public int getId() {
         return id;
@@ -37,7 +38,7 @@ public class BrandEntity {
     }
 
     @Basic
-    @Column(name = "Address")
+    @Column(name = "address")
     public String getAddress() {
         return address;
     }
@@ -47,7 +48,7 @@ public class BrandEntity {
     }
 
     @Basic
-    @Column(name = "Phone")
+    @Column(name = "phone")
     public String getPhone() {
         return phone;
     }
@@ -57,7 +58,7 @@ public class BrandEntity {
     }
 
     @Basic
-    @Column(name = "Email")
+    @Column(name = "email")
     public String getEmail() {
         return email;
     }
@@ -67,13 +68,33 @@ public class BrandEntity {
     }
 
     @Basic
-    @Column(name = "Description")
+    @Column(name = "description")
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Basic
+    @Column(name = "sologan")
+    public String getSologan() {
+        return sologan;
+    }
+
+    public void setSologan(String sologan) {
+        this.sologan = sologan;
+    }
+
+    @Basic
+    @Column(name = "image")
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     @Override
@@ -89,6 +110,8 @@ public class BrandEntity {
         if (phone != null ? !phone.equals(that.phone) : that.phone != null) return false;
         if (email != null ? !email.equals(that.email) : that.email != null) return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
+        if (sologan != null ? !sologan.equals(that.sologan) : that.sologan != null) return false;
+        if (image != null ? !image.equals(that.image) : that.image != null) return false;
 
         return true;
     }
@@ -101,6 +124,8 @@ public class BrandEntity {
         result = 31 * result + (phone != null ? phone.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (sologan != null ? sologan.hashCode() : 0);
+        result = 31 * result + (image != null ? image.hashCode() : 0);
         return result;
     }
 }
