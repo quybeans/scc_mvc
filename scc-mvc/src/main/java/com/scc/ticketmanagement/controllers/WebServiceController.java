@@ -120,6 +120,9 @@ public class WebServiceController {
                 if (ticketRepository.findBycommentid(cmt.getId())!=null){
                     cmt.setIsticket(true);
                 }
+                if(user.getRoleid()==Constant.ROLE_STAFF){
+                    cmt.setStaff(true);
+                }
                 showcomments.add(cmt);
             }
 

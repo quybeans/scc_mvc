@@ -1,6 +1,5 @@
 package com.scc.ticketmanagement.repositories;
 
-import com.scc.ticketmanagement.Entities.BrandEntity;
 import com.scc.ticketmanagement.Entities.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -49,5 +48,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
      void changeActive(@Param("userid") Integer userid,
                         @Param("active") boolean active);
 
-
+    @Query("Select u from UserEntity u where u.brandid=:brandid")
+    List<UserEntity> getAllUserInBrand(@Param("brandid") Integer brandid);
 }

@@ -20,6 +20,7 @@ public class TicketEntity {
     private Integer priority;
 
     @Id
+    @GeneratedValue
     @Column(name = "id")
     public int getId() {
         return id;

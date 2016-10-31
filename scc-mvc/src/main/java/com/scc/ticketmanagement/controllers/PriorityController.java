@@ -30,9 +30,6 @@ public class PriorityController {
         String loginUser = (String) session.getAttribute("username");
         UserEntity user = userRepository.findUserByUsername(loginUser);
         List<PriorityEntity> listpriority = priorityReposioty.findBybrandid(user.getBrandid());
-        for (PriorityEntity priority: listpriority) {
-            System.out.println("Priority: " + priority.getName());
-        }
         return listpriority;
     }
 
