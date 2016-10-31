@@ -15,6 +15,7 @@ public class FacebookaccountEntity {
     private String facebookusername;
 
     @Id
+    @GeneratedValue
     @Column(name = "facebookaccountid")
     public int getFacebookaccountid() {
         return facebookaccountid;
