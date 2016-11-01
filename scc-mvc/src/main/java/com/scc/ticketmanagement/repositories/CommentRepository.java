@@ -16,7 +16,7 @@ public interface CommentRepository extends JpaRepository<CommentEntity,String> {
     @Query("SELECT u FROM CommentEntity u WHERE u.postId = :postId")
     List<CommentEntity> findCommentByPostId(@Param("postId") String postId);
 
-    @Query("SELECT u FROM CommentEntity u WHERE u.postId = :postId order by u.sentimentScore")
+    @Query("SELECT u FROM CommentEntity u WHERE u.postId = :postId order by u.sentimentScore DESC")
     List<CommentEntity> findCommentByPostIdSen(@Param("postId") String postId);
 
 

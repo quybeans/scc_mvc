@@ -63,22 +63,22 @@ public class WebServiceController {
             for(String pageid : listPage)
             {
                 PageEntity page = pageRepository.findOne(pageid);
-                List<PostEntity> list =  postRepository.findByCreatedBy(pageid);
-                for (PostEntity post : list)
-                {
-                    ExPost newP = new ExPost();
-                    newP.setCreatedBy(post.getCreatedBy());
-                    newP.setContent(post.getContent());
-                    newP.setId(post.getId());
-                    newP.setLikesCount(post.getLikesCount());
-                    newP.setCommentsCount(post.getCommentsCount());
-                    newP.setSharesCount(post.getSharesCount());
-                    newP.setCreatedAt(post.getCreatedAt());
-                    newP.setCreatedByName(page.getName());
+                if(page.isCrawler()) {
+                    List<PostEntity> list = postRepository.findByCreatedBy(pageid);
+                    for (PostEntity post : list) {
+                        ExPost newP = new ExPost();
+                        newP.setCreatedBy(post.getCreatedBy());
+                        newP.setContent(post.getContent());
+                        newP.setId(post.getId());
+                        newP.setLikesCount(post.getLikesCount());
+                        newP.setCommentsCount(post.getCommentsCount());
+                        newP.setSharesCount(post.getSharesCount());
+                        newP.setCreatedAt(post.getCreatedAt());
+                        newP.setCreatedByName(page.getName());
 
-                    rs.add(newP);
+                        rs.add(newP);
+                    }
                 }
-
             }
             Collections.reverse(rs);
             return rs;
@@ -213,6 +213,17 @@ public class WebServiceController {
 
         }
         return null;
+    }
+
+    @RequestMapping("sendMessage")
+    public String sendMessage(String content, String id, String token)
+    {
+        try {
+            return FacebookUtility.sendMessage(content, id, token);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "nothing";
     }
 
 }

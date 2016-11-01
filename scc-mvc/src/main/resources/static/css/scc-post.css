@@ -152,7 +152,8 @@ overflow: scroll;
 
 .cmtList .cmt{
   cursor:pointer;
-  height: 14vh;
+  max-heightheight: 20vh;
+  overflow: hidden;
   border-bottom: 1px solid lightgray;
   margin-bottom: 0px;
   margin-top: 0px;
