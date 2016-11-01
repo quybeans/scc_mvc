@@ -206,7 +206,9 @@
                                         ' style="margin-top: -10px; "><span style="color:gray " ' +
                                         'title="Forward this ticket to another staff" data-toggle="tooltip"  data-placement="bottom" ' +
                                         ' class="fa fa-group"></span></button>'
-
+                                if(!data[index].ticketofstaff){
+                                    groupbutton="";
+                                }
                             //khi nguoi dang nhap duoi quyen khac
                             }else{
                                 //Them nut assign
@@ -221,7 +223,7 @@
                             //khi nguoi dang nhap duoi quyen staff
                             if(data[index].staff){
                                 //them nut assign cho ban than no
-                                groupbutton+='<button class="btn btn-default btn-xs inline" onclick="createTicketForTheStaff('+data[index].id+')" ' +
+                                groupbutton+='<button class="btn btn-default btn-xs inline" onclick="createTicketForTheStaff('+data[index].id+','+data[index].postId+')" ' +
                                         ' style="margin-top: -10px; "><span style="color:gray " ' +
                                         'title="Create new ticket for yourself" data-toggle="tooltip"  data-placement="bottom" ' +
                                         ' class="fa fa-plus-square"></span></button>'
@@ -455,8 +457,42 @@
             })
         }
 
-        function createTicketForTheStaff(comID){
+        //create ticket for the login staff
+        function createTicketForTheStaff(comID,postID){
+                $('#staffcreateticketModal').modal('toggle');
 
+            $.ajax({
+                url: "/getallpriorityofbrand",
+                type: "GET",
+                success: function (data) {
+                    $("#staffpriority").html("");
+                    for (var i = 0; i < data.length; i++) {
+                        $("#staffpriority").append(
+                                '<option value="'+ data[i].id +'">'+ data[i].name+'</option>'
+                        )
+                    }
+                },
+                error: function () {
+                    alert("fail to load priority for update")
+                }
+            })
+
+            $('#btnStaffCreate').unbind().click(function () {
+                var priority = $('#staffpriority').val();
+                $.ajax({
+                    url:"/createticketforstaff",
+                    data:{"commentid":comID,"priority":priority},
+                    type:"POST",
+                    success:function () {
+                        $('#staffcreateticketModal').modal('toggle');
+                        alert("create ticket successful");
+                        getCommentById(postID);
+                    },
+                    error:function () {
+                        alert("fail to create ticket");
+                    }
+                })
+            })
         }
 
         //get ticket detail
@@ -480,6 +516,7 @@
                                 +'<p><b>Status: </b>'+data.statusid+'</p>'
                                 +'<p><b>Active: </b>'+data.active+'</p>'
                                 +'<p><b>Assignee: </b>'+data.assignee+'</p>'
+                                +'<p><b>Priority: </b>'+data.priority+'</p>'
                         );
                     }
 
@@ -548,6 +585,22 @@
             //Lay tat ca cac tag cua brand cho user dung
             $("#tagcommentModal").modal('toggle');
             loadcommenttag(cmtid);
+            $('#btnAddTag').unbind().click(function () {
+                var attributename=$('#attributename').val();
+                $.ajax({
+                    url:"/createattribute",
+                    type:"POST",
+                    data:{"attributename":attributename},
+                    success: function (data) {
+                        alert("create attribute "+data.name+" successful");
+                        loadcommenttag(cmtid);
+                        $('#attributename').val("");
+                    },
+                    error: function () {
+                        alert("fail to create attribute")
+                    }
+                })
+            })
         }
 
         //load tag of comment
@@ -560,19 +613,16 @@
                 success:function (data) {
                     $('#tagss').html("");
                     for(var i=0;i<data.length;i++){
-                        var commenttag;
-                        var btnclass;
+                        var button;
                         if(data[i].commentatt){
-                            commenttag='fa fa-check';
-                            btnclass='btn btn-success btn-xs';
+                            button='<button class="btn btn-success btn-xs" style="width: 25px" id="tagbtn" onclick="untagcomment('+cmtid+','+data[i].id+')"><i class="fa fa-check"></i></button>';
                         }else{
-                            commenttag='fa fa-remove';
-                            btnclass='btn btn-danger btn-xs';
+                            button='<button class="btn btn-default btn-xs" style="width: 25px" id="tagbtn" onclick="tagcomment('+cmtid+','+data[i].id+')"><i class="fa fa-check"></i></button>';
                         }
                         $('#tagss').append(
                                 '<div class="btn-group" role="group" style="margin-left: 10px">'
                                 +'<button class="btn btn-default btn-xs" >'+data[i].name+'</button>'
-                                +'<button class="'+btnclass +'" style="width: 25px" id="tagbtn" onclick="tagcomment('+cmtid+','+data[i].id+')"><i class="'+commenttag+'"></i></button>'
+                                +button
                                 +'</div>'
                         );
                     }
@@ -583,6 +633,7 @@
             })
         }
 
+        //tag comment to attribute
         function tagcomment(cmtid,attid) {
             $.ajax({
                 url:"/tagcomment",
@@ -597,6 +648,25 @@
                 }
             })
         }
+
+        //untag comment from attribute
+        function untagcomment(cmtid,attid) {
+            $.ajax({
+                url:"/untagcomment",
+                type:"POST",
+                data:{"commentid":cmtid,"tagid":attid},
+                success:function () {
+                    alert("untag comment: "+cmtid+" to attribuet:" + attid)
+                    loadcommenttag(cmtid);
+                },
+                error:function () {
+                    alert("Tag comment fail")
+                }
+            })
+        }
+
+        //create attribute
+
     </script>
     <link rel="stylesheet" th:href="@{/css/scc-post.css}"/>
 </head>
@@ -733,9 +803,9 @@
                     </div>
                     <div class="modal-footer">
                         <div class="input-group">
-                            <input type="text" class="form-control" placeholder="New Attribute"/>
+                            <input type="text" class="form-control" id="attributename" placeholder="New Attribute"/>
                             <span class="input-group-btn">
-                            <button class="btn btn-primary" id="btnManageTag" style="text-align: center">Add </button>
+                            <button class="btn btn-primary" id="btnAddTag" style="text-align: center">Add</button>
                                 </span>
                         </div>
                     </div>

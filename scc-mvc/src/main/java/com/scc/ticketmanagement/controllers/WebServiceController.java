@@ -117,8 +117,12 @@ public class WebServiceController {
                 cmt.setId(c.getId());
                 cmt.setPostId(c.getPostId());
                 cmt.setSentimentScore(c.getSentimentScore());
-                if (ticketRepository.findBycommentid(cmt.getId())!=null){
+                TicketEntity ticket =ticketRepository.findBycommentid(cmt.getId());
+                if (ticket!=null){
                     cmt.setIsticket(true);
+                    if(ticket.getAssignee()==user.getUserid()){
+                        cmt.setTicketofstaff(true);
+                    }
                 }
                 if(user.getRoleid()== Constant.ROLE_STAFF){
                     cmt.setStaff(true);
