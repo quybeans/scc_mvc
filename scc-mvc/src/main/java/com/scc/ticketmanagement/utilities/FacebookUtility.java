@@ -8,12 +8,15 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
+import com.google.gson.Gson;
 import com.scc.ticketmanagement.facebook.UserResponse;
 import com.scc.ticketmanagement.facebook.UserUri;
+import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 
@@ -83,5 +86,59 @@ public class FacebookUtility {
 
         return false;
     }
+
+    public static String sendMessage(String content, String recipientId, String accessToken) throws Exception
+    {
+        HttpClient httpclient = HttpClients.createDefault();
+        HttpPost httpPost =  new HttpPost("https://graph.facebook.com/me/messages?access_token="+accessToken);
+        Gson gson = new Gson();
+
+        Payload.Recipient recipient = new Payload.Recipient(recipientId);
+        Payload.Message message = new Payload.Message(content);
+
+        Payload payloads = new Payload(recipient,message);
+
+        StringEntity payload = new StringEntity(gson.toJson(payloads));
+
+        httpPost.setEntity(payload);
+
+
+        httpPost.setHeader("Content-type", "application/json");
+        HttpResponse response = httpclient.execute(httpPost);
+
+        return response.toString();
+    }
+
+    public static class Payload{
+        public Recipient recipient;
+        public Message message;
+
+        public Payload(Recipient recipient, Message message) {
+            this.recipient = recipient;
+            this.message = message;
+        }
+        public static class Recipient {
+            public String id;
+
+            public Recipient(String id) {this.id = id;}
+
+            public String getId() {return id;}
+
+            public void setId(String id) {this.id = id; }
+        }
+        public static class Message
+        {
+            public String text;
+
+            public Message(String text) {  this.text = text;}
+
+            public String getText() { return text;}
+
+            public void setText(String text) {  this.text = text;   }
+        }
+    }
+
+
+
 
 }
