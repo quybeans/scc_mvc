@@ -62,7 +62,6 @@
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Add
                         Facebook account
                     </button>
-                    <a href="#" onclick="FB.login(function(response){},{perms:'manage_pages,publish_actions,publish_pages'});">AAA</a>
                 </div>
 
             </div>
@@ -87,7 +86,7 @@
                                 <input type="hidden" name="uid" id="uid" value=""/>
                             </form>
 
-                            <fb:login-button data-scope="publish_pages,email" onlogin="checkLoginState();">
+                            <fb:login-button data-scope="manage_pages,publish_actions,publish_pages" onlogin="checkLoginState();">
                             </fb:login-button>
                             <div id="status">
                             </div>

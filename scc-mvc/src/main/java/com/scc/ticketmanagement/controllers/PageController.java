@@ -77,6 +77,7 @@ public class PageController {
                                          @RequestParam("pageId") String pageId,
                                          @RequestParam("pageCategory") String pageCategory) {
 
+        System.out.println(pageToken);
         if (!this.isCurrentUserAuthorized(request)) {
             return "page/403";
         }
@@ -92,7 +93,7 @@ public class PageController {
             try {
                 System.out.println("brand id: " + brandId);
 
-                String longLivedToken = AccessTokenUtility.getExtendedAccessToken(pageToken);
+                String longLivedToken = AccessTokenUtility.getMessengerExtendedAccessToken(pageToken);
                 System.out.println(longLivedToken);
                 pageService.createPage(pageName, pageId, longLivedToken, pageCategory);
                 brandPageService.addBrandPage(brandId, pageId);
