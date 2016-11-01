@@ -62,6 +62,7 @@
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Add
                         Facebook account
                     </button>
+                    <a href="#" onclick="FB.login(function(response){},{perms:'manage_pages,publish_actions,publish_pages'});">AAA</a>
                 </div>
 
             </div>
@@ -86,9 +87,8 @@
                                 <input type="hidden" name="uid" id="uid" value=""/>
                             </form>
 
-                            <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+                            <fb:login-button data-scope="publish_pages,email" onlogin="checkLoginState();">
                             </fb:login-button>
-
                             <div id="status">
                             </div>
                             <div class="modal-footer">
@@ -165,7 +165,7 @@
                     onAuthResponse(response);
                 } else {
                     FB.login(onAuthResponse, {
-                        scope: 'manage_pages, publish_actions'
+                        scope: 'manage_pages,publish_actions,publish_pages'
                     });
 
                 }
@@ -177,15 +177,13 @@
             FB.init({
                 appId: '341786092825787',
                 cookie: true,  // enable cookies to allow the server to access
-                // the session
+                               // the session
                 xfbml: true,  // parse social plugins on this page
-                version: 'v2.5' // use graph api version 2.5
+                version: 'v2.8' // use graph api version 2.5
             });
 
 
-//
             FB.getLoginStatus(function (response) {
-                console.log(response);
                 statusChangeCallback(response);
             });
 

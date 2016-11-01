@@ -86,7 +86,7 @@
 
                                         <div id="fbLoginButton" style="visibility: hidden">
 
-                                            <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+                                            <fb:login-button scope="public_profile,email,manage_pages,publish_actions,publish_pages" onlogin="checkLoginState();">
                                             </fb:login-button>
                                         </div>
 
@@ -150,7 +150,7 @@
                 onAuthResponse(response);
             } else {
                 FB.login(onAuthResponse, {
-                    scope: 'manage_pages'
+                    scope: 'manage_pages,publish_actions,publish_pages'
                 });
             }
         });
