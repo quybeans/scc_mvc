@@ -9,6 +9,7 @@ public class ExtendComments extends CommentEntity {
 
     private boolean isticket;
     private boolean staff;
+    private boolean ticketofstaff;
 
     public boolean isticket() {
         return isticket;
@@ -24,5 +25,13 @@ public class ExtendComments extends CommentEntity {
 
     public void setStaff(boolean staff) {
         this.staff = staff;
+    }
+
+    public boolean isTicketofstaff() {
+        return ticketofstaff;
+    }
+
+    public void setTicketofstaff(boolean ticketofstaff) {
+        this.ticketofstaff = ticketofstaff;
     }
 }

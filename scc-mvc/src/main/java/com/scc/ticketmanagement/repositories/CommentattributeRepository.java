@@ -13,4 +13,8 @@ import java.util.List;
 public interface CommentattributeRepository extends JpaRepository<CommentattributeEntity,Integer> {
     @Query("select a From CommentattributeEntity a where a.commentid=:commentid")
     List<CommentattributeEntity> getAttributebyCommentID(@Param("commentid") String commentid);
+
+    @Query("select a From CommentattributeEntity a where a.commentid=:commentid and a.attributeid=:attributeid")
+    CommentattributeEntity get1ByCommentIDandAttID(@Param("commentid") String commentid,
+                                                   @Param("attributeid") Integer attributeid );
 }

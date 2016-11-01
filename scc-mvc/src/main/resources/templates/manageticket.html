@@ -9,6 +9,7 @@
 
     <script src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
     <script src="js/moment.min.js"></script>
+    <script th:src="@{/js/jquery_dateFormat.js}"></script>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -27,9 +28,7 @@
                   <button class="btn btn-info btn-md " type="button" onclick="configpriority()">
                    <i class="fa fa-cogs" aria-hidden="true"></i> <strong>Config Priority</strong>
                   </button>
-                 <button class="btn btn-info btn-md " type="button" >
-                   <i class="fa fa-wrench" aria-hidden="true"></i> <strong>Config Attribute</strong>
-                  </button>
+
        </span>
         </section>
 
@@ -148,6 +147,26 @@
                     </div>
                 </div>
             </div>
+
+            <div class="modal fade" id="ticketModal" role="dialog">
+                <div class="modal-dialog modal-md">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <!--<h4 class="modal-title">Ticket</h4>-->
+                            <div id="comment">
+
+                            </div>
+                        </div>
+                        <div id="reply" class="modal-body">
+
+                        </div>
+                        <div class="modal-footer">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
 
     </div>
@@ -182,7 +201,7 @@
                     width:'20%',
                     targets: 2,
                     render: (data, type, row) => {
-                    return '<h5 style="overflow: hidden; max-height: 100px"><a href="getcurrentticket?ticketid='+row.id+'">'+row.content+'</a></h5>'
+                    return '<h5 style="overflow: hidden; max-height: 100px"><a onclick="showticket('+row.commentid+')">'+row.content+'</a></h5>'
                                                 },
                 },
                 {
@@ -192,11 +211,11 @@
                      },
                 },
                 {
-                    width:'9%',
+                    width:'10%',
                     targets: 11,
                     render: (data, type, row) => {
                     return '<div class="btn-group btn-xs">'
-                    +'<button type="button" class="btn btn-success btn-xs" onclick="assign('+row.commentid+')"><i class="fa fa-tag"></i></button>'
+                    +'<button type="button" class="btn btn-success btn-xs" onclick="assign('+row.commentid+')"><i class="fa fa-ticket"></i></button>'
                     +'<button type="button" class="btn btn-danger btn-xs" onclick="status('+row.commentid+')"><i class="fa fa-navicon"></i></button>'
                     +'<button type="button" class="btn btn-primary btn-xs" onclick="updateticket('+row.id+')"><i class="fa fa-pencil"></i></button>'
                     +'</div>'
@@ -417,6 +436,78 @@
                 },
                 error: function () {
                     alert("Fail to delete priority");
+                }
+            })
+        }
+
+
+
+        function showticket(cmtid) {
+            $('#ticketModal').modal('toggle');
+            
+            $.ajax({
+                url:"/getcommentbyid",
+                type:"GET",
+                data:{"commentid":cmtid},
+                success:function (data) {
+                    $('#comment').html('');
+                    $('#comment').append(
+                            '<div  class="cmt" >'
+                            +'<div class="col-lg-2 cmtContent">'
+                            +'<img onload="http://localhost:9000/img/user_img.jpg" src="http://graph.facebook.com/'+data.createdBy+'/picture" alt="user image">'
+                            +'</div>'
+                            +'<div class="col-lg-8">'
+                            +'<p class="message">'
+                            +'<a>'
+                            +data.createdByName
+                            +'<small class="text-muted" style="margin-left: 10px">'
+                            +jQuery.format.prettyDate( new Date(data.createdAt))
+                            +'</small>'
+                            +' </a>'
+                            +'<p style="margin-left: 65px;margin-top: -10px " onclick="">'+data.content+'</p>'
+                            +'</p>'
+                            +'</div>'
+                            +'<div class="col-lg-2" style="margin-top: 30px">' +'<small class="" style="font-size: 20px;"></small>'
+                            +'</div>'
+                            +'</div>'
+                    )
+                },
+                error:function () {
+                    alert("Fail to get ticket comment");
+                }
+            })
+            
+            $.ajax({
+                url:"/getreply",
+                type:"GET",
+                data:{"commentid":cmtid},
+                success:function (data) {
+                    $('#reply').html('');
+                    for(var i=0;i<data.length;i++){
+                        $('#reply').append(
+                                '<div  class="cmt" >'
+                                +'<div class="col-lg-2 cmtContent">' +
+                                '<img onload="http://localhost:9000/img/user_img.jpg" src="http://graph.facebook.com/'+data[i].createdBy+'/picture" alt="user image">'
+                                +'</div>'
+                                +'<div class="col-lg-8">'
+                                +'<p class="message">'
+                                +'<a>'
+                                +data[i].createdByName
+                                +'<small class="text-muted" style="margin-left: 10px">'
+                                +jQuery.format.prettyDate( new Date(data[i].createdAt))
+                                +'</small>'
+                                +' </a>'
+                                +'<p style="margin-left: 65px;margin-top: -10px " onclick="">'+data[i].content+'</p>'
+                                +'</p>'
+                                +'</div>'
+                                +'<div class="col-lg-2" style="margin-top: 30px">' +'<small class="" style="font-size: 20px;"></small>'
+                                +'</div>'
+                                +'</div>'
+                        )
+                    }
+                },
+                error:function () {
+                    alert("Fail to load reply")
                 }
             })
         }

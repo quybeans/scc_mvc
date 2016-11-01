@@ -64,4 +64,27 @@ public class AttributeController {
         commentattributeEntity.setCommentid(commentid);
         return commentattributeRepository.save(commentattributeEntity);
     }
+
+    @RequestMapping("/untagcomment")
+    public void untagcomment(@RequestParam("commentid") String commentid,
+                                               @RequestParam("tagid") Integer tag){
+        CommentattributeEntity commentattributeEntity = commentattributeRepository.get1ByCommentIDandAttID(commentid,tag);
+        if(commentattributeEntity!=null){
+            commentattributeRepository.delete(commentattributeEntity);
+        }
+    }
+
+    @RequestMapping("/createattribute")
+    public AttributeEntity createattribute(@RequestParam("attributename") String attributename,HttpServletRequest request){
+
+        HttpSession session = request.getSession();
+        String loginUser = (String) session.getAttribute("username");
+        UserEntity user = userRepository.findUserByUsername(loginUser);
+
+
+        AttributeEntity attribute = new AttributeEntity();
+        attribute.setName(attributename);
+        attribute.setBrandid(user.getBrandid());
+        return attributeRepository.save(attribute);
+    }
 }

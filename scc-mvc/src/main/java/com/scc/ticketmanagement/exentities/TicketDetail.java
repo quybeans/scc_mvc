@@ -13,7 +13,7 @@ public class TicketDetail {
     private String assignee;
     private String createby;
     private String commentid;
-    private String deadline;
+    private String priority;
 
     public int getId() {
         return id;
@@ -71,11 +71,11 @@ public class TicketDetail {
         this.commentid = commentid;
     }
 
-    public String getDeadline() {
-        return deadline;
+    public String getPriority() {
+        return priority;
     }
 
-    public void setDeadline(String deadline) {
-        this.deadline = deadline;
+    public void setPriority(String priority) {
+        this.priority = priority;
     }
 }
