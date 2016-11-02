@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>Messenger</title>
+    <header class="main-header" th:include="Head::header"></header>
+    <aside class="main-sidebar" th:include="SideBar::aside"></aside>
+
+    <link rel="stylesheet" th:href="@{/css/scc-post.css}"/>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+    <div class="content-wrapper" style="max-height: 90vh;overflow: hidden">
+
+        <section class="content">
+
+            <!--Messages-->
+            <div class="col-md-3" id="messagesList">
+                List of message here
+            </div>
+            <div class="col-md-6" id="message">
+                Content
+            </div>
+            <div class="col-md-3" id="customer-info">
+                Customer info
+            </div>
+
+        </section>
+    </div>
+
+</div>
+</body>
+</html>
