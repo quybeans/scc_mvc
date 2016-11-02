@@ -46,9 +46,33 @@
 
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
-                <!-- Messages: style can be found in dropdown.less-->
 
-                <!-- User Account: style can be found in dropdown.less -->
+                <!--This is notification dropdown-->
+
+                <li class="dropdown tasks-menu">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-bell"></i>
+                        <span class="label label-danger">9</span>
+                    </a>
+                    <ul class="dropdown-menu" style=" box-shadow: 5px 5px 5px #888888;">
+                        <li class="header"><b>Notification</b></li>
+                        <li>
+                            <ul class="menu">
+                                <li><!-- Task item -->
+                                    <a href="#">
+                                        <h3>
+                                            You have a new ticket from <b>Mr.Boss</b>
+                                            <p class="pull right"><span class="fa fa-ticket" style="margin-right: 5px"></span>5 mins ago</p>
+                                        </h3>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="footer">
+                            <a href="#">View all tasks</a>
+                        </li>
+                    </ul>
+                </li>
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <span class="hidden-xs" th:text="${session.fullname}"></span>

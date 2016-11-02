@@ -90,8 +90,6 @@
 
         //Get all posts
         function getAllPosts() {
-
-
             $.ajax({
                 url: '/allPostsByBrand',
                 type: "GET",
@@ -101,7 +99,7 @@
                     $('#post-box').empty();
                     $.each(data,function (index) {
                         $('#post-box').append(
-                                '<div class="item" onclick="getCommentById('+data[index].id+')">'
+                                '<div class="item" style="position:relative" onclick="getCommentById('+data[index].id+')">'
                                 +'<img onload="http://localhost:8080/img/user_img.jpg" src="http://graph.facebook.com/'+data[index].createdBy+'/picture" alt="user image">'
                                 +'<p class="message">'
                                 +'<a class="name">'
@@ -112,7 +110,7 @@
                                 +' </a>'
                                 +'</p>'
                                 +'<p style="margin-top: 30px;height: 35px;overflow: hidden">'+data[index].content+'</p>'
-                                +'<div style="color: gray; bottom: 0px;text-align: center; ">'
+                                +'<div style="color: gray; bottom: 0px; position: absolute; width: 90%;text-align: center">'
                                 +'<div class="inline"  style="margin-right: 10px"><span class="glyphicon glyphicon-thumbs-up"></span>&nbsp;'+data[index].likesCount+'</div>'
                                 +'<div class="inline"style="margin-right: 10px"><span class="glyphicon glyphicon-comment"></span>&nbsp;'+data[index].commentsCount+' </div>'
                                 +'<div class="inline" style="margin-right: 10px"> <span class="glyphicon glyphicon-share-alt"></span>&nbsp;'+data[index].sharesCount+'</div>'

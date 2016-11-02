@@ -6,7 +6,6 @@
 
 }
 .postlist {
-
   height: 95vh;
   padding: 0px;
   background-color: white;
@@ -18,7 +17,7 @@
 
 .cmtbox{
 
-overflow: scroll;
+  overflow: scroll;
   height:95vh;
   padding:0px;
   background-color: white;
