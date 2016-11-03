@@ -7,6 +7,7 @@ import com.scc.ticketmanagement.exentities.ExPost;
 import com.scc.ticketmanagement.exentities.ExtendComments;
 import com.scc.ticketmanagement.exentities.FaceBookPage;
 import com.scc.ticketmanagement.repositories.*;
+import com.scc.ticketmanagement.services.PageService;
 import com.scc.ticketmanagement.utilities.Constant;
 import com.scc.ticketmanagement.utilities.FacebookUtility;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,9 @@ public class WebServiceController {
 
     @Autowired
     private TicketRepository ticketRepository;
+
+    @Autowired
+    private PageService pageService;
 
     @RequestMapping("allPostsByBrand")
     public List<ExPost> postsByByBrand(HttpServletRequest request)
@@ -217,6 +221,11 @@ public class WebServiceController {
 
         }
         return null;
+    }
+
+    @RequestMapping("/getPageAccessTokenByPageId")
+    public String error404(@RequestParam("pageId") String pageId) {
+       return pageService.getPageAccessTokenByPageId(pageId);
     }
 
     @RequestMapping("sendMessage")

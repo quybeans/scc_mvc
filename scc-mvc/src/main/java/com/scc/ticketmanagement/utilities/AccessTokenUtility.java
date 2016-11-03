@@ -3,6 +3,7 @@ package com.scc.ticketmanagement.utilities;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
 import com.restfb.exception.FacebookException;
+import com.scc.ticketmanagement.facebook.Contact;
 
 import javax.naming.AuthenticationException;
 
@@ -44,6 +45,7 @@ public class AccessTokenUtility {
         }
         return extendedAccessToken.getAccessToken();
     }
+
 
 
 }

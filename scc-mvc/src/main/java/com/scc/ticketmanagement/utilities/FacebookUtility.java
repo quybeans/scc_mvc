@@ -9,6 +9,9 @@ import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
 import com.google.gson.Gson;
+import com.restfb.DefaultFacebookClient;
+import com.restfb.FacebookClient;
+import com.scc.ticketmanagement.facebook.Contact;
 import com.scc.ticketmanagement.facebook.UserResponse;
 import com.scc.ticketmanagement.facebook.UserUri;
 import org.apache.http.HttpResponse;
@@ -20,6 +23,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 
+import javax.naming.AuthenticationException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -138,7 +142,11 @@ public class FacebookUtility {
         }
     }
 
-
+    public static Contact getContact(String senderId,String accessToken) throws AuthenticationException {
+        FacebookClient facebookClient = new DefaultFacebookClient(accessToken);
+        Contact contact = facebookClient.fetchObject(senderId, Contact.class);
+        return contact;
+    }
 
 
 }
