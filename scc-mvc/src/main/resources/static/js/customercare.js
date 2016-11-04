@@ -153,102 +153,153 @@ function getReplyByCommentId(commentId) {
     })
 }
 //Get comments for posts
-function getCommentById(postId,page) {
-    var happycount = 0;
-    var sadcount = 0;
-    $('#comment-box').empty();
-    $('#comment-box').html('Loading....');
-    getPostById(postId);
+// function getCommentById(postId,page) {
+//     var happycount = 0;
+//     var sadcount = 0;
+//     $('#comment-box').empty();
+//     $('#comment-box').html('Loading....');
+//     getPostById(postId);
+//
+//     $.ajax({
+//         url: 'post/sentimentcount',
+//         type: "GET",
+//         data: {postid: postId},
+//         dataType: "json",
+//         success: function (result) {happycount=result[0];sadcount=result[1]}});
+//
+//     $.ajax({
+//         url: 'comment/getallcomment',
+//         type: "GET",
+//         data: {postid: postId, page:page},
+//         dataType: "json",
+//         success: function (result) {
+//
+//             // Pagination
+//             var data = result.content;
+//             commentPagination(parseInt(result.totalPages),postId);
+//
+//
+//             $('#comment-box').empty();
+//             $.each(data, function (index) {
+//                  var senIcon = sadicon;
+//                 if (data[index].sentimentScore == 1)
+//                     senIcon = happyicon;
+//
+//
+//
+//                 var cmtId = "'" + postId + "_" + data[index].id + "'";
+//                 // groupbutton chua 2 nut là reply, danh tag
+//                 var groupbutton = '<button  onclick="replyToComment(' + cmtId + ');getReplyByCommentId(' + data[index].id + ');" class="btn btn-default btn-xs inline"' +
+//                     ' style="margin-left: 65px;margin-top: -10px; "><span class="glyphicon glyphicon-send"' +
+//                     ' style="color:gray "  title="Reply to this comment"   data-placement="bottom" ' +
+//                     'data-toggle="tooltip" ></span></button>'
+//
+//                     + '<button  onclick="showtagcomment(' + data[index].id + ')" class="btn btn-default btn-xs inline"' +
+//                     ' style="margin-top: -10px;" ><span class="fa fa-tag"' +
+//                     ' style="color:gray "  title="Tag this comment to attribute"   data-placement="bottom" ' +
+//                     'data-toggle="popover" ></span></button>';
+//
+//                 //khi comment la mot ticket
+//                 if (data[index].ticket) {
+//
+//                     //Them nut change stt
+//                     groupbutton += '<button class="btn btn-default btn-xs inline" onclick="status(' + data[index].id + ')"' +
+//                         ' style="margin-top: -10px; "><span style="color:gray " ' +
+//                         'title="Change ticket status" data-toggle="tooltip"  data-placement="bottom" ' +
+//                         ' class="fa fa-navicon"></span></button>'
+//
+//                     //khi nguoi dang nhap duoi quyen staff
+//                     if (data[index].staff) {
+//                         //them nut forward ticket
+//                         groupbutton += '<button class="btn btn-default btn-xs inline" onclick="forwardticket(' + data[index].id + ')"' +
+//                             ' style="margin-top: -10px; "><span style="color:gray " ' +
+//                             'title="Forward this ticket to another staff" data-toggle="tooltip"  data-placement="bottom" ' +
+//                             ' class="fa fa-group"></span></button>'
+//                         if (!data[index].ticketofstaff) {
+//                             groupbutton = "";
+//                         }
+//                         //khi nguoi dang nhap duoi quyen khac
+//                     } else {
+//                         //Them nut assign
+//                         groupbutton += '<button class="btn btn-default btn-xs inline" onclick="assign(' + data[index].id + ')"' +
+//                             ' style="margin-top: -10px; "><span style="color:gray " ' +
+//                             'title="Assign this ticket to staff" data-toggle="tooltip"  data-placement="bottom" ' +
+//                             ' class="fa fa-ticket"></span></button>'
+//                     }
+//
+//                     //khi comment chua phai la ticket
+//                 } else {
+//                     //khi nguoi dang nhap duoi quyen staff
+//                     if (data[index].staff) {
+//                         //them nut assign cho ban than no
+//                         groupbutton += '<button class="btn btn-default btn-xs inline" onclick="createTicketForTheStaff(' + data[index].id + ',' + data[index].postId + ')" ' +
+//                             ' style="margin-top: -10px; "><span style="color:gray " ' +
+//                             'title="Create new ticket for yourself" data-toggle="tooltip"  data-placement="bottom" ' +
+//                             ' class="fa fa-plus-square"></span></button>'
+//
+//                         //khi nguoi dang nhap duoi quyen khac
+//                     } else {
+//                         //them nut create ticket
+//                         groupbutton += '<button  onclick="createticket(' + data[index].id + ',' + data[index].postId + ');" class="btn btn-default btn-xs inline"' +
+//                             ' style="margin-top: -10px; "><span class="fa fa-plus"' +
+//                             ' style="color:gray "  title="Reply to this comment"   data-placement="bottom" ' +
+//                             'data-toggle="tooltip" ></span></button>'
+//                     }
+//                 }
+//                 $('#comment-box').append(
+//                     '<div  class="cmt" >'
+//                     + '<div class="col-lg-10 cmtContent">' +
+//                     '<img onload="http://localhost:9000/img/user_img.jpg" src="http://graph.facebook.com/' + data[index].createdBy + '/picture" alt="user image">'
+//                     + '<p class="message">'
+//                     + '<a>'
+//                     + data[index].createdByName
+//                     + '<small class="text-muted" style="margin-left: 10px">'
+//                     + jQuery.format.prettyDate(new Date(data[index].createdAt))
+//                     + '</small>'
+//                     + ' </a>'
+//                     + '<p style="margin-left: 65px;margin-top: -10px " onclick="getticket(' + data[index].id + ',' + postId + ')">' + data[index].content + '</p>'
+//                     + '</p>'
+//                     //Day la nut reply
+// //                                +'<button onclick="replyToComment('+cmtId+')" class="btn btn-default btn-xs inline" style="margin-left: 65px;margin-top: -10px; "><span class="glyphicon glyphicon-send" style="color:gray "  title="Reply to this comment"   data-placement="bottom" data-toggle="tooltip" ></span></button>'
+//                     + groupbutton
+//                     + '</div>'
+//                     + '<div class="col-lg-2" style="margin-top: 30px">' + '<small class="' + senIcon + '" style="font-size: 20px;"></small>'
+//                     + '</div>'
+//                     + '</div>')
+//             });
+//
+//             $("#happy-count").html(happycount);
+//             $("#sad-count").html(sadcount);
+//         }
+//     });
+//
+// }
 
+
+
+function getCommentById(postid) {
+    getPostById(postid);
+    getCommentByPostIdwPage(postid,1);
+}
+
+//Get comment by id
+function getCommentByPostIdwPage(postId,page) {
     $.ajax({
-        url: 'post/sentimentcount',
-        type: "GET",
-        data: {postid: postId},
-        dataType: "json",
-        success: function (result) {happycount=result[0];sadcount=result[1]}});
-    
-    $.ajax({
-        url: 'comment/getallcomment',
+        url: 'comment/bypostid',
         type: "GET",
         data: {postid: postId, page:page},
         dataType: "json",
-        success: function (result) {
-
-            // Pagination
-            var data = result.content;
-            commentPagination(parseInt(result.totalPages),postId);
-
-
+        success: function (data) {
             $('#comment-box').empty();
             $.each(data, function (index) {
-                 var senIcon = sadicon;
+                var senIcon = sadicon;
                 if (data[index].sentimentScore == 1)
                     senIcon = happyicon;
-
-
-
                 var cmtId = "'" + postId + "_" + data[index].id + "'";
-                // groupbutton chua 2 nut là reply, danh tag
-                var groupbutton = '<button  onclick="replyToComment(' + cmtId + ');getReplyByCommentId(' + data[index].id + ');" class="btn btn-default btn-xs inline"' +
-                    ' style="margin-left: 65px;margin-top: -10px; "><span class="glyphicon glyphicon-send"' +
-                    ' style="color:gray "  title="Reply to this comment"   data-placement="bottom" ' +
-                    'data-toggle="tooltip" ></span></button>'
 
-                    + '<button  onclick="showtagcomment(' + data[index].id + ')" class="btn btn-default btn-xs inline"' +
-                    ' style="margin-top: -10px;" ><span class="fa fa-tag"' +
-                    ' style="color:gray "  title="Tag this comment to attribute"   data-placement="bottom" ' +
-                    'data-toggle="popover" ></span></button>';
-
-                //khi comment la mot ticket
-                if (data[index].ticket) {
-
-                    //Them nut change stt
-                    groupbutton += '<button class="btn btn-default btn-xs inline" onclick="status(' + data[index].id + ')"' +
-                        ' style="margin-top: -10px; "><span style="color:gray " ' +
-                        'title="Change ticket status" data-toggle="tooltip"  data-placement="bottom" ' +
-                        ' class="fa fa-navicon"></span></button>'
-
-                    //khi nguoi dang nhap duoi quyen staff
-                    if (data[index].staff) {
-                        //them nut forward ticket
-                        groupbutton += '<button class="btn btn-default btn-xs inline" onclick="forwardticket(' + data[index].id + ')"' +
-                            ' style="margin-top: -10px; "><span style="color:gray " ' +
-                            'title="Forward this ticket to another staff" data-toggle="tooltip"  data-placement="bottom" ' +
-                            ' class="fa fa-group"></span></button>'
-                        if (!data[index].ticketofstaff) {
-                            groupbutton = "";
-                        }
-                        //khi nguoi dang nhap duoi quyen khac
-                    } else {
-                        //Them nut assign
-                        groupbutton += '<button class="btn btn-default btn-xs inline" onclick="assign(' + data[index].id + ')"' +
-                            ' style="margin-top: -10px; "><span style="color:gray " ' +
-                            'title="Assign this ticket to staff" data-toggle="tooltip"  data-placement="bottom" ' +
-                            ' class="fa fa-ticket"></span></button>'
-                    }
-
-                    //khi comment chua phai la ticket
-                } else {
-                    //khi nguoi dang nhap duoi quyen staff
-                    if (data[index].staff) {
-                        //them nut assign cho ban than no
-                        groupbutton += '<button class="btn btn-default btn-xs inline" onclick="createTicketForTheStaff(' + data[index].id + ',' + data[index].postId + ')" ' +
-                            ' style="margin-top: -10px; "><span style="color:gray " ' +
-                            'title="Create new ticket for yourself" data-toggle="tooltip"  data-placement="bottom" ' +
-                            ' class="fa fa-plus-square"></span></button>'
-
-                        //khi nguoi dang nhap duoi quyen khac
-                    } else {
-                        //them nut create ticket
-                        groupbutton += '<button  onclick="createticket(' + data[index].id + ',' + data[index].postId + ');" class="btn btn-default btn-xs inline"' +
-                            ' style="margin-top: -10px; "><span class="fa fa-plus"' +
-                            ' style="color:gray "  title="Reply to this comment"   data-placement="bottom" ' +
-                            'data-toggle="tooltip" ></span></button>'
-                    }
-                }
                 $('#comment-box').append(
-                    '<div  class="cmt" >'
-                    + '<div class="col-lg-10 cmtContent">' +
+                    '<div class="cmt" >'
+                    +'<div class="col-lg-10 cmtContent">' +
                     '<img onload="http://localhost:9000/img/user_img.jpg" src="http://graph.facebook.com/' + data[index].createdBy + '/picture" alt="user image">'
                     + '<p class="message">'
                     + '<a>'
@@ -259,25 +310,45 @@ function getCommentById(postId,page) {
                     + ' </a>'
                     + '<p style="margin-left: 65px;margin-top: -10px " onclick="getticket(' + data[index].id + ',' + postId + ')">' + data[index].content + '</p>'
                     + '</p>'
-                    //Day la nut reply
-//                                +'<button onclick="replyToComment('+cmtId+')" class="btn btn-default btn-xs inline" style="margin-left: 65px;margin-top: -10px; "><span class="glyphicon glyphicon-send" style="color:gray "  title="Reply to this comment"   data-placement="bottom" data-toggle="tooltip" ></span></button>'
-                    + groupbutton
+                    // Day la nut reply
+                    +'<button  onclick="replyToComment(' + cmtId + ');getReplyByCommentId(' + data[index].id + ');" class="btn btn-default btn-xs inline"' +
+                    ' style="margin-left: 65px;margin-top: -10px; "><span class="glyphicon glyphicon-send"' +
+                    ' style="color:gray "  title="Reply to this comment"   data-placement="bottom" ' +
+                    'data-toggle="tooltip" ></span></button>'
                     + '</div>'
                     + '<div class="col-lg-2" style="margin-top: 30px">' + '<small class="' + senIcon + '" style="font-size: 20px;"></small>'
                     + '</div>'
                     + '</div>')
             });
-
-            $("#happy-count").html(happycount);
-            $("#sad-count").html(sadcount);
-        }
-    });
-
+        }});
 }
-
-
 //Get post by id
 function getPostById(postId) {
+    var happycount = 0;
+    var sadcount = 0;
+
+    //Count sentiment in post
+    $.ajax({
+    url: 'post/sentimentcount',
+    type: "GET",
+    data: {postid: postId},
+    dataType: "json",
+    success: function (result) {happycount=result[0];sadcount=result[1];
+        $("#happy-count").html(happycount);
+        $("#sad-count").html(sadcount);
+    }});
+
+    //Count comment in post
+    $.ajax({
+        url: 'comment/bypostid/count',
+        type: "GET",
+        data: {postid: postId},
+        dataType: "json",
+        success: function (result) {
+            commentPagination(result,postId);
+        }});
+
+    //Get post detail
     $.ajax({
         url: '/postById',
         type: "GET",
@@ -693,7 +764,6 @@ function untagcomment(cmtid, attid) {
 
 
 //get all page for filter
-
 function getAllCrawlPage() {
     $.ajax({
         url: "/page/allpage",
@@ -721,6 +791,7 @@ function getAllCrawlPage() {
     })
 }
 
+//Page list filter select
 function select(e, id) {
 
     var newid = id.toString();
@@ -738,11 +809,21 @@ function select(e, id) {
     }
 }
 
+//Show pagination in commentlist
 function commentPagination(pagecount, postid) {
-    $('#page-nav').html('');
+    $('#page-nav').html('<li><a style="border: none; background-color: transparent">PAGE <p id="currentpage" style="display: inline; color: cornflowerblue">&nbsp;1</p>/'+pagecount+'</a></li>');
     for (i=0;i<pagecount;i++)
     {
         var count =i +1;
-        $('#page-nav').append('<li onclick="getCommentById(' + postid + ','+count+')"><a href="#">'+count+'</a></li>');
+        $('#page-nav').append('<li onclick="activePage(this);getCommentByPostIdwPage(' + postid + ','+count+')"><a href="#">'+count+'</a></li>');
     }
+    
+
+}
+
+//Set which page is active
+function activePage(a) {
+    $('#page-nav>li.active').removeClass("active");
+    $(a).addClass('active');
+    $('#currentpage').html($(a).html());
 }

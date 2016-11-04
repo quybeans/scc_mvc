@@ -90,7 +90,8 @@
 }
 .chat .item > .message > .name {
   display: block;
-  font-weight: 600;
+  font-weight: bold;
+  color: cornflowerblue;
 }
 
 .box-input {
@@ -201,6 +202,15 @@
   border: 0px solid lightgray;
   border-bottom:  1px solid lightgray;
   background-color: transparent ;
+}
+
+.pagination li:first-child a,.pagination li:last-child a {
+   border-radius: 0px;
+ }
+
+.pagination li a{
+  font-weight: bold;
+  margin-left: 4px;
 }
 /*.cmtList .cmt  .message {*/
   /*margin-left: 65px;*/

@@ -237,8 +237,7 @@
         <!--MODALS END HERE-->
 
         <section class="col-lg-3" style="padding: 0px">
-            <div class="row"
-                 style="padding-bottom: 5px; background-color: white; padding-top: 5px; border: 1px solid lightgray">
+            <div class="row" style="padding-bottom: 5px; background-color: white; padding-top: 5px; border: 1px solid lightgray">
                 <div class="btn-group pull-right" style="margin-right: 20px" data-toggle="modal" data-target="#filter-page-modal">
                     <a class="btn btn-primary" style="border-radius: 0px">
                         <i class="fa fa-newspaper-o"></i>
@@ -257,13 +256,13 @@
             </div>
         </section>
 
-        <section class="col-lg-6 cmtbox" style="padding-bottom: 5%;  background-color: gray  ; border-left: 1px solid lightgray;">
+        <section class="col-lg-6 cmtbox" style="padding-bottom: 5%; background-color: gray; position: relative; border-left: 1px solid lightgray;">
 
             <div class="postdetail">
                 <div>
                     <div class="col-lg-11" style="padding-left: 0px">
                         <img src="" alt="user image" id="post-image">
-                        <p class="author" id="post-author">Page name</p>
+                        <p class="author" id="post-author" style="color: cornflowerblue">Page name</p>
                         <div id="post-time" class="text-muted" style="margin-left: 60px; margin-top: -10px">sss
                         </div>
                         <p style="margin-top: 15px; text-align: justify; text-justify: inter-word;" id="post-content">
@@ -294,19 +293,22 @@
                 <!-- This is posts list -->
             </div>
 
-            <div style="padding: 0; margin: 0; width: 100%; background-color: white; position: fixed; bottom: 0px; height: 50px; border-top: 1px solid lightgray ">
+            <div style=" padding: 0; margin: 0; width: 100%; background-color: white; position: fixed; bottom: 0px; height: 45px; border-top: 1px solid lightgray">
+
                 <ul id = "page-nav" class="pagination" style="margin-left: 10px; margin-top: 5px; padding: 0">
                     <li><a href="#">1</a></li>
                     <li><a href="#">2</a></li>
                     <li><a href="#">3</a></li>
                     <li><a href="#">4</a></li>
                     <li><a href="#">5</a></li>
+                    <li><a href="#">6</a></li>
+
                 </ul>
             </div>
         </section>
 
         <section class="col-lg-2"
-                 style="padding: 0; margin:0px 0px 0px 0px; border-left: 1px solid lightgray;height: 100vh">
+                 style="padding: 0; margin:0px 0px 0px 0px; display:block;border-left: 1px solid lightgray;height: 100vh">
             <div style="height: 50vh">
                 <ul class="nav nav-tabs" style="overflow: hidden;width: 100vh;display: inline-block; margin-top: 10px">
                     <li class="active"><a data-toggle="tab" href="#tab_1">Ticket Detail</a></li>
