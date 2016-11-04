@@ -16,6 +16,7 @@ public interface MessageService {
     List<String> getAllSenderIdByPageID(String pageId);
 
     List<MessageEntity> getMessageDesc(String receiverId, String senderId);
+    List<MessageEntity> getMessageAsc(String receiverId, String senderId);
 
     String getLastMessage(String receiverId, String senderId);
 }

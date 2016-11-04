@@ -102,12 +102,14 @@ public class FacebookUtility {
 
         Payload payloads = new Payload(recipient,message);
 
-        StringEntity payload = new StringEntity(gson.toJson(payloads));
+        StringEntity payload = new StringEntity(gson.toJson(payloads),"UTF-8");
 
         httpPost.setEntity(payload);
 
 
+//        httpPost.setEntity(new UrlEncodedFormEntity(payload, "UTF-8"));
         httpPost.setHeader("Content-type", "application/json");
+
         HttpResponse response = httpclient.execute(httpPost);
 
         return response.toString();

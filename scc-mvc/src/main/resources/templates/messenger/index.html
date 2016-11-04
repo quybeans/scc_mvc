@@ -10,7 +10,9 @@
     <link rel="stylesheet" th:href="@{/css/scc-post.css}"/>
 </head>
 <style>
-    body {font-family: "Lato", sans-serif;}
+    body {
+        font-family: "Lato", sans-serif;
+    }
 
     ul.tab {
         list-style-type: none;
@@ -22,7 +24,9 @@
     }
 
     /* Float the list items side by side */
-    ul.tab li {float: left;}
+    ul.tab li {
+        float: left;
+    }
 
     /* Style the links inside the list items */
     ul.tab li a {
@@ -57,23 +61,34 @@
 <div class="wrapper">
     <div class="content-wrapper" style="max-height: 90vh;overflow: hidden">
 
-        <select class="form-control" multiple="multiple" name="slMembers">
+        <select class="form-control" multiple="multiple" name="ddlPages">
             <option th:each="page : ${pages}"
                     th:value="${page.pageid}"
-                    th:text="${page.name}" th:onclick="'getAllConversationsByPageId(\'' + ${page.pageid} + '\')'"></option>
+                    th:text="${page.name}"
+                    th:onclick="'getAllConversationsByPageId(\'' + ${page.pageid} + '\')'"></option>
         </select>
         <section class="content chat">
 
             <!--Messages-->
-            <div class="col-md-3" id="messagesList" style="background-color: whitesmoke; height: 100vh; overflow: scroll">
+            <div class="col-md-3" id="messagesList"
+                 style="background-color: whitesmoke; height: 100vh; overflow: scroll">
                 <div class="item"></div>
             </div>
-            <div class="col-md-6" id="conversation" style="background-color: whitesmoke; height: 100vh; overflow: scroll">
+            <div class="col-md-6" id="conversation"
+                 style="background-color: whitesmoke; height: 100vh; overflow: scroll">
                 <div id="conversationContent">
 
                 </div>
+                <div style="position: fixed; bottom: 0px;" id="conversationReply">
+                    <div class="col-md-10">
+                        <input style="width: 450px" class="form-control" type="text" id="replyText" name="replyText" value=""/>
+                    </div>
+                    <div class="col-md-2">
+                        <button id="btnReply" class="btn btn-primary" onclick="">Reply</button>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-3" id="customer-info" style="background-color: whitesmoke">
+            <div class="col-md-3" id="customer-info" style="background-color: whitesmoke; max-height: 90vh">
                 Customer info
             </div>
 
@@ -84,6 +99,8 @@
 </body>
 </html>
 <script>
+
+    var currentInterval;
 
     function getAllConversationsByPageId(pageId) {
         $.ajax({
@@ -96,14 +113,14 @@
             success: function (data) {
                 $('#messagesList').empty();
 
-                $.each(data,function (i) {
+                $.each(data, function (i) {
                     var senderImg = '';
                     $('#messagesList').append(
-                            '<div class="item" onclick="getConversationBySenderId('+pageId+',\''+data[i].senderId+'\')">'
-                            +'<div><img style="max-height: 30px" src="'+data[i].senderPicture+'"</div>'
-                            +'<div>'+data[i].senderName+'</div>'
-                            +'<div>'+data[i].lastMessage+'</div>'
-                            +'</div>'
+                            '<div class="item" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId + '\')">'
+                            + '<div><img style="max-height: 30px" src="' + data[i].senderPicture + '"</div>'
+                            + '<div>' + data[i].senderName + '</div>'
+                            + '<div>' + data[i].lastMessage + '</div>'
+                            + '</div>'
                     )
                 });
             }
@@ -111,31 +128,43 @@
 
     }
 
-    function getConversationBySenderId(pageId,senderId) {
-        $.ajax({
-            url: '/messenger/getConversationBySenderIdAndPageId',
-            type: "POST",
-            data: {
-                pageId: pageId,
-                senderId: senderId
-            },
-            dataType: "json",
-            success: function (data) {
-                $('#conversationContent').empty();
-                $.each(data,function (i) {
-                    $('#conversationContent').append(
-                            '<div>'
-                            +'<div>'+data[i].content+'</div>'
-                            +'</div>'
-                    )
-                });
-                $('#conversationContent').append(
-                        '<div><input class="form-control col-md-5" type="text" id="replyText" name="replyText" value=""/>' +
-                        '<button class="btn btn-primary col-md-3" onclick="sendMessage('+pageId+',\''+senderId+'\')" >Reply</button>' +
-                        '</div>'
-                );
-            }
-        });
+    function getConversationBySenderId(pageId, senderId) {
+        getCustomerInfo(senderId);
+        $('#btnReply').attr('onclick', 'sendMessage(' + pageId + ',' + senderId + ')');
+        clearInterval(currentInterval);
+        currentInterval = setInterval(function () {
+            $.ajax({
+                url: '/messenger/getConversationBySenderIdAndPageId',
+                type: "POST",
+                data: {
+                    pageId: pageId,
+                    senderId: senderId
+                },
+                dataType: "json",
+                success: function (data) {
+                    $('#conversationContent').empty();
+                    $.each(data, function (i) {
+                        if (data[i].senderid == pageId) {
+                            $('#conversationContent').append(
+                                    '<div style="text-align: right">'
+                                    + '<div><img src=""/> ' + data[i].content + '</div>'
+                                    + '</div>'
+                            );
+                        } else {
+                            $('#conversationContent').append(
+                                    '<div style="text-align: left">'
+                                    + '<div>' + data[i].content + '</div>'
+                                    + '</div>'
+                            );
+                        }
+
+                    });
+
+                }
+            });
+
+        }, 500);
+
     }
 
     function sendMessage(pageId, receiverId) {
@@ -150,7 +179,33 @@
             },
             dataType: "json",
             success: function (data) {
-                getConversationBySenderId(pageId,receiverId);
+            },
+            error: function (data) {
+            }
+        });
+        $('#replyText').val("");
+    }
+
+    function getCustomerInfo(customerId) {
+        $.ajax({
+            url: '/messenger/getCustomerInfo',
+            type: "POST",
+            data: {
+                customerId: customerId,
+            },
+            dataType: "json",
+            success: function (data) {
+                $('#customer-info').empty();
+                $('#customer-info').append(
+                        '<div>'
+                        + '<div><img style="max-height: 200px; text-align: center" src="' + data.picture + '"</div>'
+                        + '<div><label>Facebook ID: </label>' + data.facebookid + '</div>'
+                        + '<div><label>Name: </label>' + " " + data.name + '</div>'
+                        + '<div><label>Location: </label>' + " " + data.locale + '</div>'
+                        + '<div><label>Timezone: </label>' + " " + data.timezone + '</div>'
+                        + '<div><label>Gender: </label>' + " " + data.gender + '</div>'
+                        + '</div>'
+                )
             }
         });
     }

@@ -103,6 +103,11 @@ public class MessageServiceImp implements MessageService {
     }
 
     @Override
+    public List<MessageEntity> getMessageAsc(String receiverId, String senderId) {
+        return messageRepository.getMessageAsc(receiverId, senderId);
+    }
+
+    @Override
     public String getLastMessage(String receiverId, String senderId) {
         MessageEntity messageEntity = this.getMessageDesc(receiverId, senderId).get(0);
         return messageEntity.getContent();
