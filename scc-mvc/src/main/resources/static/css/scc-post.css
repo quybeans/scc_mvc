@@ -43,7 +43,7 @@
 }
 .chat .item {
   cursor:pointer;
-  height: 20vh;
+  height: 140px;
   border-bottom: 1px solid #D3D3D3;
   margin-bottom: 0px;
   margin-top: 0px;
@@ -120,8 +120,9 @@
 {
   margin: 10px 20px 10px 20px;
   background-color: white;
-  height: auto;
-    padding: 10px 10px 10px 15px;
+    display:block;
+    overflow:auto;
+  padding: 10px 0px 10px 15px;
   border-radius: 3px;
 }
 
@@ -134,7 +135,7 @@
 .postdetail .author
 {
   margin-top: -50px;
-  color: blue;
+
     font-weight: bold;
     margin-left: 60px;
     font-size: 15px;
@@ -187,6 +188,19 @@
 {
   font-size: 20px;
   color: #50D050
+}
+
+
+/* PAGE LIST SELECTED*/
+.page-selected {
+  border: 1px solid cornflowerblue;
+  background-color: lightblue;
+}
+
+.page-unselected {
+  border: 0px solid lightgray;
+  border-bottom:  1px solid lightgray;
+  background-color: transparent ;
 }
 /*.cmtList .cmt  .message {*/
   /*margin-left: 65px;*/

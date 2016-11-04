@@ -1,6 +1,7 @@
 package com.scc.ticketmanagement.Entities;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 /**
  * Created by QuyBean on 10/26/2016.
@@ -10,12 +11,12 @@ import javax.persistence.*;
 public class PostEntity {
     private String id;
     private String content;
-    private String createdAt;
+    private Timestamp createdAt;
     private int commentsCount;
     private int likesCount;
     private int sharesCount;
     private String createdBy;
-    private String attachment;
+
 
     @Id
     @Column(name = "id")
@@ -37,13 +38,11 @@ public class PostEntity {
         this.content = content;
     }
 
-    @Basic
-    @Column(name = "created_at")
-    public String getCreatedAt() {
+    public Timestamp getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
     }
 
@@ -117,13 +116,5 @@ public class PostEntity {
         return result;
     }
 
-    @Basic
-    @Column(name = "attachment")
-    public String getAttachment() {
-        return attachment;
-    }
 
-    public void setAttachment(String attachment) {
-        this.attachment = attachment;
-    }
 }

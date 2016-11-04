@@ -2,17 +2,18 @@ package com.scc.ticketmanagement.controllers;
 
 
 import com.scc.ticketmanagement.Entities.*;
+import com.scc.ticketmanagement.Entities.Page;
 import com.scc.ticketmanagement.exentities.ExComment;
 import com.scc.ticketmanagement.exentities.ExPost;
 import com.scc.ticketmanagement.exentities.ExtendComments;
 import com.scc.ticketmanagement.exentities.FaceBookPage;
 import com.scc.ticketmanagement.repositories.*;
+import com.scc.ticketmanagement.services.CommentService;
 import com.scc.ticketmanagement.utilities.Constant;
 import com.scc.ticketmanagement.utilities.FacebookUtility;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.*;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -28,6 +29,9 @@ public class WebServiceController {
 
     private static final String ACCESS_TOKEN_KITTY = "EAACEdEose0cBABbQIYIAjEagu1dsZAlAGzzx8xCasf6EH1TrlNuhfXMGRDn5I8lZAU2ReDRc2udIpn5RpZCnlrlxrKjnNOrngPOFjhG7XhwaozLnimI5PxjCzkrLkRzii9vbCshoyrvsA9ipxIKYeWjZAqi0rr98TZBEZCMk4ASgZDZD";
     public static FaceBookPage page = new FaceBookPage("177872845972148","Kitty Bang Bang",ACCESS_TOKEN_KITTY);
+
+    @Autowired
+    private CommentService commentService;
 
     @Autowired
     private PostRepository postRepository;
@@ -50,15 +54,18 @@ public class WebServiceController {
     @Autowired
     private TicketRepository ticketRepository;
 
-    @RequestMapping("allPostsByBrand")
-    public List<ExPost> postsByByBrand(HttpServletRequest request)
+    @RequestMapping(value = "allPostsByBrand", method = RequestMethod.POST)
+    public List<ExPost> postsByByBrand(HttpServletRequest request, String pagelist)
     {
+        if (!pagelist.equals("")){
         HttpSession session = request.getSession(false);
         if (session!=null){
             String username = (String)session.getAttribute("username");
             // List<PostEntity> listP =  postRepository.findByCreatedBy(pageid);
             int brandid = userRepository.getBrandIdByUsername(username);
-            List<String> listPage =  brandPageRepository.getAllPagesByBrandid(brandid);
+//            List<String> listPage =  brandPageRepository.getAllPagesByBrandid(brandid);
+            List<String> listPage = Arrays.asList(pagelist.split(","));
+            if (listPage.size()>0){
             List<ExPost> rs = new ArrayList<>();
             for(String pageid : listPage)
             {
@@ -80,9 +87,15 @@ public class WebServiceController {
                     }
                 }
             }
-            Collections.reverse(rs);
+            Collections.sort(rs, new Comparator<ExPost>() {
+                @Override
+                public int compare(ExPost o1, ExPost o2) {
+                    return o2.getCreatedAt().compareTo(o1.getCreatedAt());
+                }
+            });
+
             return rs;
-        }
+        }}}
         return null;
     }
 
@@ -132,31 +145,7 @@ public class WebServiceController {
 
         return showcomments;
     }
-    //This one include createdByName, NO LONGER USE
-    @RequestMapping("newcommentbypost")
-    public List<ExComment> newcommentsByPost(@RequestParam("postId") String postId){
 
-        List<CommentEntity> list =commentRepository.findCommentByPostId(postId);
-        List<ExComment> exlist = new ArrayList<>();
-        for ( CommentEntity old : list)
-        {
-            ExComment newComment = new ExComment();
-
-            newComment.setId(old.getId());
-
-            newComment.setPostId(old.getPostId());
-            newComment.setContent(old.getContent());
-
-            newComment.setCreatedAt(old.getCreatedAt());
-            newComment.setCreatedBy(old.getCreatedBy());
-            //Created by Name add here
-            newComment.setCreatedByName(FacebookUtility.getFBName(old.getCreatedBy(),page.getPageToken()));
-
-            exlist.add(newComment);
-        }
-
-        return exlist;
-    }
 
     @RequestMapping("postById")
     public ExPost postsById(@RequestParam("postId") String postId){
@@ -230,4 +219,18 @@ public class WebServiceController {
         return "nothing";
     }
 
+    @RequestMapping("comment/getallcomment")
+    public org.springframework.data.domain.Page<CommentEntity> getAllComment(int page, String postid)
+    {
+        return commentService.getCommentByPostId(page,postid);
+    }
+
+    @RequestMapping("post/sentimentcount")
+    public int[] sentimentcount(String postid)
+    {
+        int[] rs = new int[]{0,0};
+        rs[0] = postRepository.findPosCountByPostId(postid);
+        rs[1] = postRepository.findNegCountByPostId(postid);
+        return rs;
+    }
 }

@@ -13,8 +13,49 @@
     <script src="/js/jquery-ui.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/app.min.js"></script>
+    <script th:src="@{/js/jquery_dateFormat.js}"></script>
     <script>
         getCurrentBrandInfo();
+        getUnreadNotiCount();
+        getUnreadNoti();
+
+        //Get unread noti
+        function getUnreadNotiCount() {
+            $.ajax({
+                url: '/notification/unread_count',
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    $('#unread_count').html(data);
+                }
+            });
+        }
+
+        function getUnreadNoti() {
+            $.ajax({
+                url: '/notification/getunread',
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    $('#noti-list').html('');
+                    $.each(data,function (index) {
+                        $('#noti-list').append('<li>' +
+                                '<a href="#"> ' +
+                                '<h3>'+data[index].message+'&nbsp;from <b>Mr.Boss</b>   ' +
+                                '<p class="pull right">' +
+                                '<span class="fa fa-ticket" style="margin-right: 5px"></span>'+
+                                jQuery.format.prettyDate( new Date(data[index].createdat))+'</p> ' +
+                                '</h3>' +
+                                '</a>' +
+                                '</li>')
+
+                    })
+                }
+            });
+
+        }
+
+        //Get brand info
         function getCurrentBrandInfo() {
             $.ajax({
                 url: '/brand/getBrandInfo',
@@ -52,13 +93,13 @@
                 <li class="dropdown tasks-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-bell"></i>
-                        <span class="label label-danger">9</span>
+                        <span id="unread_count" class="label label-danger">9</span>
                     </a>
                     <ul class="dropdown-menu" style=" box-shadow: 5px 5px 5px #888888;">
                         <li class="header"><b>Notification</b></li>
                         <li>
-                            <ul class="menu">
-                                <li><!-- Task item -->
+                            <ul class="menu" id="noti-list">
+                                <li>
                                     <a href="#">
                                         <h3>
                                             You have a new ticket from <b>Mr.Boss</b>
@@ -66,6 +107,7 @@
                                         </h3>
                                     </a>
                                 </li>
+
                             </ul>
                         </li>
                         <li class="footer">
