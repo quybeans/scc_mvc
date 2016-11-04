@@ -4,18 +4,19 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 /**
- * Created by Thien on 11/4/2016.
+ * Created by QuyBean on 10/26/2016.
  */
 @Entity
 @Table(name = "post", schema = "scc", catalog = "")
 public class PostEntity {
     private String id;
-    private int commentsCount;
     private String content;
     private Timestamp createdAt;
-    private String createdBy;
+    private int commentsCount;
     private int likesCount;
     private int sharesCount;
+    private String createdBy;
+
 
     @Id
     @Column(name = "id")
@@ -28,16 +29,6 @@ public class PostEntity {
     }
 
     @Basic
-    @Column(name = "comments_count")
-    public int getCommentsCount() {
-        return commentsCount;
-    }
-
-    public void setCommentsCount(int commentsCount) {
-        this.commentsCount = commentsCount;
-    }
-
-    @Basic
     @Column(name = "content")
     public String getContent() {
         return content;
@@ -47,8 +38,6 @@ public class PostEntity {
         this.content = content;
     }
 
-    @Basic
-    @Column(name = "created_at")
     public Timestamp getCreatedAt() {
         return createdAt;
     }
@@ -58,13 +47,13 @@ public class PostEntity {
     }
 
     @Basic
-    @Column(name = "created_by")
-    public String getCreatedBy() {
-        return createdBy;
+    @Column(name = "comments_count")
+    public int getCommentsCount() {
+        return commentsCount;
     }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
+    public void setCommentsCount(int commentsCount) {
+        this.commentsCount = commentsCount;
     }
 
     @Basic
@@ -85,6 +74,16 @@ public class PostEntity {
 
     public void setSharesCount(int sharesCount) {
         this.sharesCount = sharesCount;
+    }
+
+    @Basic
+    @Column(name = "created_by")
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
     @Override
@@ -108,12 +107,14 @@ public class PostEntity {
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + commentsCount;
         result = 31 * result + (content != null ? content.hashCode() : 0);
         result = 31 * result + (createdAt != null ? createdAt.hashCode() : 0);
-        result = 31 * result + (createdBy != null ? createdBy.hashCode() : 0);
+        result = 31 * result + commentsCount;
         result = 31 * result + likesCount;
         result = 31 * result + sharesCount;
+        result = 31 * result + (createdBy != null ? createdBy.hashCode() : 0);
         return result;
     }
+
+
 }
