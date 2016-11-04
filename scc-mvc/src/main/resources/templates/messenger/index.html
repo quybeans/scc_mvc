@@ -61,34 +61,36 @@
 <div class="wrapper">
     <div class="content-wrapper" style="max-height: 90vh;overflow: hidden">
 
-        <select class="form-control" multiple="multiple" name="ddlPages">
+        <select class="form-control" name="ddlPages" id="ddlPages" onchange="getAllConversation(this)"
+                onSelect="getAllConversation(this)">
             <option th:each="page : ${pages}"
+                    th:id="${page.pageid}"
                     th:value="${page.pageid}"
-                    th:text="${page.name}"
-                    th:onclick="'getAllConversationsByPageId(\'' + ${page.pageid} + '\')'"></option>
+                    th:text="${page.name}"></option>
         </select>
         <section class="content chat">
 
             <!--Messages-->
             <div class="col-md-3" id="messagesList"
-                 style="background-color: whitesmoke; height: 100vh; overflow: scroll">
+                 style="background-color: white; height: 100vh; overflow: scroll">
                 <div class="item"></div>
             </div>
             <div class="col-md-6" id="conversation"
-                 style="background-color: whitesmoke; height: 100vh; overflow: scroll">
-                <div id="conversationContent">
+                 style="background-color: white; height: 100vh; overflow: scroll">
+                <div id="conversationContent" >
 
                 </div>
-                <div style="position: fixed; bottom: 0px;" id="conversationReply">
+                <div style="position: fixed; bottom: 10px;" id="conversationReply">
                     <div class="col-md-10">
-                        <input style="width: 450px" class="form-control" type="text" id="replyText" name="replyText" value=""/>
+                        <input style="width: 450px" class="form-control" type="text" id="replyText" name="replyText"
+                               value=""/>
                     </div>
                     <div class="col-md-2">
                         <button id="btnReply" class="btn btn-primary" onclick="">Reply</button>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3" id="customer-info" style="background-color: whitesmoke; max-height: 90vh">
+            <div class="col-md-3" id="customer-info" style="background-color: white; max-height: 90vh">
                 Customer info
             </div>
 
@@ -99,6 +101,13 @@
 </body>
 </html>
 <script>
+    $( document ).ready(function() {
+        document.getElementById("ddlPages").selectedIndex = "1";
+    });
+
+    function getAllConversation(a) {
+        getAllConversationsByPageId(a.value);
+    }
 
     var currentInterval;
 
@@ -146,15 +155,11 @@
                     $.each(data, function (i) {
                         if (data[i].senderid == pageId) {
                             $('#conversationContent').append(
-                                    '<div style="text-align: right">'
-                                    + '<div><img src=""/> ' + data[i].content + '</div>'
-                                    + '</div>'
+                                    '<div style="text-align: right">' + data[i].content +'</div>'
                             );
                         } else {
                             $('#conversationContent').append(
-                                    '<div style="text-align: left">'
-                                    + '<div>' + data[i].content + '</div>'
-                                    + '</div>'
+                                    '<div style="text-align: left">' + data[i].content + '</div>'
                             );
                         }
 

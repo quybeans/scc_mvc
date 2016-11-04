@@ -23,4 +23,6 @@ public class Constant {
 
     public static final boolean ACTIVE=true;
     public static final boolean DEACTIVE=false;
+
+    public static final int PAGE_SIZE = 50;
 }

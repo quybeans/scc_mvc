@@ -2,6 +2,7 @@ package com.scc.ticketmanagement.services;
 
 import com.scc.ticketmanagement.Entities.MessageEntity;
 import com.scc.ticketmanagement.exentities.Conversation;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -17,6 +18,7 @@ public interface MessageService {
 
     List<MessageEntity> getMessageDesc(String receiverId, String senderId);
     List<MessageEntity> getMessageAsc(String receiverId, String senderId);
+    Page<MessageEntity> getMessageAscWithPage(String receiverId, String senderId, Integer page);
 
     String getLastMessage(String receiverId, String senderId);
 }

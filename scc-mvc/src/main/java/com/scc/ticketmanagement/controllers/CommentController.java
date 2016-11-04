@@ -1,7 +1,6 @@
 package com.scc.ticketmanagement.controllers;
 
 import com.scc.ticketmanagement.Entities.CommentEntity;
-import com.scc.ticketmanagement.exentities.ExtendComments;
 import com.scc.ticketmanagement.repositories.CommentRepository;
 import com.scc.ticketmanagement.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

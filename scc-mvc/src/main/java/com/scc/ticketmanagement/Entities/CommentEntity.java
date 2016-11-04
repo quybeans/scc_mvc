@@ -1,19 +1,20 @@
 package com.scc.ticketmanagement.Entities;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 /**
- * Created by QuyBeans on 11-Oct-16.
+ * Created by Thien on 11/4/2016.
  */
 @Entity
 @Table(name = "comment", schema = "scc", catalog = "")
 public class CommentEntity {
     private String id;
     private String content;
-    private String createdAt;
+    private Timestamp createdAt;
     private String createdBy;
-    private String postId;
     private String createdByName;
+    private String postId;
     private Integer sentimentScore;
 
     @Id
@@ -38,11 +39,11 @@ public class CommentEntity {
 
     @Basic
     @Column(name = "created_at")
-    public String getCreatedAt() {
+    public Timestamp getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
     }
 
@@ -57,16 +58,6 @@ public class CommentEntity {
     }
 
     @Basic
-    @Column(name = "post_id")
-    public String getPostId() {
-        return postId;
-    }
-
-    public void setPostId(String postId) {
-        this.postId = postId;
-    }
-
-    @Basic
     @Column(name = "created_by_name")
     public String getCreatedByName() {
         return createdByName;
@@ -74,6 +65,16 @@ public class CommentEntity {
 
     public void setCreatedByName(String createdByName) {
         this.createdByName = createdByName;
+    }
+
+    @Basic
+    @Column(name = "post_id")
+    public String getPostId() {
+        return postId;
+    }
+
+    public void setPostId(String postId) {
+        this.postId = postId;
     }
 
     @Basic
@@ -97,9 +98,9 @@ public class CommentEntity {
         if (content != null ? !content.equals(that.content) : that.content != null) return false;
         if (createdAt != null ? !createdAt.equals(that.createdAt) : that.createdAt != null) return false;
         if (createdBy != null ? !createdBy.equals(that.createdBy) : that.createdBy != null) return false;
-        if (postId != null ? !postId.equals(that.postId) : that.postId != null) return false;
         if (createdByName != null ? !createdByName.equals(that.createdByName) : that.createdByName != null)
             return false;
+        if (postId != null ? !postId.equals(that.postId) : that.postId != null) return false;
         if (sentimentScore != null ? !sentimentScore.equals(that.sentimentScore) : that.sentimentScore != null)
             return false;
 
@@ -112,8 +113,8 @@ public class CommentEntity {
         result = 31 * result + (content != null ? content.hashCode() : 0);
         result = 31 * result + (createdAt != null ? createdAt.hashCode() : 0);
         result = 31 * result + (createdBy != null ? createdBy.hashCode() : 0);
-        result = 31 * result + (postId != null ? postId.hashCode() : 0);
         result = 31 * result + (createdByName != null ? createdByName.hashCode() : 0);
+        result = 31 * result + (postId != null ? postId.hashCode() : 0);
         result = 31 * result + (sentimentScore != null ? sentimentScore.hashCode() : 0);
         return result;
     }

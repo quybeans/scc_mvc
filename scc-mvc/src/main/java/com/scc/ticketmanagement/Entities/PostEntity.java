@@ -1,21 +1,21 @@
 package com.scc.ticketmanagement.Entities;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 /**
- * Created by QuyBean on 10/26/2016.
+ * Created by Thien on 11/4/2016.
  */
 @Entity
 @Table(name = "post", schema = "scc", catalog = "")
 public class PostEntity {
     private String id;
-    private String content;
-    private String createdAt;
     private int commentsCount;
+    private String content;
+    private Timestamp createdAt;
+    private String createdBy;
     private int likesCount;
     private int sharesCount;
-    private String createdBy;
-    private String attachment;
 
     @Id
     @Column(name = "id")
@@ -25,6 +25,16 @@ public class PostEntity {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    @Basic
+    @Column(name = "comments_count")
+    public int getCommentsCount() {
+        return commentsCount;
+    }
+
+    public void setCommentsCount(int commentsCount) {
+        this.commentsCount = commentsCount;
     }
 
     @Basic
@@ -39,22 +49,22 @@ public class PostEntity {
 
     @Basic
     @Column(name = "created_at")
-    public String getCreatedAt() {
+    public Timestamp getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
     }
 
     @Basic
-    @Column(name = "comments_count")
-    public int getCommentsCount() {
-        return commentsCount;
+    @Column(name = "created_by")
+    public String getCreatedBy() {
+        return createdBy;
     }
 
-    public void setCommentsCount(int commentsCount) {
-        this.commentsCount = commentsCount;
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
     @Basic
@@ -75,16 +85,6 @@ public class PostEntity {
 
     public void setSharesCount(int sharesCount) {
         this.sharesCount = sharesCount;
-    }
-
-    @Basic
-    @Column(name = "created_by")
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
     }
 
     @Override
@@ -108,22 +108,12 @@ public class PostEntity {
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + commentsCount;
         result = 31 * result + (content != null ? content.hashCode() : 0);
         result = 31 * result + (createdAt != null ? createdAt.hashCode() : 0);
-        result = 31 * result + commentsCount;
+        result = 31 * result + (createdBy != null ? createdBy.hashCode() : 0);
         result = 31 * result + likesCount;
         result = 31 * result + sharesCount;
-        result = 31 * result + (createdBy != null ? createdBy.hashCode() : 0);
         return result;
-    }
-
-    @Basic
-    @Column(name = "attachment")
-    public String getAttachment() {
-        return attachment;
-    }
-
-    public void setAttachment(String attachment) {
-        this.attachment = attachment;
     }
 }

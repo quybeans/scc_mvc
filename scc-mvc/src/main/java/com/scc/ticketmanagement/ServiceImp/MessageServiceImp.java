@@ -10,8 +10,13 @@ import com.scc.ticketmanagement.repositories.PageRepository;
 import com.scc.ticketmanagement.services.ContactService;
 import com.scc.ticketmanagement.services.MessageService;
 import com.scc.ticketmanagement.services.PageService;
+import com.scc.ticketmanagement.utilities.Constant;
 import com.scc.ticketmanagement.utilities.FacebookUtility;
+import org.apache.tomcat.util.bcel.Const;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.naming.AuthenticationException;
@@ -54,9 +59,9 @@ public class MessageServiceImp implements MessageService {
             //tim ra contact cua 1 thang sender
             try {
                 contactEntity = contactRepository.getContactById(senderId);
-                if (contactEntity != null){
+                if (contactEntity != null) {
                     System.out.println("co contact");
-                }else {
+                } else {
                     System.out.println("ko co contact");
                     try {
                         //neu khong co trong database thi gui api len fb kiem
@@ -105,6 +110,12 @@ public class MessageServiceImp implements MessageService {
     @Override
     public List<MessageEntity> getMessageAsc(String receiverId, String senderId) {
         return messageRepository.getMessageAsc(receiverId, senderId);
+    }
+
+    @Override
+    public Page<MessageEntity> getMessageAscWithPage(String receiverId, String senderId, Integer page) {
+        PageRequest pageRequest = new PageRequest(page - 1, Constant.PAGE_SIZE, Sort.Direction.ASC, "seq");
+        return messageRepository.getMessageAscWithPage(receiverId, senderId, pageRequest);
     }
 
     @Override

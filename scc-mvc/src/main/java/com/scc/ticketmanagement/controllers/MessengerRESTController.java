@@ -13,6 +13,7 @@ import com.scc.ticketmanagement.utilities.AccessTokenUtility;
 import com.scc.ticketmanagement.utilities.FacebookUtility;
 import org.omg.CORBA.OBJ_ADAPTER;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -52,7 +53,8 @@ public class MessengerRESTController {
     @RequestMapping(value = "/messenger/getConversationBySenderIdAndPageId", method = RequestMethod.POST)
     public List<MessageEntity> getAllConversations(@RequestParam("pageId") String pageId,
                                                    @RequestParam("senderId") String senderId) {
-        return messageService.getMessageAsc(pageId, senderId);
+        Page<MessageEntity> messages = messageService.getMessageAscWithPage(pageId, senderId, 1);
+        return messages.getContent();
     }
 
     @RequestMapping(value = "/messenger/sendMessageToCustomer", method = RequestMethod.POST)

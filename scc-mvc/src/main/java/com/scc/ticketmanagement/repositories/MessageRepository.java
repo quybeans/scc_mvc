@@ -2,6 +2,8 @@ package com.scc.ticketmanagement.repositories;
 
 import com.scc.ticketmanagement.Entities.MessageEntity;
 import org.hibernate.persister.entity.Queryable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -31,4 +33,10 @@ public interface MessageRepository extends JpaRepository<MessageEntity, String> 
             "order by m.seq asc")
     List<MessageEntity> getMessageAsc(@Param("receiverId") String receiverId,
                                        @Param("senderId") String senderId);
+
+    @Query("SELECT m FROM MessageEntity m WHERE (m.receiverid =:receiverId and m.senderid =:senderId) " +
+            "or (m.receiverid =:senderId and m.senderid =:receiverId)" +
+            "order by m.seq")
+    Page<MessageEntity> getMessageAscWithPage(@Param("receiverId") String receiverId,
+                                              @Param("senderId") String senderId, Pageable page);
 }
