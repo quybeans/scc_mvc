@@ -1,4 +1,4 @@
-package com.scc.ticketmanagement.controllers;
+package com.scc.ticketmanagement.controllers.restcontroller;
 
 import com.google.api.client.json.Json;
 import com.scc.ticketmanagement.Entities.ContactEntity;
@@ -52,8 +52,10 @@ public class MessengerRESTController {
 
     @RequestMapping(value = "/messenger/getConversationBySenderIdAndPageId", method = RequestMethod.POST)
     public List<MessageEntity> getAllConversations(@RequestParam("pageId") String pageId,
-                                                   @RequestParam("senderId") String senderId) {
-        Page<MessageEntity> messages = messageService.getMessageAscWithPage(pageId, senderId, 1);
+                                                   @RequestParam("senderId") String senderId,
+                                                   @RequestParam("pageNum") Integer pageNum) {
+        Page<MessageEntity> messages = messageService.getMessageAscWithPage(pageId, senderId, pageNum);
+        messages.getTotalPages();
         return messages.getContent();
     }
 

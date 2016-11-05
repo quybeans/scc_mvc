@@ -5,6 +5,7 @@ package com.scc.ticketmanagement.utilities;
  */
 public class Constant {
 
+    //Scc-Staff
     public static final String APP_ID = "341786092825787";
     public static final String APP_SECRET = "c07230dd847bc69613a4aa0104d422a8";
 
@@ -24,5 +25,5 @@ public class Constant {
     public static final boolean ACTIVE=true;
     public static final boolean DEACTIVE=false;
 
-    public static final int PAGE_SIZE = 50;
+    public static final int PAGE_SIZE = 10;
 }

@@ -77,8 +77,12 @@
                                 <form id="form" action="processPageAccessToken" method="post">
                                     <input type="hidden" name="pageAccessToken" id="pageAccessToken" value=""/>
                                     <input type="hidden" name="pageName" id="pageName" value=""/>
-                                    <input type="text" name="pageId" id="pageId" value="" required="true"/>
-                                    <button type="button" onclick="addPageToCrawl()">Add</button>
+                                    <div>
+                                        <input class="form-control" type="text" name="pageId" id="pageId" value=""
+                                               required="true"/>
+                                        <button class="btn btn-primary" type="button" onclick="addPageToCrawl()">Add
+                                        </button>
+                                    </div>
                                 </form>
 
                                 <div id="fbLoginButton" style="visibility: hidden">

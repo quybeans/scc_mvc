@@ -9,54 +9,6 @@
 
     <link rel="stylesheet" th:href="@{/css/scc-post.css}"/>
 </head>
-<style>
-    body {
-        font-family: "Lato", sans-serif;
-    }
-
-    ul.tab {
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-        border: 1px solid #ccc;
-        background-color: #f1f1f1;
-    }
-
-    /* Float the list items side by side */
-    ul.tab li {
-        float: left;
-    }
-
-    /* Style the links inside the list items */
-    ul.tab li a {
-        display: inline-block;
-        color: black;
-        text-align: center;
-        padding: 14px 16px;
-        text-decoration: none;
-        transition: 0.3s;
-        font-size: 17px;
-    }
-
-    /* Change background color of links on hover */
-    ul.tab li a:hover {
-        background-color: #ddd;
-    }
-
-    /* Create an active/current tablink class */
-    ul.tab li a:focus, .active {
-        background-color: #ccc;
-    }
-
-    /* Style the tab content */
-    .tabcontent {
-        display: none;
-        padding: 6px 12px;
-        border: 1px solid #ccc;
-        border-top: none;
-    }
-</style>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
     <div class="content-wrapper" style="max-height: 90vh;overflow: hidden">
@@ -77,16 +29,16 @@
             </div>
             <div class="col-md-6" id="conversation"
                  style="background-color: white; height: 100vh; overflow: scroll">
-                <div id="conversationContent" >
+                <div id="conversationContent" style="overflow: scroll">
 
                 </div>
                 <div style="position: fixed; bottom: 10px;" id="conversationReply">
                     <div class="col-md-10">
                         <input style="width: 450px" class="form-control" type="text" id="replyText" name="replyText"
-                               value=""/>
+                               value="" autofocus/>
                     </div>
                     <div class="col-md-2">
-                        <button id="btnReply" class="btn btn-primary" onclick="">Reply</button>
+                        <button id="btnReply" class="btn btn-primary" onclick="" autofocus>Reply</button>
                     </div>
                 </div>
             </div>
@@ -101,8 +53,15 @@
 </body>
 </html>
 <script>
-    $( document ).ready(function() {
-        document.getElementById("ddlPages").selectedIndex = "1";
+    $(document).ready(function () {
+        var a = $("#ddlPages option:first").val();
+        getAllConversationsByPageId(a);
+
+
+        $('#replyText').keypress(function (e) {
+            if (e.keyCode == 13)
+                $('#btnReply').click();
+        });
     });
 
     function getAllConversation(a) {
@@ -112,6 +71,9 @@
     var currentInterval;
 
     function getAllConversationsByPageId(pageId) {
+        clearInterval(currentInterval);
+        $('#conversationContent').empty();
+        $('#messagesList').empty();
         $.ajax({
             url: '/messenger/getAllConversationsByPageId',
             type: "GET",
@@ -125,19 +87,21 @@
                 $.each(data, function (i) {
                     var senderImg = '';
                     $('#messagesList').append(
-                            '<div class="item" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId + '\')">'
+                            '<div class="item" id="conversation' + i + '" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId + '\')">'
                             + '<div><img style="max-height: 30px" src="' + data[i].senderPicture + '"</div>'
                             + '<div>' + data[i].senderName + '</div>'
                             + '<div>' + data[i].lastMessage + '</div>'
                             + '</div>'
                     )
                 });
+                $('#conversation0').click();
             }
         });
 
     }
 
     function getConversationBySenderId(pageId, senderId) {
+        document.getElementById('replyText').select();
         getCustomerInfo(senderId);
         $('#btnReply').attr('onclick', 'sendMessage(' + pageId + ',' + senderId + ')');
         clearInterval(currentInterval);
@@ -147,7 +111,8 @@
                 type: "POST",
                 data: {
                     pageId: pageId,
-                    senderId: senderId
+                    senderId: senderId,
+                    pageNum: 2
                 },
                 dataType: "json",
                 success: function (data) {
@@ -155,7 +120,7 @@
                     $.each(data, function (i) {
                         if (data[i].senderid == pageId) {
                             $('#conversationContent').append(
-                                    '<div style="text-align: right">' + data[i].content +'</div>'
+                                    '<div style="text-align: right">' + data[i].content + '</div>'
                             );
                         } else {
                             $('#conversationContent').append(
