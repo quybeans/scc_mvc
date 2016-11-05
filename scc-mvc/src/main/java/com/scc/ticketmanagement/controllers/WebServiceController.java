@@ -82,7 +82,8 @@ public class WebServiceController {
                         newP.setSharesCount(post.getSharesCount());
                         newP.setCreatedAt(post.getCreatedAt());
                         newP.setCreatedByName(page.getName());
-
+                        newP.setNegCount(postRepository.findNegCountByPostId(post.getId()));
+                        newP.setPosCount(postRepository.findPosCountByPostId(post.getId()));
                         rs.add(newP);
                     }
                 }
@@ -99,13 +100,6 @@ public class WebServiceController {
         return null;
     }
 
-    @RequestMapping("posts")
-    public List<PostEntity> posts(){
-
-        List<PostEntity> listP =  postRepository.findAll();
-        Collections.reverse(listP);
-        return listP;
-    }
 
     @RequestMapping("commentbypost")
     public List<CommentEntity> commentsByPost(@RequestParam("postId") String postId){
@@ -219,18 +213,7 @@ public class WebServiceController {
         return "nothing";
     }
 
-    @RequestMapping("comment/getallcomment")
-    public org.springframework.data.domain.Page<CommentEntity> getAllComment(int page, String postid)
-    {
-        return commentService.getCommentByPostId(page,postid);
-    }
 
-    @RequestMapping("post/sentimentcount")
-    public int[] sentimentcount(String postid)
-    {
-        int[] rs = new int[]{0,0};
-        rs[0] = postRepository.findPosCountByPostId(postid);
-        rs[1] = postRepository.findNegCountByPostId(postid);
-        return rs;
-    }
+
+
 }

@@ -13,4 +13,5 @@ public interface CommentService {
     List<CommentEntity> findAll();
     Page<CommentEntity> getCommentPage(Integer pagenumber);
     Page<CommentEntity> getCommentByPostId(int pagenumber, String postid);
+
 }

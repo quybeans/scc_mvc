@@ -84,7 +84,55 @@ function getAllPageAccount() {
 }
 
 //Get all posts
+function findPostByContent(pagelist) {
+
+    var content = $('#txtSearchPost').val();
+    alert(content);
+    $('#post-box').html('</br><div style="margin-right: 10px; text-align: center;font-size: 30px; width: 100%; height: 100%;"><span style=" color: cornflowerblue; " class="fa fa-spinner fa-spin"></span>Loading...</div>');
+    if (pagelist.length != 0) {
+        $.ajax({
+            url: '/post/findbycontent',
+            type: "POST",
+            data: {content:content,pagelist: pagelist.toString()},
+            dataType: "json",
+            success: function (data) {
+                $('#post-box').empty();
+                $.each(data, function (index) {
+                    $('#post-box').append(
+                        '<div class="item" style="position:relative;" onclick="getCommentById('+"'" + data[index].id +"'"+ ')">'
+                        + '<img onload="http://localhost:8080/img/user_img.jpg" src="http://graph.facebook.com/' + data[index].createdBy + '/picture" alt="user image">'
+                        + '<p class="message">'
+                        + '<small class="text-muted pull-right">'
+                        + jQuery.format.prettyDate(new Date(data[index].createdAt))
+                        + '</small>'
+                        + '<a class="name"  style="text-overflow: ellipsis; max-width: 70%; overflow: hidden; white-space: nowrap">'
+                        + data[index].createdByName
+                        + ' </a>'
+                        + '</p>'
+                        + '<div style="margin-left: 65px;margin-top: -10px">'
+                        +' <span style="vertical-align:middle;">'+data[index].posCount+'</span> <span class="fa fa-smile-o happy" style="font-size:20px; vertical-align:middle; margin-right:10px; "></span>'
+                        +' <span style="vertical-align:middle;">'+data[index].negCount+'</span> <span class="fa fa-frown-o sad" style="font-size:20px; vertical-align:middle;"></span>'
+                        +'</div>'
+                        + '<p style="margin-top: 15px;height: 35px;overflow: hidden;">' + data[index].content + '</p>'
+                        + '<div style="color: gray; bottom: 0px; position: absolute; width: 90%;text-align: center;">'
+                        + '<div class="inline"  style="margin-right: 10px"><span class="glyphicon glyphicon-thumbs-up"></span>&nbsp;' + getRepString(data[index].likesCount) + '</div>'
+                        + '<div class="inline"style="margin-right: 10px"><span class="glyphicon glyphicon-comment"></span>&nbsp;' + getRepString(data[index].commentsCount) + ' </div>'
+                        + '<div class="inline" style="margin-right: 10px"> <span class="glyphicon glyphicon-share-alt"></span>&nbsp;' + getRepString(data[index].sharesCount) + '</div>'
+                        + '</div>'
+                        + '</div>'
+                    )
+                });
+            }
+        });
+    }
+    else {
+        $('#post-box').empty();
+        $('#post-box').html('<div style="text-align: center; margin-top: 50%; font-weight: bold">Select a page to show posts</div>');
+    }
+}
+
 function getAllPosts(pagelist) {
+    $('#post-box').html('</br><div style="margin-right: 10px; text-align: center;font-size: 30px; width: 100%; height: 100%;"><span style=" color: cornflowerblue; " class="fa fa-spinner fa-spin"></span>Loading...</div>');
     if (pagelist.length != 0) {
         $.ajax({
             url: '/allPostsByBrand',
@@ -95,21 +143,25 @@ function getAllPosts(pagelist) {
                 $('#post-box').empty();
                 $.each(data, function (index) {
                     $('#post-box').append(
-                        '<div class="item" style="position:relative" onclick="getCommentById(' + data[index].id + ',1)">'
+                        '<div class="item" style="position:relative;" onclick="getCommentById('+"'" + data[index].id +"'"+ ')">'
                         + '<img onload="http://localhost:8080/img/user_img.jpg" src="http://graph.facebook.com/' + data[index].createdBy + '/picture" alt="user image">'
                         + '<p class="message">'
-                        + '<a class="name">'
                         + '<small class="text-muted pull-right">'
                         + jQuery.format.prettyDate(new Date(data[index].createdAt))
                         + '</small>'
+                        + '<a class="name"  style="text-overflow: ellipsis; max-width: 70%; overflow: hidden; white-space: nowrap">'
                         + data[index].createdByName
                         + ' </a>'
                         + '</p>'
-                        + '<p style="margin-top: 30px;height: 35px;overflow: hidden">' + data[index].content + '</p>'
-                        + '<div style="color: gray; bottom: 0px; position: absolute; width: 90%;text-align: center">'
-                        + '<div class="inline"  style="margin-right: 10px"><span class="glyphicon glyphicon-thumbs-up"></span>&nbsp;' + data[index].likesCount + '</div>'
-                        + '<div class="inline"style="margin-right: 10px"><span class="glyphicon glyphicon-comment"></span>&nbsp;' + data[index].commentsCount + ' </div>'
-                        + '<div class="inline" style="margin-right: 10px"> <span class="glyphicon glyphicon-share-alt"></span>&nbsp;' + data[index].sharesCount + '</div>'
+                        + '<div style="margin-left: 65px;margin-top: -10px">'
+                        +' <span style="vertical-align:middle;">'+data[index].posCount+'</span> <span class="fa fa-smile-o happy" style="font-size:20px; vertical-align:middle; margin-right:10px; "></span>'
+                        +' <span style="vertical-align:middle;">'+data[index].negCount+'</span> <span class="fa fa-frown-o sad" style="font-size:20px; vertical-align:middle;"></span>'
+                        +'</div>'
+                        + '<p style="margin-top: 15px;height: 35px;overflow: hidden;">' + data[index].content + '</p>'
+                        + '<div style="color: gray; bottom: 0px; position: absolute; width: 90%;text-align: center;">'
+                        + '<div class="inline"  style="margin-right: 10px"><span class="glyphicon glyphicon-thumbs-up"></span>&nbsp;' + getRepString(data[index].likesCount) + '</div>'
+                        + '<div class="inline"style="margin-right: 10px"><span class="glyphicon glyphicon-comment"></span>&nbsp;' + getRepString(data[index].commentsCount) + ' </div>'
+                        + '<div class="inline" style="margin-right: 10px"> <span class="glyphicon glyphicon-share-alt"></span>&nbsp;' + getRepString(data[index].sharesCount) + '</div>'
                         + '</div>'
                         + '</div>'
                     )
@@ -278,12 +330,15 @@ function getReplyByCommentId(commentId) {
 
 
 function getCommentById(postid) {
+
+
     getPostById(postid);
     getCommentByPostIdwPage(postid,1);
 }
 
 //Get comment by id
 function getCommentByPostIdwPage(postId,page) {
+
     $.ajax({
         url: 'comment/bypostid',
         type: "GET",
@@ -359,9 +414,9 @@ function getPostById(postId) {
             var time = $.format.date(data.createdAt, "HH:mm");
             $('#post-content').html(data.content);
             $('#post-author').html(data.createdByName);
-            $('#post-like-count').html('<span class="glyphicon glyphicon-thumbs-up"></span>&nbsp;' + data.likesCount + '&nbsp;Likes');
-            $('#post-comment-count').html('<span class="glyphicon glyphicon-comment"></span>&nbsp;' + data.commentsCount + '&nbsp;Comments');
-            $('#post-share-count').html('<span class="glyphicon glyphicon-share-alt"></span>&nbsp;' + data.sharesCount + '&nbsp;Shares');
+            $('#post-like-count').html('<span class="glyphicon glyphicon-thumbs-up"></span>&nbsp;' + getRepString(data.likesCount) + '&nbsp;Likes');
+            $('#post-comment-count').html('<span class="glyphicon glyphicon-comment"></span>&nbsp;' + getRepString(data.commentsCount) + '&nbsp;Comments');
+            $('#post-share-count').html('<span class="glyphicon glyphicon-share-alt"></span>&nbsp;' + getRepString(data.sharesCount) + '&nbsp;Shares');
             $('#post-image').attr('src', 'http://graph.facebook.com/' + data.createdBy + '/picture');
             $('#post-time').html(date + ' at ' + time);
             //Set onClick command for comment button
@@ -780,9 +835,9 @@ function getAllCrawlPage() {
             });
 
             getAllPosts(listPageFilter);
-            setInterval(function () {
-                getAllPosts(listPageFilter);
-            }, 5000);
+            // setInterval(function () {
+            //     getAllPosts(listPageFilter);
+            // }, 5000);
 
         },
         error: function () {
@@ -812,10 +867,11 @@ function select(e, id) {
 //Show pagination in commentlist
 function commentPagination(pagecount, postid) {
     $('#page-nav').html('<li><a style="border: none; background-color: transparent">PAGE <p id="currentpage" style="display: inline; color: cornflowerblue">&nbsp;1</p>/'+pagecount+'</a></li>');
+
     for (i=0;i<pagecount;i++)
     {
         var count =i +1;
-        $('#page-nav').append('<li onclick="activePage(this);getCommentByPostIdwPage(' + postid + ','+count+')"><a href="#">'+count+'</a></li>');
+        $('#page-nav').append('<li onclick="activePage(this);getCommentByPostIdwPage('+"'" + postid + "'"+','+count+')"><a href="#">'+count+'</a></li>');
     }
     
 
@@ -826,4 +882,17 @@ function activePage(a) {
     $('#page-nav>li.active').removeClass("active");
     $(a).addClass('active');
     $('#currentpage').html($(a).html());
+}
+
+//Number over thousand format
+function getRepString (rep) {
+    rep = rep+''; // coerce to string
+    if (rep < 1000) {
+        return rep; // return the same number
+    }
+    // if (rep < 10000) { // place a comma between
+    //     return rep.charAt(0) + '.' + rep.substring(1);
+    // }
+    // divide and format
+    return (rep/1000).toFixed(rep % 1000 != 0)+'k';
 }

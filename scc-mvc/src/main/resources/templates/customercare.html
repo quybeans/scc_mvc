@@ -6,13 +6,13 @@
     <header class="main-header" th:include="Head::header"></header>
     <aside class="main-sidebar" th:include="SideBar::aside"></aside>
 
-    <script  src="/js/customercare.js"></script>
+    <script src="/js/customercare.js"></script>
     <link rel="stylesheet" th:href="@{/css/scc-post.css}"/>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
     <div class="content-wrapper" style="max-height: 90vh;overflow: hidden">
-    <!--MODALS GO HERE-->
+        <!--MODALS GO HERE-->
 
         <div class="modal fade" id="replyModal" role="dialog">
             <div class="modal-dialog">
@@ -225,7 +225,8 @@
                         <h4 class="modal-title">Select page to display posts</h4>
                     </div>
                     <div class="modal-body" id="page-list">
-                        <img height="20px" width="20px" src="https://graph.facebook.com/750322811668893/picture"><b>Kitty Bang Bang</b>
+                        <img height="20px" width="20px" src="https://graph.facebook.com/750322811668893/picture"><b>Kitty
+                        Bang Bang</b>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-default" data-dismiss="modal">Close</button>
@@ -237,17 +238,33 @@
         <!--MODALS END HERE-->
 
         <section class="col-lg-3" style="padding: 0px">
-            <div class="row" style="padding-bottom: 5px; background-color: white; padding-top: 5px; border: 1px solid lightgray">
-                <div class="btn-group pull-right" style="margin-right: 20px" data-toggle="modal" data-target="#filter-page-modal">
-                    <a class="btn btn-primary" style="border-radius: 0px">
+            <div class="row"
+                 style="padding-bottom: 5px; text-align:center; background-color: white; padding-top: 5px; border: 1px solid lightgray">
+                <div class="btn-group pull-right" style="margin-right: 20px" data-toggle="modal"
+                     data-target="#filter-page-modal">
+                    <a class="btn btn-default" style="border-radius: 0px">
                         <i class="fa fa-newspaper-o"></i>
                         &nbsp; Pages &nbsp;
-                        <i class="fa fa-caret-down"></i>
+
                     </a>
                 </div>
 
-            </div>
+                <button data-toggle="collapse" data-target="#search-box" class="btn btn-default pull-left"
+                        style="border-radius:0px; margin-left: 20px"><span class="fa fa-search"></span> &nbsp;Search
+                </button>
+                <div class="btn-group" style="margin-left: 5px">
+                    <a class="btn btn-default" onclick="getAllPosts(listPageFilter)" style="border-radius: 100px">
+                        <i class="fa fa-refresh"></i>
 
+                    </a>
+                </div>
+            </div>
+            <div class="collapse" id="search-box" style="padding: 10px">
+                <div class="input-group">
+                    <input type="text" class="form-control" value="" id="txtSearchPost" placeholder="Search by post content"/>
+                    <span class="input-group-addon" onclick="findPostByContent(listPageFilter)"> <i class="fa fa-search"></i></span>
+                </div>
+            </div>
             <div class="postlist">
                 <div class="box-body chat" id="post-box">
                     <!--Post list here-->
@@ -256,7 +273,8 @@
             </div>
         </section>
 
-        <section class="col-lg-6 cmtbox" style="padding-bottom: 5%; background-color: gray; position: relative; border-left: 1px solid lightgray;">
+        <section class="col-lg-6 cmtbox"
+                 style="padding-bottom: 5%; background-color: gray; position: relative; border-left: 1px solid lightgray;">
 
             <div class="postdetail">
                 <div>
@@ -268,7 +286,7 @@
                         <p style="margin-top: 15px; text-align: justify; text-justify: inter-word;" id="post-content">
                             Content
                         </p>
-                        <div  style="color: gray">
+                        <div style="color: gray">
                             <div class="inline" style="margin-right: 15px" id="post-like-count"><span
                                     class="glyphicon glyphicon-thumbs-up"></span>likes
                             </div>
@@ -282,8 +300,12 @@
                     </div>
                     <div class="col-lg-1" style="padding-right: 15px;">
                         <div style="margin: 0;" class="pull-right">
-                            <div style="border-bottom: 1px solid lightgray"><div id="happy-count" style="text-align: center">16</div><span class="fa fa-smile-o happy"></span></div>
-                            <div><div id="sad-count" style="text-align: center">20</div><span class="fa fa fa-frown-o sad"></span></div>
+                            <div style="border-bottom: 1px solid lightgray">
+                                <div id="happy-count" style="text-align: center">16</div>
+                                <span class="fa fa-smile-o happy"></span></div>
+                            <div>
+                                <div id="sad-count" style="text-align: center">20</div>
+                                <span class="fa fa fa-frown-o sad"></span></div>
                         </div>
                     </div>
 
@@ -295,7 +317,7 @@
 
             <div style=" padding: 0; margin: 0; width: 100%; background-color: white; position: fixed; bottom: 0px; height: 45px; border-top: 1px solid lightgray">
 
-                <ul id = "page-nav" class="pagination" style="margin-left: 10px; margin-top: 5px; padding: 0">
+                <ul id="page-nav" class="pagination" style="margin-left: 10px; margin-top: 5px; padding: 0">
                     <li><a href="#">1</a></li>
                     <li><a href="#">2</a></li>
                     <li><a href="#">3</a></li>
