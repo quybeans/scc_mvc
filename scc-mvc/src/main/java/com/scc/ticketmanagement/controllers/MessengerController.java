@@ -29,7 +29,7 @@ public class MessengerController {
 
     @RequestMapping("/messengertest")
     public String messengertest() {
-        return "/messenger/index";
+        return "/messenger/messengertest";
     }
 
     @RequestMapping("/messenger")
