@@ -10,7 +10,8 @@ var listPageFilter = new Array();
 //Hard image link for account user.
 var graphImage = "https://graph.facebook.com/";
 var postListCurPage = 1;
-
+var commentListCurPage = 1;
+var currentPost;
 startup();
 
 function startup() {
@@ -89,7 +90,7 @@ function findPostByContent(pagelist) {
 
     var content = $('#txtSearchPost').val();
 
-    $('#post-box').html('</br><div style="margin-right: 10px; text-align: center;font-size: 30px; width: 100%; height: 100%;"><span style=" color: cornflowerblue; " class="fa fa-spinner fa-spin"></span>Loading...</div>');
+    $('#post-box').html('</br><div style="margin-right: 10px; text-align: center;font-size: 30px; width: 100%; height: 100%;"><span style=" color: cornflowerblue; " class="fa fa-circle-o-notch fa-spin"></span>Loading...</div>');
     if (pagelist.length != 0) {
         $.ajax({
             url: '/post/findbycontent',
@@ -133,7 +134,7 @@ function findPostByContent(pagelist) {
 }
 
 function getAllPosts(pagelist,pageno) {
-    if (pageno==1)$('#post-box').html('</br><div style="margin-right: 10px; text-align: center;font-size: 30px; width: 100%; height: 100%;"><span style=" color: cornflowerblue; " class="fa fa-spinner fa-spin"></span>Loading...</div>');
+    if (pageno==1)$('#post-box').html('</br><div style="margin-right: 10px; text-align: center;font-size: 30px; width: 100%; height: 100%;"><span style=" color: cornflowerblue; " class="fa fa-circle-o-notch fa-spin"></span>Loading...</div>');
     if (pagelist.length != 0) {
         $.ajax({
             // url: '/allPostsByBrand',
@@ -333,22 +334,23 @@ function getReplyByCommentId(commentId) {
 
 
 function getCommentById(postid) {
-
-
     getPostById(postid);
+    currentPost = postid;
+    commentListCurPage = 1;
+    $('#comment-box').html('<div style=" padding-left: 10px"><span style="color: cornflowerblue;" class="fa fa-circle-o-notch fa-spin"></span> &nbsp;Loading comments ...</div>');
     getCommentByPostIdwPage(postid,1);
 }
 
 //Get comment by id
 function getCommentByPostIdwPage(postId,page) {
-
+    $('#comment-list').on('scroll', function() {scrollerOn(this);})
     $.ajax({
         url: 'comment/bypostid',
         type: "GET",
         data: {postid: postId, page:page},
         dataType: "json",
         success: function (data) {
-            $('#comment-box').empty();
+            if (page==1) $('#comment-box').empty();
             $.each(data, function (index) {
                 var senIcon = sadicon;
                 if (data[index].sentimentScore == 1)
@@ -359,9 +361,9 @@ function getCommentByPostIdwPage(postId,page) {
 
                 $('#comment-box').append(
                     '<div class="cmt" >'
-                    +'<div class="col-lg-10 cmtContent">' +
+                    +'<div class="col-lg-11 cmtContent">' +
                     '<img onload="http://localhost:9000/img/user_img.jpg" src="http://graph.facebook.com/' + data[index].createdBy + '/picture" alt="user image">'
-                    + '<p class="message">'
+                    + '<p class="message" style="margin-top: -53px">'
                     + '<a>'
                     + data[index].createdByName
                     + '<small class="text-muted" style="margin-left: 10px">'
@@ -376,7 +378,7 @@ function getCommentByPostIdwPage(postId,page) {
                     ' style="color:gray "  title="Reply to this comment"   data-placement="bottom" ' +
                     'data-toggle="tooltip" ></span></button>'
                     + '</div>'
-                    + '<div class="col-lg-2" style="margin-top: 30px">' + '<small class="' + senIcon + '" style="font-size: 20px;"></small>'
+                    + '<div class="col-lg-1" style="margin-top: 30px">' + '<small class="' + senIcon + '" style="font-size: 20px;"></small>'
                     + '</div>'
                     + '</div>')
             });
@@ -398,15 +400,15 @@ function getPostById(postId) {
         $("#sad-count").html(sadcount);
     }});
 
-    //Count comment in post
-    $.ajax({
-        url: 'comment/bypostid/count',
-        type: "GET",
-        data: {postid: postId},
-        dataType: "json",
-        success: function (result) {
-            commentPagination(result,postId);
-        }});
+    // //Count comment in post
+    // $.ajax({
+    //     url: 'comment/bypostid/count',
+    //     type: "GET",
+    //     data: {postid: postId},
+    //     dataType: "json",
+    //     success: function (result) {
+    //         commentPagination(result,postId);
+    //     }});
 
     //Get post detail
     $.ajax({
@@ -869,19 +871,6 @@ function select(e, id) {
     }
 }
 
-//Show pagination in commentlist
-function commentPagination(pagecount, postid) {
-    $('#page-nav').html('<li><a style="border: none; background-color: transparent">PAGE <p id="currentpage" style="display: inline; color: cornflowerblue">&nbsp;1</p>/'+pagecount+'</a></li>');
-
-    for (i=0;i<pagecount;i++)
-    {
-        var count =i +1;
-        $('#page-nav').append('<li onclick="activePage(this);getCommentByPostIdwPage('+"'" + postid + "'"+','+count+')"><a href="#">'+count+'</a></li>');
-    }
-    
-
-}
-
 //Set which page is active
 function activePage(a) {
     $('#page-nav>li.active').removeClass("active");
@@ -911,3 +900,6 @@ jQuery(function($) {
         }
     })
 });
+
+
+

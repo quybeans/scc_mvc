@@ -16,12 +16,10 @@
 
 
 .cmtbox{
-
-  overflow: scroll;
   height:95vh;
-  padding:0px;
+  padding:0 0 2%;
   background-color: white;
-  overflow:scroll;
+  overflow-y:scroll;
 
 }
 
@@ -232,3 +230,50 @@
   /*display: block;*/
   /*font-weight: 600;*/
 /*}*/
+.chat
+{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.chat li
+{
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+  border-bottom: 1px dotted #B3A9A9;
+}
+
+.chat li.left .chat-body
+{
+  margin-left: 35px;
+}
+
+.chat li.right .chat-body
+{
+  margin-right: 35px;
+}
+
+
+.chat li .chat-body p
+{
+  margin: 0;
+  color: #777777;
+}
+
+.panel .slidedown .glyphicon, .chat .glyphicon
+{
+  margin-right: 5px;
+}
+
+.panel-body
+{
+  overflow-y: scroll;
+
+}
+
+.chat li  span  img
+{
+  height: 30px;
+  width: 30px;
+}
