@@ -6,13 +6,10 @@ import com.scc.ticketmanagement.exentities.Conversation;
 import com.scc.ticketmanagement.facebook.Contact;
 import com.scc.ticketmanagement.repositories.ContactRepository;
 import com.scc.ticketmanagement.repositories.MessageRepository;
-import com.scc.ticketmanagement.repositories.PageRepository;
-import com.scc.ticketmanagement.services.ContactService;
 import com.scc.ticketmanagement.services.MessageService;
 import com.scc.ticketmanagement.services.PageService;
 import com.scc.ticketmanagement.utilities.Constant;
 import com.scc.ticketmanagement.utilities.FacebookUtility;
-import org.apache.tomcat.util.bcel.Const;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,7 +17,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.naming.AuthenticationException;
-import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -115,7 +111,12 @@ public class MessageServiceImp implements MessageService {
     @Override
     public Page<MessageEntity> getMessageAscWithPage(String receiverId, String senderId, Integer page) {
         PageRequest pageRequest = new PageRequest(page - 1, Constant.PAGE_SIZE, Sort.Direction.ASC, "seq");
-        return messageRepository.getMessageAscWithPage(receiverId, senderId, pageRequest);
+        return messageRepository.getMessageWithPage(receiverId, senderId, pageRequest);
+    }
+    @Override
+    public Page<MessageEntity> getMessageDescWithPage(String receiverId, String senderId, Integer page) {
+        PageRequest pageRequest = new PageRequest(page - 1, Constant.PAGE_SIZE, Sort.Direction.DESC, "seq");
+        return messageRepository.getMessageWithPage(receiverId, senderId, pageRequest);
     }
 
     @Override
