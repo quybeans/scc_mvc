@@ -5,6 +5,8 @@ package com.scc.ticketmanagement.repositories;
  */
 import com.scc.ticketmanagement.Entities.CommentEntity;
 import com.scc.ticketmanagement.Entities.PostEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -22,6 +24,13 @@ public interface PostRepository extends JpaRepository<PostEntity, String> {
     @Query("SELECT COUNT(c) from CommentEntity c where c.sentimentScore=1 and c.postId= :postId")
      int findPosCountByPostId(@Param("postId") String postId);
 
-    @Query("SELECT COUNT(c) from CommentEntity c where c.sentimentScore!=1 and c.postId= :postId")
+    @Query("SELECT COUNT(c) from CommentEntity c where c.sentimentScore=2 and c.postId= :postId")
     int findNegCountByPostId(@Param("postId") String postId);
+
+    @Query("SELECT p from PostEntity p where p.content like %:content%")
+    List<PostEntity> findPostByContent(@Param("content")String content);
+
+    Page<PostEntity> findByCreatedByIn(List<String> listpage, Pageable page);
+
+    List<PostEntity> findByCreatedByInAndContentContaining(List<String> listpage, String content);
 }

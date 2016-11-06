@@ -6,7 +6,7 @@
 
 }
 .postlist {
-  height: 95vh;
+  height: 90vh;
   padding: 0px;
   background-color: white;
   position: relative;
@@ -79,7 +79,7 @@
 
 .chat .item > .message {
   margin-left: 65px;
-  margin-top: -45px;
+  margin-top: -50px;
 
 
 }
@@ -92,6 +92,7 @@
   display: block;
   font-weight: bold;
   color: cornflowerblue;
+
 }
 
 .box-input {
@@ -191,7 +192,11 @@
   color: #50D050
 }
 
-
+.question
+{
+  font-size: 20px;
+  color: #FFD700;
+}
 /* PAGE LIST SELECTED*/
 .page-selected {
   border: 1px solid cornflowerblue;
