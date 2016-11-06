@@ -8,8 +8,10 @@
     <aside class="main-sidebar" th:include="SideBar::aside"></aside>
 
     <link rel="stylesheet" th:href="@{/css/scc-post.css}"/>
+    <script src="/js/moment.min.js"></script>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
+
 <div class="wrapper">
     <div class="content-wrapper" style="max-height: 90vh;overflow: hidden">
 
@@ -131,11 +133,17 @@
 
                         if (dataReversed[i].senderid == pageId) {
                             $('#conversationContent').append(
-                                    '<div style="text-align: right;"><h1 style="display: inline-block; background-color: #00a7d0">' + dataReversed[i].content + '</h1></div>'
+                                    '<div style="text-align: right;">' +
+                                    '<h1 style="display: inline-block; background-color: #00a7d0">' + dataReversed[i].content + '</h1>' +
+                                    '<p>' + moment(dataReversed[i].createdAt).fromNow() + '</p>' +
+                                    '</div>'
                             );
                         } else {
                             $('#conversationContent').append(
-                                    '<div style="text-align: left;"><h1 style="display: inline-block; background-color: #00a65a">' + dataReversed[i].content + '</h1></div>'
+                                    '<div style="text-align: left;">' +
+                                    '<h1 style="display: inline-block; background-color: #9d9d9d">' + dataReversed[i].content + '</h1>' +
+                                    '<p>' + moment(dataReversed[i].createdAt).fromNow() + '</p>' +
+                                    '</div>'
                             );
                         }
 
@@ -166,13 +174,19 @@
                     var dataReversed = data.reverse();
                     $.each(dataReversed, function (i) {
 
-                        if (dataReversed[i].senderid == currentPageId ) {
+                        if (dataReversed[i].senderid == currentPageId) {
                             $('#conversationContent').append(
-                                    '<div style="text-align: right;"><h1 style="display: inline-block; background-color: #00a7d0">' + dataReversed[i].content + '</h1></div>'
+                                    '<div style="text-align: right;">' +
+                                    '<h1 style="display: inline-block; background-color: #00a7d0">' + dataReversed[i].content + '</h1>' +
+                                    '<p>' + moment(dataReversed[i].createdAt).fromNow() + '</p>' +
+                                    '</div>'
                             );
                         } else {
                             $('#conversationContent').append(
-                                    '<div style="text-align: left;"><h1 style="display: inline-block; background-color: #00a65a">' + dataReversed[i].content + '</h1></div>'
+                                    '<div style="text-align: left;">' +
+                                    '<h1 style="display: inline-block; background-color: #9d9d9d">' + dataReversed[i].content + '</h1>' +
+                                    '<p>' + moment(dataReversed[i].createdAt).fromNow() + '</p>' +
+                                    '</div>'
                             );
                         }
 
@@ -187,7 +201,7 @@
 
 
     $(function () {
-        var conversation =  $('#conversationContent');
+        var conversation = $('#conversationContent');
         conversation.scroll(function () {
             if (conversation.scrollTop() == 0)
                 getConversationBySenderIdWithPage();
@@ -231,6 +245,7 @@
                         + '<div><label>Location: </label>' + " " + data.locale + '</div>'
                         + '<div><label>Timezone: </label>' + " " + data.timezone + '</div>'
                         + '<div><label>Gender: </label>' + " " + data.gender + '</div>'
+                        + '<div><label>Note: </label>' + " " + data.note + '</div>'
                         + '</div>'
                 )
             }

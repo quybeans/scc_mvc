@@ -14,6 +14,7 @@ public class ContactEntity {
     private String locale;
     private String timezone;
     private String gender;
+    private String note;
 
     @Id
     @Column(name = "facebookid")
@@ -93,5 +94,15 @@ public class ContactEntity {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    @Basic
+    @Column(name = "note")
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 }
