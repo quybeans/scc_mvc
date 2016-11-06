@@ -112,7 +112,7 @@
                 data: {
                     pageId: pageId,
                     senderId: senderId,
-                    pageNum: 2
+                    pageNum: 1
                 },
                 dataType: "json",
                 success: function (data) {
@@ -120,7 +120,7 @@
                     $.each(data, function (i) {
                         if (data[i].senderid == pageId) {
                             $('#conversationContent').append(
-                                    '<div style="text-align: right">' + data[i].content + '</div>'
+                                    '<div style="text-align: right"><p>' + data[i].content + '</p></div>'
                             );
                         } else {
                             $('#conversationContent').append(
