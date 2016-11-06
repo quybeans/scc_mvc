@@ -253,7 +253,8 @@
                         style="border-radius:0px; margin-left: 20px"><span class="fa fa-search"></span> &nbsp;Search
                 </button>
                 <div class="btn-group" style="margin-left: 5px">
-                    <a class="btn btn-default" onclick="postListCurPage=1;getAllPosts(listPageFilter,postListCurPage)" style="border-radius: 100px">
+                    <a class="btn btn-default" onclick="postListCurPage=1;getAllPosts(listPageFilter,postListCurPage)"
+                       style="border-radius: 100px">
                         <i class="fa fa-refresh"></i>
 
                     </a>
@@ -261,8 +262,10 @@
             </div>
             <div class="collapse" id="search-box" style="padding: 10px">
                 <div class="input-group">
-                    <input type="text" class="form-control" value="" id="txtSearchPost" placeholder="Search by post content"/>
-                    <span class="input-group-addon" onclick="findPostByContent(listPageFilter)"> <i class="fa fa-search"></i></span>
+                    <input type="text" class="form-control" value="" id="txtSearchPost"
+                           placeholder="Search by post content"/>
+                    <span class="input-group-addon" onclick="findPostByContent(listPageFilter)"> <i
+                            class="fa fa-search"></i></span>
                 </div>
             </div>
             <div class="postlist" id="post-list">
@@ -273,8 +276,8 @@
             </div>
         </section>
 
-        <section class="col-lg-6 cmtbox"
-                 style="padding-bottom: 5%; background-color: gray; position: relative; border-left: 1px solid lightgray;">
+        <section class="col-lg-6 cmtbox" id="comment-list"
+                 style=" background-color: gray;  border-left: 1px solid lightgray;">
 
             <div class="postdetail">
                 <div>
@@ -312,46 +315,139 @@
                 </div>
             </div>
             <div id="comment-box" class="cmtList">
-                <!-- This is posts list -->
+                <!-- This is comment list -->
             </div>
 
-            <div style=" padding: 0; margin: 0; width: 100%; background-color: white; position: fixed; bottom: 0px; height: 45px; border-top: 1px solid lightgray">
 
-                <ul id="page-nav" class="pagination" style="margin-left: 10px; margin-top: 5px; padding: 0">
-                    <li><a href="#">1</a></li>
-                    <li><a href="#">2</a></li>
-                    <li><a href="#">3</a></li>
-                    <li><a href="#">4</a></li>
-                    <li><a href="#">5</a></li>
-                    <li><a href="#">6</a></li>
-
-                </ul>
-            </div>
         </section>
 
-        <section class="col-lg-2"
-                 style="padding: 0; margin:0px 0px 0px 0px; display:block;border-left: 1px solid lightgray;height: 100vh">
-            <div style="height: 50vh">
-                <ul class="nav nav-tabs" style="overflow: hidden;width: 100vh;display: inline-block; margin-top: 10px">
-                    <li class="active"><a data-toggle="tab" href="#tab_1">Ticket Detail</a></li>
-                    <li><a data-toggle="tab" href="#tab_2">History</a></li>
-                    <li><a data-toggle="tab" href="#tab_3">Reply</a></li>
-                </ul>
-                <div class="tab-content" style="height: 100vh;background-color: white; width: 100vh; margin-top: -5px">
-                    <div class="tab-pane active" id="tab_1" style="max-height: 100%">
+        <section class="col-lg-3"
+                 style="padding: 0; margin:0px 0px 0px 0px;border-left: 1px solid lightgray; position: relative; height: 100vh;">
+            <div style="border: 1px solid gray; margin-bottom: 20px">
+                <div style="border-radius: 0px">
+                    <div style="background-color: white">MESSENGER</div>
+                    <!--<span class="glyphicon glyphicon-comment"></span> Messenger-->
+                    <!--<div class="btn-group pull-right">-->
+                    <!--<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">-->
+                    <!--<span class="glyphicon glyphicon-chevron-down"></span>-->
+                    <!--</button>-->
+                    <!--<ul class="dropdown-menu slidedown">-->
+                    <!--<li><a href="http://www.jquery2dotnet.com"><span class="glyphicon glyphicon-refresh">-->
+                    <!--</span>Refresh</a></li>-->
+                    <!--<li><a href="http://www.jquery2dotnet.com"><span class="glyphicon glyphicon-ok-sign">-->
+                    <!--</span>Available</a></li>-->
+                    <!--<li><a href="http://www.jquery2dotnet.com"><span class="glyphicon glyphicon-remove">-->
+                    <!--</span>Busy</a></li>-->
+                    <!--<li><a href="http://www.jquery2dotnet.com"><span class="glyphicon glyphicon-time"></span>-->
+                    <!--Away</a></li>-->
+                    <!--<li class="divider"></li>-->
+                    <!--<li><a href="http://www.jquery2dotnet.com"><span class="glyphicon glyphicon-off"></span>-->
+                    <!--Sign Out</a></li>-->
+                    <!--</ul>-->
+                    <!--</div>-->
+
+                    <div style="padding-bottom: 0px; height: 80vh;  overflow: auto">
+                        <ul class="chat">
+                            <li class="left clearfix"><span class="chat-img pull-left"> <img src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar" class="img-circle"/> </span>
+                                <div class="chat-body clearfix">
+                                    <div class="header">
+                                        <strong class="primary-font">Jack Sparrow</strong>
+                                        <small class="pull-right text-muted">
+                                            <span class="glyphicon glyphicon-time"></span>12 mins ago
+                                        </small>
+                                    </div>
+                                    <p>
+                                        Xin chào
+                                    </p>
+                                </div>
+                            </li>
+                            <li class="left clearfix"><span class="chat-img pull-left"> <img src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar" class="img-circle"/> </span>
+                                <div class="chat-body clearfix">
+                                    <div class="header">
+                                        <strong class="primary-font">Jack Sparrow</strong>
+                                        <small class="pull-right text-muted">
+                                            <span class="glyphicon glyphicon-time"></span>12 mins ago
+                                        </small>
+                                    </div>
+                                    <p>
+                                        Mình cần hỗ trợ
+                                    </p>
+                                </div>
+                            </li>
+                            <li class="left clearfix"><span class="chat-img pull-left"> <img src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar" class="img-circle"/> </span>
+                                <div class="chat-body clearfix">
+                                    <div class="header">
+                                        <strong class="primary-font">Jack Sparrow</strong>
+                                        <small class="pull-right text-muted">
+                                            <span class="glyphicon glyphicon-time"></span>12 mins ago
+                                        </small>
+                                    </div>
+                                    <p>
+                                        Về đổi trả Galaxy note 7
+                                    </p>
+                                </div>
+                            </li>
+                            <li class="right clearfix"><span class="chat-img pull-right">
+                            <img src="http://placehold.it/50/FA6F57/fff&text=ME" alt="User Avatar" class="img-circle"/>
+                        </span>
+                                <div class="chat-body clearfix">
+                                    <div class="header">
+                                        <small class=" text-muted"><span class="glyphicon glyphicon-time"></span>13 mins
+                                            ago
+                                        </small>
+                                        <strong class="pull-right primary-font">Bhaumik Patel</strong>
+                                    </div>
+                                    <p>
+                                        Chào bạn, chúng tôi đên tứ
+                                    </p>
+                                </div>
+                            </li>
+                            <li class="left clearfix"><span class="chat-img pull-left">
+                            <img src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar" class="img-circle"/>
+                        </span>
+                                <div class="chat-body clearfix">
+                                    <div class="header">
+                                        <strong class="primary-font">Jack Sparrow</strong>
+                                        <small class="pull-right text-muted">
+                                            <span class="glyphicon glyphicon-time"></span>14 mins ago
+                                        </small>
+                                    </div>
+                                    <p>
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum
+                                        ornare
+                                        dolor, quis ullamcorper ligula sodales.
+                                    </p>
+                                </div>
+                            </li>
+                            <li class="right clearfix"><span class="chat-img pull-right">
+                            <img src="http://placehold.it/50/FA6F57/fff&text=ME" alt="User Avatar" class="img-circle"/>
+                        </span>
+                                <div class="chat-body clearfix">
+                                    <div class="header">
+                                        <small class=" text-muted"><span class="glyphicon glyphicon-time"></span>15 mins
+                                            ago
+                                        </small>
+                                        <strong class="pull-right primary-font">Bhaumik Patel</strong>
+                                    </div>
+                                    <p>
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum
+                                        ornare
+                                        dolor, quis ullamcorper ligula sodales.
+                                    </p>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
-
-                    <div class="tab-pane" id="tab_2" style="max-height: 100%">
+                    <div style="bottom: 0; position: relative;">
+                        <div class="input-group">
+                            <input id="btn-input" type="text" class="form-control input-sm"
+                                   placeholder="Type your message here..."/>
+                            <span class="input-group-btn">
+                            <button class="btn btn-warning btn-sm" id="btn-chat">
+                                Send</button>
+                        </span>
+                        </div>
                     </div>
-
-                    <div class="tab-pane" id="tab_3" style="max-height: 100%">
-
-                    </div>
-
-                </div>
-            </div>
-            <div style="height: 50vh">
-                <div id="realtedcomment">
                 </div>
             </div>
         </section>
