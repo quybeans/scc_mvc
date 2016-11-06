@@ -114,8 +114,14 @@ public class MessageServiceImp implements MessageService {
         return messageRepository.getMessageWithPage(receiverId, senderId, pageRequest);
     }
     @Override
-    public Page<MessageEntity> getMessageDescWithPage(String receiverId, String senderId, Integer page) {
-        PageRequest pageRequest = new PageRequest(page - 1, Constant.PAGE_SIZE, Sort.Direction.DESC, "seq");
+    public Page<MessageEntity> getMessageDescWithPage(String receiverId, String senderId, Integer pageNum) {
+        PageRequest pageRequest = new PageRequest(pageNum - 1, Constant.PAGE_SIZE, Sort.Direction.DESC, "seq");
+        return messageRepository.getMessageWithPage(receiverId, senderId, pageRequest);
+    }
+
+    @Override
+    public Page<MessageEntity> getMessageDescWithPageSize(String receiverId, String senderId, Integer pageNum) {
+        PageRequest pageRequest = new PageRequest(0, (Constant.PAGE_SIZE)*pageNum, Sort.Direction.DESC, "seq");
         return messageRepository.getMessageWithPage(receiverId, senderId, pageRequest);
     }
 

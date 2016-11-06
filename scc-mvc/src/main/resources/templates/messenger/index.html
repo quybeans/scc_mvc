@@ -54,6 +54,10 @@
 </body>
 </html>
 <script>
+
+    var currentPageId = "0";
+    var currentCustomer = "0";
+    var currentPageNum = 0;
     $(document).ready(function () {
         var a = $("#ddlPages option:first").val();
         getAllConversationsByPageId(a);
@@ -102,13 +106,16 @@
     }
 
     function getConversationBySenderId(pageId, senderId) {
+        currentPageId = pageId;
+        currentCustomer = senderId;
+        currentPageNum = 1;
         document.getElementById('replyText').select();
         getCustomerInfo(senderId);
         $('#btnReply').attr('onclick', 'sendMessage(' + pageId + ',' + senderId + ')');
         clearInterval(currentInterval);
         currentInterval = setInterval(function () {
             $.ajax({
-                url: '/messenger/getConversationBySenderIdAndPageId',
+                url: '/messenger/getConversationBySenderIdWithPage',
                 type: "POST",
                 data: {
                     pageId: pageId,
@@ -140,12 +147,49 @@
 
     }
 
+    function getConversationBySenderIdWithPage() {
+
+        clearInterval(currentInterval);
+        currentInterval = setInterval(function () {
+            $.ajax({
+                url: '/messenger/getConversationBySenderIdWithPage',
+                type: "POST",
+                data: {
+                    pageId: currentPageId,
+                    senderId: currentCustomer,
+                    pageNum: currentPageNum
+                },
+                dataType: "json",
+                success: function (data) {
+                    $('#conversationContent').empty();
+                    var dataReversed = data.reverse();
+                    $.each(dataReversed, function (i) {
+
+                        if (dataReversed[i].senderid == currentPageId ) {
+                            $('#conversationContent').append(
+                                    '<div style="text-align: right"><h1>' + dataReversed[i].content + '</h1></div>'
+                            );
+                        } else {
+                            $('#conversationContent').append(
+                                    '<div style="text-align: left"><h1>' + dataReversed[i].content + '</h1></div>'
+                            );
+                        }
+
+                    });
+
+                }
+            });
+
+        }, 500);
+        currentPageNum = currentPageNum + 1;
+    }
+
+
     $(function () {
         var conversation =  $('#conversationContent');
-
         conversation.scroll(function () {
             if (conversation.scrollTop() == 0)
-                alert('Scrolled to Page Top');
+                getConversationBySenderIdWithPage();
         });
     });
 

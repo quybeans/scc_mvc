@@ -20,7 +20,7 @@ public interface MessageService {
     List<MessageEntity> getMessageAsc(String receiverId, String senderId);
 
     Page<MessageEntity> getMessageDescWithPage(String receiverId, String senderId, Integer page);
+    Page<MessageEntity> getMessageDescWithPageSize(String receiverId, String senderId, Integer page);
     Page<MessageEntity> getMessageAscWithPage(String receiverId, String senderId, Integer page);
-
     String getLastMessage(String receiverId, String senderId);
 }
