@@ -249,18 +249,20 @@
   margin-left: 35px;
   background-color: white;
   padding: 5px 10px 5px 5px;
+  border-radius: 5px;
 }
 
 .chat li.right .chat-body
 {
   padding: 5px 5px 5px 10px;
   margin-right: 35px;
-  background-color: white;
+  background-color: lightblue;
+  border-radius: 5px;
+
 }
 .chat li.right .chat-body p
 {
-
-
+  color: black;
 }
 
 .chat li .chat-body p
@@ -284,4 +286,5 @@
 {
   height: 30px;
   width: 30px;
+  border-radius: 3px;
 }
