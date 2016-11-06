@@ -89,12 +89,6 @@ public class PriorityController {
         extendPriority.setDuration(priority.getDuration());
         extendPriority.setCreatedtime(ticket.getCreatedtime());
         extendPriority.setName(priority.getName());
-        long create=ticket.getCreatedtime().getHours();
-        long current=new Date().getHours();
-        long diff = current-create;
-
-        System.out.println("DIFF:"+diff);
-        System.out.println("Create:"+ create +" Current:"+ current+ " DIff:"+ diff);
         return extendPriority;
     }
 }

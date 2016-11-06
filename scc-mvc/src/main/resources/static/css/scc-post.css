@@ -6,8 +6,7 @@
 
 }
 .postlist {
-
-  height: 95vh;
+  height: 90vh;
   padding: 0px;
   background-color: white;
   position: relative;
@@ -18,7 +17,7 @@
 
 .cmtbox{
 
-overflow: scroll;
+  overflow: scroll;
   height:95vh;
   padding:0px;
   background-color: white;
@@ -44,7 +43,7 @@ overflow: scroll;
 }
 .chat .item {
   cursor:pointer;
-  height: 20vh;
+  height: 140px;
   border-bottom: 1px solid #D3D3D3;
   margin-bottom: 0px;
   margin-top: 0px;
@@ -80,7 +79,7 @@ overflow: scroll;
 
 .chat .item > .message {
   margin-left: 65px;
-  margin-top: -45px;
+  margin-top: -50px;
 
 
 }
@@ -91,7 +90,9 @@ overflow: scroll;
 }
 .chat .item > .message > .name {
   display: block;
-  font-weight: 600;
+  font-weight: bold;
+  color: cornflowerblue;
+
 }
 
 .box-input {
@@ -121,8 +122,9 @@ overflow: scroll;
 {
   margin: 10px 20px 10px 20px;
   background-color: white;
-  height: auto;
-    padding: 10px 10px 10px 15px;
+    display:block;
+    overflow:auto;
+  padding: 10px 0px 10px 15px;
   border-radius: 3px;
 }
 
@@ -135,7 +137,7 @@ overflow: scroll;
 .postdetail .author
 {
   margin-top: -50px;
-  color: blue;
+
     font-weight: bold;
     margin-left: 60px;
     font-size: 15px;
@@ -188,6 +190,32 @@ overflow: scroll;
 {
   font-size: 20px;
   color: #50D050
+}
+
+.question
+{
+  font-size: 20px;
+  color: #FFD700;
+}
+/* PAGE LIST SELECTED*/
+.page-selected {
+  border: 1px solid cornflowerblue;
+  background-color: lightblue;
+}
+
+.page-unselected {
+  border: 0px solid lightgray;
+  border-bottom:  1px solid lightgray;
+  background-color: transparent ;
+}
+
+.pagination li:first-child a,.pagination li:last-child a {
+   border-radius: 0px;
+ }
+
+.pagination li a{
+  font-weight: bold;
+  margin-left: 4px;
 }
 /*.cmtList .cmt  .message {*/
   /*margin-left: 65px;*/

@@ -18,4 +18,5 @@ public interface PageService {
     void deactivateCrawlerPage(String pageUid);
     void activatePage(String pageUid);
     void activateCrawlerPage(String pageUid);
+    String getPageAccessTokenByPageId(String pageId);
 }

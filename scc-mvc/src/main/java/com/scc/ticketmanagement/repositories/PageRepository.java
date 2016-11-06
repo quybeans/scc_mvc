@@ -22,4 +22,6 @@ public interface PageRepository extends JpaRepository<PageEntity, String> {
     @Query("select p from PageEntity p where p.pageid IN " +
             "(SELECT m.pageid FROM BrandpageEntity m, BrandEntity b WHERE m.brandid = b.id AND b.id = :brandId)")
     List<PageEntity> getAllCrawlerPageByBrandId(@Param("brandId") Integer brandId);
+
+    List<PageEntity> findByPageidIn(List<String> pageid);
 }

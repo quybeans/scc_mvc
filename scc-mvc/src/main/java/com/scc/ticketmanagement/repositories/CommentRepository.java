@@ -1,6 +1,8 @@
 package com.scc.ticketmanagement.repositories;
 
 import com.scc.ticketmanagement.Entities.CommentEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,8 +18,10 @@ public interface CommentRepository extends JpaRepository<CommentEntity,String> {
     @Query("SELECT u FROM CommentEntity u WHERE u.postId = :postId")
     List<CommentEntity> findCommentByPostId(@Param("postId") String postId);
 
+    @Query("SELECT u FROM CommentEntity u WHERE u.postId = :postId")
+    Page<CommentEntity> findAllByPostId (@Param("postId")String postid, Pageable pageable);
+
     @Query("SELECT u FROM CommentEntity u WHERE u.postId = :postId order by u.sentimentScore DESC")
     List<CommentEntity> findCommentByPostIdSen(@Param("postId") String postId);
-
 
 }

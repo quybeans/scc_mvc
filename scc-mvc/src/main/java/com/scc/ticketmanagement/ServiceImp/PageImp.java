@@ -94,4 +94,10 @@ public class PageImp implements PageService {
         page.setCrawler(true);
         pageRepository.save(page);
     }
+
+    @Override
+    public String getPageAccessTokenByPageId(String pageId) {
+        return pageRepository.getPageById(pageId).getAccesstoken();
+    }
+
 }

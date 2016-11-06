@@ -6,9 +6,13 @@
   <session-factory>
     <property name="connection.url">jdbc:mysql://localhost:3306/scc</property>
     <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-      <mapping class="com.scc.ticketmanagement.Entities.PageEntity"/>
+    <mapping class="com.scc.ticketmanagement.Entities.PageEntity"/>
       <mapping class="com.scc.ticketmanagement.Entities.FacebookaccountEntity"/>
       <mapping class="com.scc.ticketmanagement.Entities.UserfacebookaccountEntity"/>
+      <mapping class="com.scc.ticketmanagement.Entities.ContactEntity"/>
+    <mapping class="com.scc.ticketmanagement.Entities.MessageEntity"/>
+      <mapping class="com.scc.ticketmanagement.Entities.CommentEntity"/>
+      <mapping class="com.scc.ticketmanagement.Entities.PostEntity"/>
       <!-- DB schema will be updated if needed -->
     <!-- <property name="hbm2ddl.auto">update</property> -->
   </session-factory>

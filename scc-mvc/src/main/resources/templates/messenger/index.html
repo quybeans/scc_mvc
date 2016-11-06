@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:fb="http://www.facebook.com/2008/fbml">
+<head>
+    <meta charset="utf-8"/>
+    <title>Messenger</title>
+    <header class="main-header" th:include="Head::header"></header>
+    <aside class="main-sidebar" th:include="SideBar::aside"></aside>
+
+    <link rel="stylesheet" th:href="@{/css/scc-post.css}"/>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+    <div class="content-wrapper" style="max-height: 90vh;overflow: hidden">
+
+        <select class="form-control" name="ddlPages" id="ddlPages" onchange="getAllConversation(this)"
+                onSelect="getAllConversation(this)">
+            <option th:each="page : ${pages}"
+                    th:id="${page.pageid}"
+                    th:value="${page.pageid}"
+                    th:text="${page.name}"></option>
+        </select>
+        <section class="content chat">
+
+            <!--Messages-->
+            <div class="col-md-3" id="messagesList"
+                 style="background-color: white; height: 100vh; overflow: scroll">
+                <div class="item"></div>
+            </div>
+            <div class="col-md-6" id="conversation"
+                 style="background-color: white; height: 100vh; overflow: scroll">
+                <div id="conversationContent" style="overflow: scroll">
+
+                </div>
+                <div style="position: fixed; bottom: 10px;" id="conversationReply">
+                    <div class="col-md-10">
+                        <input style="width: 450px" class="form-control" type="text" id="replyText" name="replyText"
+                               value="" autofocus/>
+                    </div>
+                    <div class="col-md-2">
+                        <button id="btnReply" class="btn btn-primary" onclick="" autofocus>Reply</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3" id="customer-info" style="background-color: white; max-height: 90vh">
+                Customer info
+            </div>
+
+        </section>
+    </div>
+
+</div>
+</body>
+</html>
+<script>
+    $(document).ready(function () {
+        var a = $("#ddlPages option:first").val();
+        getAllConversationsByPageId(a);
+
+
+        $('#replyText').keypress(function (e) {
+            if (e.keyCode == 13)
+                $('#btnReply').click();
+        });
+    });
+
+    function getAllConversation(a) {
+        getAllConversationsByPageId(a.value);
+    }
+
+    var currentInterval;
+
+    function getAllConversationsByPageId(pageId) {
+        clearInterval(currentInterval);
+        $('#conversationContent').empty();
+        $('#messagesList').empty();
+        $.ajax({
+            url: '/messenger/getAllConversationsByPageId',
+            type: "GET",
+            data: {
+                pageId: pageId
+            },
+            dataType: "json",
+            success: function (data) {
+                $('#messagesList').empty();
+
+                $.each(data, function (i) {
+                    var senderImg = '';
+                    $('#messagesList').append(
+                            '<div class="item" id="conversation' + i + '" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId + '\')">'
+                            + '<div><img style="max-height: 30px" src="' + data[i].senderPicture + '"</div>'
+                            + '<div>' + data[i].senderName + '</div>'
+                            + '<div>' + data[i].lastMessage + '</div>'
+                            + '</div>'
+                    )
+                });
+                $('#conversation0').click();
+            }
+        });
+
+    }
+
+    function getConversationBySenderId(pageId, senderId) {
+        document.getElementById('replyText').select();
+        getCustomerInfo(senderId);
+        $('#btnReply').attr('onclick', 'sendMessage(' + pageId + ',' + senderId + ')');
+        clearInterval(currentInterval);
+        currentInterval = setInterval(function () {
+            $.ajax({
+                url: '/messenger/getConversationBySenderIdAndPageId',
+                type: "POST",
+                data: {
+                    pageId: pageId,
+                    senderId: senderId,
+                    pageNum: 1
+                },
+                dataType: "json",
+                success: function (data) {
+                    $('#conversationContent').empty();
+                    $.each(data, function (i) {
+                        if (data[i].senderid == pageId) {
+                            $('#conversationContent').append(
+                                    '<div style="text-align: right"><p>' + data[i].content + '</p></div>'
+                            );
+                        } else {
+                            $('#conversationContent').append(
+                                    '<div style="text-align: left">' + data[i].content + '</div>'
+                            );
+                        }
+
+                    });
+
+                }
+            });
+
+        }, 500);
+
+    }
+
+    function sendMessage(pageId, receiverId) {
+        var content = $('#replyText').val();
+        $.ajax({
+            url: '/messenger/sendMessageToCustomer',
+            type: "POST",
+            data: {
+                pageId: pageId,
+                receiverId: receiverId,
+                content: content
+            },
+            dataType: "json",
+            success: function (data) {
+            },
+            error: function (data) {
+            }
+        });
+        $('#replyText').val("");
+    }
+
+    function getCustomerInfo(customerId) {
+        $.ajax({
+            url: '/messenger/getCustomerInfo',
+            type: "POST",
+            data: {
+                customerId: customerId,
+            },
+            dataType: "json",
+            success: function (data) {
+                $('#customer-info').empty();
+                $('#customer-info').append(
+                        '<div>'
+                        + '<div><img style="max-height: 200px; text-align: center" src="' + data.picture + '"</div>'
+                        + '<div><label>Facebook ID: </label>' + data.facebookid + '</div>'
+                        + '<div><label>Name: </label>' + " " + data.name + '</div>'
+                        + '<div><label>Location: </label>' + " " + data.locale + '</div>'
+                        + '<div><label>Timezone: </label>' + " " + data.timezone + '</div>'
+                        + '<div><label>Gender: </label>' + " " + data.gender + '</div>'
+                        + '</div>'
+                )
+            }
+        });
+    }
+
+</script>
