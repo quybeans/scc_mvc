@@ -29,7 +29,7 @@
             </div>
             <div class="col-md-6" id="conversation"
                  style="background-color: white; height: 100vh; overflow: scroll">
-                <div id="conversationContent" style="overflow: scroll">
+                <div id="conversationContent" style="overflow: scroll; height: 80vh;">
 
                 </div>
                 <div style="position: fixed; bottom: 10px;" id="conversationReply">
@@ -117,14 +117,16 @@
                 dataType: "json",
                 success: function (data) {
                     $('#conversationContent').empty();
-                    $.each(data, function (i) {
-                        if (data[i].senderid == pageId) {
+                    var dataReversed = data.reverse();
+                    $.each(dataReversed, function (i) {
+
+                        if (dataReversed[i].senderid == pageId) {
                             $('#conversationContent').append(
-                                    '<div style="text-align: right"><p>' + data[i].content + '</p></div>'
+                                    '<div style="text-align: right"><h1>' + dataReversed[i].content + '</h1></div>'
                             );
                         } else {
                             $('#conversationContent').append(
-                                    '<div style="text-align: left">' + data[i].content + '</div>'
+                                    '<div style="text-align: left"><h1>' + dataReversed[i].content + '</h1></div>'
                             );
                         }
 
