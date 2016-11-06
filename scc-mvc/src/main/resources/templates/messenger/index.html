@@ -131,11 +131,11 @@
 
                         if (dataReversed[i].senderid == pageId) {
                             $('#conversationContent').append(
-                                    '<div style="text-align: right"><h1>' + dataReversed[i].content + '</h1></div>'
+                                    '<div style="text-align: right;"><h1 style="display: inline-block; background-color: #00a7d0">' + dataReversed[i].content + '</h1></div>'
                             );
                         } else {
                             $('#conversationContent').append(
-                                    '<div style="text-align: left"><h1>' + dataReversed[i].content + '</h1></div>'
+                                    '<div style="text-align: left;"><h1 style="display: inline-block; background-color: #00a65a">' + dataReversed[i].content + '</h1></div>'
                             );
                         }
 
@@ -168,11 +168,11 @@
 
                         if (dataReversed[i].senderid == currentPageId ) {
                             $('#conversationContent').append(
-                                    '<div style="text-align: right"><h1>' + dataReversed[i].content + '</h1></div>'
+                                    '<div style="text-align: right;"><h1 style="display: inline-block; background-color: #00a7d0">' + dataReversed[i].content + '</h1></div>'
                             );
                         } else {
                             $('#conversationContent').append(
-                                    '<div style="text-align: left"><h1>' + dataReversed[i].content + '</h1></div>'
+                                    '<div style="text-align: left;"><h1 style="display: inline-block; background-color: #00a65a">' + dataReversed[i].content + '</h1></div>'
                             );
                         }
 
