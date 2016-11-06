@@ -318,7 +318,15 @@
                 <!-- This is comment list -->
             </div>
 
+            <div style=" padding: 0; margin: 0; width: 100%; background-color: white; position: fixed; bottom: 0px; height: 45px; border-top: 1px solid lightgray">
 
+                <ul id="page-nav" class="pagination" style="margin-left: 10px; margin-top: 5px; padding: 0">
+                    <li><a>Total: <span id="comment-page-count">30</span> Pages</a></li>
+                    <li onclick="previousCommentPage()"><a href="#"><span class="fa fa-chevron-left"></span></a></li>
+                    <li><a href="#" style="padding-bottom: 5px;padding-top: 5px"><input type="number" id="comment-page-current" onkeypress="checkNumberInputAndEnter(event)"  style="width: 30px; text-align:center; border: none" value="1"></a></li>
+                    <li  onclick="nextCommentPage()"><a href="#"><span class="fa fa-chevron-right"></span></a></li>
+                </ul>
+            </div>
         </section>
 
         <section class="col-lg-3"
