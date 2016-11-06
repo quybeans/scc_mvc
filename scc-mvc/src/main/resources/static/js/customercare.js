@@ -5,10 +5,11 @@
 //Ask me if you are confused QUYDV
 var happyicon = 'fa fa-smile-o pull-right happy';
 var sadicon = 'fa fa-frown-o pull-right sad';
+var questionicon = 'fa fa-question-circle-o pull-right question'
 var listPageFilter = new Array();
 //Hard image link for account user.
 var graphImage = "https://graph.facebook.com/";
-
+var postListCurPage = 1;
 
 startup();
 
@@ -87,7 +88,7 @@ function getAllPageAccount() {
 function findPostByContent(pagelist) {
 
     var content = $('#txtSearchPost').val();
-    alert(content);
+
     $('#post-box').html('</br><div style="margin-right: 10px; text-align: center;font-size: 30px; width: 100%; height: 100%;"><span style=" color: cornflowerblue; " class="fa fa-spinner fa-spin"></span>Loading...</div>');
     if (pagelist.length != 0) {
         $.ajax({
@@ -131,16 +132,18 @@ function findPostByContent(pagelist) {
     }
 }
 
-function getAllPosts(pagelist) {
-    $('#post-box').html('</br><div style="margin-right: 10px; text-align: center;font-size: 30px; width: 100%; height: 100%;"><span style=" color: cornflowerblue; " class="fa fa-spinner fa-spin"></span>Loading...</div>');
+function getAllPosts(pagelist,pageno) {
+    if (pageno==1)$('#post-box').html('</br><div style="margin-right: 10px; text-align: center;font-size: 30px; width: 100%; height: 100%;"><span style=" color: cornflowerblue; " class="fa fa-spinner fa-spin"></span>Loading...</div>');
     if (pagelist.length != 0) {
         $.ajax({
-            url: '/allPostsByBrand',
+            // url: '/allPostsByBrand',
+            url: '/post/allpostbypage',
             type: "POST",
-            data: {pagelist: pagelist.toString()},
+            data: {pagelist: pagelist.toString(),pageno:pageno},
             dataType: "json",
             success: function (data) {
-                $('#post-box').empty();
+                if (pageno==1){
+                $('#post-box').empty();}
                 $.each(data, function (index) {
                     $('#post-box').append(
                         '<div class="item" style="position:relative;" onclick="getCommentById('+"'" + data[index].id +"'"+ ')">'
@@ -350,6 +353,8 @@ function getCommentByPostIdwPage(postId,page) {
                 var senIcon = sadicon;
                 if (data[index].sentimentScore == 1)
                     senIcon = happyicon;
+                if (data[index].sentimentScore == 3)
+                    senIcon = questionicon;
                 var cmtId = "'" + postId + "_" + data[index].id + "'";
 
                 $('#comment-box').append(
@@ -833,8 +838,8 @@ function getAllCrawlPage() {
                     '<p style="margin-left: 65px; margin-top: -45px; font-weight: bold; color: #72afd2">' + data[index].name + '</p>' +
                     '<p style="margin-left: 65px; margin-top: -10px;">' + data[index].category + '</p></div>');
             });
-
-            getAllPosts(listPageFilter);
+            postListCurPage = 1;
+            getAllPosts(listPageFilter,postListCurPage);
             // setInterval(function () {
             //     getAllPosts(listPageFilter);
             // }, 5000);
@@ -848,18 +853,18 @@ function getAllCrawlPage() {
 
 //Page list filter select
 function select(e, id) {
-
+    postListCurPage =1;
     var newid = id.toString();
     if ($(e).attr("class") == "page-unselected") {
         listPageFilter.push(newid);
         $(e).attr("class", "page-selected");
-        getAllPosts(listPageFilter);
+        getAllPosts(listPageFilter,postListCurPage);
     }
     else {
         var index = listPageFilter.indexOf(newid);
         listPageFilter.splice(index, 1);
         $(e).attr("class", "page-unselected");
-        getAllPosts(listPageFilter);
+        getAllPosts(listPageFilter,postListCurPage);
 
     }
 }
@@ -896,3 +901,13 @@ function getRepString (rep) {
     // divide and format
     return (rep/1000).toFixed(rep % 1000 != 0)+'k';
 }
+
+//Lazy load for post list
+jQuery(function($) {
+    $('#post-list').on('scroll', function() {
+        if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
+            postListCurPage = postListCurPage +1;
+            getAllPosts(listPageFilter,postListCurPage);
+        }
+    })
+});

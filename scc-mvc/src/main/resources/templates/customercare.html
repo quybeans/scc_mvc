@@ -253,7 +253,7 @@
                         style="border-radius:0px; margin-left: 20px"><span class="fa fa-search"></span> &nbsp;Search
                 </button>
                 <div class="btn-group" style="margin-left: 5px">
-                    <a class="btn btn-default" onclick="getAllPosts(listPageFilter)" style="border-radius: 100px">
+                    <a class="btn btn-default" onclick="postListCurPage=1;getAllPosts(listPageFilter,postListCurPage)" style="border-radius: 100px">
                         <i class="fa fa-refresh"></i>
 
                     </a>
@@ -265,7 +265,7 @@
                     <span class="input-group-addon" onclick="findPostByContent(listPageFilter)"> <i class="fa fa-search"></i></span>
                 </div>
             </div>
-            <div class="postlist">
+            <div class="postlist" id="post-list">
                 <div class="box-body chat" id="post-box">
                     <!--Post list here-->
                 </div>

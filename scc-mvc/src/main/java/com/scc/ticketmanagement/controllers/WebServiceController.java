@@ -54,51 +54,6 @@ public class WebServiceController {
     @Autowired
     private TicketRepository ticketRepository;
 
-    @RequestMapping(value = "allPostsByBrand", method = RequestMethod.POST)
-    public List<ExPost> postsByByBrand(HttpServletRequest request, String pagelist)
-    {
-        if (!pagelist.equals("")){
-        HttpSession session = request.getSession(false);
-        if (session!=null){
-            String username = (String)session.getAttribute("username");
-            // List<PostEntity> listP =  postRepository.findByCreatedBy(pageid);
-            int brandid = userRepository.getBrandIdByUsername(username);
-//            List<String> listPage =  brandPageRepository.getAllPagesByBrandid(brandid);
-            List<String> listPage = Arrays.asList(pagelist.split(","));
-            if (listPage.size()>0){
-            List<ExPost> rs = new ArrayList<>();
-            for(String pageid : listPage)
-            {
-                PageEntity page = pageRepository.findOne(pageid);
-                if(page.isCrawler()) {
-                    List<PostEntity> list = postRepository.findByCreatedBy(pageid);
-                    for (PostEntity post : list) {
-                        ExPost newP = new ExPost();
-                        newP.setCreatedBy(post.getCreatedBy());
-                        newP.setContent(post.getContent());
-                        newP.setId(post.getId());
-                        newP.setLikesCount(post.getLikesCount());
-                        newP.setCommentsCount(post.getCommentsCount());
-                        newP.setSharesCount(post.getSharesCount());
-                        newP.setCreatedAt(post.getCreatedAt());
-                        newP.setCreatedByName(page.getName());
-                        newP.setNegCount(postRepository.findNegCountByPostId(post.getId()));
-                        newP.setPosCount(postRepository.findPosCountByPostId(post.getId()));
-                        rs.add(newP);
-                    }
-                }
-            }
-            Collections.sort(rs, new Comparator<ExPost>() {
-                @Override
-                public int compare(ExPost o1, ExPost o2) {
-                    return o2.getCreatedAt().compareTo(o1.getCreatedAt());
-                }
-            });
-
-            return rs;
-        }}}
-        return null;
-    }
 
 
     @RequestMapping("commentbypost")
