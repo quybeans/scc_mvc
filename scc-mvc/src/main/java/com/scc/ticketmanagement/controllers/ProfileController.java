@@ -1,18 +1,28 @@
 package com.scc.ticketmanagement.controllers;
 
 import com.scc.ticketmanagement.Entities.ProfileEntity;
+import com.scc.ticketmanagement.Entities.UserEntity;
+import com.scc.ticketmanagement.repositories.ProfileRepository;
+import com.scc.ticketmanagement.repositories.UserRepository;
 import com.scc.ticketmanagement.services.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * Created by user on 10/5/2016.
  */
 @Controller
 public class ProfileController {
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    ProfileRepository profileRepository;
+
     @Autowired
     ProfileService profileService;
 
@@ -34,5 +44,12 @@ public class ProfileController {
                                 @RequestParam("profileid") Integer profileid){
         profileService.updateProfile(profileid,firstname,lastname,address,gender,phone,email);
         return "redirect:UserProfile?profileid="+profileid;
+    }
+
+    @RequestMapping("/getuserprofile")
+    @ResponseBody
+    public ProfileEntity getuserprofile(@RequestParam("userid") Integer userid){
+        UserEntity user = userRepository.findOne(userid);
+        return profileRepository.findOne(user.getProfileid());
     }
 }

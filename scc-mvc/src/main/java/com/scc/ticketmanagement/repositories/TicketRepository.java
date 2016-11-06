@@ -22,5 +22,11 @@ public interface TicketRepository extends JpaRepository<TicketEntity,Integer> {
     @Query("select t from TicketEntity t where t.assignee=:userid")
     List<TicketEntity> getTicketUser(@Param("userid") Integer userid);
 
-    TicketEntity findBycommentid(String commentid);
+    @Query("select t from TicketEntity t ORDER BY t.priority ASC ")
+    List<TicketEntity> getTicketOrderByPriority();
+
+    @Query("select t from TicketEntity t where t.assignee=:assignee ORDER BY t.priority ASC ")
+    List<TicketEntity> getStaffTicketOrderByPriority(@Param("assignee") Integer assignee);
+
+
 }

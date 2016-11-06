@@ -1,8 +1,11 @@
 package com.scc.ticketmanagement.controllers;
 
 import com.scc.ticketmanagement.Entities.PriorityEntity;
+import com.scc.ticketmanagement.Entities.TicketEntity;
 import com.scc.ticketmanagement.Entities.UserEntity;
+import com.scc.ticketmanagement.exentities.ExtendPriority;
 import com.scc.ticketmanagement.repositories.PriorityReposioty;
+import com.scc.ticketmanagement.repositories.TicketRepository;
 import com.scc.ticketmanagement.repositories.UserRepository;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,6 +29,9 @@ public class PriorityController {
     @Autowired
     PriorityReposioty priorityReposioty;
 
+    @Autowired
+    TicketRepository ticketRepository;
+
     @RequestMapping("/getallpriorityofbrand")
     public List<PriorityEntity> getallpriorityofbrand(HttpServletRequest request){
         HttpSession session = request.getSession();
@@ -35,7 +43,7 @@ public class PriorityController {
 
     @RequestMapping("/updatepriority")
     public PriorityEntity updatepriority(@RequestParam("priorityid") Integer priorityid,
-                                 @RequestParam("priorityduration") Integer duration,
+                                         @RequestParam("priorityduration") Integer duration,
                                          @RequestParam("priorityname")String name){
 
         PriorityEntity priorityEntity = priorityReposioty.findOne(priorityid);
@@ -46,7 +54,7 @@ public class PriorityController {
             priorityEntity.setName(name);
         }
 
-       return priorityReposioty.save(priorityEntity);
+        return priorityReposioty.save(priorityEntity);
 
     }
 
@@ -70,5 +78,17 @@ public class PriorityController {
         if(priorityEntity!=null){
             priorityReposioty.delete(priorityid);
         }
+    }
+
+    @RequestMapping("/getticketduetime")
+    public ExtendPriority getticketduetime(@RequestParam("ticketid") Integer ticketid){
+        TicketEntity ticket = ticketRepository.findOne(ticketid);
+        PriorityEntity priority = priorityReposioty.findOne(ticket.getPriority());
+        ExtendPriority extendPriority = new ExtendPriority();
+        extendPriority.setBrandid(priority.getBrandid());
+        extendPriority.setDuration(priority.getDuration());
+        extendPriority.setCreatedtime(ticket.getCreatedtime());
+        extendPriority.setName(priority.getName());
+        return extendPriority;
     }
 }

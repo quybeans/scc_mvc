@@ -25,8 +25,32 @@
                 Ticket management
             </h1>
             <span class="pull-right">
+                 <select id="filtername" style="width:210px">
+                    <option>Name</option>
+                </select>
+                <select id="filtercreateby" style="width: 115px">
+                    <option>Create by</option>
+                </select>
+                <select id="filterassignee" style="width: 90px">
+                    <option>Assignee</option>
+                </select>
+                <select id="filterstatus" style="width: 110px">
+                    <option>Status</option>
+                </select>
+                <select id="filtercreatetime" style="width: 140px">
+                    <option>Create time</option>
+                </select>
+                <select id="filterpriority" style="width:85px">
+                    <option>Priority</option>
+                </select>
+                <button class="btn btn-default btn-md " style="width: 70px" type="button" onclick="filter()">
+                   <i class="fa fa-filter" aria-hidden="true"></i> <strong>Filter</strong>
+                  </button>
                   <button class="btn btn-info btn-md " type="button" onclick="configpriority()">
                    <i class="fa fa-cogs" aria-hidden="true"></i> <strong>Config Priority</strong>
+                  </button>
+                    <button class="btn btn-success btn-md " type="button" onclick="newticket()">
+                   <i class="fa fa-plus" aria-hidden="true"></i> <strong>New Ticket</strong>
                   </button>
 
        </span>
@@ -46,6 +70,8 @@
                         <div class="modal-body">
                             <select id="assign">
                             </select>
+                            <input type="text" list="listuser" autocomplete="getalluser()">
+                            <datalist id="listuser"></datalist>
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-primary " id="btnAssign">Assign</button>
@@ -93,13 +119,91 @@
                                 <textarea class="form-control" id="ticketnote"></textarea>
                             </div>
                             <div class="form group">
-                            <label for="ticketpriority"> Priority</label>
-                            <select id="ticketpriority" class="form-control" >
-                            </select>
+                                <label for="ticketpriority"> Priority</label>
+                                <select id="ticketpriority" class="form-control" >
+                                </select>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-primary " id="btnChangeTicket">Update Ticket</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="modal fade" id="configPriorityModal" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Config Priority</h4>
+                        </div>
+                        <div class="modal-body" id="brandpriority">
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <div class="form-inline" style="text-align: left">
+                                <input type="text" placeholder="New Priority" class="form-control" id="newpriorityname" style="width: 20%"/>
+                                <input type="number" placeholder="Duration" class="form-control" id="newpriorityduration" style="width: 60%" />
+                                <input type="button"  class="btn btn-success btn-xs" value="Create" onclick="createpriority()"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="ticketModal" role="dialog">
+                <div class="modal-dialog modal-md">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <!--<h4 class="modal-title">Ticket</h4>-->
+                            <div id="comment">
+
+                            </div>
+                        </div>
+                        <div id="reply" class="modal-body">
+
+                        </div>
+                        <div class="modal-footer">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="createticketModal" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Create Ticket</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form group">
+                                <label for="newticketname">Name</label>
+                                <input type="text" class="form-control" id="newticketname"/>
+                            </div>
+                            <div class="form group">
+                                <label for="newticketpriority"> Priority</label>
+                                <select id="newticketpriority" class="form-control" >
+                                </select>
+                            </div>
+                            <div class="form group">
+                                <label for="assignee"> Assignee</label>
+                                <select id="assignee" class="form-control" >
+                                </select>
+                            </div>
+                            <div class="form group">
+                                <label for="newticketnote">Note</label>
+                                <textarea class="form-control" id="newticketnote"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-primary " id="btnCreateTicket">Create Ticket</button>
                         </div>
                     </div>
 
@@ -126,47 +230,7 @@
 
                 </section>
             </div>
-            <div class="modal fade" id="configPriorityModal" role="dialog">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Config Priority</h4>
-                        </div>
-                        <div class="modal-body" id="brandpriority">
 
-
-                        </div>
-                        <div class="modal-footer">
-                            <div class="form-inline" style="text-align: left">
-                            <input type="text" placeholder="New Priority" class="form-control" id="newpriorityname" style="width: 20%"/>
-                            <input type="number" placeholder="Duration" class="form-control" id="newpriorityduration" style="width: 60%" />
-                            <input type="button"  class="btn btn-success btn-xs" value="Create" onclick="createpriority()"/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="modal fade" id="ticketModal" role="dialog">
-                <div class="modal-dialog modal-md">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <!--<h4 class="modal-title">Ticket</h4>-->
-                            <div id="comment">
-
-                            </div>
-                        </div>
-                        <div id="reply" class="modal-body">
-
-                        </div>
-                        <div class="modal-footer">
-
-                        </div>
-                    </div>
-                </div>
-            </div>
         </section>
 
     </div>
@@ -177,90 +241,84 @@
     $(document).ready(function () {
 
         table= $("#table").DataTable({
+
+
             ajax: {
                 url:"/getallticket",
                 type: "GET"
             },
             sAjaxDataProp : "",
             columns: [
-                {title: "ID", data:"id"},
-                {title: "commentid", data:"commentid", visible:false },
-                {title: "Comment content",data:"content" },
+                {title: "ID", data:"id",visible:false},
+                {title: "Name",data:"name" },
                 {title: "Created By",data:"createbyuser"},
                 {title: "Assignee",data:"assigneeuser"},
                 {title: "Status",data:"currentstatus"},
                 {title: "Created Time",data:"createdtime"},
-                {title: "active",data:"active",visible:false},
                 {title: "Priority", data:"currentpriority"},
+                {title: "Note", data:"note"},
+                {title:"Action"},
                 {title: "createby", data:"createdby", visible:false },
                 {title: "assignee", data:"assignee", visible:false },
-                {title:"Action"}
+                {title: "active",data:"active",visible:false},
             ],
+
             columnDefs:[
                 {
                     width:'20%',
-                    targets: 2,
+                    targets: 7,
                     render: (data, type, row) => {
-                    return '<h5 style="overflow: hidden; max-height: 100px"><a onclick="showticket('+row.commentid+')">'+row.content+'</a></h5>'
-                                                },
+                    return '<h5 style="overflow: hidden; max-height: 100px">'+row.note+'</h5>'
                 },
+        },
                 {
-                    targets: 6,
+                    width:'20%',
+                    targets: 1,
                     render: (data, type, row) => {
-                    return moment(row.createdtime).format("d/MM/YYYY h:mm:ss");
-                     },
+                    return '<h5 style="overflow: hidden; max-height: 100px"><a href="followticket?ticketid='+row.id+'">'+row.name+'</a></h5>'
                 },
-                {
-                    width:'10%',
-                    targets: 11,
+    },
+        {
+            targets: 5,
                     render: (data, type, row) => {
-                    return '<div class="btn-group btn-xs">'
-                    +'<button type="button" class="btn btn-success btn-xs" onclick="assign('+row.commentid+')"><i class="fa fa-ticket"></i></button>'
-                    +'<button type="button" class="btn btn-danger btn-xs" onclick="status('+row.commentid+')"><i class="fa fa-navicon"></i></button>'
+            return moment(row.createdtime).format("d/MM/YYYY h:mm:ss");
+        },
+        },
+        {
+            width:'10%',
+                    targets: 8,
+                render: (data, type, row) => {
+            return '<div class="btn-group btn-xs">'
+                    +'<button type="button" class="btn btn-success btn-xs" onclick="assign('+row.id+')"><i class="fa fa-ticket"></i></button>'
+                    +'<button type="button" class="btn btn-danger btn-xs" onclick="status('+row.id+')"><i class="fa fa-navicon"></i></button>'
                     +'<button type="button" class="btn btn-primary btn-xs" onclick="updateticket('+row.id+')"><i class="fa fa-pencil"></i></button>'
                     +'</div>'
-                     },
-                },
-                {
-                    width:'10%',
-                    targets: 5,
-                    render: (data, type, row) => {
-                    var statuscolor;
-                    switch (row.statusid){
-                        case 1: statuscolor='color:#db8b0b'; break;
-                        case 2: statuscolor='color:#ffff00'; break;
-                        case 3: statuscolor='color:#00a7d0'; break;
-                        case 4: statuscolor='color:#00a65a'; break;
-                        case 5: statuscolor='color:#500a6f'; break;
-                        case 6: statuscolor='color:#01ff70'; break;
-                        case 7: statuscolor='color:#000000'; break;
-                                        }
-                    return '<p><i class="fa fa-circle" aria-hidden="true" style="'+statuscolor+'"></i>'+'  ' +row.currentstatus+'</p>'
-                                                },
-                },
-//        {
-//
-//                targets:6,
-//                render:(data,type,row)=> {
-//            return `<button class='btn btn-${row.active?"danger":"success"} status' data-id='${row.userid}' style='width: 100px'>${row.active?"Deactive":"Active"}</button>`
-//
-//        },
-//        },
-//        {
-//      targets:7,
-//              render:(data,type,row)=> {
-//      return `<button class='btn btn-primary' id='update' data-id='${row.userid}' >
-//             <i class='fa fa-edit' aria-hidden='true' ></i>
-//</button>`
-//        },
-//        },
+        },
+        },
+        {
+            width:'10%',
+                    targets: 4,
+                render: (data, type, row) => {
+            var statuscolor;
+            switch (row.statusid){
+                case 1: statuscolor='color:#db8b0b'; break;
+                case 2: statuscolor='color:#ffff00'; break;
+                case 3: statuscolor='color:#00a7d0'; break;
+                case 4: statuscolor='color:#00a65a'; break;
+                case 5: statuscolor='color:#500a6f'; break;
+                case 6: statuscolor='color:#01ff70'; break;
+                case 7: statuscolor='color:#000000'; break;
+            }
+            return '<p><i class="fa fa-circle" aria-hidden="true" style="'+statuscolor+'"></i>'+'  ' +row.currentstatus+'</p>'
+        },
+        },
         ],
 
     });
     });
 
     //assign ticket
-    function assign(comID) {
+    function assign(ticketid) {
         //Load list user de assign
         $.ajax({
             url:"getalluser",
@@ -283,10 +341,10 @@
             var assignee = $('#assign').val();
             $.ajax({
                 url:"/assignticket",
-                data:{"commentid":comID,"assignee":assignee},
+                data:{"ticketid":ticketid,"assignee":assignee},
                 type:"POST",
                 success:function (data) {
-                    alert("assign ticket successful"+data.commentid);
+                    alert("assign ticket successful"+data.assignee);
                     $('#assignModal').modal('toggle');
                     table.ajax.reload();
                 },
@@ -298,13 +356,13 @@
     }
 
     //change status
-    function status(comID,postID) {
+    function status(ticketid) {
         $('#statusModal').modal('toggle');
         $('#btnStatus').unbind().click(function () {
             var status = $('#status').val();
             $.ajax({
                 url:"/changeticketstatus",
-                data:{"commentid":comID,"status":status},
+                data:{"ticketid":ticketid,"status":status},
                 type:"POST",
                 success:function (data) {
                     $('#statusModal').modal('toggle');
@@ -321,7 +379,6 @@
     //change priority,note
     function updateticket(ticketid) {
         $('#changeticketModal').modal('toggle');
-
         $.ajax({
             url: "/getallpriorityofbrand",
             type: "GET",
@@ -349,168 +406,240 @@
                 alert("Fail ne");
             }
         })
+
+        $("#btnChangeTicket").unbind().click(function () {
+            var ticketnote= $("#ticketnote").val();
+            var ticketpriority = $("#ticketpriority").val();
+            $.ajax({
+                url: "/updateticket",
+                type: "POST",
+                data: {"ticketid": ticketid,"ticketnote":ticketnote,"ticketpriority":ticketpriority},
+                success: function (data) {
+                    console.log(data.ticketid);
+                    alert("update ticket successful!");
+                    $('#changeticketModal').modal('toggle');
+                    table.ajax.reload();
+                },
+                error: function () {
+                    alert("Fail ne");
+                }
+            })
+        })
     }
 
-        //show config priority modal
-        function configpriority() {
-            $('#configPriorityModal').modal('toggle');
-            getallpriority();
-        }
+    //show config priority modal
+    function configpriority() {
+        $('#configPriorityModal').modal('toggle');
+        getallpriority();
+    }
 
-        //load all priority
-        function getallpriority() {
+    //load all priority
+    function getallpriority() {
 
-            $.ajax({
-                url: "/getallpriorityofbrand",
-                type: "GET",
-                success: function (data) {
-                    $('#brandpriority').html('');
-                    for (var i = 0; i < data.length; i++) {
-                        $('#brandpriority').append(
-                                '<div class="form-inline">'
-                                + '<input type="text" style="width: 20%" class="form-control" id="name' + data[i].id + '" value="' + data[i].name + '">'
-                                + '<input type="number" style="width: 60%" class="form-control" id="duration' + data[i].id + '" value="' + data[i].duration + '"/>'
-                                + '<input type="button" class="btn btn-primary btn-xs" value="Update" onclick="updatepriority(' + data[i].id + ')" /> '
-                                + '<input type="button" class="btn btn-danger btn-xs" value="Delete" onclick="deletepriority(' + data[i].id + ')" /> '
-                                + '</div>'
-                        )
-                    }
-                },
-                error: function () {
-                    alert("Fail to load brand priority");
+        $.ajax({
+            url: "/getallpriorityofbrand",
+            type: "GET",
+            success: function (data) {
+                $('#brandpriority').html('');
+                for (var i = 0; i < data.length; i++) {
+                    $('#brandpriority').append(
+                            '<div class="form-inline">'
+                            + '<input type="text" style="width: 20%" class="form-control" id="name' + data[i].id + '" value="' + data[i].name + '">'
+                            + '<input type="number" style="width: 60%" class="form-control" id="duration' + data[i].id + '" value="' + data[i].duration + '"/>'
+                            + '<input type="button" class="btn btn-primary btn-xs" value="Update" onclick="updatepriority(' + data[i].id + ')" /> '
+                            + '<input type="button" class="btn btn-danger btn-xs" value="Delete" onclick="deletepriority(' + data[i].id + ')" /> '
+                            + '</div>'
+                    )
                 }
-            })
-        }
+            },
+            error: function () {
+                alert("Fail to load brand priority");
+            }
+        })
+    }
 
-        //update priority
-        function updatepriority(id) {
-            var prioritynameelementid = "name" + id + "";
-            var priorityedurationlementid = "duration" + id + "";
-            var name = $("#" + prioritynameelementid + "").val();
-            var duration = $("#" + priorityedurationlementid + "").val();
-            $.ajax({
-                url: "/updatepriority",
-                type: "POST",
-                data: {"priorityid": id, "priorityduration": duration, "priorityname": name},
-                success: function (data) {
-                    alert("update priority successfully" + data.duration);
-                },
-                error: function () {
-                    alert("fail to update priority");
-                }
-            })
-        }
+    //update priority
+    function updatepriority(id) {
+        var prioritynameelementid = "name" + id + "";
+        var priorityedurationlementid = "duration" + id + "";
+        var name = $("#" + prioritynameelementid + "").val();
+        var duration = $("#" + priorityedurationlementid + "").val();
+        $.ajax({
+            url: "/updatepriority",
+            type: "POST",
+            data: {"priorityid": id, "priorityduration": duration, "priorityname": name},
+            success: function (data) {
+                alert("update priority successfully" + data.duration);
+            },
+            error: function () {
+                alert("fail to update priority");
+            }
+        })
+    }
 
-        //create priority
-        function createpriority() {
-            var priorityname = $('#newpriorityname').val();
-            var priorityduration = $('#newpriorityduration').val();
-            alert(priorityname + "  " + priorityduration)
-            $.ajax({
-                url: "/createpriority",
-                type: "POST",
-                data: {"priorityname": priorityname, "priorityduration": priorityduration},
-                success: function (data) {
-                    alert("create priority " + data.name + " successfull!")
-                    getallpriority();
-                    $('#newpriorityname').val("");
-                    $('#newpriorityduration').val("");
-                },
-                error: function () {
-                    alert("Fail to create priority")
-                    $('#newpriorityname').val("");
-                    $('#newpriorityduration').val("");
-                }
-            })
-        }
+    //create priority
+    function createpriority() {
+        var priorityname = $('#newpriorityname').val();
+        var priorityduration = $('#newpriorityduration').val();
+        alert(priorityname + "  " + priorityduration)
+        $.ajax({
+            url: "/createpriority",
+            type: "POST",
+            data: {"priorityname": priorityname, "priorityduration": priorityduration},
+            success: function (data) {
+                getallpriority();
+                $('#newpriorityname').val("");
+                $('#newpriorityduration').val("");
+            },
+            error: function () {
+                alert("Fail to create priority")
+                $('#newpriorityname').val("");
+                $('#newpriorityduration').val("");
+            }
+        })
+    }
 
-        //delete priority
-        function deletepriority(id) {
-            $.ajax({
-                url: "/deletepriority",
-                type: "POST",
-                data: {"priorityid": id},
-                success: function () {
-                    alert("Delete priotiry" + id + " successfull");
-                    getallpriority();
-                },
-                error: function () {
-                    alert("Fail to delete priority");
-                }
-            })
-        }
+    //delete priority
+    function deletepriority(id) {
+        $.ajax({
+            url: "/deletepriority",
+            type: "POST",
+            data: {"priorityid": id},
+            success: function () {
+                alert("Delete priotiry" + id + " successfull");
+                getallpriority();
+            },
+            error: function () {
+                alert("Fail to delete priority");
+            }
+        })
+    }
 
+    function showticket(cmtid) {
+        $('#ticketModal').modal('toggle');
 
+        $.ajax({
+            url:"/getcommentbyid",
+            type:"GET",
+            data:{"commentid":cmtid},
+            success:function (data) {
+                $('#comment').html('');
+                $('#comment').append(
+                        '<div  class="cmt" >'
+                        +'<div class="col-lg-2 cmtContent">'
+                        +'<img onload="http://localhost:9000/img/user_img.jpg" src="http://graph.facebook.com/'+data.createdBy+'/picture" alt="user image">'
+                        +'</div>'
+                        +'<div class="col-lg-8">'
+                        +'<p class="message">'
+                        +'<a>'
+                        +data.createdByName
+                        +'<small class="text-muted" style="margin-left: 10px">'
+                        +jQuery.format.prettyDate( new Date(data.createdAt))
+                        +'</small>'
+                        +' </a>'
+                        +'<p style="margin-left: 65px;margin-top: -10px " onclick="">'+data.content+'</p>'
+                        +'</p>'
+                        +'</div>'
+                        +'<div class="col-lg-2" style="margin-top: 30px">' +'<small class="" style="font-size: 20px;"></small>'
+                        +'</div>'
+                        +'</div>'
+                )
+            },
+            error:function () {
+                alert("Fail to get ticket comment");
+            }
+        })
 
-        function showticket(cmtid) {
-            $('#ticketModal').modal('toggle');
-            
-            $.ajax({
-                url:"/getcommentbyid",
-                type:"GET",
-                data:{"commentid":cmtid},
-                success:function (data) {
-                    $('#comment').html('');
-                    $('#comment').append(
+        $.ajax({
+            url:"/getreply",
+            type:"GET",
+            data:{"commentid":cmtid},
+            success:function (data) {
+                $('#reply').html('');
+                for(var i=0;i<data.length;i++){
+                    $('#reply').append(
                             '<div  class="cmt" >'
-                            +'<div class="col-lg-2 cmtContent">'
-                            +'<img onload="http://localhost:9000/img/user_img.jpg" src="http://graph.facebook.com/'+data.createdBy+'/picture" alt="user image">'
+                            +'<div class="col-lg-2 cmtContent">' +
+                            '<img onload="http://localhost:9000/img/user_img.jpg" src="http://graph.facebook.com/'+data[i].createdBy+'/picture" alt="user image">'
                             +'</div>'
                             +'<div class="col-lg-8">'
                             +'<p class="message">'
                             +'<a>'
-                            +data.createdByName
+                            +data[i].createdByName
                             +'<small class="text-muted" style="margin-left: 10px">'
-                            +jQuery.format.prettyDate( new Date(data.createdAt))
+                            +jQuery.format.prettyDate( new Date(data[i].createdAt))
                             +'</small>'
                             +' </a>'
-                            +'<p style="margin-left: 65px;margin-top: -10px " onclick="">'+data.content+'</p>'
+                            +'<p style="margin-left: 65px;margin-top: -10px " onclick="">'+data[i].content+'</p>'
                             +'</p>'
                             +'</div>'
                             +'<div class="col-lg-2" style="margin-top: 30px">' +'<small class="" style="font-size: 20px;"></small>'
                             +'</div>'
                             +'</div>'
                     )
-                },
-                error:function () {
-                    alert("Fail to get ticket comment");
                 }
-            })
-            
+            },
+            error:function () {
+                alert("Fail to load reply")
+            }
+        })
+    }
+
+    function newticket() {
+        $('#createticketModal').modal('toggle');
+
+        $.ajax({
+            url:"getalluser",
+            type:"GET",
+            success:function (data) {
+                $("#assignee").html("");
+                for (var i =0;i<data.length;i++)
+                    $("#assignee").append(
+                            '<option value="'+data[i].userid+'">'+data[i].firstname+ ' ' +data[i].lastname +'</option>'
+                    );
+            },
+            error:function () {
+                alert("Fail to load list user");
+            }
+        })
+
+        $.ajax({
+            url: "/getallpriorityofbrand",
+            type: "GET",
+            success: function (data) {
+                $("#newticketpriority").html("");
+                for (var i = 0; i < data.length; i++) {
+                    $("#newticketpriority").append(
+                            '<option value="'+ data[i].id +'">'+ data[i].name+'</option>'
+                    )
+                }
+            },
+            error: function () {
+                alert("fail to load priority for update")
+            }
+        })
+
+
+        $("#btnCreateTicket").unbind().click(function () {
+            var ticketname = $('#newticketname').val();
+            var priority = $("#newticketpriority").val();
+            var note = $("#newticketnote").val();
+            var assignee = $("#assignee").val();
             $.ajax({
-                url:"/getreply",
-                type:"GET",
-                data:{"commentid":cmtid},
+                url:"/createticket",
+                type:"POST",
+                data:{"ticketname":ticketname,"priority":priority,"note":note,"assignee":assignee},
                 success:function (data) {
-                    $('#reply').html('');
-                    for(var i=0;i<data.length;i++){
-                        $('#reply').append(
-                                '<div  class="cmt" >'
-                                +'<div class="col-lg-2 cmtContent">' +
-                                '<img onload="http://localhost:9000/img/user_img.jpg" src="http://graph.facebook.com/'+data[i].createdBy+'/picture" alt="user image">'
-                                +'</div>'
-                                +'<div class="col-lg-8">'
-                                +'<p class="message">'
-                                +'<a>'
-                                +data[i].createdByName
-                                +'<small class="text-muted" style="margin-left: 10px">'
-                                +jQuery.format.prettyDate( new Date(data[i].createdAt))
-                                +'</small>'
-                                +' </a>'
-                                +'<p style="margin-left: 65px;margin-top: -10px " onclick="">'+data[i].content+'</p>'
-                                +'</p>'
-                                +'</div>'
-                                +'<div class="col-lg-2" style="margin-top: 30px">' +'<small class="" style="font-size: 20px;"></small>'
-                                +'</div>'
-                                +'</div>'
-                        )
-                    }
+                    table.ajax.reload();
+                    alert("create ticket: "+data.id+" successful!");
                 },
                 error:function () {
-                    alert("Fail to load reply")
+                    alert("fail to create ticket");
                 }
             })
-        }
+        })
+
+    }
 
 </script>
 </body>

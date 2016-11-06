@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>Social Customer Care</title>
+    <header class="main-header" th:include="Head::header"></header>
+    <aside class="main-sidebar" th:include="SideBar::aside"></aside>
+    <script th:src="@{/js/jquery_dateFormat.js}"></script>
+    <script src="js/moment.min.js"></script>
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+    <div class="content-wrapper"  style="max-height: 90vh;overflow: hidden">
+
+        <div class="modal fade" id="assignModal" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Assign Ticket</h4>
+                    </div>
+                    <div class="modal-body">
+                        <select id="assign">
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary " id="btnAssign">Assign</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="modal fade" id="statusModal" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Change Ticket Status</h4>
+                    </div>
+                    <div class="modal-body">
+                        <select id="status">
+                            <option value="3">Open</option>
+                            <option value="4">Inprocess</option>
+                            <option value="5">Solving</option>
+                            <option value="6">Solved</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary " id="btnStatus">Change Status</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="modal fade" id="changeticketModal" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Update Ticket</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form group">
+                            <label for="ticketnote">Note</label>
+                            <textarea class="form-control" id="ticketnote"></textarea>
+                        </div>
+                        <div class="form group">
+                            <label for="ticketpriority"> Priority</label>
+                            <select id="ticketpriority" class="form-control" >
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary " id="btnChangeTicket">Update Ticket</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <input type="hidden" th:value="${ticketid}" id="ticketid"/>
+        <section class="col-lg-9 "style="overflow: hidden">
+           <ul class="timeline" id="ticketitem" style="overflow: auto;max-height: 650px">
+
+           </ul>
+
+        </section>
+
+        <section class="col-lg-3" style="border-left: 1px solid lightgray;height: 100vh;background-color: white;max-height: 650px">
+            <div  style="border: solid 1px lightgray;height: 150px;width: 250px;border-radius: 20px;margin-top: 10px">
+                <div style="margin-top: 30px">
+                <span>
+                    <h4 id="ticketstatus" style="text-align: center">
+                        <i class="fa fa-circle" aria-hidden="true" style="color:red"></i>
+                        Open
+                    </h4>
+                </span>
+                <span style="text-align: center">
+                     <h4 id="ticketname" style="max-width: 250px;word-wrap: break-word;">Ticket Name</h4>
+                    <h4 id="dueday" style="max-width: 250px;word-wrap: break-word">Due:</h4>
+
+                </span>
+                </div>
+            </div>
+            <div id="getassigner" style="border-top: solid 1px lightgray;width: 250px; margin-top:10px" >
+            </div>
+            <div id="assigner" style="height: 80px;width: 250px;display: none">
+                <h5 id="assignerfullname">Full name</h5>
+                <h5 id="assignerphone">Phone</h5>
+                <h5 id="assigneremail">Email</h5>
+            </div>
+            <div id="getassignee" style="border-top: solid 1px lightgray;width: 250px;margin-top:8px" >
+            </div>
+            <div id="assignee" style="height: 80px;width: 250px;display: none">
+                <h5 id="assigneefullname">This is assigner info</h5>
+                <h5 id="assigneephone">This is assigner info</h5>
+                <h5 id="assigneeemail">This is assigner info</h5>
+            </div>
+            <div style="border-top: solid 1px lightgray;width: 250px;margin-top:8px" >
+                <h4 id="createdat"><i  class="fa fa-chevron-right" ></i><b style="margin-left: 5px">Created At:</b></h4>
+            </div>
+            <div style="border-top: solid 1px lightgray;width: 250px;margin-top:8px" >
+                <h4 id="ticketprioritydetail" > <i  class="fa fa-chevron-right" ></i><b style="margin-left: 5px">Priority:</b></h4>
+            </div>
+            <div style="border-top: solid 1px lightgray;width: 250px;margin-top:8px" >
+                <h4 id="ticketnotedetail" style="width: 250px;word-wrap: break-word"><b>Note:</b></h4>
+            </div>
+            <div style="border-top: solid 1px lightgray;width: 250px;margin-top:8px" >
+                <div id="ticketbutton" class="btn-group" style="margin-top: 10px;margin-left: 40px">
+
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+</div>
+<script>
+    var ticketid = $("#ticketid").val();
+
+    loadticketitem(ticketid)
+
+    getticket(ticketid)
+    function getticketduetime(ticketid) {
+        $.ajax({
+            url:"/getticketduetime",
+            type:"GET",
+            data:{"ticketid":ticketid},
+            success:function (data) {
+                var createtime = moment(data.createdtime)+ (data.duration * 60 * 1000);
+                var current = moment();
+                var diff = current.diff(createtime)*(-1);
+               window.ticketdue = diff;
+            },
+            error:function () {
+                alert("fail to get ticket duetime");
+            }
+        })
+    }
+    getticketduetime(ticketid)
+    var ticketdue;
+
+
+    setInterval(function () {
+        ticketdue =moment.duration(ticketdue-1000,'milliseconds');
+        if(ticketdue>0){
+            $("#dueday").html("Due in "+ticketdue.hours()+":"+ticketdue.minutes()+":"+ticketdue.seconds());
+        }else{
+            $("#dueday").html("Expired")
+        }
+    },1000);
+
+    function getticket(ticketid) {
+        $.ajax({
+            url:"/getticketdetail",
+            type:"GET",
+            data:{"ticketid":ticketid},
+            success:function (data) {
+                var statuscolor;
+                var statusname;
+                switch (data.statusid){
+                    case 1: statuscolor='color:#db8b0b'; statusname="Unassign"; break;
+                    case 2: statuscolor='color:#ffff00'; statusname="Assign"; break;
+                    case 3: statuscolor='color:#00a7d0'; statusname="Open"; break;
+                    case 4: statuscolor='color:#00a65a'; statusname="Inprocess"; break;
+                    case 5: statuscolor='color:#500a6f'; statusname="Solving"; break;
+                    case 6: statuscolor='color:#01ff70'; statusname="Solved"; break;
+                    case 7: statuscolor='color:#000000'; statusname="Close"; break;
+                }
+                var dueminute = new Date(data.createdtime).getMinutes()+30;
+                var duehour = new Date(data.createdtime).getHours();
+                var duesecond = new Date(data.createdtime).getSeconds();
+                var createtime = moment(data.createdtime).format("d/MM/YYYY");
+                var createat = moment(data.createdtime).format("d/MM/YYYY, hh:mm:ss");
+                    $("#ticketstatus").html(
+                    '<i class="fa fa-circle" aria-hidden="true" style="'+statuscolor+'"></i>'
+                       +statusname
+                    );
+                    $("#ticketname").html(data.name);
+                    $("#createdat").append(" "+createat);
+                    $("#ticketnotedetail").append(" "+data.note);
+                    $("#ticketprioritydetail").append(' '+data.currentpriority);
+                    $("#getassigner").append('<h4><i  class="fa fa-chevron-right" onclick="getassignerinfo('+data.createdby+')"></i><b style="margin-left: 5px">Assigner:</b> '+data.createbyuser+'</h4>');
+                    $("#getassignee").append('<h4><i  class="fa fa-chevron-right" onclick="getassigneeinfo('+data.assignee+')"></i><b style="margin-left: 5px">Assignee:</b> '+data.assigneeuser+'</h4>');
+                    $("#ticketbutton").append(
+                            '<button class="btn btn-success" style="width: 60px" onclick="assign('+data.id+')">Assign</button>'
+                            +'<button class="btn btn-primary" style="width: 60px" onclick="status('+data.id+')">Status</button>'
+                            +'<button class=" btn btn-danger" style="width: 60px" onclick="updateticket('+data.id+')">Edit</button>'
+                    )
+
+            },
+            error: function () {
+                alert("fail to get ticket");
+            }
+
+        })
+    }
+
+    function loadticketitem(ticketid) {
+        $.ajax({
+            url:"/loadticketitem",
+            type:"POST",
+            data:{"ticketid":ticketid},
+            success:function (data) {
+                for(var index =0;index<data.length;index++){
+                    $('#ticketitem').append(
+                            '<li class="time-label">'
+                            +'<span class="bg-red" id="createtime">'
+                            +moment(data[index].createdAt).format("dd d/MM/YYYY")
+                            +'</span>'
+                            +'</li>'
+                            +'<li>'
+                            +'<div class="timeline-item" >'
+                            +'<span class="time"><i class="fa fa-clock-o"></i>'
+                            +jQuery.format.prettyDate( new Date(data[index].createdAt))
+                            +'</span>'
+                            +'<h3 class="timeline-header">'
+                            +'<img src="http://graph.facebook.com/'+data[index].createdBy+'/picture" alt="user image" style="width: 50px;height: 50px;border-radius: 50px;margin-left: 5px" alt="user image"/>'
+                            +'<span style="margin-left: 10px">'+data[index].createdByName+'</span>'
+                            +'</h3>'
+                            +'<div class="timeline-body" onclick="getCommentReply('+data[index].id+')">'
+                            +data[index].content
+                            +'</div>'
+                            +'<div class="timeline-footer">'
+                            +'<a class="btn btn-primary btn-xs"><i class="fa fa-send"></i>Reply</a>'
+                            +'</div>'
+                            +'</div>'
+                            +'<div class="pull-right"  id="reply'+data[index].id+'" style="width: 70%;margin-right: 20px;margin-top: 10px;border-radius: 10px;display: none">'
+
+                            +'</div>'
+                            +'</li>'
+
+                    )
+                }
+            },
+            error: function () {
+                alert("fail to load ticket item")
+            }
+        })
+    }
+
+    function getCommentReply(comId) {
+        $.ajax({
+            url: '/getreply',
+            type: "GET",
+            data: { "commentid": comId },
+            success: function (data){
+                var element= "reply"+comId;
+                $("#"+element+"").html("");
+                $("#"+element+"").toggle();
+               for(var i =0;i<data.length;i++){
+
+                   $("#"+element+"").append(
+                           '<div class="timeline-item" style="background-color:white;border: 1px solid lightgray;border-radius: 10px">'
+                           +'<h3 class="timeline-header" style="border-bottom: 1px solid lightgray;">'
+                           +'<small class="time pull-right"><i class="fa fa-clock-o"></i>'
+                           +jQuery.format.prettyDate( new Date(data[i].createdAt))
+                           +'</small>'
+                           +'<img src="http://graph.facebook.com/'+data[i].createdBy+'/picture" alt="user image" style="width: 50px;height: 50px;border-radius: 50px;margin-left: 5px" alt="user image"/>'
+                           +'<span style="margin-left: 10px">'+data[i].createdByName+'</span>'
+                           +'</h3>'
+                           +'<div class="timeline-body" style="margin-left: 20px">'+data[i].content+'</div>'
+                           +'<div class="timeline-footer">'
+                           +'<a class="btn btn-primary btn-xs"><i class="fa fa-send"></i>Reply</a>'
+                           +'</div>'
+                           +'</div>'
+                   )
+               }
+
+            },
+            error:function () {
+                alert("fail to load reply");
+            }
+        })
+    }
+
+    function getassignerinfo(userid) {
+        $("#assigner").slideToggle();
+        $.ajax({
+            url:"/getuserprofile",
+            type:"POST",
+            data:{"userid":userid},
+            success: function (data) {
+                $("#assignerfullname").html("Fullname: "+data.firstname + " " + data.lastname);
+                $("#assignerphone").html("Phone: "+data.phone);
+                $("#assigneremail").html("Email: "+data.email);
+            },
+            error: function () {
+                alert("fail to get user profile");
+            }
+        })
+    }
+
+    function getassigneeinfo(userid){
+        $("#assignee").slideToggle();
+        $.ajax({
+            url:"/getuserprofile",
+            type:"POST",
+            data:{"userid":userid},
+            success: function (data) {
+                $("#assigneefullname").html("Fullname: "+data.firstname + " " + data.lastname);
+                $("#assigneephone").html("Phone: "+data.phone);
+                $("#assigneeemail").html("Email: "+data.email);
+            },
+            error: function () {
+                alert("fail to get user profile");
+            }
+        })
+    }
+
+    //assign ticket
+    function assign(ticketid) {
+        //Load list user de assign
+        $.ajax({
+            url:"getalluser",
+            type:"GET",
+            success:function (data) {
+                $("#assign").html("");
+                for (var i =0;i<data.length;i++)
+                    $("#assign").append(
+                            '<option value="'+data[i].userid+'">'+data[i].firstname+ ' ' +data[i].lastname +'</option>'
+                    );
+            },
+            error:function () {
+                alert("Fail to load list user");
+            }
+        })
+
+        //assign ticket
+        $('#assignModal').modal('toggle');
+        $('#btnAssign').unbind().click(function () {
+            var assignee = $('#assign').val();
+            $.ajax({
+                url:"/assignticket",
+                data:{"ticketid":ticketid,"assignee":assignee},
+                type:"POST",
+                success:function (data) {
+                    alert("assign ticket successful"+data.assignee);
+                    $('#assignModal').modal('toggle');
+                    table.ajax.reload();
+                },
+                error:function () {
+                    alert("fail to assign ticket");
+                }
+            })
+        })
+    }
+
+    //change status
+    function status(ticketid) {
+        $('#statusModal').modal('toggle');
+        $('#btnStatus').unbind().click(function () {
+            var status = $('#status').val();
+            $.ajax({
+                url:"/changeticketstatus",
+                data:{"ticketid":ticketid,"status":status},
+                type:"POST",
+                success:function (data) {
+                    $('#statusModal').modal('toggle');
+                    alert("change status successfull!");
+                    table.ajax.reload();
+                },
+                error:function () {
+                    alert("fail to change ticket status");
+                }
+            })
+        })
+    }
+
+    //change priority,note
+    function updateticket(ticketid) {
+        $('#changeticketModal').modal('toggle');
+        $.ajax({
+            url: "/getallpriorityofbrand",
+            type: "GET",
+            success: function (data) {
+                $("#ticketpriority").html("");
+                for (var i = 0; i < data.length; i++) {
+                    $("#ticketpriority").append(
+                            '<option value="'+ data[i].id +'">'+ data[i].name+'</option>'
+                    )
+                }
+            },
+            error: function () {
+                alert("fail to load priority for update")
+            }
+        })
+
+        $.ajax({
+            url: "/getupdateticket",
+            type: "POST",
+            data: {"ticketid": ticketid},
+            success: function (data) {
+                $("#ticketnote").val(data.note);
+            },
+            error: function () {
+                alert("Fail ne");
+            }
+        })
+
+        $("#btnChangeTicket").unbind().click(function () {
+            var ticketnote= $("#ticketnote").val();
+            var ticketpriority = $("#ticketpriority").val();
+            $.ajax({
+                url: "/updateticket",
+                type: "POST",
+                data: {"ticketid": ticketid,"ticketnote":ticketnote,"ticketpriority":ticketpriority},
+                success: function (data) {
+                    console.log(data.ticketid);
+                    alert("update ticket successful!");
+                    $('#changeticketModal').modal('toggle');
+                    table.ajax.reload();
+                },
+                error: function () {
+                    alert("Fail ne");
+                }
+            })
+        })
+    }
+
+</script>
+</body>
+</html>

@@ -17,4 +17,7 @@ public interface CommentattributeRepository extends JpaRepository<Commentattribu
     @Query("select a From CommentattributeEntity a where a.commentid=:commentid and a.attributeid=:attributeid")
     CommentattributeEntity get1ByCommentIDandAttID(@Param("commentid") String commentid,
                                                    @Param("attributeid") Integer attributeid );
+
+    @Query("select a From CommentattributeEntity a where a.attributeid=:attributeid")
+    List<CommentattributeEntity> findByAttID(@Param("attributeid") Integer attributeid);
 }

@@ -4,13 +4,13 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 /**
- * Created by user on 10/30/2016.
+ * Created by user on 11/6/2016.
  */
 @Entity
 @Table(name = "ticket", schema = "scc", catalog = "")
 public class TicketEntity {
     private int id;
-    private String commentid;
+    private String name;
     private Integer createdby;
     private Timestamp createdtime;
     private Integer statusid;
@@ -20,7 +20,6 @@ public class TicketEntity {
     private Integer priority;
 
     @Id
-    @GeneratedValue
     @Column(name = "id")
     public int getId() {
         return id;
@@ -31,13 +30,13 @@ public class TicketEntity {
     }
 
     @Basic
-    @Column(name = "commentid")
-    public String getCommentid() {
-        return commentid;
+    @Column(name = "name")
+    public String getName() {
+        return name;
     }
 
-    public void setCommentid(String commentid) {
-        this.commentid = commentid;
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Basic
@@ -118,7 +117,7 @@ public class TicketEntity {
         TicketEntity that = (TicketEntity) o;
 
         if (id != that.id) return false;
-        if (commentid != null ? !commentid.equals(that.commentid) : that.commentid != null) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (createdby != null ? !createdby.equals(that.createdby) : that.createdby != null) return false;
         if (createdtime != null ? !createdtime.equals(that.createdtime) : that.createdtime != null) return false;
         if (statusid != null ? !statusid.equals(that.statusid) : that.statusid != null) return false;
@@ -133,7 +132,7 @@ public class TicketEntity {
     @Override
     public int hashCode() {
         int result = id;
-        result = 31 * result + (commentid != null ? commentid.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (createdby != null ? createdby.hashCode() : 0);
         result = 31 * result + (createdtime != null ? createdtime.hashCode() : 0);
         result = 31 * result + (statusid != null ? statusid.hashCode() : 0);
