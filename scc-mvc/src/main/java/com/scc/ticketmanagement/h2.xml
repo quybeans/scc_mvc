@@ -17,6 +17,7 @@
     <mapping class="com.scc.ticketmanagement.Entities.AttributeEntity"/>
       <mapping class="com.scc.ticketmanagement.Entities.PriorityEntity"/>
       <mapping class="com.scc.ticketmanagement.Entities.CommentattributeEntity"/>
+      <mapping class="com.scc.ticketmanagement.Entities.TicketitemEntity"/>
       <!-- DB schema will be updated if needed -->
     <!-- <property name="hbm2ddl.auto">update</property> -->
   </session-factory>

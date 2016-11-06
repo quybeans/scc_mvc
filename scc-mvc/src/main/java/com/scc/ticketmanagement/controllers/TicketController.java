@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by user on 9/30/2016.
@@ -41,26 +39,81 @@ public class TicketController {
     @Autowired
     private TicketRequestRepository ticketRequestRepository;
 
+    @Autowired
+    private CommentattributeRepository commentattributeRepository;
+
+    @Autowired
+    private TicketitemRepository ticketitemRepository;
+
+    @RequestMapping("/createticket")
+    public TicketEntity createTicket(HttpServletRequest request,
+                                     @RequestParam("ticketname") String ticketname,
+                                     @RequestParam("assignee") Integer assignee,
+                                     @RequestParam("priority") Integer priority,
+                                     @RequestParam("note") String note){
+        HttpSession session = request.getSession();
+        String loginUser = (String) session.getAttribute("username");
+        UserEntity user = userRepository.findUserByUsername(loginUser);
+
+        if(session!=null){
+            //Tao moi 1 ticket
+            TicketEntity ticketEntity = new TicketEntity();
+            ticketEntity.setCreatedby(user.getUserid());
+            ticketEntity.setName(ticketname);
+            ticketEntity.setStatusid(1);
+            ticketEntity.setAssignee(assignee);
+            ticketEntity.setActive(true);
+            ticketEntity.setStatusid(2);
+            ticketEntity.setPriority(priority);
+            ticketEntity.setCreatedtime(new Timestamp(new Date().getTime()));
+            ticketEntity.setNote(note);
+
+
+            TicketEntity ticket= ticketRepository.save(ticketEntity);
+            System.out.println("Ticket ID:"+ ticket.getId()+" with name:" + ticket.getName());
+            //Tao 1 ticket history
+            TicketstatuschangeEntity status = new TicketstatuschangeEntity();
+            status.setTicketid(ticket.getId());
+            status.setStatusid(2);
+            status.setChangeby(user.getUserid());
+            status.setAssignee(assignee);
+            status.setCreatedat(new Timestamp(new Date().getTime()));
+
+            ticketStatusChangeRepository.save(status);
+
+            return ticket;
+        }
+        return null;
+    }
+
     @RequestMapping(value = "/getallticket",method = RequestMethod.GET,produces = "application/json")
-    public List<ExtendTicket> getallticket(){
-        List<TicketEntity> listticket = ticketRepository.findAll();
+    public List<ExtendTicket> getallticket(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String loginUser = (String) session.getAttribute("username");
+        UserEntity user = userRepository.findUserByUsername(loginUser);
+
+        List<TicketEntity> listticket = new ArrayList<TicketEntity>();
+        if(user.getRoleid()!=Constant.ROLE_STAFF){
+            listticket = ticketRepository.getTicketOrderByPriority();
+        }else {
+            listticket=ticketRepository.getStaffTicketOrderByPriority(user.getUserid());
+        }
+
+
         List<ExtendTicket> listextendticket = new ArrayList<ExtendTicket>();
         //Tao mot extendticket list de show len bang
         for (TicketEntity tk: listticket) {
+            System.out.println(tk.getCreatedtime());
             ExtendTicket extendticket = new ExtendTicket();
 
             extendticket.setAssignee(tk.getAssignee());
-            extendticket.setCommentid(tk.getCommentid());
+            extendticket.setName(tk.getName());
             extendticket.setActive(tk.getActive());
             extendticket.setCreatedby(tk.getCreatedby());
             extendticket.setId(tk.getId());
             extendticket.setStatusid(tk.getStatusid());
             extendticket.setCreatedtime(tk.getCreatedtime());
-
-            //Get content cua comment theo commentid va set vao extendticket
-            CommentEntity cmt= commentRepository.findOne(extendticket.getCommentid());
-            extendticket.setContent(cmt.getContent());
-
+            extendticket.setNote(tk.getNote());
             //Get UserEntity cua ng tao ra ticket
             UserEntity createTicketUser =userRepository.findOne(extendticket.getCreatedby());
             //Get ProfileEntity cua ng tao ra ticket
@@ -89,56 +142,22 @@ public class TicketController {
             PriorityEntity priority = priorityReposioty.findOne(tk.getPriority());
             extendticket.setCurrentpriority(priority.getName());
             listextendticket.add(extendticket);
-        }
+
+            }
         return listextendticket;
-    }
-
-    @RequestMapping("/createticket")
-    public TicketEntity createTicket(HttpServletRequest request,
-                                     @RequestParam("commentid") String commentid,
-                                     @RequestParam("assignee") Integer assignee,
-                                     @RequestParam("priority") Integer priority){
-        HttpSession session = request.getSession();
-        String loginUser = (String) session.getAttribute("username");
-        UserEntity user = userRepository.findUserByUsername(loginUser);
-
-        if(session!=null){
-            //Tao moi 1 ticket
-            TicketEntity ticketEntity = new TicketEntity();
-            ticketEntity.setCreatedby(user.getUserid());
-            ticketEntity.setCommentid(commentid);
-            ticketEntity.setStatusid(1);
-            ticketEntity.setAssignee(assignee);
-            ticketEntity.setActive(true);
-            ticketEntity.setStatusid(2);
-            ticketEntity.setPriority(priority);
-            ticketEntity.setCreatedtime(new Timestamp(new Date().getTime()));
-
-            TicketEntity ticket= ticketRepository.save(ticketEntity);
-
-            //Tao 1 ticket history
-            TicketstatuschangeEntity status = new TicketstatuschangeEntity();
-            status.setTicketid(ticket.getId());
-            status.setStatusid(2);
-            status.setChangeby(user.getUserid());
-            status.setAssignee(assignee);
-            status.setCreatedat(new Timestamp(new Date().getTime()));
-
-            ticketStatusChangeRepository.save(status);
-        }
-        return null;
     }
 
 
     @RequestMapping("/assignticket")
-    public TicketEntity assignTicket(@RequestParam("commentid") String commentid,
-                                     @RequestParam("assignee") Integer assignee, HttpServletRequest request){
+    public TicketEntity assignTicket(@RequestParam("ticketid") Integer ticketid,
+                                     @RequestParam("assignee") Integer assignee,
+                                     HttpServletRequest request){
         //Lay userid cua account dang login vao he thong
         HttpSession session = request.getSession();
         String loginUser = (String) session.getAttribute("username");
         UserEntity user = userRepository.findUserByUsername(loginUser);
 
-        TicketEntity ticket =ticketRepository.findBycommentid(commentid);
+        TicketEntity ticket =ticketRepository.findOne(ticketid);
             //Thay doi assignee
             ticket.setAssignee(assignee);
 
@@ -155,14 +174,14 @@ public class TicketController {
     }
 
     @RequestMapping("/changeticketstatus")
-    public TicketEntity changeTicketStatus(@RequestParam("commentid") String commentid,
+    public TicketEntity changeTicketStatus(@RequestParam("ticketid") Integer ticketid,
                                            @RequestParam("status") Integer status, HttpServletRequest request){
         HttpSession session = request.getSession();
         String loginUser = (String) session.getAttribute("username");
         UserEntity user = userRepository.findUserByUsername(loginUser);
 
         //Thay doi status trong ticket
-        TicketEntity ticket=ticketRepository.findBycommentid(commentid);
+        TicketEntity ticket=ticketRepository.findOne(ticketid);
         ticket.setStatusid(status);
 
         //Them 1 ticket history
@@ -178,7 +197,8 @@ public class TicketController {
 
     @RequestMapping("/getticket")
     public TicketDetail getTicket(@RequestParam("commentid") String commentid){
-        TicketEntity ticket = ticketRepository.findBycommentid(commentid);
+        TicketitemEntity item = ticketitemRepository.getTicketItemByCommentID(commentid);
+        TicketEntity ticket = ticketRepository.findOne(item.getTicketid());
         if(ticket!=null){
 
             TicketDetail detail = new TicketDetail();
@@ -198,9 +218,10 @@ public class TicketController {
             }
 
             detail.setActive(ticket.getActive());
-            detail.setCommentid(ticket.getCommentid());
             detail.setCreatedtime(ticket.getCreatedtime());
             detail.setId(ticket.getId());
+            detail.setName(ticket.getName());
+            detail.setNote(ticket.getNote());
             //get priority name
             PriorityEntity priority = priorityReposioty.findOne(ticket.getPriority());
             detail.setPriority(priority.getName());
@@ -219,9 +240,37 @@ public class TicketController {
         return null;
     }
 
+    @RequestMapping("/getticketdetail")
+    public ExtendTicket getticketdetail(@RequestParam("ticketid") Integer ticketid){
+        TicketEntity ticket = ticketRepository.findOne(ticketid);
+        ExtendTicket extendTicket = new ExtendTicket();
+
+        PriorityEntity pri = priorityReposioty.findOne(ticket.getPriority());
+        extendTicket.setCurrentpriority(pri.getName());
+
+        ProfileEntity profileEntity = profileRepository.findOne(ticket.getAssignee());
+        extendTicket.setAssigneeuser(profileEntity.getFirstname());
+
+        profileEntity = profileRepository.findOne(ticket.getCreatedby());
+        extendTicket.setCreatebyuser(profileEntity.getFirstname());
+
+        extendTicket.setCreatedtime(ticket.getCreatedtime());
+        extendTicket.setName(ticket.getName());
+        extendTicket.setNote(ticket.getNote());
+        extendTicket.setActive(ticket.getActive());
+        extendTicket.setCreatedby(ticket.getCreatedby());
+        extendTicket.setAssignee(ticket.getAssignee());
+        extendTicket.setStatusid(ticket.getStatusid());
+        extendTicket.setId(ticket.getId());
+        extendTicket.setPriority(ticket.getPriority());
+
+        return extendTicket;
+    }
+
     @RequestMapping("/gettickethistory")
     public List<TicketHistory> getTickethistory(@RequestParam("commentid") String commentid){
-        TicketEntity ticket = ticketRepository.findBycommentid(commentid);
+        TicketitemEntity item = ticketitemRepository.getTicketItemByCommentID(commentid);
+        TicketEntity ticket = ticketRepository.findOne(item.getTicketid());
         if(ticket!=null){
             List<TicketstatuschangeEntity> list = ticketStatusChangeRepository.getTicketChanges(ticket.getId());
             List<TicketHistory> history = new ArrayList<TicketHistory>();
@@ -262,12 +311,100 @@ public class TicketController {
         return list;
     }
 
+    @RequestMapping("/updateticket")
+    public TicketEntity updateticket(@RequestParam("ticketid") Integer ticketid,
+                                     @RequestParam("ticketnote") String ticketnote,
+                                     @RequestParam("ticketpriority") Integer ticketpriority){
+        TicketEntity ticket = ticketRepository.findOne(ticketid);
+        ticket.setNote(ticketnote);
+        ticket.setPriority(ticketpriority);
+       return ticketRepository.save(ticket);
+    }
     @RequestMapping("/getupdateticket")
     public TicketEntity getupdateticket(@RequestParam("ticketid") Integer ticketid){
         return ticketRepository.findOne(ticketid);
     }
 
-    @RequestMapping("/forwardticket")
+    @RequestMapping("/assigncommenttoticket")
+    public void assigncommenttoticket(@RequestParam("ticketid") Integer ticketid,
+                                      @RequestParam("commentid") String commentid){
+        TicketitemEntity item = new TicketitemEntity();
+        item.setCommentid(commentid);
+        item.setTicketid(ticketid);
+        item.setMessageid("0");
+        item.setPostid("0");
+        ticketitemRepository.save(item);
+    }
+
+    @RequestMapping("/getrelatedticket")
+    public List<TicketEntity> getrelatedticket(@RequestParam("commentid") String commentid){
+        //Lay list attribute cua comment
+        List<CommentattributeEntity> listattributeofcomment = commentattributeRepository.getAttributebyCommentID(commentid);
+        List<TicketEntity> ticketlist = new ArrayList<TicketEntity>();
+        //Khi comment da duoc danh tag
+        if(listattributeofcomment!=null){
+            for (CommentattributeEntity ca: listattributeofcomment) {
+                //Voi moi attribute se lay 1 list<commentAttribuet> de lay commentid cua cac comment lien quan
+                List<CommentattributeEntity> newlist = commentattributeRepository.findByAttID(ca.getAttributeid());
+                //Voi moi comment lien quan
+                if(newlist!=null){
+                    for (CommentattributeEntity cae: newlist) {
+                        //khong lay lai comment dang click
+                        if(!cae.getCommentid().equals(commentid)){
+                            //Voi moi commentid se kiem tra xem co thuoc ticket nao ko
+                            TicketitemEntity item = ticketitemRepository.getTicketItemByCommentID(cae.getCommentid());
+                            //khi comment da thuoc 1 ticket
+                            if(item!=null){
+                                //Lay ticket do ra them vao list
+                                TicketEntity ticket = ticketRepository.findOne(item.getTicketid());
+                                //Doan nay de tranh' trung` lap. ticket lay ra
+                                if(ticket!=null){
+                                        ticketlist.add(ticket);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return ticketlist;
+    }
+
+    @RequestMapping("/getrelatedcomment")
+    public List<ExtendComments> getrelatedcomment(@RequestParam("commentid") String commentid){
+        List<CommentattributeEntity> listattributeofcomment = commentattributeRepository.getAttributebyCommentID(commentid);
+        List<ExtendComments> commentlist = new ArrayList<ExtendComments>();
+        if(listattributeofcomment!=null){
+            for (CommentattributeEntity ca: listattributeofcomment) {
+                System.out.println(commentid+" has attribute "+ca.getAttributeid());
+                List<CommentattributeEntity> newlist = commentattributeRepository.findByAttID(ca.getAttributeid());
+                for (CommentattributeEntity cae: newlist) {
+                    System.out.println(commentid +" relate commet "+ cae.getCommentid());
+                    if(!cae.getCommentid().equals(commentid)){
+                        CommentEntity cmt = commentRepository.findOne(cae.getCommentid());
+
+                        ExtendComments excmt = new ExtendComments();
+                        excmt.setContent(cmt.getContent());
+                        excmt.setCreatedAt(cmt.getCreatedAt());
+                        excmt.setCreatedBy(cmt.getCreatedBy());
+                        excmt.setCreatedByName(cmt.getCreatedByName());
+                        excmt.setId(cmt.getId());
+                        excmt.setPostId(cmt.getPostId());
+                        excmt.setSentimentScore(cmt.getSentimentScore());
+                        TicketitemEntity item = ticketitemRepository.getTicketItemByCommentID(cmt.getId());
+                        if(item!=null){
+                            excmt.setTicket(true);
+                        }
+                        commentlist.add(excmt);
+                    }
+
+                }
+            }
+        }
+        return commentlist;
+    }
+
+    /*@RequestMapping("/forwardticket")
     public TicketrequestEntity forwardticket(@RequestParam("commentid") String commentid,
                                              @RequestParam("forwarduser") Integer forwarduser,
                                              @RequestParam("forwardnote") String forwardnote,
@@ -286,9 +423,9 @@ public class TicketController {
         ticketrequest.setTicketid(ticket.getId());
         return ticketRequestRepository.save(ticketrequest);
 
-    }
+    }*/
 
-    @RequestMapping("/createticketforstaff")
+    /*@RequestMapping("/createticketforstaff")
     public TicketEntity createticketforstaff(HttpServletRequest request,
                                              @RequestParam("commentid") String commentid,
                                              @RequestParam("priority") Integer priority){
@@ -300,7 +437,7 @@ public class TicketController {
             //Tao moi 1 ticket
             TicketEntity ticketEntity = new TicketEntity();
             ticketEntity.setCreatedby(user.getUserid());
-            ticketEntity.setCommentid(commentid);
+//            ticketEntity.setCommentid(commentid);
             ticketEntity.setStatusid(1);
             ticketEntity.setAssignee(user.getUserid());
             ticketEntity.setActive(true);
@@ -321,5 +458,7 @@ public class TicketController {
             ticketStatusChangeRepository.save(status);
         }
         return null;
-    }
+    }*/
+
+
 }

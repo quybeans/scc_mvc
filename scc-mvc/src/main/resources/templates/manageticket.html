@@ -25,8 +25,32 @@
                 Ticket management
             </h1>
             <span class="pull-right">
+                 <select id="filtername" style="width:210px">
+                    <option>Name</option>
+                </select>
+                <select id="filtercreateby" style="width: 115px">
+                    <option>Create by</option>
+                </select>
+                <select id="filterassignee" style="width: 90px">
+                    <option>Assignee</option>
+                </select>
+                <select id="filterstatus" style="width: 110px">
+                    <option>Status</option>
+                </select>
+                <select id="filtercreatetime" style="width: 140px">
+                    <option>Create time</option>
+                </select>
+                <select id="filterpriority" style="width:85px">
+                    <option>Priority</option>
+                </select>
+                <button class="btn btn-default btn-md " style="width: 80px" type="button" onclick="filter()">
+                   <i class="fa fa-filter" aria-hidden="true"></i> <strong>Filter</strong>
+                  </button>
                   <button class="btn btn-info btn-md " type="button" onclick="configpriority()">
                    <i class="fa fa-cogs" aria-hidden="true"></i> <strong>Config Priority</strong>
+                  </button>
+                    <button class="btn btn-success btn-md " type="button" onclick="newticket()">
+                   <i class="fa fa-plus" aria-hidden="true"></i> <strong>New Ticket</strong>
                   </button>
 
        </span>
@@ -46,6 +70,8 @@
                         <div class="modal-body">
                             <select id="assign">
                             </select>
+                            <input type="text" list="listuser" autocomplete="getalluser()">
+                            <datalist id="listuser"></datalist>
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-primary " id="btnAssign">Assign</button>
@@ -105,27 +131,7 @@
 
                 </div>
             </div>
-            <div class="row">
-                <section class="col-lg-12">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="box">
 
-                                <!-- /.box-header -->
-                                <div class="box-body table-responsive no-padding">
-                                    <table id="table" class="table table-striped table-bordered" style="width:100%">
-
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </section>
-                <section class="col-lg-5 connectedSortable">
-
-                </section>
-            </div>
             <div class="modal fade" id="configPriorityModal" role="dialog">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -139,9 +145,9 @@
                         </div>
                         <div class="modal-footer">
                             <div class="form-inline" style="text-align: left">
-                            <input type="text" placeholder="New Priority" class="form-control" id="newpriorityname" style="width: 20%"/>
-                            <input type="number" placeholder="Duration" class="form-control" id="newpriorityduration" style="width: 60%" />
-                            <input type="button"  class="btn btn-success btn-xs" value="Create" onclick="createpriority()"/>
+                                <input type="text" placeholder="New Priority" class="form-control" id="newpriorityname" style="width: 20%"/>
+                                <input type="number" placeholder="Duration" class="form-control" id="newpriorityduration" style="width: 60%" />
+                                <input type="button"  class="btn btn-success btn-xs" value="Create" onclick="createpriority()"/>
                             </div>
                         </div>
                     </div>
@@ -167,6 +173,64 @@
                     </div>
                 </div>
             </div>
+
+            <div class="modal fade" id="createticketModal" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Create Ticket</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form group">
+                                <label for="newticketname">Name</label>
+                                <input type="text" class="form-control" id="newticketname"/>
+                            </div>
+                            <div class="form group">
+                                <label for="newticketpriority"> Priority</label>
+                                <select id="newticketpriority" class="form-control" >
+                                </select>
+                            </div>
+                            <div class="form group">
+                                <label for="assignee"> Assignee</label>
+                                <select id="assignee" class="form-control" >
+                                </select>
+                            </div>
+                            <div class="form group">
+                                <label for="newticketnote">Note</label>
+                                <textarea class="form-control" id="newticketnote"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-primary " id="btnCreateTicket">Create Ticket</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <section class="col-lg-12">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="box">
+
+                                <!-- /.box-header -->
+                                <div class="box-body table-responsive no-padding">
+                                    <table id="table" class="table table-striped table-bordered" style="width:100%">
+
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+                <section class="col-lg-5 connectedSortable">
+
+                </section>
+            </div>
+
         </section>
 
     </div>
@@ -177,53 +241,63 @@
     $(document).ready(function () {
 
         table= $("#table").DataTable({
+
+
             ajax: {
                 url:"/getallticket",
                 type: "GET"
             },
             sAjaxDataProp : "",
             columns: [
-                {title: "ID", data:"id"},
-                {title: "commentid", data:"commentid", visible:false },
-                {title: "Comment content",data:"content" },
+                {title: "ID", data:"id",visible:false},
+                {title: "Name",data:"name" },
                 {title: "Created By",data:"createbyuser"},
                 {title: "Assignee",data:"assigneeuser"},
                 {title: "Status",data:"currentstatus"},
                 {title: "Created Time",data:"createdtime"},
-                {title: "active",data:"active",visible:false},
                 {title: "Priority", data:"currentpriority"},
+                {title: "Note", data:"note"},
+                {title:"Action"},
                 {title: "createby", data:"createdby", visible:false },
                 {title: "assignee", data:"assignee", visible:false },
-                {title:"Action"}
+                {title: "active",data:"active",visible:false},
             ],
+
             columnDefs:[
                 {
                     width:'20%',
-                    targets: 2,
+                    targets: 7,
                     render: (data, type, row) => {
-                    return '<h5 style="overflow: hidden; max-height: 100px"><a onclick="showticket('+row.commentid+')">'+row.content+'</a></h5>'
+                    return '<h5 style="overflow: hidden; max-height: 100px">'+row.note+'</h5>'
+                },
+        },
+                {
+                    width:'20%',
+                    targets: 1,
+                    render: (data, type, row) => {
+                    return '<h5 style="overflow: hidden; max-height: 100px"><a href="followticket?ticketid='+row.id+'">'+row.name+'</a></h5>'
                                                 },
                 },
                 {
-                    targets: 6,
+                    targets: 5,
                     render: (data, type, row) => {
                     return moment(row.createdtime).format("d/MM/YYYY h:mm:ss");
                      },
                 },
                 {
                     width:'10%',
-                    targets: 11,
+                    targets: 8,
                     render: (data, type, row) => {
                     return '<div class="btn-group btn-xs">'
-                    +'<button type="button" class="btn btn-success btn-xs" onclick="assign('+row.commentid+')"><i class="fa fa-ticket"></i></button>'
-                    +'<button type="button" class="btn btn-danger btn-xs" onclick="status('+row.commentid+')"><i class="fa fa-navicon"></i></button>'
+                    +'<button type="button" class="btn btn-success btn-xs" onclick="assign('+row.id+')"><i class="fa fa-ticket"></i></button>'
+                    +'<button type="button" class="btn btn-danger btn-xs" onclick="status('+row.id+')"><i class="fa fa-navicon"></i></button>'
                     +'<button type="button" class="btn btn-primary btn-xs" onclick="updateticket('+row.id+')"><i class="fa fa-pencil"></i></button>'
                     +'</div>'
                      },
                 },
                 {
                     width:'10%',
-                    targets: 5,
+                    targets: 4,
                     render: (data, type, row) => {
                     var statuscolor;
                     switch (row.statusid){
@@ -238,29 +312,13 @@
                     return '<p><i class="fa fa-circle" aria-hidden="true" style="'+statuscolor+'"></i>'+'  ' +row.currentstatus+'</p>'
                                                 },
                 },
-//        {
-//
-//                targets:6,
-//                render:(data,type,row)=> {
-//            return `<button class='btn btn-${row.active?"danger":"success"} status' data-id='${row.userid}' style='width: 100px'>${row.active?"Deactive":"Active"}</button>`
-//
-//        },
-//        },
-//        {
-//      targets:7,
-//              render:(data,type,row)=> {
-//      return `<button class='btn btn-primary' id='update' data-id='${row.userid}' >
-//             <i class='fa fa-edit' aria-hidden='true' ></i>
-//</button>`
-//        },
-//        },
         ],
 
     });
     });
 
     //assign ticket
-    function assign(comID) {
+    function assign(ticketid) {
         //Load list user de assign
         $.ajax({
             url:"getalluser",
@@ -283,10 +341,10 @@
             var assignee = $('#assign').val();
             $.ajax({
                 url:"/assignticket",
-                data:{"commentid":comID,"assignee":assignee},
+                data:{"ticketid":ticketid,"assignee":assignee},
                 type:"POST",
                 success:function (data) {
-                    alert("assign ticket successful"+data.commentid);
+                    alert("assign ticket successful"+data.assignee);
                     $('#assignModal').modal('toggle');
                     table.ajax.reload();
                 },
@@ -298,13 +356,13 @@
     }
 
     //change status
-    function status(comID,postID) {
+    function status(ticketid) {
         $('#statusModal').modal('toggle');
         $('#btnStatus').unbind().click(function () {
             var status = $('#status').val();
             $.ajax({
                 url:"/changeticketstatus",
-                data:{"commentid":comID,"status":status},
+                data:{"ticketid":ticketid,"status":status},
                 type:"POST",
                 success:function (data) {
                     $('#statusModal').modal('toggle');
@@ -321,7 +379,6 @@
     //change priority,note
     function updateticket(ticketid) {
         $('#changeticketModal').modal('toggle');
-
         $.ajax({
             url: "/getallpriorityofbrand",
             type: "GET",
@@ -349,16 +406,35 @@
                 alert("Fail ne");
             }
         })
+
+        $("#btnChangeTicket").unbind().click(function () {
+            var ticketnote= $("#ticketnote").val();
+            var ticketpriority = $("#ticketpriority").val();
+            $.ajax({
+                url: "/updateticket",
+                type: "POST",
+                data: {"ticketid": ticketid,"ticketnote":ticketnote,"ticketpriority":ticketpriority},
+                success: function (data) {
+                    console.log(data.ticketid);
+                    alert("update ticket successful!");
+                    $('#changeticketModal').modal('toggle');
+                    table.ajax.reload();
+                },
+                error: function () {
+                    alert("Fail ne");
+                }
+            })
+        })
     }
 
-        //show config priority modal
-        function configpriority() {
+    //show config priority modal
+    function configpriority() {
             $('#configPriorityModal').modal('toggle');
             getallpriority();
         }
 
-        //load all priority
-        function getallpriority() {
+    //load all priority
+    function getallpriority() {
 
             $.ajax({
                 url: "/getallpriorityofbrand",
@@ -382,8 +458,8 @@
             })
         }
 
-        //update priority
-        function updatepriority(id) {
+    //update priority
+    function updatepriority(id) {
             var prioritynameelementid = "name" + id + "";
             var priorityedurationlementid = "duration" + id + "";
             var name = $("#" + prioritynameelementid + "").val();
@@ -401,8 +477,8 @@
             })
         }
 
-        //create priority
-        function createpriority() {
+    //create priority
+    function createpriority() {
             var priorityname = $('#newpriorityname').val();
             var priorityduration = $('#newpriorityduration').val();
             alert(priorityname + "  " + priorityduration)
@@ -424,8 +500,8 @@
             })
         }
 
-        //delete priority
-        function deletepriority(id) {
+    //delete priority
+    function deletepriority(id) {
             $.ajax({
                 url: "/deletepriority",
                 type: "POST",
@@ -440,9 +516,7 @@
             })
         }
 
-
-
-        function showticket(cmtid) {
+    function showticket(cmtid) {
             $('#ticketModal').modal('toggle');
             
             $.ajax({
@@ -510,6 +584,62 @@
                     alert("Fail to load reply")
                 }
             })
+        }
+
+    function newticket() {
+            $('#createticketModal').modal('toggle');
+
+            $.ajax({
+                url:"getalluser",
+                type:"GET",
+                success:function (data) {
+                    $("#assignee").html("");
+                    for (var i =0;i<data.length;i++)
+                        $("#assignee").append(
+                                '<option value="'+data[i].userid+'">'+data[i].firstname+ ' ' +data[i].lastname +'</option>'
+                        );
+                },
+                error:function () {
+                    alert("Fail to load list user");
+                }
+            })
+
+            $.ajax({
+                url: "/getallpriorityofbrand",
+                type: "GET",
+                success: function (data) {
+                    $("#newticketpriority").html("");
+                    for (var i = 0; i < data.length; i++) {
+                        $("#newticketpriority").append(
+                                '<option value="'+ data[i].id +'">'+ data[i].name+'</option>'
+                        )
+                    }
+                },
+                error: function () {
+                    alert("fail to load priority for update")
+                }
+            })
+
+
+            $("#btnCreateTicket").unbind().click(function () {
+                var ticketname = $('#newticketname').val();
+                var priority = $("#newticketpriority").val();
+                var note = $("#newticketnote").val();
+                var assignee = $("#assignee").val();
+                $.ajax({
+                    url:"/createticket",
+                    type:"POST",
+                    data:{"ticketname":ticketname,"priority":priority,"note":note,"assignee":assignee},
+                    success:function (data) {
+                        table.ajax.reload();
+                        alert("create ticket: "+data.id+" successful!");
+                    },
+                    error:function () {
+                        alert("fail to create ticket");
+                    }
+                })
+            })
+
         }
 
 </script>

@@ -50,6 +50,9 @@ public class WebServiceController {
     @Autowired
     private TicketRepository ticketRepository;
 
+    @Autowired
+    private TicketitemRepository ticketitemRepository;
+
     @RequestMapping("allPostsByBrand")
     public List<ExPost> postsByByBrand(HttpServletRequest request)
     {
@@ -117,16 +120,11 @@ public class WebServiceController {
                 cmt.setId(c.getId());
                 cmt.setPostId(c.getPostId());
                 cmt.setSentimentScore(c.getSentimentScore());
-                TicketEntity ticket =ticketRepository.findBycommentid(cmt.getId());
-                if (ticket!=null){
-                    cmt.setIsticket(true);
-                    if(ticket.getAssignee()==user.getUserid()){
-                        cmt.setTicketofstaff(true);
-                    }
+                TicketitemEntity item = ticketitemRepository.getTicketItemByCommentID(c.getId());
+                if(item!=null){
+                    cmt.setTicket(true);
                 }
-                if(user.getRoleid()== Constant.ROLE_STAFF){
-                    cmt.setStaff(true);
-                }
+
                 showcomments.add(cmt);
             }
 

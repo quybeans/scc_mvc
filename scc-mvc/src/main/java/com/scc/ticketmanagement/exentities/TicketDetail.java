@@ -14,6 +14,8 @@ public class TicketDetail {
     private String createby;
     private String commentid;
     private String priority;
+    private String name;
+    private String note;
 
     public int getId() {
         return id;
@@ -77,5 +79,21 @@ public class TicketDetail {
 
     public void setPriority(String priority) {
         this.priority = priority;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 }

@@ -32,4 +32,6 @@ public class CommentController {
     public List<CommentEntity> getreply(@RequestParam("commentid") String commentid){
         return commentRepository.findCommentByPostId(commentid);
     }
+
+
 }

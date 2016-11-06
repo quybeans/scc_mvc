@@ -1,8 +1,11 @@
 package com.scc.ticketmanagement.controllers;
 
 import com.scc.ticketmanagement.Entities.PriorityEntity;
+import com.scc.ticketmanagement.Entities.TicketEntity;
 import com.scc.ticketmanagement.Entities.UserEntity;
+import com.scc.ticketmanagement.exentities.ExtendPriority;
 import com.scc.ticketmanagement.repositories.PriorityReposioty;
+import com.scc.ticketmanagement.repositories.TicketRepository;
 import com.scc.ticketmanagement.repositories.UserRepository;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -23,6 +28,9 @@ public class PriorityController {
 
     @Autowired
     PriorityReposioty priorityReposioty;
+
+    @Autowired
+    TicketRepository ticketRepository;
 
     @RequestMapping("/getallpriorityofbrand")
     public List<PriorityEntity> getallpriorityofbrand(HttpServletRequest request){
@@ -70,5 +78,23 @@ public class PriorityController {
         if(priorityEntity!=null){
             priorityReposioty.delete(priorityid);
         }
+    }
+
+    @RequestMapping("/getticketduetime")
+    public ExtendPriority getticketduetime(@RequestParam("ticketid") Integer ticketid){
+        TicketEntity ticket = ticketRepository.findOne(ticketid);
+        PriorityEntity priority = priorityReposioty.findOne(ticket.getPriority());
+        ExtendPriority extendPriority = new ExtendPriority();
+        extendPriority.setBrandid(priority.getBrandid());
+        extendPriority.setDuration(priority.getDuration());
+        extendPriority.setCreatedtime(ticket.getCreatedtime());
+        extendPriority.setName(priority.getName());
+        long create=ticket.getCreatedtime().getHours();
+        long current=new Date().getHours();
+        long diff = current-create;
+
+        System.out.println("DIFF:"+diff);
+        System.out.println("Create:"+ create +" Current:"+ current+ " DIff:"+ diff);
+        return extendPriority;
     }
 }

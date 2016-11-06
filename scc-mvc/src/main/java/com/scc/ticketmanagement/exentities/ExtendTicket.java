@@ -6,19 +6,11 @@ import com.scc.ticketmanagement.Entities.TicketEntity;
  * Created by user on 10/29/2016.
  */
 public class ExtendTicket extends TicketEntity {
-    private String content;
     private String createbyuser;
     private String assigneeuser;
     private String currentstatus;
     private String currentpriority;
 
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
 
     public String getCreatebyuser() {
         return createbyuser;
