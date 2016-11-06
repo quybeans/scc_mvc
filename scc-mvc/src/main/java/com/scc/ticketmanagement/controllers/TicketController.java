@@ -246,10 +246,10 @@ public class TicketController {
         PriorityEntity pri = priorityReposioty.findOne(ticket.getPriority());
         extendTicket.setCurrentpriority(pri.getName());
 
-        ProfileEntity profileEntity = profileRepository.findOne(ticket.getAssignee());
+        ProfileEntity profileEntity = profileRepository.findOne(userRepository.findOne(ticket.getAssignee()).getProfileid());
         extendTicket.setAssigneeuser(profileEntity.getFirstname());
 
-        profileEntity = profileRepository.findOne(ticket.getCreatedby());
+        profileEntity = profileRepository.findOne(userRepository.findOne(ticket.getCreatedby()).getProfileid());
         extendTicket.setCreatebyuser(profileEntity.getFirstname());
 
         extendTicket.setCreatedtime(ticket.getCreatedtime());
