@@ -11,7 +11,7 @@ public class TicketHistory {
     private int statusid;
     private Timestamp createdat;
     private String assignee;
-
+    private String note;
 
     public String getUserid() {
         return userid;
@@ -51,5 +51,13 @@ public class TicketHistory {
 
     public void setTicketid(int ticketid) {
         this.ticketid = ticketid;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 }

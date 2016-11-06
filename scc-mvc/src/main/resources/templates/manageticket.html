@@ -68,10 +68,15 @@
                             <h4 class="modal-title">Assign Ticket</h4>
                         </div>
                         <div class="modal-body">
-                            <select id="assign">
-                            </select>
-                            <input type="text" list="listuser" autocomplete="getalluser()">
-                            <datalist id="listuser"></datalist>
+                            <div class="form group">
+                                <label for="assignnote">Note</label>
+                                <textarea id="assignnote" class="form-control"> </textarea>
+                            </div>
+                            <div class="form group">
+                                <label for="assign">User</label>
+                                <select class="form-control" id="assign">
+                                </select>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-primary " id="btnAssign">Assign</button>
@@ -90,12 +95,20 @@
                             <h4 class="modal-title">Change Ticket Status</h4>
                         </div>
                         <div class="modal-body">
-                            <select id="status">
-                                <option value="3">Open</option>
-                                <option value="4">Inprocess</option>
-                                <option value="5">Solving</option>
-                                <option value="6">Solved</option>
-                            </select>
+                            <div class="form group">
+                                <label for="statusnote">Note</label>
+                                <textarea id="statusnote" class="form-control"> </textarea>
+                            </div>
+                            <div class="form group">
+                                <label for="status">Status</label>
+                                <select class="form-control" id="status">
+                                    <option value="3">Open</option>
+                                    <option value="4">Inprocess</option>
+                                    <option value="5">Solving</option>
+                                    <option value="6">Solved</option>
+                                </select>
+                            </div>
+
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-primary " id="btnStatus">Change Status</button>
@@ -240,6 +253,8 @@
     var table = null;
     $(document).ready(function () {
 
+
+
         table= $("#table").DataTable({
 
 
@@ -325,10 +340,13 @@
             type:"GET",
             success:function (data) {
                 $("#assign").html("");
-                for (var i =0;i<data.length;i++)
+                for (var i =0;i<data.length;i++){
                     $("#assign").append(
                             '<option value="'+data[i].userid+'">'+data[i].firstname+ ' ' +data[i].lastname +'</option>'
                     );
+
+                }
+
             },
             error:function () {
                 alert("Fail to load list user");
@@ -339,9 +357,10 @@
         $('#assignModal').modal('toggle');
         $('#btnAssign').unbind().click(function () {
             var assignee = $('#assign').val();
+            var assignnote = $("#assignnote").val();
             $.ajax({
                 url:"/assignticket",
-                data:{"ticketid":ticketid,"assignee":assignee},
+                data:{"ticketid":ticketid,"assignee":assignee,"assignnote":assignnote},
                 type:"POST",
                 success:function (data) {
                     alert("assign ticket successful"+data.assignee);
@@ -360,9 +379,10 @@
         $('#statusModal').modal('toggle');
         $('#btnStatus').unbind().click(function () {
             var status = $('#status').val();
+            var statusnote = $("#statusnote").val();
             $.ajax({
                 url:"/changeticketstatus",
-                data:{"ticketid":ticketid,"status":status},
+                data:{"ticketid":ticketid,"status":status,"statusnote":statusnote},
                 type:"POST",
                 success:function (data) {
                     $('#statusModal').modal('toggle');
