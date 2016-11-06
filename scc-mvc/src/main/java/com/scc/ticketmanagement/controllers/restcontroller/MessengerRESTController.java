@@ -54,10 +54,18 @@ public class MessengerRESTController {
     public List<MessageEntity> getAllConversations(@RequestParam("pageId") String pageId,
                                                    @RequestParam("senderId") String senderId,
                                                    @RequestParam("pageNum") Integer pageNum) {
-        Page<MessageEntity> messages = messageService.getMessageAscWithPage(pageId, senderId, pageNum);
+        Page<MessageEntity> messages = messageService.getMessageDescWithPage(pageId, senderId, pageNum);
         messages.getTotalPages();
         return messages.getContent();
     }
+
+//    @RequestMapping(value = "/messenger/getConversationLastMessages", method = RequestMethod.POST)
+//    public List<MessageEntity> getConversationLastMessages(@RequestParam("pageId") String pageId,
+//                                                           @RequestParam("senderId") String senderId,
+//                                                           @RequestParam("pageNum") Integer pageNum) {
+//        Page<MessageEntity> messages = messageService.getMessageDescWithPage(pageId, senderId, pageNum);
+//        return messages.getContent();
+//    }
 
     @RequestMapping(value = "/messenger/sendMessageToCustomer", method = RequestMethod.POST)
     public String sendMessage(@RequestParam("pageId") String pageId,

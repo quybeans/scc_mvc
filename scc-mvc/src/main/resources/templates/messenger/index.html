@@ -29,7 +29,7 @@
             </div>
             <div class="col-md-6" id="conversation"
                  style="background-color: white; height: 100vh; overflow: scroll">
-                <div id="conversationContent" style="overflow: scroll">
+                <div id="conversationContent" style="overflow: scroll;  height: 80vh;">
 
                 </div>
                 <div style="position: fixed; bottom: 10px;" id="conversationReply">
@@ -118,13 +118,14 @@
                 success: function (data) {
                     $('#conversationContent').empty();
                     $.each(data, function (i) {
+                        data = data.reverse();
                         if (data[i].senderid == pageId) {
                             $('#conversationContent').append(
-                                    '<div style="text-align: right"><p>' + data[i].content + '</p></div>'
+                                    '<div style="text-align: right"><h1>' + data[i].content + '</h1></div>'
                             );
                         } else {
                             $('#conversationContent').append(
-                                    '<div style="text-align: left">' + data[i].content + '</div>'
+                                    '<div style="text-align: left"><h1>' + data[i].content + '</h1></div>'
                             );
                         }
 
@@ -136,6 +137,15 @@
         }, 500);
 
     }
+
+    $(function () {
+        var conversation =  $('#conversationContent');
+
+        conversation.scroll(function () {
+            if (conversation.scrollTop() == 0)
+                alert('Scrolled to Page Top');
+        });
+    });
 
     function sendMessage(pageId, receiverId) {
         var content = $('#replyText').val();

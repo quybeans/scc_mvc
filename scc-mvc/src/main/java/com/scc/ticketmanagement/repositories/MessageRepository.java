@@ -35,8 +35,7 @@ public interface MessageRepository extends JpaRepository<MessageEntity, String> 
                                        @Param("senderId") String senderId);
 
     @Query("SELECT m FROM MessageEntity m WHERE (m.receiverid =:receiverId and m.senderid =:senderId) " +
-            "or (m.receiverid =:senderId and m.senderid =:receiverId)" +
-            "order by m.seq")
-    Page<MessageEntity> getMessageAscWithPage(@Param("receiverId") String receiverId,
-                                              @Param("senderId") String senderId, Pageable page);
+            "or (m.receiverid =:senderId and m.senderid =:receiverId)")
+    Page<MessageEntity> getMessageWithPage(@Param("receiverId") String receiverId,
+                                           @Param("senderId") String senderId, Pageable page);
 }
