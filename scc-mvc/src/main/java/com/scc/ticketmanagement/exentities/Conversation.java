@@ -8,7 +8,25 @@ public class Conversation {
     private String senderId;
     private String senderPicture;
     private String lastMessage;
+    private String lastMessageId;
     private String sentTime;
+    private boolean read;
+
+    public boolean isRead() {
+        return read;
+    }
+
+    public String getLastMessageId() {
+        return lastMessageId;
+    }
+
+    public void setLastMessageId(String lastMessageId) {
+        this.lastMessageId = lastMessageId;
+    }
+
+    public void setRead(boolean read) {
+        this.read = read;
+    }
 
     public Conversation() {
     }

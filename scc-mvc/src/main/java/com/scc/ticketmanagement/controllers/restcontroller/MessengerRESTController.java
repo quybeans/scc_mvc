@@ -1,17 +1,12 @@
 package com.scc.ticketmanagement.controllers.restcontroller;
 
-import com.google.api.client.json.Json;
 import com.scc.ticketmanagement.Entities.ContactEntity;
 import com.scc.ticketmanagement.Entities.MessageEntity;
 import com.scc.ticketmanagement.exentities.Conversation;
-import com.scc.ticketmanagement.facebook.Contact;
 import com.scc.ticketmanagement.repositories.ContactRepository;
-import com.scc.ticketmanagement.services.ContactService;
 import com.scc.ticketmanagement.services.MessageService;
 import com.scc.ticketmanagement.services.PageService;
-import com.scc.ticketmanagement.utilities.AccessTokenUtility;
 import com.scc.ticketmanagement.utilities.FacebookUtility;
-import org.omg.CORBA.OBJ_ADAPTER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,10 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.naming.AuthenticationException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -61,9 +52,10 @@ public class MessengerRESTController {
 
     @RequestMapping(value = "/messenger/getConversationBySenderIdWithPage", method = RequestMethod.POST)
     public List<MessageEntity> getConversationBySenderIdWithPage(@RequestParam("pageId") String pageId,
-                                                           @RequestParam("senderId") String senderId,
-                                                           @RequestParam("pageNum") Integer pageNum) {
+                                                                 @RequestParam("senderId") String senderId,
+                                                                 @RequestParam("pageNum") Integer pageNum) {
         Page<MessageEntity> messages = messageService.getMessageDescWithPageSize(pageId, senderId, pageNum);
+
         return messages.getContent();
     }
 
@@ -90,6 +82,16 @@ public class MessengerRESTController {
     @RequestMapping(value = "/messenger/getCustomerInfo", method = RequestMethod.POST)
     public ContactEntity getCustomerInfo(@RequestParam("customerId") String customerId) {
         return contactService.getContactById(customerId);
+    }
+
+    @RequestMapping(value = "/messenger/setMessageRead", method = RequestMethod.POST)
+    public MessageEntity setRead(@RequestParam("pageId") String pageId,
+                                 @RequestParam("senderId") String senderId) {
+        MessageEntity messageEntity = messageService.getLastMessage(pageId,senderId);
+        if (messageEntity!=null && messageEntity.getMessageRead() == false){
+            messageService.setMessageRead(messageEntity.getId());
+        }
+        return messageEntity;
     }
 
 }

@@ -82,7 +82,9 @@ public class MessageServiceImp implements MessageService {
                 conversation.setSenderId(senderId);
                 conversation.setSenderName(contactEntity.getName());
                 conversation.setSenderPicture(contactEntity.getPicture());
-                conversation.setLastMessage(this.getLastMessage(pageId, senderId));
+                conversation.setLastMessage(this.getLastMessageContent(pageId, senderId));
+                conversation.setRead(this.getLastMessage(pageId, senderId).getMessageRead());
+                conversation.setLastMessageId(this.getLastMessage(pageId, senderId).getId());
                 conversationList.add(conversation);
             } catch (javax.persistence.EntityNotFoundException e) {
                 e.printStackTrace();
@@ -126,8 +128,20 @@ public class MessageServiceImp implements MessageService {
     }
 
     @Override
-    public String getLastMessage(String receiverId, String senderId) {
+    public String getLastMessageContent(String receiverId, String senderId) {
         MessageEntity messageEntity = this.getMessageDesc(receiverId, senderId).get(0);
         return messageEntity.getContent();
+    }
+
+    @Override
+    public MessageEntity getLastMessage(String receiverId, String senderId) {
+        return this.getMessageDesc(receiverId, senderId).get(0);
+    }
+
+
+    @Override
+    public MessageEntity setMessageRead(String messageId) {
+        messageRepository.setMessageRead(messageId);
+        return null;
     }
 }

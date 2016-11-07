@@ -1,12 +1,13 @@
 package com.scc.ticketmanagement.repositories;
 
 import com.scc.ticketmanagement.Entities.MessageEntity;
-import org.hibernate.persister.entity.Queryable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -38,4 +39,13 @@ public interface MessageRepository extends JpaRepository<MessageEntity, String> 
             "or (m.receiverid =:senderId and m.senderid =:receiverId)")
     Page<MessageEntity> getMessageWithPage(@Param("receiverId") String receiverId,
                                            @Param("senderId") String senderId, Pageable page);
+
+    @Query("SELECT m FROM  MessageEntity m WHERE m.id = :id")
+    public MessageEntity getMessageById(@Param("id") String id);
+
+
+    @Query("UPDATE MessageEntity m set m.messageRead= true WHERE m.id=:id")
+    @Modifying
+    @Transactional
+    void setMessageRead(@Param("id") String id);
 }

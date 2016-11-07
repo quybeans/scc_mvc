@@ -8,9 +8,12 @@ var currentPageId = "0";
 var currentCustomer = "0";
 var currentPageNum = 0;
 var currentInterval;
+var loadConversationInterval;
+var messageId = "0";
 $(document).ready(function () {
-    var a = $("#ddlPages option:first").val();
-    getAllConversationsByPageId(a);
+
+    currentPageId = $("#ddlPages option:first").val();
+    getAllConversationsByPageId(currentPageId);
 
 
     $('#replyText').keypress(function (e) {
@@ -20,6 +23,8 @@ $(document).ready(function () {
 });
 
 function getAllConversation(a) {
+    clearInterval(loadConversationInterval);
+    clearInterval(currentInterval);
     getAllConversationsByPageId(a.value);
 }
 
@@ -36,21 +41,78 @@ function getAllConversationsByPageId(pageId) {
         dataType: "json",
         success: function (data) {
             $('#messagesList').empty();
-
             $.each(data, function (i) {
-                var senderImg = '';
-                $('#messagesList').append(
-                    '<div class="item" id="conversation' + i + '" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId + '\')">'
-                    + '<div><img style="max-height: 30px" src="' + data[i].senderPicture + '"</div>'
-                    + '<div>' + data[i].senderName + '</div>'
-                    + '<div>' + data[i].lastMessage + '</div>'
-                    + '</div>'
-                )
+                if (data[i].read) {
+                    $('#messagesList').append(
+                        '<div class="item" id="conversation' + i + '" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId + '\')">'
+                        + '<div><img style="max-height: 30px" src="' + data[i].senderPicture + '"</div>'
+                        + '<div>' + data[i].senderName + '</div>'
+                        + '<div>' + data[i].lastMessage + '</div>'
+                        + '</div>'
+                    )
+                } else {
+                    $('#messagesList').append(
+                        '<div class="item" id="conversation' + i + '" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId +  '\')">'
+                        + '<div><img style="max-height: 30px" src="' + data[i].senderPicture + '"</div>'
+                        + '<div>' + data[i].senderName + '</div>'
+                        + '<div><b>' + data[i].lastMessage + '</b></div>'
+                        + '</div>'
+                    )
+                }
+
             });
             $('#conversation0').click();
         }
     });
 
+    loadConversationInterval = setInterval(function () {
+        $.ajax({
+            url: '/messenger/getAllConversationsByPageId',
+            type: "GET",
+            data: {
+                pageId: pageId
+            },
+            dataType: "json",
+            success: function (data) {
+                $('#messagesList').empty();
+                $.each(data, function (i) {
+                    if (data[i].read) {
+                        $('#messagesList').append(
+                            '<div class="item" id="conversation' + i + '" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId + '\')">'
+                            + '<div><img style="max-height: 30px" src="' + data[i].senderPicture + '"</div>'
+                            + '<div>' + data[i].senderName + '</div>'
+                            + '<div>' + data[i].lastMessage + '</div>'
+                            + '</div>'
+                        )
+                    } else {
+                        $('#messagesList').append(
+                            '<div class="item" id="conversation' + i + '" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId +  '\')">'
+                            + '<div><img style="max-height: 30px" src="' + data[i].senderPicture + '"</div>'
+                            + '<div>' + data[i].senderName + '</div>'
+                            + '<div><b>' + data[i].lastMessage + '</b></div>'
+                            + '</div>'
+                        )
+                    }
+
+                });
+            }
+        });
+    }, 500)
+}
+
+function setRead(pageId, senderId) {
+    $.ajax({
+        url: '/messenger/setMessageRead',
+        type: "POST",
+        data: {
+            pageId: pageId,
+            senderId: senderId
+        },
+        dataType: "json",
+        success: function (data) {
+
+        }
+    });
 }
 
 function getConversationBySenderId(pageId, senderId) {
@@ -59,12 +121,12 @@ function getConversationBySenderId(pageId, senderId) {
     currentPageNum = 1;
     var isFirstLoad = true;
 
+    setRead(pageId, senderId);
     document.getElementById('replyText').setAttribute('value', '');
     document.getElementById('replyText').select();
 
     getCustomerInfo(senderId);
     $('#btnReply').attr('onclick', 'sendMessage(' + pageId + ',' + senderId + ')');
-
 
     clearInterval(currentInterval);
 
@@ -187,7 +249,7 @@ function getCustomerInfo(customerId) {
         url: '/messenger/getCustomerInfo',
         type: "POST",
         data: {
-            customerId: customerId,
+            customerId: customerId
         },
         dataType: "json",
         success: function (data) {

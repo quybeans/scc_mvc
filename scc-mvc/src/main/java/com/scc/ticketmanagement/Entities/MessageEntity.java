@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 /**
- * Created by Thien on 11/2/2016.
+ * Created by Thien on 11/8/2016.
  */
 @Entity
 @Table(name = "message", schema = "scc", catalog = "")
@@ -17,6 +17,7 @@ public class MessageEntity {
     private String senderName;
     private String senderid;
     private int seq;
+    private Boolean messageRead;
 
     @Id
     @Column(name = "id")
@@ -98,6 +99,16 @@ public class MessageEntity {
         this.seq = seq;
     }
 
+    @Basic
+    @Column(name = "message_read")
+    public Boolean getMessageRead() {
+        return messageRead;
+    }
+
+    public void setMessageRead(Boolean messageRead) {
+        this.messageRead = messageRead;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -113,6 +124,7 @@ public class MessageEntity {
         if (receiverid != null ? !receiverid.equals(that.receiverid) : that.receiverid != null) return false;
         if (senderName != null ? !senderName.equals(that.senderName) : that.senderName != null) return false;
         if (senderid != null ? !senderid.equals(that.senderid) : that.senderid != null) return false;
+        if (messageRead != null ? !messageRead.equals(that.messageRead) : that.messageRead != null) return false;
 
         return true;
     }
@@ -127,6 +139,7 @@ public class MessageEntity {
         result = 31 * result + (senderName != null ? senderName.hashCode() : 0);
         result = 31 * result + (senderid != null ? senderid.hashCode() : 0);
         result = 31 * result + seq;
+        result = 31 * result + (messageRead != null ? messageRead.hashCode() : 0);
         return result;
     }
 }
