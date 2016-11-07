@@ -33,4 +33,9 @@ public class CommentRESTController {
         return result.getTotalPages();
     }
 
+    @RequestMapping("comment/bypostid/negSort")
+    public List<CommentEntity> commentNegSort(String postid, int page) {
+        Page<CommentEntity> result =  commentService.getCommentByPostIdwSort(page,1,postid);
+        return result.getContent();
+    }
 }

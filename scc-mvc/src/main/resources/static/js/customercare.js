@@ -12,6 +12,8 @@ var graphImage = "https://graph.facebook.com/";
 var postListCurPage = 1;
 var commentListCurPage = 1;
 var currentPost;
+//Sort setting 1: by question, 2: by neg, 3: by time
+var sortCommentBy =1;
 startup();
 
 function startup() {
@@ -148,7 +150,7 @@ function getAllPosts(pagelist, pageno) {
                 }
                 $.each(data, function (index) {
                     $('#post-box').append(
-                        '<div class="item" style="position:relative;" onclick="getCommentById(' + "'" + data[index].id + "'" + ')">'
+                        '<div class="item" id="'+data[index].id+'" style="position:relative;" onclick="getCommentById(' + "'" + data[index].id + "'" + ')">'
                         + '<img onload="http://localhost:8080/img/user_img.jpg" src="http://graph.facebook.com/' + data[index].createdBy + '/picture" alt="user image">'
                         + '<p class="message">'
                         + '<small class="text-muted pull-right">'
@@ -337,16 +339,20 @@ function getCommentById(postid) {
     getPostById(postid);
     currentPost = postid;
     commentListCurPage = 1;
+    $('#post-box').find("*").removeClass("active");
+    $('#'+postid).addClass('active');
     $('#comment-page-current').val(commentListCurPage);
     getCommentByPostIdwPage(postid, 1);
 }
 
 //Get comment by id
 function getCommentByPostIdwPage(postId, page) {
+    if (sortCommentBy==2) var url = 'comment/bypostid/negSort';
+    else url = 'comment/bypostid';
     $('#comment-box').empty();
     $('#comment-box').html('<div style=" padding-left: 10px"><span style="color: cornflowerblue;" class="fa fa-circle-o-notch fa-spin"></span> &nbsp;Loading comments ...</div>');
     $.ajax({
-        url: 'comment/bypostid',
+        url: url,
         type: "GET",
         data: {postid: postId, page: page},
         dataType: "json",
@@ -365,7 +371,7 @@ function getCommentByPostIdwPage(postId, page) {
                     + '<div class="col-lg-11 cmtContent">' +
                     '<img onload="http://localhost:9000/img/user_img.jpg" src="http://graph.facebook.com/' + data[index].createdBy + '/picture" alt="user image">'
                     + '<p class="message" style="margin-top: -53px">'
-                    + '<a>'
+                    + '<a href="https:/fb.com/'+data[index].createdBy+'" target="_blank">'
                     + data[index].createdByName
                     + '<small class="text-muted" style="margin-left: 10px">'
                     + jQuery.format.prettyDate(new Date(data[index].createdAt))
@@ -844,7 +850,7 @@ function getAllCrawlPage() {
 
         },
         error: function () {
-            alert("Tag comment fail")
+            alert("Getting page failed")
         }
     })
 }

@@ -97,17 +97,7 @@
   max-width: 200px;
 }
 
-/*cmt */
-::-webkit-scrollbar {
-  width: 8px;
-  margin-right: 3px;
 
-}
-::-webkit-scrollbar-thumb {
-  background: dimgray;
-  border-radius: 0px;
-
-}
 
 
 ::-webkit-scrollbar-track {
@@ -143,7 +133,7 @@
 
 /*--------------------------------COMMENT LIST------------------------------*/
 .cmtList{
-  margin: 10px 20px 0px 20px;
+  margin: 10px 20px 45px 20px;
   background-color: white;
   overflow-y: auto;
   border-radius: 3px;
@@ -290,10 +280,27 @@
 }
 
 
+#post-box .active
+{
+    background-color: lightblue;
+}
+
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
   margin: 0;
+}
+
+/*cmt */
+::-webkit-scrollbar {
+    width: 8px;
+    margin-right: 3px;
+
+}
+::-webkit-scrollbar-thumb {
+    background: dimgray;
+    border-radius: 0px;
+
 }

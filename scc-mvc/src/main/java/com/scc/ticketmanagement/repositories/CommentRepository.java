@@ -21,6 +21,11 @@ public interface CommentRepository extends JpaRepository<CommentEntity,String> {
     @Query("SELECT u FROM CommentEntity u WHERE u.postId = :postId")
     Page<CommentEntity> findAllByPostId (@Param("postId")String postid, Pageable pageable);
 
+    @Query("SELECT u FROM CommentEntity u WHERE u.postId = :postId " +
+            "ORDER BY CASE WHEN (u.sentimentScore = 2) THEN -1 ELSE u.sentimentScore END")
+    Page<CommentEntity> findAllByPostIdwNegSort(@Param("postId")String postid,
+                                             Pageable pageable);
+
     @Query("SELECT u FROM CommentEntity u WHERE u.postId = :postId order by u.sentimentScore DESC")
     List<CommentEntity> findCommentByPostIdSen(@Param("postId") String postId);
 

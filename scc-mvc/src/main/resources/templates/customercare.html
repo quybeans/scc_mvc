@@ -270,7 +270,7 @@
             </div>
             <div class="postlist" id="post-list">
                 <div class="box-body chat" id="post-box">
-                    <!--Post list here-->
+                    <!--This is post list here-->
                 </div>
 
             </div>
@@ -286,7 +286,7 @@
                         <p class="author" id="post-author" style="color: cornflowerblue">Page name</p>
                         <div id="post-time" class="text-muted" style="margin-left: 60px; margin-top: -10px">sss
                         </div>
-                        <p style="margin-top: 15px; text-align: justify; text-justify: inter-word;" id="post-content">
+                        <p style="margin-top: 15px; word-wrap: break-word;" id="post-content">
                             Content
                         </p>
                         <div style="color: gray">
@@ -317,14 +317,26 @@
             <div id="comment-box" class="cmtList">
                 <!-- This is comment list -->
             </div>
-
-            <div style=" padding: 0; margin: 0; width: 100%; background-color: white; position: fixed; bottom: 0px; height: 45px; border-top: 1px solid lightgray">
-
+            <div style="bottom: 45px; position: fixed; padding: 5px 10px 5px 10px ;background-color: white; border-right: 1px solid lightgray; border-top: 1px solid lightgray" class="collapse" id="sort-option">
+                <div class="inline" style="margin-right: 10px">Sort comments by:</div>
+                <div class="radio inline" style="margin-right: 10px">
+                    <label><input type="radio" checked="checked" value="" name="optradio" onclick="sortCommentBy=1">Question</label>
+                </div>
+                <div class="radio inline" style="margin-right: 10px">
+                    <label><input type="radio" value="" name="optradio" onclick="sortCommentBy=2">Negative</label>
+                </div>
+            </div>
+            <div style="padding: 0; margin: 0; width: 100%; background-color: white; position: fixed; bottom: 0px; height: 45px; border-top: 1px solid lightgray">
                 <ul id="page-nav" class="pagination" style="margin-left: 10px; margin-top: 5px; padding: 0">
-                    <li><a>Total: <span id="comment-page-count">30</span> Pages</a></li>
+                    <li data-toggle="collapse" data-target="#sort-option" id="more"><a class="fa fa-ellipsis-v"></a>
+                    </li>
                     <li onclick="previousCommentPage()"><a href="#"><span class="fa fa-chevron-left"></span></a></li>
-                    <li><a href="#" style="padding-bottom: 5px;padding-top: 5px"><input type="number" id="comment-page-current" onkeypress="checkNumberInputAndEnter(event)"  style="width: 30px; text-align:center; border: none" value="1"></a></li>
-                    <li  onclick="nextCommentPage()"><a href="#"><span class="fa fa-chevron-right"></span></a></li>
+                    <li onclick="$('#comment-page-current').focus()"><a href="#"
+                                                                        style="padding-bottom: 5px;padding-top: 5px">
+                        <input type="number" id="comment-page-current" onkeypress="checkNumberInputAndEnter(event)" f
+                               style="width: 25px; text-align:center; border: none" value="1">/&nbsp;<span
+                            id="comment-page-count">30</span> Pages</a></li>
+                    <li onclick="nextCommentPage()"><a href="#"><span class="fa fa-chevron-right"></span></a></li>
                 </ul>
             </div>
         </section>
@@ -333,11 +345,14 @@
                  style="padding: 0; margin:0px 0px 0px 0px;border-left: 1px solid lightgray; position: relative; height: 100vh;">
             <div style="margin-bottom: 20px; background-color: inherit">
                 <div style="padding: 0 5px 0 5px">
-                    <div style="background-color: white; text-align: center; margin-bottom: 10px; font-size: 20px; font-weight: bold">Jack Sparrow</div>
+                    <div style="background-color: white; text-align: center; margin-bottom: 10px; font-size: 20px; font-weight: bold">
+                        Jack Sparrow
+                    </div>
 
                     <div style="padding-bottom: 0px; height: 80vh;  overflow: auto">
                         <ul class="chat">
-                            <li class="left clearfix"><span class="chat-img pull-left"> <img src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar" /> </span>
+                            <li class="left clearfix"><span class="chat-img pull-left"> <img
+                                    src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar"/> </span>
                                 <div class="chat-body clearfix">
                                     <div class="header">
                                         <strong class="primary-font">Jack Sparrow</strong>
@@ -350,7 +365,8 @@
                                     </p>
                                 </div>
                             </li>
-                            <li class="left clearfix"><span class="chat-img pull-left"> <img src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar"/> </span>
+                            <li class="left clearfix"><span class="chat-img pull-left"> <img
+                                    src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar"/> </span>
                                 <div class="chat-body clearfix">
                                     <div class="header">
                                         <strong class="primary-font">Jack Sparrow</strong>
@@ -363,7 +379,8 @@
                                     </p>
                                 </div>
                             </li>
-                            <li class="left clearfix"><span class="chat-img pull-left"> <img src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar"/> </span>
+                            <li class="left clearfix"><span class="chat-img pull-left"> <img
+                                    src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar"/> </span>
                                 <div class="chat-body clearfix">
                                     <div class="header">
                                         <strong class="primary-font">Jack Sparrow</strong>
@@ -377,7 +394,7 @@
                                 </div>
                             </li>
                             <li class="right clearfix"><span class="chat-img pull-right">
-                            <img src="http://placehold.it/50/FA6F57/fff&text=ME" alt="User Avatar" />
+                            <img src="http://placehold.it/50/FA6F57/fff&text=ME" alt="User Avatar"/>
                         </span>
                                 <div class="chat-body clearfix">
                                     <div class="header">
@@ -416,7 +433,7 @@
                                         <strong class="pull-right primary-font">Bhaumik Patel</strong>
                                     </div>
                                     <p>
-                                       Để đổi trả bạn hãy mang đến trung tâm bảo hành gần nhất
+                                        Để đổi trả bạn hãy mang đến trung tâm bảo hành gần nhất
                                     </p>
                                 </div>
                             </li>
