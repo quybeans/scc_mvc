@@ -1,7 +1,7 @@
 /**
  * Created by QuyBean on 11/2/2016.
  */
-
+var firstimerun = true;
 //Ask me if you are confused QUYDV
 var happyicon = 'fa fa-smile-o pull-right happy';
 var sadicon = 'fa fa-frown-o pull-right sad';
@@ -13,16 +13,16 @@ var postListCurPage = 1;
 var commentListCurPage = 1;
 var currentPost;
 //Sort setting 1: by question, 2: by neg, 3: by time
-var sortCommentBy =1;
+var sortCommentBy = 1;
 startup();
 
 function startup() {
 //Get post every 5s
     getAllCrawlPage();
-
     $('#list-fb-account').empty();
     getAllFBAccount();
     getAllPageAccount();
+
 
 }
 
@@ -150,7 +150,7 @@ function getAllPosts(pagelist, pageno) {
                 }
                 $.each(data, function (index) {
                     $('#post-box').append(
-                        '<div class="item" id="'+data[index].id+'" style="position:relative;" onclick="getCommentById(' + "'" + data[index].id + "'" + ')">'
+                        '<div class="item" id="' + data[index].id + '" style="position:relative;" onclick="getCommentById(' + "'" + data[index].id + "'" + ')">'
                         + '<img onload="http://localhost:8080/img/user_img.jpg" src="http://graph.facebook.com/' + data[index].createdBy + '/picture" alt="user image">'
                         + '<p class="message">'
                         + '<small class="text-muted pull-right">'
@@ -172,7 +172,8 @@ function getAllPosts(pagelist, pageno) {
                         + '</div>'
                         + '</div>'
                     )
-                });
+
+                }); if (firstimerun == true){$('#'+data[0].id).click();firstimerun =false};
             }
         });
     }
@@ -334,21 +335,24 @@ function getReplyByCommentId(commentId) {
 //
 // }
 
-
+//ON POST CLICK
 function getCommentById(postid) {
     getPostById(postid);
     currentPost = postid;
     commentListCurPage = 1;
     $('#post-box').find("*").removeClass("active");
-    $('#'+postid).addClass('active');
+    $('#' + postid).addClass('active');
     $('#comment-page-current').val(commentListCurPage);
     getCommentByPostIdwPage(postid, 1);
 }
 
 //Get comment by id
 function getCommentByPostIdwPage(postId, page) {
-    if (sortCommentBy==2) var url = 'comment/bypostid/negSort';
+    var url;
+    if (sortCommentBy == 2)  url = 'comment/bypostid/negSort';
+    if (sortCommentBy == 3) url = 'comment/bypostid/timeSort';
     else url = 'comment/bypostid';
+
     $('#comment-box').empty();
     $('#comment-box').html('<div style=" padding-left: 10px"><span style="color: cornflowerblue;" class="fa fa-circle-o-notch fa-spin"></span> &nbsp;Loading comments ...</div>');
     $.ajax({
@@ -371,7 +375,7 @@ function getCommentByPostIdwPage(postId, page) {
                     + '<div class="col-lg-11 cmtContent">' +
                     '<img onload="http://localhost:9000/img/user_img.jpg" src="http://graph.facebook.com/' + data[index].createdBy + '/picture" alt="user image">'
                     + '<p class="message" style="margin-top: -53px">'
-                    + '<a href="https:/fb.com/'+data[index].createdBy+'" target="_blank">'
+                    + '<a href="https:/fb.com/' + data[index].createdBy + '" target="_blank">'
                     + data[index].createdByName
                     + '<small class="text-muted" style="margin-left: 10px">'
                     + jQuery.format.prettyDate(new Date(data[index].createdAt))
@@ -392,7 +396,9 @@ function getCommentByPostIdwPage(postId, page) {
         }
     });
 }
-//Get post by id
+
+
+//On post click
 function getPostById(postId) {
     var happycount = 0;
     var sadcount = 0;
@@ -827,6 +833,7 @@ function untagcomment(cmtid, attid) {
 }
 
 
+//FILTER POST BY PAGES FUNCTIONS
 //get all page for filter
 function getAllCrawlPage() {
     $.ajax({
@@ -873,26 +880,6 @@ function select(e, id) {
     }
 }
 
-//Set which page is active
-function activePage(a) {
-    $('#page-nav>li.active').removeClass("active");
-    $(a).addClass('active');
-    $('#currentpage').html($(a).html());
-}
-
-//Number over thousand format
-function getRepString(rep) {
-    rep = rep + ''; // coerce to string
-    if (rep < 1000) {
-        return rep; // return the same number
-    }
-    // if (rep < 10000) { // place a comma between
-    //     return rep.charAt(0) + '.' + rep.substring(1);
-    // }
-    // divide and format
-    return (rep / 1000).toFixed(rep % 1000 != 0) + 'k';
-}
-
 //Lazy load for post list
 jQuery(function ($) {
     $('#post-list').on('scroll', function () {
@@ -904,6 +891,9 @@ jQuery(function ($) {
 });
 
 
+
+
+//PAGINATION COMMENT LIST FUNCTIONS
 function countComment(postid) {
     //Count comment in post
     $.ajax({
@@ -938,4 +928,46 @@ function checkNumberInputAndEnter(e) {
         getCommentByPostIdwPage(currentPost, commentListCurPage);
     }
 
+}
+
+
+// COMMENT SORT FUNCTIONS
+function negSortClick() {
+    sortCommentBy = 2;
+    $('#more').click();
+    getCommentById(currentPost);
+}
+
+function questSortClick() {
+    sortCommentBy = 1;
+    $('#more').click();
+    getCommentById(currentPost);
+}
+
+function timeSortClick() {
+    sortCommentBy = 3;
+    $('#more').click();
+    getCommentById(currentPost);
+}
+
+//UTILITIES
+
+//Set which page is active
+function activePage(a) {
+    $('#page-nav>li.active').removeClass("active");
+    $(a).addClass('active');
+    $('#currentpage').html($(a).html());
+}
+
+//Number over thousand format
+function getRepString(rep) {
+    rep = rep + ''; // coerce to string
+    if (rep < 1000) {
+        return rep; // return the same number
+    }
+    // if (rep < 10000) { // place a comma between
+    //     return rep.charAt(0) + '.' + rep.substring(1);
+    // }
+    // divide and format
+    return (rep / 1000).toFixed(rep % 1000 != 0) + 'k';
 }

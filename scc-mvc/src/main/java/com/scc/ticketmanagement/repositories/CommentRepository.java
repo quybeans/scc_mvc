@@ -13,7 +13,10 @@ import java.util.List;
  * Created by user on 10/1/2016.
  */
 public interface CommentRepository extends JpaRepository<CommentEntity,String> {
-
+    //Named Query
+    Page<CommentEntity> findByPostIdOrderByCreatedAtDesc(String postId,Pageable pageable);
+    Page<CommentEntity> findByPostIdAndContentLike(String postId, String content, Pageable pageable);
+    //Custom query
     //find user by username and password
     @Query("SELECT u FROM CommentEntity u WHERE u.postId = :postId")
     List<CommentEntity> findCommentByPostId(@Param("postId") String postId);
@@ -22,7 +25,7 @@ public interface CommentRepository extends JpaRepository<CommentEntity,String> {
     Page<CommentEntity> findAllByPostId (@Param("postId")String postid, Pageable pageable);
 
     @Query("SELECT u FROM CommentEntity u WHERE u.postId = :postId " +
-            "ORDER BY CASE WHEN (u.sentimentScore = 2) THEN -1 ELSE u.sentimentScore END")
+            "ORDER BY CASE WHEN (u.sentimentScore = 2) THEN -2 when (u.sentimentScore =3) THEN -1 ELSE u.sentimentScore END")
     Page<CommentEntity> findAllByPostIdwNegSort(@Param("postId")String postid,
                                              Pageable pageable);
 
