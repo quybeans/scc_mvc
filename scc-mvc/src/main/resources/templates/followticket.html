@@ -102,8 +102,8 @@
         </div>
 
         <input type="hidden" th:value="${ticketid}" id="ticketid"/>
-        <section class="col-lg-9 "style="overflow: hidden">
-           <ul class="timeline" id="ticketitem" style="overflow: auto;max-height: 650px">
+        <section class="col-lg-9 " style="overflow: auto;max-height: 650px">
+           <ul class="timeline" id="ticketitem" >
 
            </ul>
 
@@ -215,11 +215,7 @@
                     case 6: statuscolor='color:#01ff70'; statusname="Solved"; break;
                     case 7: statuscolor='color:#000000'; statusname="Close"; break;
                 }
-                var dueminute = new Date(data.createdtime).getMinutes()+30;
-                var duehour = new Date(data.createdtime).getHours();
-                var duesecond = new Date(data.createdtime).getSeconds();
-                var createtime = moment(data.createdtime).format("d/MM/YYYY");
-                var createat = moment(data.createdtime).format("d/MM/YYYY, hh:mm:ss");
+                var createat = moment(data.createdtime).format("D/MM/YYYY, hh:mm:ss");
                     $("#ticketstatus").html(
                     '<i class="fa fa-circle" aria-hidden="true" style="'+statuscolor+'"></i>'
                        +statusname
@@ -251,34 +247,58 @@
             data:{"ticketid":ticketid},
             success:function (data) {
                 for(var index =0;index<data.length;index++){
-                    $('#ticketitem').append(
-                            '<li class="time-label">'
-                            +'<span class="bg-red" id="createtime">'
-                            +moment(data[index].createdAt).format("dd d/MM/YYYY")
-                            +'</span>'
-                            +'</li>'
-                            +'<li>'
-                            +'<div class="timeline-item" >'
-                            +'<span class="time"><i class="fa fa-clock-o"></i>'
-                            +jQuery.format.prettyDate( new Date(data[index].createdAt))
-                            +'</span>'
-                            +'<h3 class="timeline-header">'
-                            +'<img src="http://graph.facebook.com/'+data[index].createdBy+'/picture" alt="user image" style="width: 50px;height: 50px;border-radius: 50px;margin-left: 5px" alt="user image"/>'
-                            +'<span style="margin-left: 10px">'+data[index].createdByName+'</span>'
-                            +'</h3>'
-                            +'<div class="timeline-body" onclick="getCommentReply('+data[index].id+')">'
-                            +data[index].content
-                            +'</div>'
-                            +'<div class="timeline-footer">'
-                            +'<a class="btn btn-primary btn-xs"><i class="fa fa-send"></i>Reply</a>'
-                            +'</div>'
-                            +'</div>'
-                            +'<div class="pull-right"  id="reply'+data[index].id+'" style="width: 70%;margin-right: 20px;margin-top: 10px;border-radius: 10px;display: none">'
-
-                            +'</div>'
-                            +'</li>'
-
-                    )
+                    var timelineitem;
+                    if(data[index].item){
+                        timelineitem =
+                                '<li class="time-label">'
+                                +'<span class="bg-red" id="createtime">'
+                                +moment(data[index].createdAt).format("D/MM/YYYY")
+                                +'</span>'
+                                +'</li>'
+                                +'<li>'
+                                +'<div class="timeline-item" >'
+                                +'<span class="time"><i class="fa fa-clock-o"></i>'
+                                +moment(data[index].commentat).format("D/MM/YYYY, hh:mm:ss")
+                                +'</span>'
+                                +'<h3 class="timeline-header">'
+                                +'<img src="http://graph.facebook.com/'+data[index].createdBy+'/picture" alt="user image" style="width: 50px;height: 50px;border-radius: 50px;margin-left: 5px" alt="user image"/>'
+                                +'<span style="margin-left: 10px">'+data[index].createdByName+'</span>'
+                                +'</h3>'
+                                +'<div class="timeline-body" onclick="getCommentReply('+data[index].id+')">'
+                                +data[index].content
+                                +'</div>'
+                                +'<div class="timeline-footer">'
+                                +'<a class="btn btn-primary btn-xs"><i class="fa fa-send"></i>Reply</a>'
+                                +'</div>'
+                                +'</div>'
+                                +'<div class="pull-right"  id="reply'+data[index].id+'" style="width: 70%;margin-right: 20px;margin-top: 10px;border-radius: 10px;display: none">'
+                                +'</div>'
+                                +'</li>'
+                    }else{
+                        var status;
+                        switch (data[index].statusid){
+                            case 2: status='<a>'+data[index].changeby+'</a>' +' assign this ticket to ' +'<a>'+data[index].assignee+'</a>'; break;
+                            case 3: status='<a>'+data[index].changeby+'</a>' +' change this ticket to '+'<span style="color:#00a7d0 ">Open</span>'; break;
+                            case 4: status='<a>'+data[index].changeby+'</a>' +' change this ticket to '+'<span style="color:#00a65a ">Inprocess</span>'; break;
+                            case 5: status='<a>'+data[index].changeby+'</a>' +' change this ticket to '+'<span style="color:#500a6f ">Solving</span>'; break;
+                            case 6: status='<a>'+data[index].changeby+'</a>' +' change this ticket to '+'<span style="color:#01ff70 ">Solved</span>'; break;
+                            case 7: status='<a>'+data[index].changeby+'</a>' +' change this ticket to '+'<span style="color:#000000 ">Close</span>'; break;
+                        }
+                        timelineitem=
+                                '<li class="time-label">'
+                                +'<span class="bg-green" id="createtime">'
+                                +moment(data[index].createdAt).format("D/MM/YYYY")
+                                +'</span>'
+                                +'</li>'
+                                +'<li>'
+                                +'<div class="timeline-item" >'
+                                +'<h3 class="timeline-header">'
+                                +'<span style="margin-left: 10px">'+status+' with note: '+ data[index].note+'</span>'
+                                +'</h3>'
+                                +'</div>'
+                                +'</li>'
+                    }
+                    $('#ticketitem').append(timelineitem);
                 }
             },
             error: function () {
