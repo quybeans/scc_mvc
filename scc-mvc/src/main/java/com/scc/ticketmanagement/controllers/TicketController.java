@@ -149,6 +149,7 @@ public class TicketController {
     @RequestMapping("/assignticket")
     public TicketEntity assignTicket(@RequestParam("ticketid") Integer ticketid,
                                      @RequestParam("assignee") Integer assignee,
+                                     @RequestParam("assignnote") String assignnote,
                                      HttpServletRequest request){
         //Lay userid cua account dang login vao he thong
         HttpSession session = request.getSession();
@@ -158,6 +159,7 @@ public class TicketController {
         TicketEntity ticket =ticketRepository.findOne(ticketid);
         //Thay doi assignee
         ticket.setAssignee(assignee);
+        ticket.setNote(assignnote);
 
         //Luu 1 TicketHistory
         TicketstatuschangeEntity status = new TicketstatuschangeEntity();
@@ -166,6 +168,7 @@ public class TicketController {
         status.setChangeby(user.getUserid());
         status.setAssignee(assignee);
         status.setCreatedat(new Timestamp(new Date().getTime()));
+        status.setNote(assignnote);
         ticketStatusChangeRepository.save(status);
 
         return ticketRepository.save(ticket);
@@ -173,7 +176,9 @@ public class TicketController {
 
     @RequestMapping("/changeticketstatus")
     public TicketEntity changeTicketStatus(@RequestParam("ticketid") Integer ticketid,
-                                           @RequestParam("status") Integer status, HttpServletRequest request){
+                                           @RequestParam("status") Integer status,
+                                           @RequestParam("statusnote") String statusnote,
+                                           HttpServletRequest request){
         HttpSession session = request.getSession();
         String loginUser = (String) session.getAttribute("username");
         UserEntity user = userRepository.findUserByUsername(loginUser);
@@ -181,6 +186,7 @@ public class TicketController {
         //Thay doi status trong ticket
         TicketEntity ticket=ticketRepository.findOne(ticketid);
         ticket.setStatusid(status);
+        ticket.setNote(statusnote);
 
         //Them 1 ticket history
         TicketstatuschangeEntity statuschange = new TicketstatuschangeEntity();
@@ -188,6 +194,7 @@ public class TicketController {
         statuschange.setChangeby(user.getUserid());
         statuschange.setStatusid(ticket.getStatusid());
         statuschange.setCreatedat(new Timestamp(new Date().getTime()));
+        statuschange.setNote(statusnote);
         ticketStatusChangeRepository.save(statuschange);
 
         return ticketRepository.save(ticket);
@@ -266,9 +273,8 @@ public class TicketController {
     }
 
     @RequestMapping("/gettickethistory")
-    public List<TicketHistory> getTickethistory(@RequestParam("commentid") String commentid){
-        TicketitemEntity item = ticketitemRepository.getTicketItemByCommentID(commentid);
-        TicketEntity ticket = ticketRepository.findOne(item.getTicketid());
+    public List<TicketHistory> getTickethistory(@RequestParam("ticketid") Integer ticketid){
+        TicketEntity ticket = ticketRepository.findOne(ticketid);
         if(ticket!=null){
             List<TicketstatuschangeEntity> list = ticketStatusChangeRepository.getTicketChanges(ticket.getId());
             List<TicketHistory> history = new ArrayList<TicketHistory>();
@@ -294,10 +300,10 @@ public class TicketController {
                     th.setCreatedat(tk.getCreatedat());
                     th.setStatusid(tk.getStatusid());
                     th.setTicketid(tk.getTicketid());
+                    th.setNote(tk.getNote());
                     history.add(th);
                 }
             }
-
             return history;
         }
         return null;

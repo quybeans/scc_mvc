@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 /**
- * Created by QuyBean on 10/27/2016.
+ * Created by user on 11/6/2016.
  */
 @Entity
 @Table(name = "ticketstatuschange", schema = "scc", catalog = "")
@@ -15,6 +15,7 @@ public class TicketstatuschangeEntity {
     private Integer statusid;
     private Timestamp createdat;
     private Integer assignee;
+    private String note;
 
     @Id
     @Column(name = "id")
@@ -76,6 +77,16 @@ public class TicketstatuschangeEntity {
         this.assignee = assignee;
     }
 
+    @Basic
+    @Column(name = "note")
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -89,6 +100,7 @@ public class TicketstatuschangeEntity {
         if (statusid != null ? !statusid.equals(that.statusid) : that.statusid != null) return false;
         if (createdat != null ? !createdat.equals(that.createdat) : that.createdat != null) return false;
         if (assignee != null ? !assignee.equals(that.assignee) : that.assignee != null) return false;
+        if (note != null ? !note.equals(that.note) : that.note != null) return false;
 
         return true;
     }
@@ -101,6 +113,7 @@ public class TicketstatuschangeEntity {
         result = 31 * result + (statusid != null ? statusid.hashCode() : 0);
         result = 31 * result + (createdat != null ? createdat.hashCode() : 0);
         result = 31 * result + (assignee != null ? assignee.hashCode() : 0);
+        result = 31 * result + (note != null ? note.hashCode() : 0);
         return result;
     }
 }
