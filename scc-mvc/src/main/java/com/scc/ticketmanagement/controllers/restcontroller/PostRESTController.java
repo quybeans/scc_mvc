@@ -37,9 +37,10 @@ public class PostRESTController {
 
     @RequestMapping("post/sentimentcount")
     public int[] sentimentcount(String postid) {
-        int[] rs = new int[]{0, 0};
+        int[] rs = new int[]{0, 0, 0};
         rs[0] = postRepository.findPosCountByPostId(postid);
         rs[1] = postRepository.findNegCountByPostId(postid);
+        rs[2] = postRepository.findQuestCountByPostId(postid);
         return rs;
     }
 
@@ -108,8 +109,8 @@ public class PostRESTController {
                                 newP.setSharesCount(post.getSharesCount());
                                 newP.setCreatedAt(post.getCreatedAt());
                                 newP.setCreatedByName(page.getName());
-//                                newP.setNegCount(postRepository.findNegCountByPostId(post.getId()));
-//                                newP.setPosCount(postRepository.findPosCountByPostId(post.getId()));
+                                newP.setNegCount(postRepository.findNegCountByPostId(post.getId()));
+                                newP.setPosCount(postRepository.findQuestCountByPostId(post.getId()));
                                 newP.setNegCount(1);
                                 newP.setPosCount(2);
                                 rs.add(newP);
@@ -156,8 +157,8 @@ public class PostRESTController {
             newP.setCommentsCount(post.getCommentsCount());
             newP.setSharesCount(post.getSharesCount());
             newP.setCreatedAt(post.getCreatedAt());
-//            newP.setNegCount(postRepository.findNegCountByPostId(post.getId()));
-//            newP.setPosCount(postRepository.findPosCountByPostId(post.getId()));
+            newP.setNegCount(postRepository.findNegCountByPostId(post.getId()));
+            newP.setPosCount(postRepository.findQuestCountByPostId(post.getId()));
 
             for (PageEntity page : pageEntities) {
                 if (post.getCreatedBy().equals(page.getPageid()) ) {

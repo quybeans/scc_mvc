@@ -24,6 +24,9 @@ public interface PostRepository extends JpaRepository<PostEntity, String> {
     @Query("SELECT COUNT(c) from CommentEntity c where c.sentimentScore=1 and c.postId= :postId")
      int findPosCountByPostId(@Param("postId") String postId);
 
+    @Query("SELECT COUNT(c) from CommentEntity c where c.sentimentScore=3 and c.postId= :postId")
+    int findQuestCountByPostId(@Param("postId") String postId);
+
     @Query("SELECT COUNT(c) from CommentEntity c where c.sentimentScore=2 and c.postId= :postId")
     int findNegCountByPostId(@Param("postId") String postId);
 

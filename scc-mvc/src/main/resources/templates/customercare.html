@@ -37,7 +37,7 @@
                                 <p class="inline" id="reply-name"> Reply as... </p>  <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" id="list-fb-account">
-                                    <!--This is facebook account list-->
+                                <!--This is facebook account list-->
                             </ul>
                         </div>
                         <textarea style="margin-top: 10px" placeholder="Write a reply...." type="text"
@@ -296,10 +296,13 @@
                     <div class="col-lg-1" style="padding-right: 15px;">
                         <div style="margin: 0;" class="pull-right">
                             <div style="border-bottom: 1px solid lightgray">
-                                <div id="happy-count" style="text-align: center">16</div>
+                                <div id="happy-count" style="text-align: center">0</div>
                                 <span class="fa fa-smile-o happy"></span></div>
+                            <div style="border-bottom: 1px solid lightgray">
+                                <div id="question-count" style="text-align: center">0</div>
+                                <span class="fa fa-question-circle-o question"></span></div>
                             <div>
-                                <div id="sad-count" style="text-align: center">20</div>
+                                <div id="sad-count" style="text-align: center">0</div>
                                 <span class="fa fa fa-frown-o sad"></span></div>
                         </div>
                     </div>
@@ -337,9 +340,11 @@
                     <li onclick="nextCommentPage()"><a href="#"><span class="fa fa-chevron-right"></span></a></li>
                     <li>
                         <a style="padding-bottom: 5px;padding-top: 5px">
-                            <input style="outline: none; background-color: transparent; margin: 0px; border: none" type="text" value="" id="txtSearchComment"
+                            <input style="outline: none; background-color: transparent; margin: 0px; border: none"
+                                   type="text" value="" id="txtSearchComment"
                                    placeholder="Search for comments" onkeypress="searchCommentEnter(event)"/>
-                            <span onclick="searchByContent(currentPost,$('#txtSearchComment').val(),1)" style="margin-left: 10px" class="fa fa-search"></span>
+                            <span onclick="searchByContent(currentPost,$('#txtSearchComment').val(),1)"
+                                  style="margin-left: 10px" class="fa fa-search"></span>
                         </a>
 
                     </li>

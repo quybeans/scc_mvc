@@ -160,7 +160,7 @@ function getAllPosts(pagelist, pageno) {
                         + ' </a>'
                         + '</p>'
                         + '<div style="margin-left: 65px;margin-top: -10px">'
-                        + ' <span style="vertical-align:middle;">' + data[index].posCount + '</span> <span class="fa fa-smile-o happy" style="font-size:20px; vertical-align:middle; margin-right:10px; "></span>'
+                        + ' <span style="vertical-align:middle;">' + data[index].posCount + '</span> <span class="fa fa-question-circle-o question" style="font-size:20px; vertical-align:middle; margin-right:10px; "></span>'
                         + ' <span style="vertical-align:middle;">' + data[index].negCount + '</span> <span class="fa fa-frown-o sad" style="font-size:20px; vertical-align:middle;"></span>'
                         + '</div>'
                         + '<p style="margin-top: 15px;height: 35px;overflow: hidden;">' + data[index].content + '</p>'
@@ -387,7 +387,7 @@ function getCommentByPostIdwPage(postId, page) {
                     + '<p style="margin-left: 65px;margin-top: -10px " onclick="getticket(' + data[index].id + ',' + postId + ')">' + data[index].content + '</p>'
                     + '</p>'
                     // Day la nut reply
-                    + '<button  onclick="replyToComment(' + cmtId + ');getReplyByCommentId(' + data[index].id + ');" class="btn btn-default btn-xs inline"' +
+                    + '<button  onclick="replyToComment(' + cmtId + ');getReplyByCommentId(' + "'" + data[index].id + "'" + ');" class="btn btn-default btn-xs inline"' +
                     ' style="margin-left: 65px;margin-top: -10px; "><span class="glyphicon glyphicon-comment"' +
                     ' style="color:gray;margin-right: 10px "  title="Reply to this comment"   data-placement="bottom" ' +
                     'data-toggle="tooltip" ></span>'+countReply(data[index].id)+' replies</button>'
@@ -448,6 +448,7 @@ function searchByContent(postId, content, page) {
 function getPostById(postId) {
     var happycount = 0;
     var sadcount = 0;
+    var questioncount = 0;
     countComment(postId);
     //Count sentiment in post
     $.ajax({
@@ -458,8 +459,10 @@ function getPostById(postId) {
         success: function (result) {
             happycount = result[0];
             sadcount = result[1];
+            questioncount = result[2];
             $("#happy-count").html(happycount);
             $("#sad-count").html(sadcount);
+            $("#question-count").html(questioncount);
         }
     });
 
