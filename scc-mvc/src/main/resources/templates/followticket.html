@@ -213,6 +213,7 @@
             type:"POST",
             data:{"ticketid":ticketid,"duration":duration},
             success:function (data) {
+
                     alert("This ticket is expired ")
                     getticketduetime(ticketid);
                     getticket(ticketid);
@@ -273,8 +274,7 @@
             success:function (data) {
                 for(var index =0;index<data.length;index++){
                     var timelineitem;
-                    if(data[index].item){
-
+                    if(data[index].comment!==null){
                         timelineitem =
                                 '<li class="time-label">'
                                 +'<span class="bg-red" id="createtime">'
@@ -284,34 +284,38 @@
                                 +'<li>'
                                 +'<div class="timeline-item" >'
                                 +'<span class="time"><i class="fa fa-clock-o"></i>'
-                                +moment(data[index].commentat).format("D/MM/YYYY, hh:mm:ss")
+                                +moment(data[index].comment.createdAt).format("D/MM/YYYY, hh:mm:ss")
                                 +'</span>'
                                 +'<h3 class="timeline-header">'
-                                +'<img src="http://graph.facebook.com/'+data[index].createdBy+'/picture" alt="user image" style="width: 50px;height: 50px;border-radius: 50px;margin-left: 5px" alt="user image"/>'
-                                +'<span style="margin-left: 10px">'+data[index].createdByName+'</span>'
+                                +'<img src="http://graph.facebook.com/'+data[index].comment.createdBy+'/picture" alt="user image" style="width: 50px;height: 50px;border-radius: 50px;margin-left: 5px" alt="user image"/>'
+                                +'<span style="margin-left: 10px">'+data[index].comment.createdByName+'</span>'
                                 +'</h3>'
-                                +'<div class="timeline-body" onclick="getCommentReply('+data[index].id+')">'
-                                +data[index].content
+                                +'<div class="timeline-body" onclick="getCommentReply('+data[index].comment.id+')">'
+                                +data[index].comment.content
                                 +'</div>'
                                 +'<div class="timeline-footer">'
                                 +'<a class="btn btn-primary btn-xs"><i class="fa fa-send"></i>Reply</a>'
                                 +'</div>'
                                 +'</div>'
-                                +'<div class="pull-right"  id="reply'+data[index].id+'" style="width: 70%;margin-right: 20px;margin-top: 10px;border-radius: 10px;display: none">'
+                                +'<div class="pull-right"  id="reply'+data[index].comment.id+'" style="width: 70%;margin-right: 20px;margin-top: 10px;border-radius: 10px;display: none">'
                                 +'</div>'
                                 +'</li>'
-                    }else{
+                    }
+                    if(data[index].history!==null){
                         var status;
-                        switch (data[index].statusid){
-                            case 2: status='<a>'+data[index].changeby+'</a>' +' assign this ticket to ' +'<a>'+data[index].assignee+'</a>'; break;
-                            case 3: status='<a>'+data[index].changeby+'</a>' +' change this ticket to '+'<span style="color:#00a65a ">Inprocess</span>'; break;
-                            case 4: status='<a>'+data[index].changeby+'</a>' +' change this ticket to '+'<span style="color:#500a6f ">Reviewing</span>'; break;
-                            case 5: status='<a>'+data[index].changeby+'</a>' +' change this ticket to '+'<span style="color:#01ff70 ">Solved</span>'; break;
-                            case 1: status='<a>'+data[index].changeby+'</a>' +' change this ticket to '+'<span style="color:#000000 ">Unassign</span>'; break;
+                        switch (data[index].history.statusid){
+                            case 2: status='<a>'+data[index].history.userid+'</a>' +' assign this ticket to ' +'<a>'+data[index].history.assignee+'</a>'; break;
+                            case 3: status='<a>'+data[index].history.userid+'</a>' +' change this ticket to '+'<span style="color:#00a65a ">Inprocess</span>'; break;
+                            case 4: status='<a>'+data[index].history.userid+'</a>' +' change this ticket to '+'<span style="color:#500a6f ">Reviewing</span>'; break;
+                            case 5: status='<a>'+data[index].history.userid+'</a>' +' change this ticket to '+'<span style="color:#01ff70 ">Solved</span>'; break;
+                            case 1: status='<a>'+data[index].history.userid+'</a>' +' change this ticket to '+'<span style="color:#000000 ">Unassign</span>'; break;
                         }
                         var note="";
-                        if(data[index].note!=null){
-                             note = " with note: " +data[index].note;
+                        if(data[index].history.note!==null){
+                             note = " with note: " +data[index].history.note;
+                        }
+                        if(data[index].history.priority!==null){
+                            status='<a>'+data[index].history.userid+'</a>'+' change this ticket priority to: ' +data[index].history.priority;
                         }
                         timelineitem=
                                 '<li class="time-label">'
@@ -561,7 +565,8 @@
                     console.log(data.ticketid);
                     alert("update ticket successful!");
                     $('#changeticketModal').modal('toggle');
-                    table.ajax.reload();
+                    getticket(ticketid)
+                    loadticketitem(ticketid)
                 },
                 error: function () {
                     alert("Fail ne");

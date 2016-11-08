@@ -185,11 +185,12 @@ public class TicketController {
         //Luu 1 TicketHistory
         TicketstatuschangeEntity status = new TicketstatuschangeEntity();
         status.setTicketid(ticket.getId());
-        status.setStatusid(2);
+        status.setStatusid(Constant.STATUS_ASSIGN);
         status.setChangeby(user.getUserid());
         status.setAssignee(assignee);
         status.setCreatedat(new Timestamp(new Date().getTime()));
         status.setNote(assignnote);
+        status.setPriorityid(0);
         ticketStatusChangeRepository.save(status);
 
         return ticketRepository.save(ticket);
@@ -214,11 +215,13 @@ public class TicketController {
 
         //Them 1 ticket history
         TicketstatuschangeEntity statuschange = new TicketstatuschangeEntity();
-        statuschange.setTicketid(ticket.getId());
+        statuschange.setTicketid(ticketid);
         statuschange.setChangeby(user.getUserid());
-        statuschange.setStatusid(ticket.getStatusid());
+        statuschange.setStatusid(status);
         statuschange.setCreatedat(new Timestamp(new Date().getTime()));
         statuschange.setNote(statusnote);
+        statuschange.setAssignee(0);
+        statuschange.setPriorityid(0);
         ticketStatusChangeRepository.save(statuschange);
 
         return ticketRepository.save(ticket);
@@ -240,7 +243,7 @@ public class TicketController {
             }
 
             //Get Full name cua nguoi duoc assign ticket
-            if(ticket.getAssignee()!=null){
+            if(ticket.getAssignee()!=0){
                 profileEntity= profileRepository.findOne(userRepository.findOne(ticket.getAssignee()).getProfileid());
 
                 detail.setAssignee(profileEntity.getFirstname() + " " + profileEntity.getLastname());
@@ -313,7 +316,7 @@ public class TicketController {
 
 
                     //Get Full name cua nguoi duoc assign
-                    if(tk.getAssignee()!=null){
+                    if(tk.getAssignee()!=0){
                         pro=profileRepository.findOne(userRepository.findOne(tk.getAssignee()).getProfileid());
                         th.setAssignee(pro.getFirstname() + " " + pro.getLastname());
                     }
@@ -340,11 +343,26 @@ public class TicketController {
     @RequestMapping("/updateticket")
     public TicketEntity updateticket(@RequestParam("ticketid") Integer ticketid,
                                      @RequestParam("ticketnote") String ticketnote,
-                                     @RequestParam("ticketpriority") Integer ticketpriority){
+                                     @RequestParam("ticketpriority") Integer ticketpriority,
+                                     HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String loginUser = (String) session.getAttribute("username");
+        UserEntity user = userRepository.findUserByUsername(loginUser);
+
         TicketEntity ticket = ticketRepository.findOne(ticketid);
         ticket.setNote(ticketnote);
         ticket.setPriority(ticketpriority);
         ticket.setDuetime(new Timestamp(new Date().getTime()));
+
+        TicketstatuschangeEntity change = new TicketstatuschangeEntity();
+        change.setTicketid(ticketid);
+        change.setChangeby(user.getUserid());
+        change.setPriorityid(ticketpriority);
+        change.setNote(ticketnote);
+        change.setCreatedat(new Timestamp(new Date().getTime()));
+        change.setStatusid(0);
+        change.setAssignee(0);
+        ticketStatusChangeRepository.save(change);
         return ticketRepository.save(ticket);
     }
     @RequestMapping("/getupdateticket")
