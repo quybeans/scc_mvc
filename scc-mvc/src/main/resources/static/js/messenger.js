@@ -45,16 +45,16 @@ function getAllConversationsByPageId(pageId) {
                 if (data[i].read) {
                     $('#messagesList').append(
                         '<div class="item" id="conversation' + i + '" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId + '\')">'
-                        + '<div><img style="max-height: 30px" src="' + data[i].senderPicture + '"</div>'
-                        + '<div>' + data[i].senderName + '</div>'
+                        + '<div><img style="max-height: 30px" src="' + data[i].senderPicture + '">' + data[i].senderName + '</div>'
+                        // + '<div>' + data[i].senderName + '</div>'
                         + '<div>' + data[i].lastMessage + '</div>'
                         + '</div>'
                     )
                 } else {
                     $('#messagesList').append(
                         '<div class="item" id="conversation' + i + '" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId +  '\')">'
-                        + '<div><img style="max-height: 30px" src="' + data[i].senderPicture + '"</div>'
-                        + '<div>' + data[i].senderName + '</div>'
+                        + '<div><img style="max-height: 30px" src="' + data[i].senderPicture + '"><b>' + data[i].senderName + '</b></div>'
+                        // + '<div>' + data[i].senderName + '</div>'
                         + '<div><b>' + data[i].lastMessage + '</b></div>'
                         + '</div>'
                     )
@@ -79,16 +79,16 @@ function getAllConversationsByPageId(pageId) {
                     if (data[i].read) {
                         $('#messagesList').append(
                             '<div class="item" id="conversation' + i + '" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId + '\')">'
-                            + '<div><img style="max-height: 30px" src="' + data[i].senderPicture + '"</div>'
-                            + '<div>' + data[i].senderName + '</div>'
+                            + '<div><img style="max-height: 30px" src="' + data[i].senderPicture + '">' + data[i].senderName + '</div>'
+                            // + '<div>' + data[i].senderName + '</div>'
                             + '<div>' + data[i].lastMessage + '</div>'
                             + '</div>'
                         )
                     } else {
                         $('#messagesList').append(
                             '<div class="item" id="conversation' + i + '" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId +  '\')">'
-                            + '<div><img style="max-height: 30px" src="' + data[i].senderPicture + '"</div>'
-                            + '<div>' + data[i].senderName + '</div>'
+                            + '<div><img style="max-height: 30px" src="' + data[i].senderPicture + '"><b>' + data[i].senderName + '</b></div>'
+                            // + '<div>' + data[i].senderName + '</div>'
                             + '<div><b>' + data[i].lastMessage + '</b></div>'
                             + '</div>'
                         )
@@ -149,14 +149,14 @@ function getConversationBySenderId(pageId, senderId) {
                     if (dataReversed[i].senderid == pageId) {
                         $('#conversationContent').append(
                             '<div style="text-align: right;">' +
-                            '<h1 style="display: inline-block; background-color: #00a7d0">' + dataReversed[i].content + '</h1>' +
+                            '<h2 style="display: inline-block; background-color: #00a7d0">' + dataReversed[i].content + '</h2>' +
                             '<p>' + moment(dataReversed[i].createdAt).fromNow() + '</p>' +
                             '</div>'
                         );
                     } else {
                         $('#conversationContent').append(
                             '<div style="text-align: left;">' +
-                            '<h1 style="display: inline-block; background-color: #9d9d9d">' + dataReversed[i].content + '</h1>' +
+                            '<h2 style="display: inline-block; background-color: #9d9d9d">' + dataReversed[i].content + '</h2>' +
                             '<p>' + moment(dataReversed[i].createdAt).fromNow() + '</p>' +
                             '</div>'
                         );
@@ -195,15 +195,15 @@ function getConversationBySenderIdWithPage() {
                     if (dataReversed[i].senderid == currentPageId) {
                         $('#conversationContent').append(
                             '<div style="text-align: right;">' +
-                            '<h1 style="display: inline-block; background-color: #00a7d0">' + dataReversed[i].content + '</h1>' +
-                            '<p>' + moment(dataReversed[i].createdAt).fromNow() + '</p>' +
+                            '<h2 style="display: inline-block; background-color: #00a7d0">' + dataReversed[i].content + '</h2>' +
+                            '<p><font size="1">' + moment(dataReversed[i].createdAt).fromNow() + '</font></p>' +
                             '</div>'
                         );
                     } else {
                         $('#conversationContent').append(
                             '<div style="text-align: left;">' +
-                            '<h1 style="display: inline-block; background-color: #9d9d9d">' + dataReversed[i].content + '</h1>' +
-                            '<p>' + moment(dataReversed[i].createdAt).fromNow() + '</p>' +
+                            '<h2 style="display: inline-block; background-color: #9d9d9d">' + dataReversed[i].content + '</h2>' +
+                            '<p><font size="1">' + moment(dataReversed[i].createdAt).fromNow() + '</font></p>' +
                             '</div>'
                         );
                     }
