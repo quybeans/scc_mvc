@@ -33,4 +33,21 @@ public class CommentRESTController {
         return result.getTotalPages();
     }
 
+    @RequestMapping("comment/bypostid/negSort")
+    public List<CommentEntity> commentNegSort(String postid, int page) {
+        Page<CommentEntity> result =  commentService.getCommentByPostIdwSort(page,1,postid);
+        return result.getContent();
+    }
+
+    @RequestMapping("comment/bypostid/timeSort")
+    public List<CommentEntity> commentTimeSort(String postid, int page) {
+        Page<CommentEntity> result =  commentService.getCommentByPostIdwTimeSort(page,postid);
+        return result.getContent();
+    }
+
+    @RequestMapping("comment/bypostid/search")
+    public List<CommentEntity> searchcommentByContent(String postid,String content, int page) {
+        Page<CommentEntity> result =  commentService.searchCommentByPostIdandContent(page,postid,content);
+        return result.getContent();
+    }
 }

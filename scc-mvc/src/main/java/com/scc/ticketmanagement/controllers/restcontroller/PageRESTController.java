@@ -4,11 +4,13 @@ import com.scc.ticketmanagement.Entities.PageEntity;
 import com.scc.ticketmanagement.repositories.PageRepository;
 import com.scc.ticketmanagement.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,8 +33,14 @@ public class PageRESTController {
 
         if (userid!=0)
         {
-            List<PageEntity> pages = pageRepository.getAllPageByBrandId(userService.getUserByID(userid).getBrandid());
-            return pages;
+            List<PageEntity> pages = pageRepository.getAllCrawlerPageByBrandId(userService.getUserByID(userid).getBrandid());
+            List<PageEntity> rs = new ArrayList<>();
+            for (PageEntity page : pages)
+            {
+                if (page.isCrawler())
+                rs.add(page);
+            }
+            return rs;
         }
         return null;
     }
