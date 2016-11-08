@@ -37,15 +37,7 @@
                                 <p class="inline" id="reply-name"> Reply as... </p>  <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" id="list-fb-account">
-                                <li class="dropdown-header" style="text-align: center">Page account</li>
-                                <li><a><img height="30px" width="30px"
-                                            style="border: 1px solid gray; border-radius: 3px"
-                                            src="http://imgsv.imaging.nikon.com/lineup/lens/zoom/normalzoom/af-s_dx_18-140mmf_35-56g_ed_vr/img/sample/sample1_l.jpg"
-                                            alt="user image"> &nbsp; Quy Beans</a></li>
-                                <li class="divider"></li>
-                                <li class="dropdown-header" style="text-align: center" id="list-user-account">User
-                                    account
-                                </li>
+                                    <!--This is facebook account list-->
                             </ul>
                         </div>
                         <textarea style="margin-top: 10px" placeholder="Write a reply...." type="text"
@@ -345,9 +337,9 @@
                     <li onclick="nextCommentPage()"><a href="#"><span class="fa fa-chevron-right"></span></a></li>
                     <li>
                         <a style="padding-bottom: 5px;padding-top: 5px">
-                            <input style="margin: 0px; border: none" type="text" value=""
-                                   placeholder="Search for comments"/>
-                            <span style="margin-left: 10px" class="fa fa-search"></span>
+                            <input style="outline: none; background-color: transparent; margin: 0px; border: none" type="text" value="" id="txtSearchComment"
+                                   placeholder="Search for comments" onkeypress="searchCommentEnter(event)"/>
+                            <span onclick="searchByContent(currentPost,$('#txtSearchComment').val(),1)" style="margin-left: 10px" class="fa fa-search"></span>
                         </a>
 
                     </li>

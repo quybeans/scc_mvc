@@ -62,6 +62,11 @@ public class CommentServiceImp implements CommentService{
     @Override
     public Page<CommentEntity> searchCommentByPostIdandContent(int pagenumber, String postid, String content) {
         PageRequest request = new PageRequest(pagenumber -1, PAGE_SIZE, Sort.Direction.ASC,"sentimentScore");
-        return commentRepository.findByPostIdAndContentLike(postid,content,request);
+        return commentRepository.findByPostIdAndContentLike(postid,"%"+content+"%",request);
+    }
+
+    @Override
+    public int countReply(String postid) {
+        return commentRepository.countReplyByPostId(postid);
     }
 }

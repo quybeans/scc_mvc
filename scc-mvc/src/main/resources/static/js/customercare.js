@@ -20,9 +20,7 @@ function startup() {
 //Get post every 5s
     getAllCrawlPage();
     $('#list-fb-account').empty();
-    getAllFBAccount();
     getAllPageAccount();
-
 
 }
 
@@ -56,8 +54,7 @@ function getAllFBAccount() {
         type: "GET",
         dataType: "json",
         success: function (data) {
-            $('#list-fb-account').empty();
-            $('#list-fb-account').html('<li class="dropdown-header" style="text-align: center">Facebook account</li>');
+            $('#list-fb-account').append('<li class="dropdown-header" style="text-align: center">Facebook account</li>');
             $.each(data, function (index) {
                 $('#list-fb-account').append(
                     '<li onclick="setOnclickReplyAccount(' + data[index].facebookuserid + ',\'' + data[index].facebookusername + '\',\'' + data[index].accesstoken + '\')">'
@@ -82,7 +79,9 @@ function getAllPageAccount() {
                     + '<a><img height="30px" width="30px" style="border-radius: 3px" src="http://graph.facebook.com/' + data[index].pageid + '/picture" alt="user image"> &nbsp;' + data[index].name + '</a>' +
                     '</li>'
                 )
-            })
+            });
+            setOnclickReplyAccount(data[0].pageid, data[0].name,data[0].accesstoken);
+            getAllFBAccount();
         }
     });
 }
@@ -173,7 +172,12 @@ function getAllPosts(pagelist, pageno) {
                         + '</div>'
                     )
 
-                }); if (firstimerun == true){$('#'+data[0].id).click();firstimerun =false};
+                });
+                if (firstimerun == true) {
+                    $('#' + data[0].id).click();
+                    firstimerun = false
+                }
+                ;
             }
         });
     }
@@ -185,7 +189,6 @@ function getAllPosts(pagelist, pageno) {
 
 //Ger reply for comment
 function getReplyByCommentId(commentId) {
-
     $('#reply-list').empty();
     $('#reply-list').html('Loading....');
     $.ajax({
@@ -385,6 +388,50 @@ function getCommentByPostIdwPage(postId, page) {
                     + '</p>'
                     // Day la nut reply
                     + '<button  onclick="replyToComment(' + cmtId + ');getReplyByCommentId(' + data[index].id + ');" class="btn btn-default btn-xs inline"' +
+                    ' style="margin-left: 65px;margin-top: -10px; "><span class="glyphicon glyphicon-comment"' +
+                    ' style="color:gray;margin-right: 10px "  title="Reply to this comment"   data-placement="bottom" ' +
+                    'data-toggle="tooltip" ></span>'+countReply(data[index].id)+' replies</button>'
+                    + '</div>'
+                    + '<div class="col-lg-1" style="margin-top: 30px">' + '<small class="' + senIcon + '" style="font-size: 20px;"></small>'
+                    + '</div>'
+                    + '</div>')
+            });
+        }
+    });
+}
+//Search comment by content
+function searchByContent(postId, content, page) {
+    $('#comment-box').html('<div style=" padding-left: 10px"><span style="color: cornflowerblue;" class="fa fa-circle-o-notch fa-spin"></span> &nbsp;Loading comments ...</div>');
+    $.ajax({
+        url: 'comment/bypostid/search',
+        type: "GET",
+        data: {postid: postId, page: page, content: content},
+        dataType: "json",
+        success: function (data) {
+            $('#comment-box').empty();
+            $.each(data, function (index) {
+                var senIcon = sadicon;
+                if (data[index].sentimentScore == 1)
+                    senIcon = happyicon;
+                if (data[index].sentimentScore == 3)
+                    senIcon = questionicon;
+                var cmtId = "'" + postId + "_" + data[index].id + "'";
+
+                $('#comment-box').append(
+                    '<div class="cmt" >'
+                    + '<div class="col-lg-11 cmtContent">' +
+                    '<img onload="http://localhost:9000/img/user_img.jpg" src="http://graph.facebook.com/' + data[index].createdBy + '/picture" alt="user image">'
+                    + '<p class="message" style="margin-top: -53px">'
+                    + '<a href="https:/fb.com/' + data[index].createdBy + '" target="_blank">'
+                    + data[index].createdByName
+                    + '<small class="text-muted" style="margin-left: 10px">'
+                    + jQuery.format.prettyDate(new Date(data[index].createdAt))
+                    + '</small>'
+                    + ' </a>'
+                    + '<p style="margin-left: 65px;margin-top: -10px " onclick="getticket(' + data[index].id + ',' + postId + ')">' + data[index].content + '</p>'
+                    + '</p>'
+                    // Day la nut reply
+                    + '<button  onclick="replyToComment(' + cmtId + ');getReplyByCommentId(' + data[index].id + ');" class="btn btn-default btn-xs inline"' +
                     ' style="margin-left: 65px;margin-top: -10px; "><span class="glyphicon glyphicon-send"' +
                     ' style="color:gray "  title="Reply to this comment"   data-placement="bottom" ' +
                     'data-toggle="tooltip" ></span></button>'
@@ -394,9 +441,8 @@ function getCommentByPostIdwPage(postId, page) {
                     + '</div>')
             });
         }
-    });
+    })
 }
-
 
 //On post click
 function getPostById(postId) {
@@ -857,7 +903,8 @@ function getAllCrawlPage() {
 
         },
         error: function () {
-            alert("Getting page failed")
+            alert(listPageFilter);
+            alert("Getting page failed, list page filter: "+listPageFilter)
         }
     })
 }
@@ -889,8 +936,6 @@ jQuery(function ($) {
         }
     })
 });
-
-
 
 
 //PAGINATION COMMENT LIST FUNCTIONS
@@ -930,6 +975,12 @@ function checkNumberInputAndEnter(e) {
 
 }
 
+function searchCommentEnter(e) {
+    if (e.keyCode == 13) {
+        $('#txtSearchComment').blur();
+        searchByContent(currentPost,$('#txtSearchComment').val(),1);
+    }
+}
 
 // COMMENT SORT FUNCTIONS
 function negSortClick() {
@@ -970,4 +1021,23 @@ function getRepString(rep) {
     // }
     // divide and format
     return (rep / 1000).toFixed(rep % 1000 != 0) + 'k';
+}
+
+//Count replies within comment
+function countReply(commentId)
+{
+
+    var rs = 0;
+    $.ajax({
+        url: 'comment/reply/count',
+        type: "GET",
+        data: {"commentId":commentId},
+        dataType: "json",
+        async: false,
+        success: function (data) {
+            rs = data;
+        }
+    });
+
+    return rs;
 }

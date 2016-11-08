@@ -32,4 +32,7 @@ public interface CommentRepository extends JpaRepository<CommentEntity,String> {
     @Query("SELECT u FROM CommentEntity u WHERE u.postId = :postId order by u.sentimentScore DESC")
     List<CommentEntity> findCommentByPostIdSen(@Param("postId") String postId);
 
+    @Query("SELECT COUNT(*) FROM CommentEntity u WHERE u.postId= :postId")
+    int countReplyByPostId(@Param("postId") String postId);
+
 }
