@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 /**
- * Created by user on 11/6/2016.
+ * Created by user on 11/8/2016.
  */
 @Entity
 @Table(name = "ticket", schema = "scc", catalog = "")
@@ -18,6 +18,7 @@ public class TicketEntity {
     private Integer assignee;
     private String note;
     private Integer priority;
+    private Timestamp duetime;
 
     @Id
     @Column(name = "id")
@@ -109,6 +110,16 @@ public class TicketEntity {
         this.priority = priority;
     }
 
+    @Basic
+    @Column(name = "duetime")
+    public Timestamp getDuetime() {
+        return duetime;
+    }
+
+    public void setDuetime(Timestamp duetime) {
+        this.duetime = duetime;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -125,6 +136,7 @@ public class TicketEntity {
         if (assignee != null ? !assignee.equals(that.assignee) : that.assignee != null) return false;
         if (note != null ? !note.equals(that.note) : that.note != null) return false;
         if (priority != null ? !priority.equals(that.priority) : that.priority != null) return false;
+        if (duetime != null ? !duetime.equals(that.duetime) : that.duetime != null) return false;
 
         return true;
     }
@@ -140,6 +152,7 @@ public class TicketEntity {
         result = 31 * result + (assignee != null ? assignee.hashCode() : 0);
         result = 31 * result + (note != null ? note.hashCode() : 0);
         result = 31 * result + (priority != null ? priority.hashCode() : 0);
+        result = 31 * result + (duetime != null ? duetime.hashCode() : 0);
         return result;
     }
 }

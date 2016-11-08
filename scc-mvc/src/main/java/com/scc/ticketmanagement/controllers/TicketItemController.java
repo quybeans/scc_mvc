@@ -84,9 +84,6 @@ public class TicketItemController {
                 return o1.getCreatedAt().compareTo(o2.getCreatedAt());
             }
         });
-        for (TicketItemAndHistory tiah: customizelist) {
-            System.out.println("Create At:" + tiah.getCreatedAt());
-        }
 
         return customizelist;
     }

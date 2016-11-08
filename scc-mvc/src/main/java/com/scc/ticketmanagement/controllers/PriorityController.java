@@ -87,7 +87,7 @@ public class PriorityController {
         ExtendPriority extendPriority = new ExtendPriority();
         extendPriority.setBrandid(priority.getBrandid());
         extendPriority.setDuration(priority.getDuration());
-        extendPriority.setCreatedtime(ticket.getCreatedtime());
+        extendPriority.setDuetime(ticket.getDuetime());
         extendPriority.setName(priority.getName());
         return extendPriority;
     }

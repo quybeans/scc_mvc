@@ -11,8 +11,8 @@
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
-    <div class="content-wrapper"  style="max-height: 90vh;overflow: hidden">
 
+    <div class="content-wrapper"  style="max-height: 90vh;overflow: hidden">
         <div class="modal fade" id="assignModal" role="dialog">
             <div class="modal-dialog">
                 <!-- Modal content-->
@@ -102,14 +102,14 @@
         </div>
 
         <input type="hidden" th:value="${ticketid}" id="ticketid"/>
-        <section class="col-lg-9 " style="overflow: auto;max-height: 650px">
+        <section class="col-lg-9 " style="overflow: auto;max-height: 630px">
            <ul class="timeline" id="ticketitem" >
 
            </ul>
 
         </section>
 
-        <section class="col-lg-3" style="border-left: 1px solid lightgray;height: 100vh;background-color: white;max-height: 650px">
+        <section class="col-lg-3" style="border-left: 1px solid lightgray;height: 100vh;background-color: white;max-height: 630px;overflow: auto">
             <div  style="border: solid 1px lightgray;height: 150px;width: 250px;border-radius: 20px;margin-top: 10px">
                 <div style="margin-top: 30px">
                 <span>
@@ -146,11 +146,11 @@
                 <h4 id="ticketprioritydetail" > <i  class="fa fa-chevron-right" ></i><b style="margin-left: 5px">Priority:</b></h4>
             </div>
             <div style="border-top: solid 1px lightgray;width: 250px;margin-top:8px" >
-                <h4 id="ticketnotedetail" style="width: 250px;word-wrap: break-word"><b>Note:</b></h4>
+                <h4 id="ticketnotedetail" style="width: 250px;word-wrap: break-word"></h4>
             </div>
-            <div style="border-top: solid 1px lightgray;width: 250px;margin-top:8px" >
-                <h4 onclick="gettickethistory(ticketid)"  style="width: 250px;word-wrap: break-word; text-align: center"><b>History</b></h4>
-            </div>
+            <!--<div style="border-top: solid 1px lightgray;width: 250px;margin-top:8px" >-->
+                <!--<h4 onclick="gettickethistory(ticketid)"  style="width: 250px;word-wrap: break-word; text-align: center"><b>History</b></h4>-->
+            <!--</div>-->
             <div id="tickethistory" style="max-height: 100px;width: 250px;display: none;overflow: auto">
             </div>
             <div style="border-top: solid 1px lightgray;width: 250px;margin-top:8px" >
@@ -165,7 +165,9 @@
 </div>
 <script>
     var ticketid = $("#ticketid").val();
-
+    var currentstatus;
+    var duration;
+    getcurrentuser()
     loadticketitem(ticketid)
 
     getticket(ticketid)
@@ -175,10 +177,11 @@
             type:"GET",
             data:{"ticketid":ticketid},
             success:function (data) {
-                var createtime = moment(data.createdtime)+ (data.duration * 60 * 1000);
+                var duetime = moment(data.duetime)+ (data.duration * 60 * 1000);
                 var current = moment();
-                var diff = current.diff(createtime)*(-1);
+                var diff = current.diff(duetime)*(-1);
                window.ticketdue = diff;
+                window.duration=data.duration;
             },
             error:function () {
                 alert("fail to get ticket duetime");
@@ -190,13 +193,36 @@
 
 
     setInterval(function () {
-        ticketdue =moment.duration(ticketdue-1000,'milliseconds');
-        if(ticketdue>0){
-            $("#dueday").html("Due in "+ticketdue.hours()+":"+ticketdue.minutes()+":"+ticketdue.seconds());
-        }else{
-            $("#dueday").html("Expired")
+        if(currentstatus==3){
+            ticketdue =moment.duration(ticketdue-1000,'milliseconds');
+            if(ticketdue>0){
+                $("#dueday").html("Due in "+ticketdue.hours()+":"+ticketdue.minutes()+":"+ticketdue.seconds());
+            }else{
+                    updateexpiredticket(ticketid,duration)
+            }
+        }else {
+            $("#dueday").html("")
         }
+
+
     },1000);
+
+    function updateexpiredticket(ticketid,duration) {
+        $.ajax({
+            url:"/updateexpiredticket",
+            type:"POST",
+            data:{"ticketid":ticketid,"duration":duration},
+            success:function (data) {
+                    alert("This ticket is expired ")
+                    getticketduetime(ticketid);
+                    getticket(ticketid);
+
+            },
+            error:function () {
+                $("#dueday").html("Expired");
+            }
+        })
+    }
 
     function getticket(ticketid) {
         $.ajax({
@@ -207,26 +233,25 @@
                 var statuscolor;
                 var statusname;
                 switch (data.statusid){
-                    case 1: statuscolor='color:#db8b0b'; statusname="Unassign"; break;
                     case 2: statuscolor='color:#ffff00'; statusname="Assign"; break;
-                    case 3: statuscolor='color:#00a7d0'; statusname="Open"; break;
-                    case 4: statuscolor='color:#00a65a'; statusname="Inprocess"; break;
-                    case 5: statuscolor='color:#500a6f'; statusname="Solving"; break;
-                    case 6: statuscolor='color:#01ff70'; statusname="Solved"; break;
-                    case 7: statuscolor='color:#000000'; statusname="Close"; break;
+                    case 3: statuscolor='color:#00a65a'; statusname="Inprocess"; break;
+                    case 4: statuscolor='color:#500a6f'; statusname="Reviewing"; break;
+                    case 5: statuscolor='color:#01ff70'; statusname="Solved"; break;
+                    case 1: statuscolor='color:#000000'; statusname="Unassign"; break;
                 }
+                window.currentstatus=data.statusid;
                 var createat = moment(data.createdtime).format("D/MM/YYYY, hh:mm:ss");
                     $("#ticketstatus").html(
                     '<i class="fa fa-circle" aria-hidden="true" style="'+statuscolor+'"></i>'
                        +statusname
                     );
                     $("#ticketname").html(data.name);
-                    $("#createdat").append(" "+createat);
-                    $("#ticketnotedetail").append(" "+data.note);
-                    $("#ticketprioritydetail").append(' '+data.currentpriority);
-                    $("#getassigner").append('<h4><i  class="fa fa-chevron-right" onclick="getassignerinfo('+data.createdby+')"></i><b style="margin-left: 5px">Assigner:</b> '+data.createbyuser+'</h4>');
-                    $("#getassignee").append('<h4><i  class="fa fa-chevron-right" onclick="getassigneeinfo('+data.assignee+')"></i><b style="margin-left: 5px">Assignee:</b> '+data.assigneeuser+'</h4>');
-                    $("#ticketbutton").append(
+                    $("#createdat").html('<i  class="fa fa-chevron-right" ></i><b style="margin-left: 5px">Created At: </b>'+createat);
+                    $("#ticketnotedetail").html('<i  class="fa fa-chevron-right" ></i><b style="margin-left: 5px">Note: </b>'+data.note);
+                    $("#ticketprioritydetail").html('<i  class="fa fa-chevron-right" ></i><b style="margin-left: 5px">Priority: </b>'+data.currentpriority);
+                    $("#getassigner").html('<h4><i  class="fa fa-chevron-right" onclick="getassignerinfo('+data.createdby+')"></i><b style="margin-left: 5px">Assigner:</b> '+data.createbyuser+'</h4>');
+                    $("#getassignee").html('<h4><i  class="fa fa-chevron-right" onclick="getassigneeinfo('+data.assignee+')"></i><b style="margin-left: 5px">Assignee:</b> '+data.assigneeuser+'</h4>');
+                    $("#ticketbutton").html(
                             '<button class="btn btn-success" style="width: 60px" onclick="assign('+data.id+')">Assign</button>'
                             +'<button class="btn btn-primary" style="width: 60px" onclick="status('+data.id+')">Status</button>'
                             +'<button class=" btn btn-danger" style="width: 60px" onclick="updateticket('+data.id+')">Edit</button>'
@@ -249,10 +274,11 @@
                 for(var index =0;index<data.length;index++){
                     var timelineitem;
                     if(data[index].item){
+
                         timelineitem =
                                 '<li class="time-label">'
                                 +'<span class="bg-red" id="createtime">'
-                                +moment(data[index].createdAt).format("D/MM/YYYY")
+                                +moment(data[index].createdAt).format("D/MM/YYYY , hh:mm:ss")
                                 +'</span>'
                                 +'</li>'
                                 +'<li>'
@@ -278,22 +304,25 @@
                         var status;
                         switch (data[index].statusid){
                             case 2: status='<a>'+data[index].changeby+'</a>' +' assign this ticket to ' +'<a>'+data[index].assignee+'</a>'; break;
-                            case 3: status='<a>'+data[index].changeby+'</a>' +' change this ticket to '+'<span style="color:#00a7d0 ">Open</span>'; break;
-                            case 4: status='<a>'+data[index].changeby+'</a>' +' change this ticket to '+'<span style="color:#00a65a ">Inprocess</span>'; break;
-                            case 5: status='<a>'+data[index].changeby+'</a>' +' change this ticket to '+'<span style="color:#500a6f ">Solving</span>'; break;
-                            case 6: status='<a>'+data[index].changeby+'</a>' +' change this ticket to '+'<span style="color:#01ff70 ">Solved</span>'; break;
-                            case 7: status='<a>'+data[index].changeby+'</a>' +' change this ticket to '+'<span style="color:#000000 ">Close</span>'; break;
+                            case 3: status='<a>'+data[index].changeby+'</a>' +' change this ticket to '+'<span style="color:#00a65a ">Inprocess</span>'; break;
+                            case 4: status='<a>'+data[index].changeby+'</a>' +' change this ticket to '+'<span style="color:#500a6f ">Reviewing</span>'; break;
+                            case 5: status='<a>'+data[index].changeby+'</a>' +' change this ticket to '+'<span style="color:#01ff70 ">Solved</span>'; break;
+                            case 1: status='<a>'+data[index].changeby+'</a>' +' change this ticket to '+'<span style="color:#000000 ">Unassign</span>'; break;
+                        }
+                        var note="";
+                        if(data[index].note!=null){
+                             note = " with note: " +data[index].note;
                         }
                         timelineitem=
                                 '<li class="time-label">'
                                 +'<span class="bg-green" id="createtime">'
-                                +moment(data[index].createdAt).format("D/MM/YYYY")
+                                +moment(data[index].createdAt).format("D/MM/YYYY, hh:mm:ss")
                                 +'</span>'
                                 +'</li>'
                                 +'<li>'
                                 +'<div class="timeline-item" >'
                                 +'<h3 class="timeline-header">'
-                                +'<span style="margin-left: 10px">'+status+' with note: '+ data[index].note+'</span>'
+                                +'<span style="margin-left: 10px">'+status+ note + '</span>'
                                 +'</h3>'
                                 +'</div>'
                                 +'</li>'
@@ -456,7 +485,8 @@
                 success:function (data) {
                     alert("assign ticket successful"+data.assignee);
                     $('#assignModal').modal('toggle');
-                    table.ajax.reload();
+                    getticket(ticketid)
+                    loadticketitem(ticketid)
                 },
                 error:function () {
                     alert("fail to assign ticket");
@@ -479,7 +509,8 @@
                 success:function (data) {
                     $('#statusModal').modal('toggle');
                     alert("change status successfull!");
-                    table.ajax.reload();
+                    getticket(ticketid)
+                    loadticketitem(ticketid)
                 },
                 error:function () {
                     alert("fail to change ticket status");
@@ -539,6 +570,25 @@
         })
     }
 
+    function getcurrentuser() {
+        $.ajax({
+            url:"/getcurrentuser",
+            type:"GET",
+            success:function (data) {
+                if(data.roleid==4){
+                    $("#status").html(
+                            '<option value="4" >Reviewing</option>'
+                    )
+                }else{
+                    $("#status").html(
+                            '<option value="4" >Reviewing</option>'
+                            +'<option value="5" >Solved</option>'
+                    )
+                }
+            }
+        })
+
+    }
 </script>
 </body>
 </html>

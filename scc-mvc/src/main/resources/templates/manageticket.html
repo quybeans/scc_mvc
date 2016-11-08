@@ -25,27 +25,7 @@
                 Ticket management
             </h1>
             <span class="pull-right">
-                 <select id="filtername" style="width:210px">
-                    <option>Name</option>
-                </select>
-                <select id="filtercreateby" style="width: 115px">
-                    <option>Create by</option>
-                </select>
-                <select id="filterassignee" style="width: 90px">
-                    <option>Assignee</option>
-                </select>
-                <select id="filterstatus" style="width: 110px">
-                    <option>Status</option>
-                </select>
-                <select id="filtercreatetime" style="width: 140px">
-                    <option>Create time</option>
-                </select>
-                <select id="filterpriority" style="width:85px">
-                    <option>Priority</option>
-                </select>
-                <button class="btn btn-default btn-md " style="width: 70px" type="button" onclick="filter()">
-                   <i class="fa fa-filter" aria-hidden="true"></i> <strong>Filter</strong>
-                  </button>
+
                   <button class="btn btn-info btn-md " type="button" onclick="configpriority()">
                    <i class="fa fa-cogs" aria-hidden="true"></i> <strong>Config Priority</strong>
                   </button>
@@ -251,13 +231,10 @@
 </div>
 <script>
     var table = null;
+    getcurrentuser();
+
     $(document).ready(function () {
-
-
-
         table= $("#table").DataTable({
-
-
             ajax: {
                 url:"/getallticket",
                 type: "GET"
@@ -294,7 +271,8 @@
                 },
     },
         {
-            targets: 5,
+                    width:'15%',
+                    targets: 5,
                     render: (data, type, row) => {
             return moment(row.createdtime).format("d/MM/YYYY h:mm:ss");
         },
@@ -316,13 +294,11 @@
                 render: (data, type, row) => {
             var statuscolor;
             switch (row.statusid){
-                case 1: statuscolor='color:#db8b0b'; break;
                 case 2: statuscolor='color:#ffff00'; break;
-                case 3: statuscolor='color:#00a7d0'; break;
-                case 4: statuscolor='color:#00a65a'; break;
-                case 5: statuscolor='color:#500a6f'; break;
-                case 6: statuscolor='color:#01ff70'; break;
-                case 7: statuscolor='color:#000000'; break;
+                case 3: statuscolor='color:#00a65a'; break;
+                case 4: statuscolor='color:#500a6f'; break;
+                case 5: statuscolor='color:#01ff70'; break;
+                case 1: statuscolor='color:#000000'; break;
             }
             return '<p><i class="fa fa-circle" aria-hidden="true" style="'+statuscolor+'"></i>'+'  ' +row.currentstatus+'</p>'
         },
@@ -657,6 +633,26 @@
                     alert("fail to create ticket");
                 }
             })
+        })
+
+    }
+
+    function getcurrentuser() {
+        $.ajax({
+            url:"/getcurrentuser",
+            type:"GET",
+            success:function (data) {
+                if(data.roleid==4){
+                    $("#status").html(
+                            '<option value="4" >Reviewing</option>'
+                    )
+                }else{
+                    $("#status").html(
+                            '<option value="4" >Reviewing</option>'
+                            +'<option value="5" >Solved</option>'
+                    )
+                }
+            }
         })
 
     }
