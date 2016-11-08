@@ -52,7 +52,7 @@ function getAllConversationsByPageId(pageId) {
                     )
                 } else {
                     $('#messagesList').append(
-                        '<div class="item" id="conversation' + i + '" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId +  '\')">'
+                        '<div class="item" id="conversation' + i + '" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId + '\')">'
                         + '<div><img style="max-height: 30px" src="' + data[i].senderPicture + '"><b>' + data[i].senderName + '</b></div>'
                         // + '<div>' + data[i].senderName + '</div>'
                         + '<div><b>' + data[i].lastMessage + '</b></div>'
@@ -86,7 +86,7 @@ function getAllConversationsByPageId(pageId) {
                         )
                     } else {
                         $('#messagesList').append(
-                            '<div class="item" id="conversation' + i + '" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId +  '\')">'
+                            '<div class="item" id="conversation' + i + '" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId + '\')">'
                             + '<div><img style="max-height: 30px" src="' + data[i].senderPicture + '"><b>' + data[i].senderName + '</b></div>'
                             // + '<div>' + data[i].senderName + '</div>'
                             + '<div><b>' + data[i].lastMessage + '</b></div>'
@@ -97,7 +97,7 @@ function getAllConversationsByPageId(pageId) {
                 });
             }
         });
-    }, 500)
+    }, 2000)
 }
 
 function setRead(pageId, senderId) {
@@ -119,7 +119,7 @@ function getConversationBySenderId(pageId, senderId) {
     currentPageId = pageId;
     currentCustomer = senderId;
     currentPageNum = 1;
-    var isFirstLoad = true;
+
 
     setRead(pageId, senderId);
     document.getElementById('replyText').setAttribute('value', '');
@@ -128,7 +128,52 @@ function getConversationBySenderId(pageId, senderId) {
     getCustomerInfo(senderId);
     $('#btnReply').attr('onclick', 'sendMessage(' + pageId + ',' + senderId + ')');
 
-    clearInterval(currentInterval);
+    clearInterval(currentInterval)
+
+    var isFirstLoad = true;
+    if (isFirstLoad) {
+        $.ajax({
+            url: '/messenger/getConversationBySenderIdWithPage',
+            type: "POST",
+            data: {
+                pageId: pageId,
+                senderId: senderId,
+                pageNum: 1
+            },
+            dataType: "json",
+            success: function (data) {
+                $('#conversationContent').empty();
+                var dataReversed = data.reverse();
+                var a;
+                $.each(dataReversed, function (i) {
+                    a = dataReversed[i].id;
+                    if (dataReversed[i].senderid == pageId) {
+                        $('#conversationContent').append(
+                            '<div style="text-align: right;">' +
+                            '<h2 style="display: inline-block; background-color: #00a7d0">' + dataReversed[i].content + '</h2>' +
+                            '<p>' + moment(dataReversed[i].createdAt).fromNow() + '' +
+                            '<button value="' + a + '" onclick="createTicket(this)"><span class="fa fa-plus"></span></button>' +
+                            '<button value="' + a + '" onclick="endTicket(this)"><span class="fa fa-check"></span></button>' +
+                            '</p>' +
+                            '</div>'
+                        );
+                    } else {
+                        $('#conversationContent').append(
+                            '<div style="text-align: left;">' +
+                            '<h2 style="display: inline-block; background-color: #9d9d9d">' + dataReversed[i].content + '</h2>' +
+                            '<p>' + moment(dataReversed[i].createdAt).fromNow() + '' +
+                            '<button value="' + a + '" onclick="createTicket(this)"><span class="fa fa-plus"></span></button>' +
+                            '<button value="' + a + '" onclick="endTicket(this)"><span class="fa fa-check"></span></button>' +
+                            '</p>' +
+                            '</div>'
+                        );
+                    }
+
+                });
+                $('#conversationContent').scrollTop($('#conversationContent').height() + 500);
+            }
+        });
+    }
 
 
     currentInterval = setInterval(function () {
@@ -144,33 +189,36 @@ function getConversationBySenderId(pageId, senderId) {
             success: function (data) {
                 $('#conversationContent').empty();
                 var dataReversed = data.reverse();
+                var a;
                 $.each(dataReversed, function (i) {
-
+                    a = dataReversed[i].id;
                     if (dataReversed[i].senderid == pageId) {
                         $('#conversationContent').append(
                             '<div style="text-align: right;">' +
                             '<h2 style="display: inline-block; background-color: #00a7d0">' + dataReversed[i].content + '</h2>' +
-                            '<p>' + moment(dataReversed[i].createdAt).fromNow() + '</p>' +
+                            '<p>' + moment(dataReversed[i].createdAt).fromNow() + '' +
+                            '<button value="' + a + '" onclick="createTicket(this)"><span class="fa fa-plus"></span></button>' +
+                            '<button value="' + a + '" onclick="endTicket(this)"><span class="fa fa-check"></span></button>' +
+                            '</p>' +
                             '</div>'
                         );
                     } else {
                         $('#conversationContent').append(
                             '<div style="text-align: left;">' +
                             '<h2 style="display: inline-block; background-color: #9d9d9d">' + dataReversed[i].content + '</h2>' +
-                            '<p>' + moment(dataReversed[i].createdAt).fromNow() + '</p>' +
+                            '<p>' + moment(dataReversed[i].createdAt).fromNow() + '' +
+                            '<button value="' + a + '" onclick="createTicket(this)"><span class="fa fa-plus"></span></button>' +
+                            '<button value="' + a + '" onclick="endTicket(this)"><span class="fa fa-check"></span></button>' +
+                            '</p>' +
                             '</div>'
                         );
                     }
 
                 });
-                if (isFirstLoad) {
-                    $('#conversationContent').scrollTop($('#conversationContent').height() + 500);
-                    isFirstLoad = false;
-                }
             }
         });
 
-    }, 500);
+    }, 2000);
 
 }
 
@@ -190,20 +238,27 @@ function getConversationBySenderIdWithPage() {
             success: function (data) {
                 $('#conversationContent').empty();
                 var dataReversed = data.reverse();
+                var a;
                 $.each(dataReversed, function (i) {
-
+                    a = dataReversed[i].id;
                     if (dataReversed[i].senderid == currentPageId) {
                         $('#conversationContent').append(
                             '<div style="text-align: right;">' +
                             '<h2 style="display: inline-block; background-color: #00a7d0">' + dataReversed[i].content + '</h2>' +
-                            '<p><font size="1">' + moment(dataReversed[i].createdAt).fromNow() + '</font></p>' +
+                            '<p>' + moment(dataReversed[i].createdAt).fromNow() + '' +
+                            '<button value="' + a + '" onclick="createTicket(this)"><span class="fa fa-plus"></span></button>' +
+                            '<button value="' + a + '" onclick="endTicket(this)"><span class="fa fa-check"></span></button>' +
+                            '</p>' +
                             '</div>'
                         );
                     } else {
                         $('#conversationContent').append(
                             '<div style="text-align: left;">' +
-                            '<h2 style="display: inline-block; background-color: #9d9d9d">' + dataReversed[i].content + '</h2>' +
-                            '<p><font size="1">' + moment(dataReversed[i].createdAt).fromNow() + '</font></p>' +
+                            '<h2 style="display: inline-block; background-color: #9d9d9d;">' + dataReversed[i].content + '</h2>' +
+                            '<p>' + moment(dataReversed[i].createdAt).fromNow() + '' +
+                            '<button value="' + a + '" onclick="createTicket(this)"><span class="fa fa-plus"></span></button>' +
+                            '<button value="' + a + '" onclick="endTicket(this)"><span class="fa fa-check"></span></button>' +
+                            '</p>' +
                             '</div>'
                         );
                     }
@@ -242,6 +297,7 @@ function sendMessage(pageId, receiverId) {
         }
     });
     $('#replyText').val("");
+
 }
 
 function getCustomerInfo(customerId) {
@@ -267,4 +323,27 @@ function getCustomerInfo(customerId) {
             )
         }
     });
+}
+
+
+function createTicket(a) {
+    alert(a.value);
+    $.ajax({
+        url: '/messenger/sendMessageToCustomer',
+        type: "POST",
+        data: {
+            pageId: pageId,
+            receiverId: receiverId,
+            content: content
+        },
+        dataType: "json",
+        success: function (data) {
+        },
+        error: function (data) {
+        }
+    });
+}
+
+function endTicket(a) {
+    alert(a.value);
 }

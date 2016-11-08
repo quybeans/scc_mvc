@@ -94,4 +94,8 @@ public class MessengerRESTController {
         return messageEntity;
     }
 
+    @RequestMapping(value = "", method = RequestMethod.POST)
+    public MessageEntity createTicket(@RequestParam("messageId") String messageId){
+        return null;
+    }
 }
