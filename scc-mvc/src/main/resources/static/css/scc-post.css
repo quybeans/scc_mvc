@@ -216,55 +216,45 @@
 /*display: block;*/
 /*font-weight: 600;*/
 /*}*/
-.chat {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+
+/*Ticket list style*/
+.ticket {
+    border: 1px solid lightgray;
+    padding-left: 10px;
+    display: inline-block;
+    width: 200px;
+    cursor: pointer;
+    background-color: transparent;
+    margin-left: 5px;
+    margin-bottom: 5px;
 }
 
-.chat li {
+
+.ticket .title {
+    background-color: cornflowerblue;
+    margin-left: -10px;
+    font-size: 20px;
+    color: white;
+    padding: 10px 10px 10px 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ticket-row {
     margin-bottom: 10px;
-    padding-bottom: 5px;
-
 }
 
-.chat li.left .chat-body {
-    margin-left: 35px;
-    background-color: white;
-    padding: 5px 10px 5px 5px;
-    border-radius: 5px;
+.ticket .process {
+    background-color: #00d600;
 }
 
-.chat li.right .chat-body {
-    padding: 5px 5px 5px 10px;
-    margin-right: 35px;
-    background-color: lightblue;
-    border-radius: 5px;
-
+.ticket .solved {
+    background-color: gray;
 }
 
-.chat li.right .chat-body p {
-    color: black;
-}
-
-.chat li .chat-body p {
-    margin: 0;
-    color: #777777;
-}
-
-.panel .slidedown .glyphicon, .chat .glyphicon {
-    margin-right: 5px;
-}
-
-.panel-body {
-    overflow-y: scroll;
-
-}
-
-.chat li span img {
-    height: 30px;
-    width: 30px;
-    border-radius: 3px;
+.ticket .assigned {
+    background-color: #cece00;
 }
 
 

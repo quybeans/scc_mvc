@@ -26,6 +26,7 @@ function startup() {
 
 //Reply to comment
 function replyToComment(objId) {
+
     $('#send-progress').attr('class', 'fa fa-paper-plane');
     $('#replyModal').modal('toggle');
     $('#btnReply').unbind().click(function () {
@@ -39,6 +40,42 @@ function replyToComment(objId) {
     });
 }
 
+//Show all ticket existed
+
+function showTicket() {
+    $('#ticket-list').empty();
+    $.ajax({
+        url: '/getallticket',
+        type: "GET",
+        dataType: "json",
+        success: function (data) {
+            $.each(data, function (index) {
+                var statusColor = 'solved';
+                if (data[index].statusid==3) statusColor = 'process';
+                else if (data[index].statusid==2) statusColor = 'assigned';
+
+
+                $('#ticket-list').append(
+                    '<div class="ticket">'
+                    + '<div class="title ' +statusColor+'">' + data[index].name + '</div>'
+                    + '<div>Status:&nbsp;'
+                    + '<span class="fa fa-circle"></span>&nbsp;'
+                    + data[index].currentstatus
+                    + '</div>'
+                    + '<div>Created by:&nbsp;<span style="color: black; font-weight: bold">'
+                    + data[index].createbyuser
+                    + '</span></div>'
+                    + '<div>Current assignee:&nbsp;<span style="color: black; font-weight: bold">'+data[index].assigneeuser+'</span>'
+                    + '</div>'
+                    + '<div></div>'
+                    + '</div>'
+                )
+            })
+        }
+    });
+    $('#ticket-modal').modal('toggle');
+
+}
 
 //Set onclick account
 function setOnclickReplyAccount(imgsrc, name, token) {
@@ -80,7 +117,7 @@ function getAllPageAccount() {
                     '</li>'
                 )
             });
-            setOnclickReplyAccount(data[0].pageid, data[0].name,data[0].accesstoken);
+            setOnclickReplyAccount(data[0].pageid, data[0].name, data[0].accesstoken);
             getAllFBAccount();
         }
     });
@@ -353,7 +390,7 @@ function getCommentById(postid) {
 function getCommentByPostIdwPage(postId, page) {
     var url;
     if (sortCommentBy == 2)  url = 'comment/bypostid/negSort';
-    if (sortCommentBy == 3) url = 'comment/bypostid/timeSort';
+    else if (sortCommentBy == 3) url = 'comment/bypostid/timeSort';
     else url = 'comment/bypostid';
 
     $('#comment-box').empty();
@@ -390,7 +427,8 @@ function getCommentByPostIdwPage(postId, page) {
                     + '<button  onclick="replyToComment(' + cmtId + ');getReplyByCommentId(' + "'" + data[index].id + "'" + ');" class="btn btn-default btn-xs inline"' +
                     ' style="margin-left: 65px;margin-top: -10px; "><span class="glyphicon glyphicon-comment"' +
                     ' style="color:gray;margin-right: 10px "  title="Reply to this comment"   data-placement="bottom" ' +
-                    'data-toggle="tooltip" ></span>'+countReply(data[index].id)+' replies</button>'
+                    'data-toggle="tooltip" ></span>' + countReply(data[index].id) + ' replies</button>'
+                    + '<button onclick="showTicket()" class="btn btn-default btn-xs inline" style="margin-left: 10px;margin-top: -10px;"><span class="fa fa-ticket"></span>Add to ticket</button>'
                     + '</div>'
                     + '<div class="col-lg-1" style="margin-top: 30px">' + '<small class="' + senIcon + '" style="font-size: 20px;"></small>'
                     + '</div>'
@@ -864,6 +902,19 @@ function tagcomment(cmtid, attid) {
         }
     })
 }
+//Get all ticket
+function getTicket() {
+    $.ajax({
+        url: "/getallticket",
+        type: "GET",
+        success: function (data) {
+
+        },
+        error: function () {
+            alert("Get all ticket failed")
+        }
+    })
+}
 
 //untag comment from attribute
 function untagcomment(cmtid, attid) {
@@ -907,7 +958,7 @@ function getAllCrawlPage() {
         },
         error: function () {
             alert(listPageFilter);
-            alert("Getting page failed, list page filter: "+listPageFilter)
+            alert("Getting page failed, list page filter: " + listPageFilter)
         }
     })
 }
@@ -981,7 +1032,7 @@ function checkNumberInputAndEnter(e) {
 function searchCommentEnter(e) {
     if (e.keyCode == 13) {
         $('#txtSearchComment').blur();
-        searchByContent(currentPost,$('#txtSearchComment').val(),1);
+        searchByContent(currentPost, $('#txtSearchComment').val(), 1);
     }
 }
 
@@ -1027,14 +1078,13 @@ function getRepString(rep) {
 }
 
 //Count replies within comment
-function countReply(commentId)
-{
+function countReply(commentId) {
 
     var rs = 0;
     $.ajax({
         url: 'comment/reply/count',
         type: "GET",
-        data: {"commentId":commentId},
+        data: {"commentId": commentId},
         dataType: "json",
         async: false,
         success: function (data) {

@@ -48,7 +48,7 @@ public class CommentServiceImp implements CommentService{
 
     @Override
     public Page<CommentEntity> getCommentByPostIdwSort(int pagenumber, Integer sortBy, String postid) {
-        PageRequest request = new PageRequest(pagenumber -1, PAGE_SIZE, Sort.Direction.ASC,"sentimentScore");
+        PageRequest request = new PageRequest(pagenumber -1, PAGE_SIZE, Sort.Direction.DESC,"createdAt");
         return commentRepository.findAllByPostIdwNegSort(postid,request);
 
     }
