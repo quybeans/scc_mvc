@@ -211,7 +211,18 @@
                                 <!-- /.box-header -->
                                 <div class="box-body table-responsive no-padding">
                                     <table id="table" class="table table-striped table-bordered" style="width:100%">
-
+                                        <!--<thead></thead>-->
+                                        <!--<tfoot><tr>-->
+                                            <!--<th></th>-->
+                                            <!--<th></th>-->
+                                            <!--<th></th>-->
+                                            <!--<th></th>-->
+                                            <!--<th></th>-->
+                                            <!--<th></th>-->
+                                            <!--<th></th>-->
+                                            <!--<th></th>-->
+                                            <!--<th></th>-->
+                                        <!--</tr></tfoot>-->
                                     </table>
                                 </div>
                             </div>
@@ -234,7 +245,7 @@
     getcurrentuser();
 
     $(document).ready(function () {
-        table= $("#table").DataTable({
+        table= $("#table").dataTable({
             ajax: {
                 url:"/getallticket",
                 type: "GET"
@@ -304,9 +315,31 @@
         },
         },
         ],
+//        initComplete:  function() {
+//            this.api().columns().every( function () {
+//                var column = this;
+//                var select = $('<select><option value=""></option></select>')
+//                        .appendTo( $(column.footer()).empty() )
+//                        .on( 'change', function () {
+//                            var val = $.fn.dataTable.util.escapeRegex(
+//                                    $(this).val()
+//                            );
+//
+//                            column
+//                                    .search( val ? '^'+val+'$' : '', true, false )
+//                                    .draw();
+//                        } );
+//
+//                column.data().unique().sort().each( function ( d, j ) {
+//                    select.append( '<option value="'+d+'">'+d+'</option>' )
+//                } );
+//            } );
+//        }
+    });
+    });
 
-    });
-    });
+
+
 
     //assign ticket
     function assign(ticketid) {
@@ -626,8 +659,9 @@
                 type:"POST",
                 data:{"ticketname":ticketname,"priority":priority,"note":note,"assignee":assignee},
                 success:function (data) {
-                    table.ajax.reload();
                     alert("create ticket: "+data.id+" successful!");
+                    $('#createticketModal').modal('toggle');
+                    table.ajax.reload();
                 },
                 error:function () {
                     alert("fail to create ticket");
@@ -644,11 +678,13 @@
             success:function (data) {
                 if(data.roleid==4){
                     $("#status").html(
-                            '<option value="4" >Reviewing</option>'
+                            '<option value="3" >Inprocess</option>'
+                            +'<option value="4" >Reviewing</option>'
                     )
                 }else{
                     $("#status").html(
-                            '<option value="4" >Reviewing</option>'
+                            '<option value="3" >Inprocess</option>'
+                            +'<option value="4" >Reviewing</option>'
                             +'<option value="5" >Solved</option>'
                     )
                 }

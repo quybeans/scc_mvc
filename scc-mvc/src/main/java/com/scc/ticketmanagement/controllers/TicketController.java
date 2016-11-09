@@ -78,9 +78,10 @@ public class TicketController {
             status.setChangeby(user.getUserid());
             status.setAssignee(assignee);
             status.setCreatedat(new Timestamp(new Date().getTime()));
-
+            status.setPriorityid(0);
+            status.setNote(note);
             ticketStatusChangeRepository.save(status);
-
+            System.out.println("create ticket thanh cong");
             return ticket;
         }
         return null;
@@ -89,7 +90,6 @@ public class TicketController {
     @RequestMapping("/updateexpiredticket")
     public PriorityEntity updateexpiredticket(@RequestParam("ticketid") Integer ticketid,
                                     @RequestParam("duration") Integer duration){
-        System.out.println(duration);
         List<PriorityEntity> priority = priorityReposioty.getNextPriority(duration);
         TicketEntity ticket = ticketRepository.findOne(ticketid);
         if(priority.size()>0){
@@ -209,9 +209,7 @@ public class TicketController {
         TicketEntity ticket=ticketRepository.findOne(ticketid);
         ticket.setStatusid(status);
         ticket.setNote(statusnote);
-        if(status==Constant.STATUS_ASSIGN){
-            ticket.setDuetime(new Timestamp(new Date().getTime()));
-        }
+
 
         //Them 1 ticket history
         TicketstatuschangeEntity statuschange = new TicketstatuschangeEntity();
@@ -220,10 +218,14 @@ public class TicketController {
         statuschange.setStatusid(status);
         statuschange.setCreatedat(new Timestamp(new Date().getTime()));
         statuschange.setNote(statusnote);
-        statuschange.setAssignee(0);
         statuschange.setPriorityid(0);
+        if(status==Constant.STATUS_ASSIGN){
+            ticket.setDuetime(new Timestamp(new Date().getTime()));
+            statuschange.setAssignee(ticket.getAssignee());
+        }else{
+            statuschange.setAssignee(0);
+        }
         ticketStatusChangeRepository.save(statuschange);
-
         return ticketRepository.save(ticket);
     }
 

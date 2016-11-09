@@ -77,7 +77,7 @@ public class HomeController {
     }
 
     @RequestMapping("/manageticket")
-    public String manageticket(){
+    public String manageticket(HttpServletRequest request){
         return "manageticket";
     }
 
@@ -203,6 +203,8 @@ public class HomeController {
             change.setStatusid(Constant.STATUS_INPROCESS);
             change.setCreatedat(new Timestamp(new Date().getTime()));
             change.setNote("Start follow ticket");
+            change.setAssignee(0);
+            change.setPriorityid(0);
             ticketStatusChangeRepository.save(change);
         }
         model.addAttribute("ticketid",ticketid);

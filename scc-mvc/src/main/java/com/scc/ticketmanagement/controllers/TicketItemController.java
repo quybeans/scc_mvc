@@ -99,6 +99,8 @@ public class TicketItemController {
             }
         });
 
+        Collections.reverse(customizelist);
+
         return customizelist;
     }
 

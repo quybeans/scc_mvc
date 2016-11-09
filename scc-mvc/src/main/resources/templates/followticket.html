@@ -13,6 +13,7 @@
 <div class="wrapper">
 
     <div class="content-wrapper"  style="max-height: 90vh;overflow: hidden">
+
         <div class="modal fade" id="assignModal" role="dialog">
             <div class="modal-dialog">
                 <!-- Modal content-->
@@ -102,8 +103,10 @@
         </div>
 
         <input type="hidden" th:value="${ticketid}" id="ticketid"/>
+
         <section class="col-lg-9 " style="overflow: auto;max-height: 630px">
            <ul class="timeline" id="ticketitem" >
+
 
            </ul>
 
@@ -158,6 +161,10 @@
 
                 </div>
             </div>
+            <div style="border-top: solid 1px lightgray;width: 250px;margin-top:8px" >
+                <button  style="margin-left: 70px;margin-top: 10px" class="btn btn-default" onclick="showhistory()">Show history</button>
+            </div>
+
         </section>
 
     </div>
@@ -167,6 +174,7 @@
     var ticketid = $("#ticketid").val();
     var currentstatus;
     var duration;
+    var staff;
     getcurrentuser()
     loadticketitem(ticketid)
 
@@ -200,8 +208,24 @@
             }else{
                     updateexpiredticket(ticketid,duration)
             }
-        }else {
-            $("#dueday").html("")
+        }else if(currentstatus==1 || currentstatus==5){
+            $("#dueday").html(
+                    '<button class="btn btn-default" onclick="reopenticket('+ticketid+')"> Reopen ticket</button>'
+            )
+        }else if(currentstatus==4){
+            if(staff){
+                $("#dueday").html("");
+            }else{
+                $("#dueday").html(
+                        '<div class="btn-group">'
+                        +'<button class="btn btn-default" onclick="approve('+ticketid+')"> Approve</button>'
+                        +'<button class="btn btn-default" onclick="reject('+ticketid+')"> Reject</button>'
+                        +'</div>'
+                )
+            }
+
+        }else{
+            $("#dueday").html("");
         }
 
 
@@ -234,7 +258,7 @@
                 var statuscolor;
                 var statusname;
                 switch (data.statusid){
-                    case 2: statuscolor='color:#ffff00'; statusname="Assign"; break;
+                    case 2: statuscolor='color:#ffff00'; statusname="Assigned"; break;
                     case 3: statuscolor='color:#00a65a'; statusname="Inprocess"; break;
                     case 4: statuscolor='color:#500a6f'; statusname="Reviewing"; break;
                     case 5: statuscolor='color:#01ff70'; statusname="Solved"; break;
@@ -304,7 +328,7 @@
                     if(data[index].history!==null){
                         var status;
                         switch (data[index].history.statusid){
-                            case 2: status='<a>'+data[index].history.userid+'</a>' +' assign this ticket to ' +'<a>'+data[index].history.assignee+'</a>'; break;
+                            case 2: status='<a>'+data[index].history.userid+'</a>' +' assigned this ticket to ' +'<a>'+data[index].history.assignee+'</a>'; break;
                             case 3: status='<a>'+data[index].history.userid+'</a>' +' change this ticket to '+'<span style="color:#00a65a ">Inprocess</span>'; break;
                             case 4: status='<a>'+data[index].history.userid+'</a>' +' change this ticket to '+'<span style="color:#500a6f ">Reviewing</span>'; break;
                             case 5: status='<a>'+data[index].history.userid+'</a>' +' change this ticket to '+'<span style="color:#01ff70 ">Solved</span>'; break;
@@ -318,14 +342,14 @@
                             status='<a>'+data[index].history.userid+'</a>'+' change this ticket priority to: ' +data[index].history.priority;
                         }
                         timelineitem=
-                                '<li class="time-label">'
-                                +'<span class="bg-green" id="createtime">'
+                                '<li class="time-label tickethistory" style="display: none">'
+                                +'<span class="bg-green tickethistory"style="display: none">'
                                 +moment(data[index].createdAt).format("D/MM/YYYY, hh:mm:ss")
                                 +'</span>'
                                 +'</li>'
                                 +'<li>'
-                                +'<div class="timeline-item" >'
-                                +'<h3 class="timeline-header">'
+                                +'<div class="timeline-item tickethistory"style="display: none" >'
+                                +'<h3 class="timeline-header tickethistory"style="display: none">'
                                 +'<span style="margin-left: 10px">'+status+ note + '</span>'
                                 +'</h3>'
                                 +'</div>'
@@ -582,17 +606,76 @@
             success:function (data) {
                 if(data.roleid==4){
                     $("#status").html(
-                            '<option value="4" >Reviewing</option>'
+                            '<option value="3" >Inprocess</option>'
+                            +'<option value="4" >Reviewing</option>'
                     )
+                    window.staff=true;
                 }else{
                     $("#status").html(
-                            '<option value="4" >Reviewing</option>'
+                            '<option value="3" >Inprocess</option>'
+                            +'<option value="4" >Reviewing</option>'
                             +'<option value="5" >Solved</option>'
                     )
+                    window.staff=false;
                 }
             }
         })
 
+    }
+
+    function showhistory() {
+            $(".tickethistory").toggle();
+    }
+
+    function reopenticket(ticketid) {
+        $.ajax({
+            url:"/changeticketstatus",
+            type:"POST",
+            data:{"ticketid":ticketid,"status":2,"statusnote":"This ticket need to rework"},
+            success:function () {
+                alert("reopen ticket successfull");
+                getticket(ticketid)
+                getticketduetime(ticketid)
+                loadticketitem(ticketid)
+            },
+            error:function () {
+                alert("reopen fail");
+            }
+        })
+    }
+
+    function approve(ticketid) {
+        $.ajax({
+            url:"/changeticketstatus",
+            type:"POST",
+            data:{"ticketid":ticketid,"status":5,"statusnote":"This ticket is solved"},
+            success:function () {
+                alert("approve ticket successfull");
+                getticket(ticketid)
+                getticketduetime(ticketid)
+                loadticketitem(ticketid)
+            },
+            error:function () {
+                alert("approve fail");
+            }
+        })
+    }
+
+    function reject(ticketid) {
+        $.ajax({
+            url:"/changeticketstatus",
+            type:"POST",
+            data:{"ticketid":ticketid,"status":2,"statusnote":"Rework pls"},
+            success:function () {
+                alert("approve ticket successfull");
+                getticket(ticketid)
+                getticketduetime(ticketid)
+                loadticketitem(ticketid)
+            },
+            error:function () {
+                alert("approve fail");
+            }
+        })
     }
 </script>
 </body>

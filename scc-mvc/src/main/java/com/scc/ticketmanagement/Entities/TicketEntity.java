@@ -21,6 +21,7 @@ public class TicketEntity {
     private Timestamp duetime;
 
     @Id
+    @GeneratedValue
     @Column(name = "id")
     public int getId() {
         return id;
