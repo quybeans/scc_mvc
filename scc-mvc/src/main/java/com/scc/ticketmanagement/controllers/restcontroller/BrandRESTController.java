@@ -1,4 +1,4 @@
-package com.scc.ticketmanagement.controllers;
+package com.scc.ticketmanagement.controllers.restcontroller;
 
 import com.scc.ticketmanagement.Entities.BrandEntity;
 

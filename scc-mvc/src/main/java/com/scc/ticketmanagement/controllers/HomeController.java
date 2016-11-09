@@ -119,6 +119,8 @@ public class HomeController {
             return "CustomerCare";
         }else if (userEntity.getRoleid() == Constant.ROLE_SUPERVISOR) {
             return "manageticket";
+        }else if (userEntity.getRoleid() == Constant.ROLE_BRAND) {
+            return "manageticket";
         }
         return "404";
     }
