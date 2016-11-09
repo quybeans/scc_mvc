@@ -13,6 +13,7 @@ public class MessageitemEntity {
     private String messageIdEnd;
 
     @Id
+    @GeneratedValue
     @Column(name = "item_id")
     public int getItemId() {
         return itemId;

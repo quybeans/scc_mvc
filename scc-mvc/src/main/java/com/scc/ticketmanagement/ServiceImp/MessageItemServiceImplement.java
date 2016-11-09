@@ -23,4 +23,19 @@ public class MessageItemServiceImplement implements MessageItemService{
     public MessageitemEntity update(MessageitemEntity messageitemEntity) {
         return this.repository.saveAndFlush(messageitemEntity);
     }
+
+    @Override
+    public MessageitemEntity startTicket(String messageId) {
+        MessageitemEntity item = new MessageitemEntity();
+        item.setMessageIdStart(messageId);
+        return repository.saveAndFlush(item);
+    }
+
+    @Override
+    public MessageitemEntity endTicket(int itemId, String messageId) {
+        MessageitemEntity item = this.repository.get(itemId);
+        item.setMessageIdEnd(messageId);
+        return repository.saveAndFlush(item);
+    }
+
 }

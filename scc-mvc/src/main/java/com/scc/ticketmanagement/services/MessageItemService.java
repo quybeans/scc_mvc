@@ -8,4 +8,6 @@ import com.scc.ticketmanagement.Entities.MessageitemEntity;
 public interface MessageItemService {
     public MessageitemEntity get(int id);
     public MessageitemEntity update(MessageitemEntity messageitemEntity);
+    public MessageitemEntity startTicket(String messageId);
+    public MessageitemEntity endTicket(int itemId ,String messageId);
 }

@@ -1,9 +1,11 @@
 package com.scc.ticketmanagement.controllers.restcontroller;
 
 import com.scc.ticketmanagement.Entities.ContactEntity;
+import com.scc.ticketmanagement.Entities.MessageitemEntity;
 import com.scc.ticketmanagement.Entities.MessageEntity;
 import com.scc.ticketmanagement.exentities.Conversation;
 import com.scc.ticketmanagement.repositories.ContactRepository;
+import com.scc.ticketmanagement.services.MessageItemService;
 import com.scc.ticketmanagement.services.MessageService;
 import com.scc.ticketmanagement.services.PageService;
 import com.scc.ticketmanagement.utilities.FacebookUtility;
@@ -30,6 +32,9 @@ public class MessengerRESTController {
 
     @Autowired
     ContactRepository contactService;
+
+    @Autowired
+    MessageItemService messageItemService;
 
     @RequestMapping(value = "/getAllConversations", method = RequestMethod.GET)
     public List<MessageEntity> getAllConversations() {
@@ -94,8 +99,8 @@ public class MessengerRESTController {
         return messageEntity;
     }
 
-    @RequestMapping(value = "", method = RequestMethod.POST)
-    public MessageEntity createTicket(@RequestParam("messageId") String messageId){
-        return null;
+    @RequestMapping(value = "/messenger/startTicket", method = RequestMethod.POST)
+    public MessageitemEntity startTicket(@RequestParam("messageId") String messageId){
+        return messageItemService.startTicket(messageId);
     }
 }
