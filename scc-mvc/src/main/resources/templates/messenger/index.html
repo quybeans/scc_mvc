@@ -10,6 +10,7 @@
     <link rel="stylesheet" th:href="@{/css/scc-post.css}"/>
     <script src="/js/moment.min.js"></script>
     <script src="/js/messenger.js"></script>
+    <link rel="stylesheet" href="/css/scc-post.css">
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 
@@ -34,11 +35,11 @@
 
             <!--Cot o giua. Noi dung chat-->
             <div class="col-md-6" id="conversation"
-                 style="background-color: white; height: 100vh; overflow: scroll">
-                <div id="conversationContent" style="overflow: scroll; height: 80vh;">
+                 style="background-color: inherit; height: 100vh; overflow: scroll">
+                <ul class="chat" id="conversationContent" style="overflow: scroll; height: 80vh;">
 
 
-                </div>
+                </ul>
                 <div style="position: fixed; bottom: 10px;" id="conversationReply">
                     <div class="col-md-10">
                         <input style="width: 450px" class="form-control" type="text" id="replyText" name="replyText"

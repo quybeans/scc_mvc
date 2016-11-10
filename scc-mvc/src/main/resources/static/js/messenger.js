@@ -10,6 +10,9 @@ var currentPageNum = 0;
 var currentInterval;
 var loadConversationInterval;
 var messageId = "0";
+var currentCustomerName = '';
+var currentCustomerAvt = '';
+var currentPageName = '';
 $(document).ready(function () {
 
     currentPageId = $("#ddlPages option:first").val();
@@ -25,6 +28,7 @@ $(document).ready(function () {
 function getAllConversation(a) {
     clearInterval(loadConversationInterval);
     clearInterval(currentInterval);
+    currentPageName = a.text;
     getAllConversationsByPageId(a.value);
 }
 
@@ -149,25 +153,38 @@ function getConversationBySenderId(pageId, senderId) {
                     a = dataReversed[i].id;
                     if (dataReversed[i].senderid == pageId) {
                         $('#conversationContent').append(
-                            '<div style="text-align: right;">' +
-                            '<h2 style="display: inline-block; background-color: #00a7d0">' + dataReversed[i].content + '</h2>' +
-                            '<p>' + changeIconSentimentScore(dataReversed[i].sentimentScrore) + " " + moment(dataReversed[i].createdAt).fromNow() + '' +
-                            '<button value="' + a + '" onclick="createTicket(this)"><span class="fa fa-plus"></span></button>' +
-                            '<button value="' + a + '" onclick="endTicket(this)"><span class="fa fa-check"></span></button>' +
+                            '<li class="right clearfix"><span class="chat-img pull-right">' +
+                            ' <img src="'+ currentCustomerAvt +'" alt="User Avatar"/>' +
+                            ' </span>' +
+                            '<div class="chat-body clearfix">' +
+                            ' <div class="header">' +
+                            '<small class=" text-muted ">'+
+                            moment(dataReversed[i].createdAt).fromNow() +
+                            '</small>' +
+                            '<strong class="pull-right primary-font">'+currentPageName+'</strong>' +
+                            '</div>' +
+                            '<p style="text-align: right">' +
+                            dataReversed[i].content +
                             '</p>' +
-                            '</div>'
+                            '</div>' +
+                            '</li>'
                         );
                     } else {
                         $('#conversationContent').append(
-                            '<div style="text-align: left;">' +
-                            '<h2 style="display: inline-block; background-color: #9d9d9d;">' + dataReversed[i].content + '</h2>' +
-                            '<p>' +
-                            '<button value="' + a + '" onclick="createTicket(this)"><span class="fa fa-plus"></span></button>' +
-                            '<button value="' + a + '" onclick="endTicket(this)"><span class="fa fa-check"></span></button>' +
-                            moment(dataReversed[i].createdAt).fromNow() + ' ' +
-                            changeIconSentimentScore(dataReversed[i].sentimentScrore)+
-                            '</p>' +
-                            '</div>'
+                            '<li class="left clearfix"><span class="chat-img pull-left"> '+
+                            '<img src="'+ currentCustomerAvt+'"/> </span>'+
+                            '<div class="chat-body clearfix">'+
+                            '<div class="header">'+
+                            '<strong class="primary-font">'+ currentCustomerName+'</strong>'+
+                            '<small class="pull-right text-muted">'+
+                            moment(dataReversed[i].createdAt).fromNow()   +
+                            '</small>'+
+                            '</div>'+
+                            '<p>'+
+                            dataReversed[i].content+
+                            '</p>'+
+                            '</div>'+
+                            '</li>'
                         );
                     }
 
@@ -196,25 +213,39 @@ function getConversationBySenderId(pageId, senderId) {
                     a = dataReversed[i].id;
                     if (dataReversed[i].senderid == pageId) {
                         $('#conversationContent').append(
-                            '<div style="text-align: right;">' +
-                            '<h2 style="display: inline-block; background-color: #00a7d0">' + dataReversed[i].content + '</h2>' +
-                            '<p>' + changeIconSentimentScore(dataReversed[i].sentimentScrore) + " " + moment(dataReversed[i].createdAt).fromNow() + '' +
-                            '<button value="' + a + '" onclick="createTicket(this)"><span class="fa fa-plus"></span></button>' +
-                            '<button value="' + a + '" onclick="endTicket(this)"><span class="fa fa-check"></span></button>' +
+                            '<li class="right clearfix"><span class="chat-img pull-right">' +
+                            ' <img src="'+ currentCustomerAvt +'" alt="User Avatar"/>' +
+                            ' </span>' +
+                            '<div class="chat-body clearfix">' +
+                            ' <div class="header">' +
+                            '<small class=" text-muted ">'+
+                            moment(dataReversed[i].createdAt).fromNow() +
+                            '</small>' +
+                            '<strong class="pull-right primary-font">'+currentPageName+'</strong>' +
+                            '</div>' +
+                            '<p style="text-align: right">' +
+                            dataReversed[i].content +
                             '</p>' +
-                            '</div>'
-                        );
+                            '</div>' +
+                            '</li>'
+                        )
+                        ;
                     } else {
                         $('#conversationContent').append(
-                            '<div style="text-align: left;">' +
-                            '<h2 style="display: inline-block; background-color: #9d9d9d;">' + dataReversed[i].content + '</h2>' +
-                            '<p>' +
-                            '<button value="' + a + '" onclick="createTicket(this)"><span class="fa fa-plus"></span></button>' +
-                            '<button value="' + a + '" onclick="endTicket(this)"><span class="fa fa-check"></span></button>' +
-                            moment(dataReversed[i].createdAt).fromNow() + ' ' +
-                            changeIconSentimentScore(dataReversed[i].sentimentScrore)+
-                            '</p>' +
-                            '</div>'
+                        '<li class="left clearfix"><span class="chat-img pull-left"> '+
+                        '<img src="'+ currentCustomerAvt+'"/> </span>'+
+                            '<div class="chat-body clearfix">'+
+                            '<div class="header">'+
+                            '<strong class="primary-font">'+ currentCustomerName+'</strong>'+
+                        '<small class="pull-right text-muted">'+
+                        moment(dataReversed[i].createdAt).fromNow()   +
+                        '</small>'+
+                        '</div>'+
+                        '<p>'+
+                        dataReversed[i].content+
+                        '</p>'+
+                        '</div>'+
+                        '</li>'
                         );
                     }
 
@@ -222,7 +253,7 @@ function getConversationBySenderId(pageId, senderId) {
             }
         });
 
-    }, 2000);
+    }, 200000);
 
 }
 
@@ -247,25 +278,38 @@ function getConversationBySenderIdWithPage() {
                     a = dataReversed[i].id;
                     if (dataReversed[i].senderid == currentPageId) {
                         $('#conversationContent').append(
-                            '<div style="text-align: right;">' +
-                            '<h2 style="display: inline-block; background-color: #00a7d0">' + dataReversed[i].content + '</h2>' +
-                            '<p>' + changeIconSentimentScore(dataReversed[i].sentimentScrore) + " " + moment(dataReversed[i].createdAt).fromNow() + '' +
-                            '<button value="' + a + '" onclick="createTicket(this)"><span class="fa fa-plus"></span></button>' +
-                            '<button value="' + a + '" onclick="endTicket(this)"><span class="fa fa-check"></span></button>' +
+                            '<li class="right clearfix"><span class="chat-img pull-right">' +
+                            ' <img src="'+ currentCustomerAvt +'" alt="User Avatar"/>' +
+                            ' </span>' +
+                            '<div class="chat-body clearfix">' +
+                            ' <div class="header">' +
+                            '<small class=" text-muted ">'+
+                            moment(dataReversed[i].createdAt).fromNow() +
+                            '</small>' +
+                            '<strong class="pull-right primary-font">'+currentPageName+'</strong>' +
+                            '</div>' +
+                            '<p style="text-align: right">' +
+                            dataReversed[i].content +
                             '</p>' +
-                            '</div>'
+                            '</div>' +
+                            '</li>'
                         );
                     } else {
                         $('#conversationContent').append(
-                            '<div style="text-align: left;">' +
-                            '<h2 style="display: inline-block; background-color: #9d9d9d;">' + dataReversed[i].content + '</h2>' +
-                            '<p>' +
-                            '<button value="' + a + '" onclick="createTicket(this)"><span class="fa fa-plus"></span></button>' +
-                            '<button value="' + a + '" onclick="endTicket(this)"><span class="fa fa-check"></span></button>' +
-                            moment(dataReversed[i].createdAt).fromNow() + ' ' +
-                            changeIconSentimentScore(dataReversed[i].sentimentScrore)+
-                            '</p>' +
-                            '</div>'
+                            '<li class="left clearfix"><span class="chat-img pull-left"> '+
+                            '<img src="'+ currentCustomerAvt+'"/> </span>'+
+                            '<div class="chat-body clearfix">'+
+                            '<div class="header">'+
+                            '<strong class="primary-font">'+ currentCustomerName+'</strong>'+
+                            '<small class="pull-right text-muted">'+
+                            moment(dataReversed[i].createdAt).fromNow()   +
+                            '</small>'+
+                            '</div>'+
+                            '<p>'+
+                            dataReversed[i].content+
+                            '</p>'+
+                            '</div>'+
+                            '</li>'
                         );
                     }
 
@@ -315,6 +359,8 @@ function getCustomerInfo(customerId) {
         },
         dataType: "json",
         success: function (data) {
+            currentCustomerName = data.name;
+            currentCustomerAvt = data.picture;
             $('#customer-info').empty();
             $('#customer-info').append(
                 '<div>'
