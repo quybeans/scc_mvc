@@ -14,4 +14,7 @@ public interface PriorityReposioty extends JpaRepository<PriorityEntity,Integer>
 
     @Query("select p from PriorityEntity p where p.brandid=:brandid")
     List<PriorityEntity> findBybrandid(@Param("brandid") Integer brandid);
+
+    @Query("SELECT p FROM PriorityEntity p where p.duration<:duration order by p.duration desc")
+    List<PriorityEntity> getNextPriority(@Param("duration") Integer duration);
 }

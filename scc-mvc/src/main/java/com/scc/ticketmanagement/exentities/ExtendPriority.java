@@ -8,13 +8,13 @@ import java.sql.Timestamp;
  * Created by user on 11/3/2016.
  */
 public class ExtendPriority extends PriorityEntity {
-    private Timestamp createdtime;
+    private Timestamp duetime;
 
-    public Timestamp getCreatedtime() {
-        return createdtime;
+    public Timestamp getDuetime() {
+        return duetime;
     }
 
-    public void setCreatedtime(Timestamp createdtime) {
-        this.createdtime = createdtime;
+    public void setDuetime(Timestamp duetime) {
+        this.duetime = duetime;
     }
 }

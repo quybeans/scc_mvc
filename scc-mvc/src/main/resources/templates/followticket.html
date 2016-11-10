@@ -11,6 +11,7 @@
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
+
     <div class="content-wrapper"  style="max-height: 90vh;overflow: hidden">
 
         <div class="modal fade" id="assignModal" role="dialog">
@@ -101,15 +102,44 @@
             </div>
         </div>
 
+        <div class="modal fade" id="forwardModal" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Forward Ticket</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form group">
+                            <label for="forwardnote">Note</label>
+                            <textarea class="form-control" id="forwardnote"></textarea>
+                        </div>
+                        <div class="form group">
+                            <label for="forward">Assignee</label>
+                            <select class="form-control" id="forward">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary " id="btnForward">Forward</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
         <input type="hidden" th:value="${ticketid}" id="ticketid"/>
-        <section class="col-lg-9 " style="overflow: auto;max-height: 650px">
+
+        <section class="col-lg-9 " style="overflow: auto;max-height: 630px">
            <ul class="timeline" id="ticketitem" >
+
 
            </ul>
 
         </section>
 
-        <section class="col-lg-3" style="border-left: 1px solid lightgray;height: 100vh;background-color: white;max-height: 650px">
+        <section class="col-lg-3" style="border-left: 1px solid lightgray;height: 100vh;background-color: white;max-height: 630px;overflow: auto">
             <div  style="border: solid 1px lightgray;height: 150px;width: 250px;border-radius: 20px;margin-top: 10px">
                 <div style="margin-top: 30px">
                 <span>
@@ -146,11 +176,11 @@
                 <h4 id="ticketprioritydetail" > <i  class="fa fa-chevron-right" ></i><b style="margin-left: 5px">Priority:</b></h4>
             </div>
             <div style="border-top: solid 1px lightgray;width: 250px;margin-top:8px" >
-                <h4 id="ticketnotedetail" style="width: 250px;word-wrap: break-word"><b>Note:</b></h4>
+                <h4 id="ticketnotedetail" style="width: 250px;word-wrap: break-word"></h4>
             </div>
-            <div style="border-top: solid 1px lightgray;width: 250px;margin-top:8px" >
-                <h4 onclick="gettickethistory(ticketid)"  style="width: 250px;word-wrap: break-word; text-align: center"><b>History</b></h4>
-            </div>
+            <!--<div style="border-top: solid 1px lightgray;width: 250px;margin-top:8px" >-->
+                <!--<h4 onclick="gettickethistory(ticketid)"  style="width: 250px;word-wrap: break-word; text-align: center"><b>History</b></h4>-->
+            <!--</div>-->
             <div id="tickethistory" style="max-height: 100px;width: 250px;display: none;overflow: auto">
             </div>
             <div style="border-top: solid 1px lightgray;width: 250px;margin-top:8px" >
@@ -158,6 +188,10 @@
 
                 </div>
             </div>
+            <div style="border-top: solid 1px lightgray;width: 250px;margin-top:8px" >
+                <button  style="margin-left: 70px;margin-top: 10px" class="btn btn-default" onclick="showhistory()">Show history</button>
+            </div>
+
         </section>
 
     </div>
@@ -165,7 +199,10 @@
 </div>
 <script>
     var ticketid = $("#ticketid").val();
-
+    var currentstatus;
+    var duration;
+    var staff;
+    getcurrentuser()
     loadticketitem(ticketid)
 
     getticket(ticketid)
@@ -175,10 +212,11 @@
             type:"GET",
             data:{"ticketid":ticketid},
             success:function (data) {
-                var createtime = moment(data.createdtime)+ (data.duration * 60 * 1000);
+                var duetime = moment(data.duetime)+ (data.duration * 60 * 1000);
                 var current = moment();
-                var diff = current.diff(createtime)*(-1);
+                var diff = current.diff(duetime)*(-1);
                window.ticketdue = diff;
+                window.duration=data.duration;
             },
             error:function () {
                 alert("fail to get ticket duetime");
@@ -190,13 +228,52 @@
 
 
     setInterval(function () {
-        ticketdue =moment.duration(ticketdue-1000,'milliseconds');
-        if(ticketdue>0){
-            $("#dueday").html("Due in "+ticketdue.hours()+":"+ticketdue.minutes()+":"+ticketdue.seconds());
+        if(currentstatus==2){
+            ticketdue =moment.duration(ticketdue-1000,'milliseconds');
+            if(ticketdue>0){
+                $("#dueday").html("Due in "+ticketdue.hours()+":"+ticketdue.minutes()+":"+ticketdue.seconds());
+            }else{
+                    updateexpiredticket(ticketid,duration)
+            }
+        }else if(currentstatus==4){
+            $("#dueday").html(
+                    '<button class="btn btn-default" onclick="reopenticket('+ticketid+')"> Reopen ticket</button>'
+            )
+        }else if(currentstatus==3){
+            if(staff){
+                $("#dueday").html("");
+            }else{
+                $("#dueday").html(
+                        '<div class="btn-group">'
+                        +'<button class="btn btn-default" onclick="approve('+ticketid+')"> Approve</button>'
+                        +'<button class="btn btn-default" onclick="reject('+ticketid+')"> Reject</button>'
+                        +'</div>'
+                )
+            }
+
         }else{
-            $("#dueday").html("Expired")
+            $("#dueday").html("");
         }
+
+
     },1000);
+
+    function updateexpiredticket(ticketid,duration) {
+        $.ajax({
+            url:"/updateexpiredticket",
+            type:"POST",
+            data:{"ticketid":ticketid,"duration":duration},
+            success:function (data) {
+                    alert("This ticket is expired ")
+                    getticketduetime(ticketid);
+                    getticket(ticketid);
+                    loadticketitem(ticketid);
+            },
+            error:function () {
+                $("#dueday").html("Expired");
+            }
+        })
+    }
 
     function getticket(ticketid) {
         $.ajax({
@@ -207,29 +284,36 @@
                 var statuscolor;
                 var statusname;
                 switch (data.statusid){
-                    case 1: statuscolor='color:#db8b0b'; statusname="Unassign"; break;
-                    case 2: statuscolor='color:#ffff00'; statusname="Assign"; break;
-                    case 3: statuscolor='color:#00a7d0'; statusname="Open"; break;
-                    case 4: statuscolor='color:#00a65a'; statusname="Inprocess"; break;
-                    case 5: statuscolor='color:#500a6f'; statusname="Solving"; break;
-                    case 6: statuscolor='color:#01ff70'; statusname="Solved"; break;
-                    case 7: statuscolor='color:#000000'; statusname="Close"; break;
+                    case 1: statuscolor='color:#ffff00'; statusname="Assigned"; break;
+                    case 2: statuscolor='color:#00a65a'; statusname="Inprocess"; break;
+                    case 3: statuscolor='color:#500a6f'; statusname="Reviewing"; break;
+                    case 4: statuscolor='color:#01ff70'; statusname="Solved"; break;
                 }
+                window.currentstatus=data.statusid;
                 var createat = moment(data.createdtime).format("D/MM/YYYY, hh:mm:ss");
                     $("#ticketstatus").html(
                     '<i class="fa fa-circle" aria-hidden="true" style="'+statuscolor+'"></i>'
                        +statusname
                     );
                     $("#ticketname").html(data.name);
-                    $("#createdat").append(" "+createat);
-                    $("#ticketnotedetail").append(" "+data.note);
-                    $("#ticketprioritydetail").append(' '+data.currentpriority);
-                    $("#getassigner").append('<h4><i  class="fa fa-chevron-right" onclick="getassignerinfo('+data.createdby+')"></i><b style="margin-left: 5px">Assigner:</b> '+data.createbyuser+'</h4>');
-                    $("#getassignee").append('<h4><i  class="fa fa-chevron-right" onclick="getassigneeinfo('+data.assignee+')"></i><b style="margin-left: 5px">Assignee:</b> '+data.assigneeuser+'</h4>');
-                    $("#ticketbutton").append(
-                            '<button class="btn btn-success" style="width: 60px" onclick="assign('+data.id+')">Assign</button>'
+                    $("#createdat").html('<i  class="fa fa-chevron-right" ></i><b style="margin-left: 5px">Created At: </b>'+createat);
+                    $("#ticketnotedetail").html('<i  class="fa fa-chevron-right" ></i><b style="margin-left: 5px">Note: </b>'+data.note);
+                    $("#ticketprioritydetail").html('<i  class="fa fa-chevron-right" ></i><b style="margin-left: 5px">Priority: </b>'+data.currentpriority);
+                    $("#getassigner").html('<h4><i  class="fa fa-chevron-right" onclick="getassignerinfo('+data.createdby+')"></i><b style="margin-left: 5px">Assigner:</b> '+data.createbyuser+'</h4>');
+                    $("#getassignee").html('<h4><i  class="fa fa-chevron-right" onclick="getassigneeinfo('+data.assignee+')"></i><b style="margin-left: 5px">Assignee:</b> '+data.assigneeuser+'</h4>');
+                var groupbtn;
+                if(staff){
+                    groupbtn = '<button class="btn btn-success" style="width: 60px" onclick="forwardticket('+data.id+')">Foward</button>'
                             +'<button class="btn btn-primary" style="width: 60px" onclick="status('+data.id+')">Status</button>'
                             +'<button class=" btn btn-danger" style="width: 60px" onclick="updateticket('+data.id+')">Edit</button>'
+                }else{
+                    groupbtn = '<button class="btn btn-success" style="width: 60px" onclick="assign('+data.id+')">Assign</button>'
+                            +'<button class="btn btn-primary" style="width: 60px" onclick="status('+data.id+')">Status</button>'
+                            +'<button class=" btn btn-danger" style="width: 60px" onclick="updateticket('+data.id+')">Edit</button>'
+                }
+
+                $("#ticketbutton").html(
+                            groupbtn
                     )
 
             },
@@ -248,52 +332,58 @@
             success:function (data) {
                 for(var index =0;index<data.length;index++){
                     var timelineitem;
-                    if(data[index].item){
+                    if(data[index].comment!==null){
                         timelineitem =
                                 '<li class="time-label">'
                                 +'<span class="bg-red" id="createtime">'
-                                +moment(data[index].createdAt).format("D/MM/YYYY")
+                                +moment(data[index].createdAt).format("D/MM/YYYY , hh:mm:ss")
                                 +'</span>'
                                 +'</li>'
                                 +'<li>'
                                 +'<div class="timeline-item" >'
                                 +'<span class="time"><i class="fa fa-clock-o"></i>'
-                                +moment(data[index].commentat).format("D/MM/YYYY, hh:mm:ss")
+                                +moment(data[index].comment.createdAt).format("D/MM/YYYY, hh:mm:ss")
                                 +'</span>'
                                 +'<h3 class="timeline-header">'
-                                +'<img src="http://graph.facebook.com/'+data[index].createdBy+'/picture" alt="user image" style="width: 50px;height: 50px;border-radius: 50px;margin-left: 5px" alt="user image"/>'
-                                +'<span style="margin-left: 10px">'+data[index].createdByName+'</span>'
+                                +'<img src="http://graph.facebook.com/'+data[index].comment.createdBy+'/picture" alt="user image" style="width: 50px;height: 50px;border-radius: 50px;margin-left: 5px" alt="user image"/>'
+                                +'<span style="margin-left: 10px">'+data[index].comment.createdByName+'</span>'
                                 +'</h3>'
-                                +'<div class="timeline-body" onclick="getCommentReply('+data[index].id+')">'
-                                +data[index].content
+                                +'<div class="timeline-body" onclick="getCommentReply('+data[index].comment.id+')">'
+                                +data[index].comment.content
                                 +'</div>'
                                 +'<div class="timeline-footer">'
                                 +'<a class="btn btn-primary btn-xs"><i class="fa fa-send"></i>Reply</a>'
                                 +'</div>'
                                 +'</div>'
-                                +'<div class="pull-right"  id="reply'+data[index].id+'" style="width: 70%;margin-right: 20px;margin-top: 10px;border-radius: 10px;display: none">'
+                                +'<div class="pull-right"  id="reply'+data[index].comment.id+'" style="width: 70%;margin-right: 20px;margin-top: 10px;border-radius: 10px;display: none">'
                                 +'</div>'
                                 +'</li>'
-                    }else{
+                    }
+                    if(data[index].history!==null){
                         var status;
-                        switch (data[index].statusid){
-                            case 2: status='<a>'+data[index].changeby+'</a>' +' assign this ticket to ' +'<a>'+data[index].assignee+'</a>'; break;
-                            case 3: status='<a>'+data[index].changeby+'</a>' +' change this ticket to '+'<span style="color:#00a7d0 ">Open</span>'; break;
-                            case 4: status='<a>'+data[index].changeby+'</a>' +' change this ticket to '+'<span style="color:#00a65a ">Inprocess</span>'; break;
-                            case 5: status='<a>'+data[index].changeby+'</a>' +' change this ticket to '+'<span style="color:#500a6f ">Solving</span>'; break;
-                            case 6: status='<a>'+data[index].changeby+'</a>' +' change this ticket to '+'<span style="color:#01ff70 ">Solved</span>'; break;
-                            case 7: status='<a>'+data[index].changeby+'</a>' +' change this ticket to '+'<span style="color:#000000 ">Close</span>'; break;
+                        switch (data[index].history.statusid){
+                            case 1: status='<a>'+data[index].history.userid+'</a>' +' assigned this ticket to ' +'<a>'+data[index].history.assignee+'</a>'; break;
+                            case 2: status='<a>'+data[index].history.userid+'</a>' +' change this ticket to '+'<span style="color:#00a65a ">Inprocess</span>'; break;
+                            case 3: status='<a>'+data[index].history.userid+'</a>' +' change this ticket to '+'<span style="color:#500a6f ">Reviewing</span>'; break;
+                            case 4: status='<a>'+data[index].history.userid+'</a>' +' change this ticket to '+'<span style="color:#01ff70 ">Solved</span>'; break;
+                        }
+                        var note="";
+                        if(data[index].history.note!==null){
+                             note = " with note: " +data[index].history.note;
+                        }
+                        if(data[index].history.priority!==null){
+                            status='<a>'+data[index].history.userid+'</a>'+' change this ticket priority to: ' +data[index].history.priority;
                         }
                         timelineitem=
-                                '<li class="time-label">'
-                                +'<span class="bg-green" id="createtime">'
-                                +moment(data[index].createdAt).format("D/MM/YYYY")
+                                '<li class="time-label tickethistory" style="display: none">'
+                                +'<span class="bg-green tickethistory"style="display: none">'
+                                +moment(data[index].createdAt).format("D/MM/YYYY, hh:mm:ss")
                                 +'</span>'
                                 +'</li>'
                                 +'<li>'
-                                +'<div class="timeline-item" >'
-                                +'<h3 class="timeline-header">'
-                                +'<span style="margin-left: 10px">'+status+' with note: '+ data[index].note+'</span>'
+                                +'<div class="timeline-item tickethistory"style="display: none" >'
+                                +'<h3 class="timeline-header tickethistory"style="display: none">'
+                                +'<span style="margin-left: 10px">'+status+ note + '</span>'
                                 +'</h3>'
                                 +'</div>'
                                 +'</li>'
@@ -322,7 +412,7 @@
                            '<div class="timeline-item" style="background-color:white;border: 1px solid lightgray;border-radius: 10px">'
                            +'<h3 class="timeline-header" style="border-bottom: 1px solid lightgray;">'
                            +'<small class="time pull-right"><i class="fa fa-clock-o"></i>'
-                           +jQuery.format.prettyDate( new Date(data[i].createdAt))
+                           +moment(data[i].createdAt).format("D/MM/YYYY, hh:mm:ss")
                            +'</small>'
                            +'<img src="http://graph.facebook.com/'+data[i].createdBy+'/picture" alt="user image" style="width: 50px;height: 50px;border-radius: 50px;margin-left: 5px" alt="user image"/>'
                            +'<span style="margin-left: 10px">'+data[i].createdByName+'</span>'
@@ -376,52 +466,7 @@
         })
     }
 
-    function gettickethistory(ticketid){
-        $("#tickethistory").slideToggle();
-        $.ajax({
-            url:"/gettickethistory",
-            type:"POST",
-            data:{"ticketid":ticketid},
-            success:function (data) {
 
-                for(var i =0;i<data.length;i++){
-                    var date = new Date(data[i].createdat).getDate();
-                    var month = new Date(data[i].createdat).getMonth() + 1;
-                    var year = new Date(data[i].createdat).getFullYear();
-                    switch (data[i].statusid) {
-                        case 1:
-                            status = "change " + data[i].ticketid + " to unassign";
-                            break;
-                        case 2:
-                            status = "assign " + data[i].ticketid + " to " + data[i].assignee;
-                            break;
-                        case 3:
-                            status = "change " + data[i].ticketid + " to open";
-                            break;
-                        case 4:
-                            status = "change " + data[i].ticketid + " to inprogess";
-                            break;
-                        case 5:
-                            status = "change " + data[i].ticketid + " to solving";
-                            break;
-                        case 6:
-                            status = "change " + data[i].ticketid + " to solved";
-                            break;
-                        case 7:
-                            status = "change " + data[i].ticketid + " to close";
-                            break;
-
-                    }
-                    $("#tickethistory").append(
-                            '<p>'+ date+'/'+month+'/'+year +','+ data[i].userid + ' ' + status +' with note: ' +data[i].note+'</p>'
-                    );
-                }
-            },
-            error:function () {
-                alert("fail to load ticket history")
-            }
-        })
-    }
 
     //assign ticket
     function assign(ticketid) {
@@ -456,7 +501,9 @@
                 success:function (data) {
                     alert("assign ticket successful"+data.assignee);
                     $('#assignModal').modal('toggle');
-                    table.ajax.reload();
+                    $('#ticketitem').html("");
+                    getticket(ticketid)
+                    loadticketitem(ticketid)
                 },
                 error:function () {
                     alert("fail to assign ticket");
@@ -479,7 +526,9 @@
                 success:function (data) {
                     $('#statusModal').modal('toggle');
                     alert("change status successfull!");
-                    table.ajax.reload();
+                    $('#ticketitem').html("");
+                    getticket(ticketid)
+                    loadticketitem(ticketid)
                 },
                 error:function () {
                     alert("fail to change ticket status");
@@ -530,7 +579,8 @@
                     console.log(data.ticketid);
                     alert("update ticket successful!");
                     $('#changeticketModal').modal('toggle');
-                    table.ajax.reload();
+                    getticket(ticketid)
+                    loadticketitem(ticketid)
                 },
                 error: function () {
                     alert("Fail ne");
@@ -539,6 +589,121 @@
         })
     }
 
+    function getcurrentuser() {
+        $.ajax({
+            url:"/getcurrentuser",
+            type:"GET",
+            success:function (data) {
+                if(data.roleid==4){
+                    $("#status").html(
+                            '<option value="2" >Inprocess</option>'
+                            +'<option value="3" >Reviewing</option>'
+                    )
+                    window.staff=true;
+                }else{
+                    $("#status").html(
+                            '<option value="2" >Inprocess</option>'
+                            +'<option value="3" >Reviewing</option>'
+                            +'<option value="4" >Solved</option>'
+                    )
+                    window.staff=false;
+                }
+            }
+        })
+
+    }
+
+    function showhistory() {
+            $(".tickethistory").toggle();
+    }
+
+    function reopenticket(ticketid) {
+        $.ajax({
+            url:"/changeticketstatus",
+            type:"POST",
+            data:{"ticketid":ticketid,"status":1,"statusnote":"This ticket need to rework"},
+            success:function () {
+                alert("reopen ticket successfull");
+                $('#ticketitem').html("");
+                getticket(ticketid)
+                getticketduetime(ticketid)
+                loadticketitem(ticketid)
+            },
+            error:function () {
+                alert("reopen fail");
+            }
+        })
+    }
+
+    function approve(ticketid) {
+        $.ajax({
+            url:"/changeticketstatus",
+            type:"POST",
+            data:{"ticketid":ticketid,"status":4,"statusnote":"This ticket is solved"},
+            success:function () {
+                alert("approve ticket successfull");
+                $('#ticketitem').html("");
+                getticket(ticketid)
+                getticketduetime(ticketid)
+                loadticketitem(ticketid)
+            },
+            error:function () {
+                alert("approve fail");
+            }
+        })
+    }
+
+    function reject(ticketid) {
+        $.ajax({
+            url:"/changeticketstatus",
+            type:"POST",
+            data:{"ticketid":ticketid,"status":2,"statusnote":"Rework pls"},
+            success:function () {
+                alert("approve ticket successfull");
+                $('#ticketitem').html("");
+                getticket(ticketid)
+                getticketduetime(ticketid)
+                loadticketitem(ticketid)
+            },
+            error:function () {
+                alert("approve fail");
+            }
+        })
+    }
+
+    function forwardticket(ticketid) {
+        $("#forwardModal").modal('toggle');
+        $.ajax({
+            url: "getalluser",
+            type: "GET",
+            success: function (data) {
+                $("#forward").html("");
+                for (var i = 0; i < data.length; i++)
+                    $("#forward").append(
+                            '<option value="' + data[i].userid + '">' + data[i].firstname + ' ' + data[i].lastname + '</option>'
+                    );
+            },
+            error: function () {
+                alert("Fail to load list user");
+            }
+        })
+        $('#btnForward').unbind().click(function () {
+            var forwardnote = $('#forwardnote').val();
+            var forwarduser = $('#forward').val();
+            $.ajax({
+                url: "forwardticket",
+                type: "POST",
+                data: {"ticketid": ticketid, "forwarduser": forwarduser, "forwardnote": forwardnote},
+                success: function (data) {
+                    alert("Forward ticket: " + data.ticketid + " to user: " + data.assignee)
+                    $("#forwardModal").modal('toggle');
+                },
+                error: function () {
+                    alert("Fail to forward ticket")
+                }
+            })
+        })
+    }
 </script>
 </body>
 </html>

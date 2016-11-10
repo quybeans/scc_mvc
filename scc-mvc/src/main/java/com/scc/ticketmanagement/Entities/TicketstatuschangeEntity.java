@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 /**
- * Created by user on 11/6/2016.
+ * Created by user on 11/8/2016.
  */
 @Entity
 @Table(name = "ticketstatuschange", schema = "scc", catalog = "")
@@ -16,6 +16,7 @@ public class TicketstatuschangeEntity {
     private Timestamp createdat;
     private Integer assignee;
     private String note;
+    private Integer priorityid;
 
     @Id
     @Column(name = "id")
@@ -87,6 +88,16 @@ public class TicketstatuschangeEntity {
         this.note = note;
     }
 
+    @Basic
+    @Column(name = "priorityid")
+    public Integer getPriorityid() {
+        return priorityid;
+    }
+
+    public void setPriorityid(Integer priorityid) {
+        this.priorityid = priorityid;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -101,6 +112,7 @@ public class TicketstatuschangeEntity {
         if (createdat != null ? !createdat.equals(that.createdat) : that.createdat != null) return false;
         if (assignee != null ? !assignee.equals(that.assignee) : that.assignee != null) return false;
         if (note != null ? !note.equals(that.note) : that.note != null) return false;
+        if (priorityid != null ? !priorityid.equals(that.priorityid) : that.priorityid != null) return false;
 
         return true;
     }
@@ -114,6 +126,7 @@ public class TicketstatuschangeEntity {
         result = 31 * result + (createdat != null ? createdat.hashCode() : 0);
         result = 31 * result + (assignee != null ? assignee.hashCode() : 0);
         result = 31 * result + (note != null ? note.hashCode() : 0);
+        result = 31 * result + (priorityid != null ? priorityid.hashCode() : 0);
         return result;
     }
 }

@@ -3,8 +3,13 @@ package com.scc.ticketmanagement.controllers;
 
 import com.scc.ticketmanagement.Entities.BrandEntity;
 import com.scc.ticketmanagement.Entities.ProfileEntity;
+import com.scc.ticketmanagement.Entities.TicketEntity;
+import com.scc.ticketmanagement.Entities.TicketstatuschangeEntity;
 import com.scc.ticketmanagement.Entities.UserEntity;
 import com.scc.ticketmanagement.repositories.BrandRepository;
+import com.scc.ticketmanagement.repositories.TicketRepository;
+import com.scc.ticketmanagement.repositories.TicketStatusChangeRepository;
+import com.scc.ticketmanagement.repositories.UserRepository;
 import com.scc.ticketmanagement.services.FacebookaccountService;
 import com.scc.ticketmanagement.services.ProfileService;
 import com.scc.ticketmanagement.services.UserService;
@@ -17,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * Created by Thien on 9/23/2016.
@@ -24,15 +31,26 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class HomeController {
     @Autowired
+    UserRepository userRepository;
+
+    @Autowired
     ProfileService profileService;
 
     @Autowired
     UserService userService;
+
     @Autowired
     FacebookaccountService fbService;
 
     @Autowired
+
     private BrandRepository brandRepository;
+
+    TicketRepository ticketRepository;
+
+    @Autowired
+    TicketStatusChangeRepository ticketStatusChangeRepository;
+
 
     @RequestMapping("/testadmin")
     public String test() {
@@ -65,7 +83,7 @@ public class HomeController {
     }
 
     @RequestMapping("/manageticket")
-    public String manageticket() {
+    public String manageticket(HttpServletRequest request){
         return "manageticket";
     }
 
@@ -177,8 +195,31 @@ public class HomeController {
     }
 
     @RequestMapping("/followticket")
-    public String followticket(@RequestParam("ticketid") Integer ticketid, Model model) {
-        model.addAttribute("ticketid", ticketid);
+    public String followticket(@RequestParam("ticketid") Integer ticketid, Model model,HttpServletRequest request){
+        TicketEntity ticket = ticketRepository.findOne(ticketid);
+        HttpSession session = request.getSession();
+        String loginUser = (String) session.getAttribute("username");
+        UserEntity user = userRepository.findUserByUsername(loginUser);
+        if(ticket.getStatusid()==Constant.STATUS_ASSIGN){
+            if(ticket.getAssignee()==user.getUserid())
+            {
+                ticket.setStatusid(Constant.STATUS_INPROCESS);
+                ticket.setNote("Start follow ticket");
+                ticketRepository.save(ticket);
+
+                TicketstatuschangeEntity change = new TicketstatuschangeEntity();
+                change.setChangeby(user.getUserid());
+                change.setTicketid(ticketid);
+                change.setStatusid(Constant.STATUS_INPROCESS);
+                change.setCreatedat(new Timestamp(new Date().getTime()));
+                change.setNote("Start follow ticket");
+                change.setAssignee(0);
+                change.setPriorityid(0);
+                ticketStatusChangeRepository.save(change);
+            }
+
+        }
+        model.addAttribute("ticketid",ticketid);
         return "followticket";
     }
 
