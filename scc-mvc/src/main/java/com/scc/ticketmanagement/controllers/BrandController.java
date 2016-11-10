@@ -6,6 +6,7 @@ import com.scc.ticketmanagement.repositories.BrandRepository;
 import com.scc.ticketmanagement.services.UserService;
 import com.scc.ticketmanagement.utilities.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,7 +35,7 @@ public class BrandController {
             , @RequestParam("txtPhone") String phone
             , @RequestParam("txtMail") String mail
             , @RequestParam("txtAddress") String address
-            , @RequestParam("txtLogo") String logo) {
+            , @RequestParam("txtLogo") String logo) throws DataAccessException{
         HttpSession session = request.getSession();
         if (session != null) {
             String username = (String) session.getAttribute("username");
@@ -51,6 +52,7 @@ public class BrandController {
                     if (logo.length() > 0) brandEntity.setImage(logo);
 
                     brandRepository.save(brandEntity);
+                    return "/brand/index";
                 }
             }
         }
