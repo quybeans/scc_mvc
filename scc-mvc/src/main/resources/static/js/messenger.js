@@ -13,6 +13,7 @@ var messageId = "0";
 var currentCustomerName = '';
 var currentCustomerAvt = '';
 var currentPageName = '';
+var currentPageAvt = '';
 $(document).ready(function () {
 
     currentPageId = $("#ddlPages option:first").val();
@@ -28,11 +29,12 @@ $(document).ready(function () {
 function getAllConversation(a) {
     clearInterval(loadConversationInterval);
     clearInterval(currentInterval);
-    currentPageName = a.text;
     getAllConversationsByPageId(a.value);
 }
 
 function getAllConversationsByPageId(pageId) {
+    currentPageName = $("#ddlPages option:selected").text();
+    currentPageAvt = 'https://graph.facebook.com/' + pageId + '/picture';
     clearInterval(currentInterval);
     $('#conversationContent').empty();
     $('#messagesList').empty();
@@ -151,41 +153,48 @@ function getConversationBySenderId(pageId, senderId) {
                 var a;
                 $.each(dataReversed, function (i) {
                     a = dataReversed[i].id;
+                    score = dataReversed[i].sentimentScrore;
                     if (dataReversed[i].senderid == pageId) {
                         $('#conversationContent').append(
                             '<li class="right clearfix"><span class="chat-img pull-right">' +
-                            ' <img src="'+ currentCustomerAvt +'" alt="User Avatar"/>' +
+                            ' <img src="' + currentPageAvt + '" alt="User Avatar"/>' +
                             ' </span>' +
-                            '<div class="chat-body clearfix">' +
+                            '<div class="chat-body clearfix pull-right">' +
                             ' <div class="header">' +
-                            '<small class=" text-muted ">'+
+                            '<small class=" text-muted ">' +
                             moment(dataReversed[i].createdAt).fromNow() +
                             '</small>' +
-                            '<strong class="pull-right primary-font">'+currentPageName+'</strong>' +
+                            '<strong class="pull-right primary-font">' + currentPageName + '</strong>' +
                             '</div>' +
                             '<p style="text-align: right">' +
                             dataReversed[i].content +
                             '</p>' +
                             '</div>' +
-                            '</li>'
-                        );
+                            '<span class="pull-right">' +
+                            changeIconSentimentScore(score) +
+                            '</br>' +
+                            '<button value="'+a+'" onclick="createTicket(this)"><span class="fa fa-plus"></span></button>' +
+                            '</span>' +
+                            '</li>');
                     } else {
                         $('#conversationContent').append(
-                            '<li class="left clearfix"><span class="chat-img pull-left"> '+
-                            '<img src="'+ currentCustomerAvt+'"/> </span>'+
-                            '<div class="chat-body clearfix">'+
-                            '<div class="header">'+
-                            '<strong class="primary-font">'+ currentCustomerName+'</strong>'+
-                            '<small class="pull-right text-muted">'+
-                            moment(dataReversed[i].createdAt).fromNow()   +
-                            '</small>'+
-                            '</div>'+
-                            '<p>'+
-                            dataReversed[i].content+
-                            '</p>'+
-                            '</div>'+
-                            '</li>'
-                        );
+                            '<li class="left clearfix"><span class="chat-img pull-left"> ' +
+                            '<img src="' + currentCustomerAvt + '"/> </span>' +
+                            '<div class="chat-body clearfix pull-left">' +
+                            '<div class="header">' +
+                            '<strong class="primary-font">' + currentCustomerName + '</strong>' +
+                            '<small class="pull-right text-muted">' +
+                            moment(dataReversed[i].createdAt).fromNow() +
+                            '</small>' +
+                            '</div>' +
+                            '<p>' +
+                            dataReversed[i].content +
+                            '</p>' +
+                            '</div>' +
+                            changeIconSentimentScore(score) +
+                            '</br>' +
+                            '<button value="'+a+'" onclick="createTicket(this)"><span class="fa fa-plus"></span></button>' +
+                            '</li>');
                     }
 
                 });
@@ -211,41 +220,50 @@ function getConversationBySenderId(pageId, senderId) {
                 var a;
                 $.each(dataReversed, function (i) {
                     a = dataReversed[i].id;
+                    score = dataReversed[i].sentimentScrore;
                     if (dataReversed[i].senderid == pageId) {
                         $('#conversationContent').append(
                             '<li class="right clearfix"><span class="chat-img pull-right">' +
-                            ' <img src="'+ currentCustomerAvt +'" alt="User Avatar"/>' +
+                            ' <img src="' + currentPageAvt + '" alt="User Avatar"/>' +
                             ' </span>' +
-                            '<div class="chat-body clearfix">' +
+                            '<div class="chat-body clearfix pull-right">' +
                             ' <div class="header">' +
-                            '<small class=" text-muted ">'+
+                            '<small class=" text-muted ">' +
                             moment(dataReversed[i].createdAt).fromNow() +
                             '</small>' +
-                            '<strong class="pull-right primary-font">'+currentPageName+'</strong>' +
+                            '<strong class="pull-right primary-font">' + currentPageName + '</strong>' +
                             '</div>' +
                             '<p style="text-align: right">' +
                             dataReversed[i].content +
                             '</p>' +
                             '</div>' +
+                            '<span class="pull-right">' +
+                            changeIconSentimentScore(score) +
+                            '</br>' +
+                            '<button value="'+a+'" onclick="createTicket(this)"><span class="fa fa-plus"></span></button>' +
+                            '</span>' +
                             '</li>'
                         )
                         ;
                     } else {
                         $('#conversationContent').append(
-                        '<li class="left clearfix"><span class="chat-img pull-left"> '+
-                        '<img src="'+ currentCustomerAvt+'"/> </span>'+
-                            '<div class="chat-body clearfix">'+
-                            '<div class="header">'+
-                            '<strong class="primary-font">'+ currentCustomerName+'</strong>'+
-                        '<small class="pull-right text-muted">'+
-                        moment(dataReversed[i].createdAt).fromNow()   +
-                        '</small>'+
-                        '</div>'+
-                        '<p>'+
-                        dataReversed[i].content+
-                        '</p>'+
-                        '</div>'+
-                        '</li>'
+                            '<li class="left clearfix"><span class="chat-img pull-left"> ' +
+                            '<img src="' + currentCustomerAvt + '"/> </span>' +
+                            '<div class="chat-body clearfix pull-left">' +
+                            '<div class="header">' +
+                            '<strong class="primary-font">' + currentCustomerName + '</strong>' +
+                            '<small class="pull-right text-muted">' +
+                            moment(dataReversed[i].createdAt).fromNow() +
+                            '</small>' +
+                            '</div>' +
+                            '<p>' +
+                            dataReversed[i].content +
+                            '</p>' +
+                            '</div>' +
+                            changeIconSentimentScore(score) +
+                            '</br>' +
+                            '<button value="'+a+'" onclick="createTicket(this)"><span class="fa fa-plus"></span></button>' +
+                            '</li>'
                         );
                     }
 
@@ -253,7 +271,7 @@ function getConversationBySenderId(pageId, senderId) {
             }
         });
 
-    }, 200000);
+    }, 500);
 
 }
 
@@ -274,41 +292,51 @@ function getConversationBySenderIdWithPage() {
                 $('#conversationContent').empty();
                 var dataReversed = data.reverse();
                 var a;
+
                 $.each(dataReversed, function (i) {
                     a = dataReversed[i].id;
+                    score = dataReversed[i].sentimentScrore;
                     if (dataReversed[i].senderid == currentPageId) {
                         $('#conversationContent').append(
                             '<li class="right clearfix"><span class="chat-img pull-right">' +
-                            ' <img src="'+ currentCustomerAvt +'" alt="User Avatar"/>' +
+                            ' <img src="' + currentPageAvt + '" alt="User Avatar"/>' +
                             ' </span>' +
-                            '<div class="chat-body clearfix">' +
+                            '<div class="chat-body clearfix pull-right">' +
                             ' <div class="header">' +
-                            '<small class=" text-muted ">'+
+                            '<small class=" text-muted ">' +
                             moment(dataReversed[i].createdAt).fromNow() +
                             '</small>' +
-                            '<strong class="pull-right primary-font">'+currentPageName+'</strong>' +
+                            '<strong class="pull-right primary-font">' + currentPageName + '</strong>' +
                             '</div>' +
                             '<p style="text-align: right">' +
                             dataReversed[i].content +
                             '</p>' +
                             '</div>' +
+                            '<span class="pull-right">' +
+                            changeIconSentimentScore(score) +
+                            '</br>' +
+                            '<button value="'+a+'" onclick="createTicket(this)"><span class="fa fa-plus"></span></button>' +
+                            '</span>' +
                             '</li>'
                         );
                     } else {
                         $('#conversationContent').append(
-                            '<li class="left clearfix"><span class="chat-img pull-left"> '+
-                            '<img src="'+ currentCustomerAvt+'"/> </span>'+
-                            '<div class="chat-body clearfix">'+
-                            '<div class="header">'+
-                            '<strong class="primary-font">'+ currentCustomerName+'</strong>'+
-                            '<small class="pull-right text-muted">'+
-                            moment(dataReversed[i].createdAt).fromNow()   +
-                            '</small>'+
-                            '</div>'+
-                            '<p>'+
-                            dataReversed[i].content+
-                            '</p>'+
-                            '</div>'+
+                            '<li class="left clearfix"><span class="chat-img pull-left"> ' +
+                            '<img src="' + currentCustomerAvt + '"/> </span>' +
+                            '<div class="chat-body clearfix pull-left">' +
+                            '<div class="header">' +
+                            '<strong class="primary-font">' + currentCustomerName + '</strong>' +
+                            '<small class="pull-right text-muted">' +
+                            moment(dataReversed[i].createdAt).fromNow() +
+                            '</small>' +
+                            '</div>' +
+                            '<p>' +
+                            dataReversed[i].content +
+                            '</p>' +
+                            '</div>' +
+                            changeIconSentimentScore(score) +
+                            '</br>' +
+                            '<button value="'+a+'" onclick="createTicket(this)"><span class="fa fa-plus"></span></button>' +
                             '</li>'
                         );
                     }
@@ -411,13 +439,13 @@ function changeIconSentimentScore(score) {
     var result = '';
     switch (score) {
         case 1:
-            result = "<span class='fa fa-smile-o happy'></span>";
+            result = "<span style='margin-left: 10px; margin-right: 10px' class='fa fa-smile-o happy'></span>";
             break;
         case 2:
-            result = "<span class='fa fa-frown-o sad'></span>";
+            result = "<span style='margin-left: 10px; margin-right: 10px' class='fa fa-frown-o sad'></span>";
             break;
         case 3:
-            result = "<span class='fa fa-question-circle-o question'></span>";
+            result = "<span style='margin-left: 10px; margin-right: 10px' class='fa fa-question-circle-o question'></span>";
             break;
     }
     return result;
