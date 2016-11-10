@@ -9,10 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.sql.Timestamp;
+import java.util.*;
 
 /**
  * Created by user on 11/2/2016.
@@ -110,6 +108,18 @@ public class TicketItemController {
         Collections.reverse(customizelist);
 
         return customizelist;
+    }
+
+    @RequestMapping("/addmessagetoitem")
+    public void addmessagetoitem(@RequestParam("ticketid") Integer ticketid,
+                                 @RequestParam("messageid") String messageid){
+        TicketitemEntity item = new TicketitemEntity();
+        item.setCommentid("0");
+        item.setPostid("0");
+        item.setCreatedAt(new Timestamp(new Date().getTime()));
+        item.setMessageid(messageid);
+        item.setTicketid(ticketid);
+        ticketitemRepository.save(item);
     }
 
 }
