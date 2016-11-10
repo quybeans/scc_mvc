@@ -73,8 +73,16 @@ public class TicketItemController {
                     profile = profileRepository.findOne(userRepository.findOne(change.getAssignee()).getProfileid());
                     history.setAssignee(profile.getFirstname()+ " " + profile.getLastname());
                 }
-                profile = profileRepository.findOne(userRepository.findOne(change.getChangeby()).getProfileid());
-                history.setUserid(profile.getFirstname()+ " " + profile.getLastname());
+
+                if(change.getChangeby()==0){
+                    history.setUserid("System");
+                }else{
+                    profile = profileRepository.findOne(userRepository.findOne(change.getChangeby()).getProfileid());
+                    history.setUserid(profile.getFirstname()+ " " + profile.getLastname());
+                }
+
+
+
                 if(change.getStatusid()!=0){
                     history.setStatusid(change.getStatusid());
                 }

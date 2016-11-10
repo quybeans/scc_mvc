@@ -194,18 +194,23 @@ public class HomeController {
         String loginUser = (String) session.getAttribute("username");
         UserEntity user = userRepository.findUserByUsername(loginUser);
         if(ticket.getStatusid()==Constant.STATUS_ASSIGN){
-            ticket.setStatusid(Constant.STATUS_INPROCESS);
-            ticketRepository.save(ticket);
+            if(ticket.getAssignee()==user.getUserid())
+            {
+                ticket.setStatusid(Constant.STATUS_INPROCESS);
+                ticket.setNote("Start follow ticket");
+                ticketRepository.save(ticket);
 
-            TicketstatuschangeEntity change = new TicketstatuschangeEntity();
-            change.setChangeby(user.getUserid());
-            change.setTicketid(ticketid);
-            change.setStatusid(Constant.STATUS_INPROCESS);
-            change.setCreatedat(new Timestamp(new Date().getTime()));
-            change.setNote("Start follow ticket");
-            change.setAssignee(0);
-            change.setPriorityid(0);
-            ticketStatusChangeRepository.save(change);
+                TicketstatuschangeEntity change = new TicketstatuschangeEntity();
+                change.setChangeby(user.getUserid());
+                change.setTicketid(ticketid);
+                change.setStatusid(Constant.STATUS_INPROCESS);
+                change.setCreatedat(new Timestamp(new Date().getTime()));
+                change.setNote("Start follow ticket");
+                change.setAssignee(0);
+                change.setPriorityid(0);
+                ticketStatusChangeRepository.save(change);
+            }
+
         }
         model.addAttribute("ticketid",ticketid);
         return "followticket";

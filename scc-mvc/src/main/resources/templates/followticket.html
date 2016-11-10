@@ -102,6 +102,33 @@
             </div>
         </div>
 
+        <div class="modal fade" id="forwardModal" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Forward Ticket</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form group">
+                            <label for="forwardnote">Note</label>
+                            <textarea class="form-control" id="forwardnote"></textarea>
+                        </div>
+                        <div class="form group">
+                            <label for="forward">Assignee</label>
+                            <select class="form-control" id="forward">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary " id="btnForward">Forward</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
         <input type="hidden" th:value="${ticketid}" id="ticketid"/>
 
         <section class="col-lg-9 " style="overflow: auto;max-height: 630px">
@@ -237,11 +264,10 @@
             type:"POST",
             data:{"ticketid":ticketid,"duration":duration},
             success:function (data) {
-
                     alert("This ticket is expired ")
                     getticketduetime(ticketid);
                     getticket(ticketid);
-
+                    loadticketitem(ticketid);
             },
             error:function () {
                 $("#dueday").html("Expired");
@@ -258,11 +284,10 @@
                 var statuscolor;
                 var statusname;
                 switch (data.statusid){
-                    case 2: statuscolor='color:#ffff00'; statusname="Assigned"; break;
-                    case 3: statuscolor='color:#00a65a'; statusname="Inprocess"; break;
-                    case 4: statuscolor='color:#500a6f'; statusname="Reviewing"; break;
-                    case 5: statuscolor='color:#01ff70'; statusname="Solved"; break;
-                    case 1: statuscolor='color:#000000'; statusname="Unassign"; break;
+                    case 1: statuscolor='color:#ffff00'; statusname="Assigned"; break;
+                    case 2: statuscolor='color:#00a65a'; statusname="Inprocess"; break;
+                    case 3: statuscolor='color:#500a6f'; statusname="Reviewing"; break;
+                    case 4: statuscolor='color:#01ff70'; statusname="Solved"; break;
                 }
                 window.currentstatus=data.statusid;
                 var createat = moment(data.createdtime).format("D/MM/YYYY, hh:mm:ss");
@@ -276,10 +301,19 @@
                     $("#ticketprioritydetail").html('<i  class="fa fa-chevron-right" ></i><b style="margin-left: 5px">Priority: </b>'+data.currentpriority);
                     $("#getassigner").html('<h4><i  class="fa fa-chevron-right" onclick="getassignerinfo('+data.createdby+')"></i><b style="margin-left: 5px">Assigner:</b> '+data.createbyuser+'</h4>');
                     $("#getassignee").html('<h4><i  class="fa fa-chevron-right" onclick="getassigneeinfo('+data.assignee+')"></i><b style="margin-left: 5px">Assignee:</b> '+data.assigneeuser+'</h4>');
-                    $("#ticketbutton").html(
-                            '<button class="btn btn-success" style="width: 60px" onclick="assign('+data.id+')">Assign</button>'
+                var groupbtn;
+                if(staff){
+                    groupbtn = '<button class="btn btn-success" style="width: 60px" onclick="forwardticket('+data.id+')">Foward</button>'
                             +'<button class="btn btn-primary" style="width: 60px" onclick="status('+data.id+')">Status</button>'
                             +'<button class=" btn btn-danger" style="width: 60px" onclick="updateticket('+data.id+')">Edit</button>'
+                }else{
+                    groupbtn = '<button class="btn btn-success" style="width: 60px" onclick="assign('+data.id+')">Assign</button>'
+                            +'<button class="btn btn-primary" style="width: 60px" onclick="status('+data.id+')">Status</button>'
+                            +'<button class=" btn btn-danger" style="width: 60px" onclick="updateticket('+data.id+')">Edit</button>'
+                }
+
+                $("#ticketbutton").html(
+                            groupbtn
                     )
 
             },
@@ -379,7 +413,7 @@
                            '<div class="timeline-item" style="background-color:white;border: 1px solid lightgray;border-radius: 10px">'
                            +'<h3 class="timeline-header" style="border-bottom: 1px solid lightgray;">'
                            +'<small class="time pull-right"><i class="fa fa-clock-o"></i>'
-                           +jQuery.format.prettyDate( new Date(data[i].createdAt))
+                           +moment(data[i].createdAt).format("D/MM/YYYY, hh:mm:ss")
                            +'</small>'
                            +'<img src="http://graph.facebook.com/'+data[i].createdBy+'/picture" alt="user image" style="width: 50px;height: 50px;border-radius: 50px;margin-left: 5px" alt="user image"/>'
                            +'<span style="margin-left: 10px">'+data[i].createdByName+'</span>'
@@ -675,6 +709,40 @@
             error:function () {
                 alert("approve fail");
             }
+        })
+    }
+
+    function forwardticket(ticketid) {
+        $("#forwardModal").modal('toggle');
+        $.ajax({
+            url: "getalluser",
+            type: "GET",
+            success: function (data) {
+                $("#forward").html("");
+                for (var i = 0; i < data.length; i++)
+                    $("#forward").append(
+                            '<option value="' + data[i].userid + '">' + data[i].firstname + ' ' + data[i].lastname + '</option>'
+                    );
+            },
+            error: function () {
+                alert("Fail to load list user");
+            }
+        })
+        $('#btnForward').unbind().click(function () {
+            var forwardnote = $('#forwardnote').val();
+            var forwarduser = $('#forward').val();
+            $.ajax({
+                url: "forwardticket",
+                type: "POST",
+                data: {"ticketid": ticketid, "forwarduser": forwarduser, "forwardnote": forwardnote},
+                success: function (data) {
+                    alert("Forward ticket: " + data.ticketid + " to user: " + data.assignee)
+                    $("#forwardModal").modal('toggle');
+                },
+                error: function () {
+                    alert("Fail to forward ticket")
+                }
+            })
         })
     }
 </script>
