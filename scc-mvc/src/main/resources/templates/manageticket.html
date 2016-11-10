@@ -466,15 +466,15 @@
                 success:function (data) {
                     if(data.roleid==4){
                         $("#status").html(
-                                '<option value="3" >Inprocess</option>'
-                                +'<option value="4" >Reviewing</option>'
+                                '<option value="2" >Inprocess</option>'
+                                +'<option value="3" >Reviewing</option>'
                         )
                         window.staff=true;
                     }else{
                         $("#status").html(
-                                '<option value="3" >Inprocess</option>'
-                                +'<option value="4" >Reviewing</option>'
-                                +'<option value="5" >Solved</option>'
+                                '<option value="2" >Inprocess</option>'
+                                +'<option value="3" >Reviewing</option>'
+                                +'<option value="4" >Solved</option>'
                         )
                         window.staff=false;
                     }

@@ -228,18 +228,18 @@
 
 
     setInterval(function () {
-        if(currentstatus==3){
+        if(currentstatus==2){
             ticketdue =moment.duration(ticketdue-1000,'milliseconds');
             if(ticketdue>0){
                 $("#dueday").html("Due in "+ticketdue.hours()+":"+ticketdue.minutes()+":"+ticketdue.seconds());
             }else{
                     updateexpiredticket(ticketid,duration)
             }
-        }else if(currentstatus==1 || currentstatus==5){
+        }else if(currentstatus==4){
             $("#dueday").html(
                     '<button class="btn btn-default" onclick="reopenticket('+ticketid+')"> Reopen ticket</button>'
             )
-        }else if(currentstatus==4){
+        }else if(currentstatus==3){
             if(staff){
                 $("#dueday").html("");
             }else{
@@ -362,11 +362,10 @@
                     if(data[index].history!==null){
                         var status;
                         switch (data[index].history.statusid){
-                            case 2: status='<a>'+data[index].history.userid+'</a>' +' assigned this ticket to ' +'<a>'+data[index].history.assignee+'</a>'; break;
-                            case 3: status='<a>'+data[index].history.userid+'</a>' +' change this ticket to '+'<span style="color:#00a65a ">Inprocess</span>'; break;
-                            case 4: status='<a>'+data[index].history.userid+'</a>' +' change this ticket to '+'<span style="color:#500a6f ">Reviewing</span>'; break;
-                            case 5: status='<a>'+data[index].history.userid+'</a>' +' change this ticket to '+'<span style="color:#01ff70 ">Solved</span>'; break;
-                            case 1: status='<a>'+data[index].history.userid+'</a>' +' change this ticket to '+'<span style="color:#000000 ">Unassign</span>'; break;
+                            case 1: status='<a>'+data[index].history.userid+'</a>' +' assigned this ticket to ' +'<a>'+data[index].history.assignee+'</a>'; break;
+                            case 2: status='<a>'+data[index].history.userid+'</a>' +' change this ticket to '+'<span style="color:#00a65a ">Inprocess</span>'; break;
+                            case 3: status='<a>'+data[index].history.userid+'</a>' +' change this ticket to '+'<span style="color:#500a6f ">Reviewing</span>'; break;
+                            case 4: status='<a>'+data[index].history.userid+'</a>' +' change this ticket to '+'<span style="color:#01ff70 ">Solved</span>'; break;
                         }
                         var note="";
                         if(data[index].history.note!==null){
@@ -467,52 +466,7 @@
         })
     }
 
-    function gettickethistory(ticketid){
-        $("#tickethistory").slideToggle();
-        $.ajax({
-            url:"/gettickethistory",
-            type:"POST",
-            data:{"ticketid":ticketid},
-            success:function (data) {
 
-                for(var i =0;i<data.length;i++){
-                    var date = new Date(data[i].createdat).getDate();
-                    var month = new Date(data[i].createdat).getMonth() + 1;
-                    var year = new Date(data[i].createdat).getFullYear();
-                    switch (data[i].statusid) {
-                        case 1:
-                            status = "change " + data[i].ticketid + " to unassign";
-                            break;
-                        case 2:
-                            status = "assign " + data[i].ticketid + " to " + data[i].assignee;
-                            break;
-                        case 3:
-                            status = "change " + data[i].ticketid + " to open";
-                            break;
-                        case 4:
-                            status = "change " + data[i].ticketid + " to inprogess";
-                            break;
-                        case 5:
-                            status = "change " + data[i].ticketid + " to solving";
-                            break;
-                        case 6:
-                            status = "change " + data[i].ticketid + " to solved";
-                            break;
-                        case 7:
-                            status = "change " + data[i].ticketid + " to close";
-                            break;
-
-                    }
-                    $("#tickethistory").append(
-                            '<p>'+ date+'/'+month+'/'+year +','+ data[i].userid + ' ' + status +' with note: ' +data[i].note+'</p>'
-                    );
-                }
-            },
-            error:function () {
-                alert("fail to load ticket history")
-            }
-        })
-    }
 
     //assign ticket
     function assign(ticketid) {
@@ -547,6 +501,7 @@
                 success:function (data) {
                     alert("assign ticket successful"+data.assignee);
                     $('#assignModal').modal('toggle');
+                    $('#ticketitem').html("");
                     getticket(ticketid)
                     loadticketitem(ticketid)
                 },
@@ -571,6 +526,7 @@
                 success:function (data) {
                     $('#statusModal').modal('toggle');
                     alert("change status successfull!");
+                    $('#ticketitem').html("");
                     getticket(ticketid)
                     loadticketitem(ticketid)
                 },
@@ -640,15 +596,15 @@
             success:function (data) {
                 if(data.roleid==4){
                     $("#status").html(
-                            '<option value="3" >Inprocess</option>'
-                            +'<option value="4" >Reviewing</option>'
+                            '<option value="2" >Inprocess</option>'
+                            +'<option value="3" >Reviewing</option>'
                     )
                     window.staff=true;
                 }else{
                     $("#status").html(
-                            '<option value="3" >Inprocess</option>'
-                            +'<option value="4" >Reviewing</option>'
-                            +'<option value="5" >Solved</option>'
+                            '<option value="2" >Inprocess</option>'
+                            +'<option value="3" >Reviewing</option>'
+                            +'<option value="4" >Solved</option>'
                     )
                     window.staff=false;
                 }
@@ -665,9 +621,10 @@
         $.ajax({
             url:"/changeticketstatus",
             type:"POST",
-            data:{"ticketid":ticketid,"status":2,"statusnote":"This ticket need to rework"},
+            data:{"ticketid":ticketid,"status":1,"statusnote":"This ticket need to rework"},
             success:function () {
                 alert("reopen ticket successfull");
+                $('#ticketitem').html("");
                 getticket(ticketid)
                 getticketduetime(ticketid)
                 loadticketitem(ticketid)
@@ -682,9 +639,10 @@
         $.ajax({
             url:"/changeticketstatus",
             type:"POST",
-            data:{"ticketid":ticketid,"status":5,"statusnote":"This ticket is solved"},
+            data:{"ticketid":ticketid,"status":4,"statusnote":"This ticket is solved"},
             success:function () {
                 alert("approve ticket successfull");
+                $('#ticketitem').html("");
                 getticket(ticketid)
                 getticketduetime(ticketid)
                 loadticketitem(ticketid)
@@ -702,6 +660,7 @@
             data:{"ticketid":ticketid,"status":2,"statusnote":"Rework pls"},
             success:function () {
                 alert("approve ticket successfull");
+                $('#ticketitem').html("");
                 getticket(ticketid)
                 getticketduetime(ticketid)
                 loadticketitem(ticketid)
