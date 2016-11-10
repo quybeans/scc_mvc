@@ -50,4 +50,10 @@ public class CommentRESTController {
         Page<CommentEntity> result =  commentService.searchCommentByPostIdandContent(page,postid,content);
         return result.getContent();
     }
+
+    @RequestMapping("comment/reply/count")
+    public int searchcommentByContent(String commentId) {
+        int result =  commentService.countReply(commentId);
+        return result;
+    }
 }

@@ -45,6 +45,11 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
+    public UserEntity findUserByBrandIdAndRole(int brandId, int role) {
+        return userRepository.findByBrandidAndRoleidEquals(brandId,role);
+    }
+
+    @Override
     public void Delete(int id) {
         userRepository.delete(id);
     }

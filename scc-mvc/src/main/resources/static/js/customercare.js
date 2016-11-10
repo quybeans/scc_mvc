@@ -20,14 +20,13 @@ function startup() {
 //Get post every 5s
     getAllCrawlPage();
     $('#list-fb-account').empty();
-    getAllFBAccount();
     getAllPageAccount();
-
 
 }
 
 //Reply to comment
 function replyToComment(objId) {
+
     $('#send-progress').attr('class', 'fa fa-paper-plane');
     $('#replyModal').modal('toggle');
     $('#btnReply').unbind().click(function () {
@@ -41,6 +40,42 @@ function replyToComment(objId) {
     });
 }
 
+//Show all ticket existed
+
+function showTicket() {
+    $('#ticket-list').empty();
+    $.ajax({
+        url: '/getallticket',
+        type: "GET",
+        dataType: "json",
+        success: function (data) {
+            $.each(data, function (index) {
+                var statusColor = 'solved';
+                if (data[index].statusid==3) statusColor = 'process';
+                else if (data[index].statusid==2) statusColor = 'assigned';
+
+
+                $('#ticket-list').append(
+                    '<div class="ticket">'
+                    + '<div class="title ' +statusColor+'">' + data[index].name + '</div>'
+                    + '<div>Status:&nbsp;'
+                    + '<span class="fa fa-circle"></span>&nbsp;'
+                    + data[index].currentstatus
+                    + '</div>'
+                    + '<div>Created by:&nbsp;<span style="color: black; font-weight: bold">'
+                    + data[index].createbyuser
+                    + '</span></div>'
+                    + '<div>Current assignee:&nbsp;<span style="color: black; font-weight: bold">'+data[index].assigneeuser+'</span>'
+                    + '</div>'
+                    + '<div></div>'
+                    + '</div>'
+                )
+            })
+        }
+    });
+    $('#ticket-modal').modal('toggle');
+
+}
 
 //Set onclick account
 function setOnclickReplyAccount(imgsrc, name, token) {
@@ -56,8 +91,7 @@ function getAllFBAccount() {
         type: "GET",
         dataType: "json",
         success: function (data) {
-            $('#list-fb-account').empty();
-            $('#list-fb-account').html('<li class="dropdown-header" style="text-align: center">Facebook account</li>');
+            $('#list-fb-account').append('<li class="dropdown-header" style="text-align: center">Facebook account</li>');
             $.each(data, function (index) {
                 $('#list-fb-account').append(
                     '<li onclick="setOnclickReplyAccount(' + data[index].facebookuserid + ',\'' + data[index].facebookusername + '\',\'' + data[index].accesstoken + '\')">'
@@ -82,7 +116,9 @@ function getAllPageAccount() {
                     + '<a><img height="30px" width="30px" style="border-radius: 3px" src="http://graph.facebook.com/' + data[index].pageid + '/picture" alt="user image"> &nbsp;' + data[index].name + '</a>' +
                     '</li>'
                 )
-            })
+            });
+            setOnclickReplyAccount(data[0].pageid, data[0].name, data[0].accesstoken);
+            getAllFBAccount();
         }
     });
 }
@@ -161,7 +197,7 @@ function getAllPosts(pagelist, pageno) {
                         + ' </a>'
                         + '</p>'
                         + '<div style="margin-left: 65px;margin-top: -10px">'
-                        + ' <span style="vertical-align:middle;">' + data[index].posCount + '</span> <span class="fa fa-smile-o happy" style="font-size:20px; vertical-align:middle; margin-right:10px; "></span>'
+                        + ' <span style="vertical-align:middle;">' + data[index].posCount + '</span> <span class="fa fa-question-circle-o question" style="font-size:20px; vertical-align:middle; margin-right:10px; "></span>'
                         + ' <span style="vertical-align:middle;">' + data[index].negCount + '</span> <span class="fa fa-frown-o sad" style="font-size:20px; vertical-align:middle;"></span>'
                         + '</div>'
                         + '<p style="margin-top: 15px;height: 35px;overflow: hidden;">' + data[index].content + '</p>'
@@ -173,7 +209,12 @@ function getAllPosts(pagelist, pageno) {
                         + '</div>'
                     )
 
-                }); if (firstimerun == true){$('#'+data[0].id).click();firstimerun =false};
+                });
+                if (firstimerun == true) {
+                    $('#' + data[0].id).click();
+                    firstimerun = false
+                }
+                ;
             }
         });
     }
@@ -185,7 +226,6 @@ function getAllPosts(pagelist, pageno) {
 
 //Ger reply for comment
 function getReplyByCommentId(commentId) {
-
     $('#reply-list').empty();
     $('#reply-list').html('Loading....');
     $.ajax({
@@ -350,7 +390,7 @@ function getCommentById(postid) {
 function getCommentByPostIdwPage(postId, page) {
     var url;
     if (sortCommentBy == 2)  url = 'comment/bypostid/negSort';
-    if (sortCommentBy == 3) url = 'comment/bypostid/timeSort';
+    else if (sortCommentBy == 3) url = 'comment/bypostid/timeSort';
     else url = 'comment/bypostid';
 
     $('#comment-box').empty();
@@ -359,6 +399,51 @@ function getCommentByPostIdwPage(postId, page) {
         url: url,
         type: "GET",
         data: {postid: postId, page: page},
+        dataType: "json",
+        success: function (data) {
+            $('#comment-box').empty();
+            $.each(data, function (index) {
+                var senIcon = sadicon;
+                if (data[index].sentimentScore == 1)
+                    senIcon = happyicon;
+                if (data[index].sentimentScore == 3)
+                    senIcon = questionicon;
+                var cmtId = "'" + postId + "_" + data[index].id + "'";
+
+                $('#comment-box').append(
+                    '<div class="cmt" >'
+                    + '<div class="col-lg-11 cmtContent">' +
+                    '<img onload="http://localhost:9000/img/user_img.jpg" src="http://graph.facebook.com/' + data[index].createdBy + '/picture" alt="user image">'
+                    + '<p class="message" style="margin-top: -53px">'
+                    + '<a href="https:/fb.com/' + data[index].createdBy + '" target="_blank">'
+                    + data[index].createdByName
+                    + '<small class="text-muted" style="margin-left: 10px">'
+                    + jQuery.format.prettyDate(new Date(data[index].createdAt))
+                    + '</small>'
+                    + ' </a>'
+                    + '<p style="margin-left: 65px;margin-top: -10px " onclick="getticket(' + data[index].id + ',' + postId + ')">' + data[index].content + '</p>'
+                    + '</p>'
+                    // Day la nut reply
+                    + '<button  onclick="replyToComment(' + cmtId + ');getReplyByCommentId(' + "'" + data[index].id + "'" + ');" class="btn btn-default btn-xs inline"' +
+                    ' style="margin-left: 65px;margin-top: -10px; "><span class="glyphicon glyphicon-comment"' +
+                    ' style="color:gray;margin-right: 10px "  title="Reply to this comment"   data-placement="bottom" ' +
+                    'data-toggle="tooltip" ></span>' + countReply(data[index].id) + ' replies</button>'
+                    + '<button onclick="showTicket()" class="btn btn-default btn-xs inline" style="margin-left: 10px;margin-top: -10px;"><span class="fa fa-ticket"></span>Add to ticket</button>'
+                    + '</div>'
+                    + '<div class="col-lg-1" style="margin-top: 30px">' + '<small class="' + senIcon + '" style="font-size: 20px;"></small>'
+                    + '</div>'
+                    + '</div>')
+            });
+        }
+    });
+}
+//Search comment by content
+function searchByContent(postId, content, page) {
+    $('#comment-box').html('<div style=" padding-left: 10px"><span style="color: cornflowerblue;" class="fa fa-circle-o-notch fa-spin"></span> &nbsp;Loading comments ...</div>');
+    $.ajax({
+        url: 'comment/bypostid/search',
+        type: "GET",
+        data: {postid: postId, page: page, content: content},
         dataType: "json",
         success: function (data) {
             $('#comment-box').empty();
@@ -394,14 +479,14 @@ function getCommentByPostIdwPage(postId, page) {
                     + '</div>')
             });
         }
-    });
+    })
 }
-
 
 //On post click
 function getPostById(postId) {
     var happycount = 0;
     var sadcount = 0;
+    var questioncount = 0;
     countComment(postId);
     //Count sentiment in post
     $.ajax({
@@ -412,8 +497,10 @@ function getPostById(postId) {
         success: function (result) {
             happycount = result[0];
             sadcount = result[1];
+            questioncount = result[2];
             $("#happy-count").html(happycount);
             $("#sad-count").html(sadcount);
+            $("#question-count").html(questioncount);
         }
     });
 
@@ -815,6 +902,19 @@ function tagcomment(cmtid, attid) {
         }
     })
 }
+//Get all ticket
+function getTicket() {
+    $.ajax({
+        url: "/getallticket",
+        type: "GET",
+        success: function (data) {
+
+        },
+        error: function () {
+            alert("Get all ticket failed")
+        }
+    })
+}
 
 //untag comment from attribute
 function untagcomment(cmtid, attid) {
@@ -857,7 +957,8 @@ function getAllCrawlPage() {
 
         },
         error: function () {
-            alert("Getting page failed")
+            alert(listPageFilter);
+            alert("Getting page failed, list page filter: " + listPageFilter)
         }
     })
 }
@@ -889,8 +990,6 @@ jQuery(function ($) {
         }
     })
 });
-
-
 
 
 //PAGINATION COMMENT LIST FUNCTIONS
@@ -930,6 +1029,12 @@ function checkNumberInputAndEnter(e) {
 
 }
 
+function searchCommentEnter(e) {
+    if (e.keyCode == 13) {
+        $('#txtSearchComment').blur();
+        searchByContent(currentPost, $('#txtSearchComment').val(), 1);
+    }
+}
 
 // COMMENT SORT FUNCTIONS
 function negSortClick() {
@@ -970,4 +1075,22 @@ function getRepString(rep) {
     // }
     // divide and format
     return (rep / 1000).toFixed(rep % 1000 != 0) + 'k';
+}
+
+//Count replies within comment
+function countReply(commentId) {
+
+    var rs = 0;
+    $.ajax({
+        url: 'comment/reply/count',
+        type: "GET",
+        data: {"commentId": commentId},
+        dataType: "json",
+        async: false,
+        success: function (data) {
+            rs = data;
+        }
+    });
+
+    return rs;
 }

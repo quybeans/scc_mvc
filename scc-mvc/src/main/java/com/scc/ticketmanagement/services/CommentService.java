@@ -22,4 +22,6 @@ public interface CommentService {
     Page<CommentEntity> getCommentByPostIdwTimeSort(int pagenumber, String postid);
 
     Page<CommentEntity> searchCommentByPostIdandContent(int pagenumber,String postid, String content);
+
+    int countReply(String postid);
 }

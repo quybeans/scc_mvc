@@ -1,0 +1,170 @@
+<link rel="stylesheet" type="text/css" th:href="@{/css/mini-messenger.css}" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<div class="header"><span class="fa fa-weixin"></span>Social Messenger</div>
+<button onclick="$('#mess-page-list').removeClass('collapse'); $('#chat-box').addClass('collapse')">Show pages</button>
+<button onclick="$('#mess-page-list').addClass('collapse'); $('#chat-box').removeClass('collapse')">Chatbox</button>
+<button onclick="$('#mess-page-list').addClass('collapse'); $('#chat-box').addClass('collapse')">Chat head</button>
+
+<div id="mess-page-list" class="collapse">
+    <div class="pages-body">
+        <div class="page">
+            <img src="https://www.zineone.com/wp-content/uploads/2014/11/no-user-image-square.jpg">
+            <div class="name">CellphoneS - Hệ thống bán lẻ di động toàn quốc</div>
+            <div class="unread-count">
+                <div class="circle">4</div>
+                <b>unread message</b></div>
+        </div>
+        <div class="page">
+            <img src="https://scontent-sit4-1.xx.fbcdn.net/v/t1.0-9/14572268_535069473367591_9173241214967493761_n.jpg?oh=4a6d32b54fd6e59874fb528de048e8ca&oe=58983C8F">
+            <div class="name">Mobile World</div>
+            <div class="unread-count">
+                <div class="circle">2</div>
+                <b>unread message</b></div>
+        </div>
+        <div class="page">
+            <img src="https://scontent-sit4-1.xx.fbcdn.net/v/t1.0-9/11071590_838711186177519_5497080331647333793_n.jpg?oh=5fe61826297c482b05d3cd4388de3943&oe=58CCC111">
+            <div class="name">Samsung Mobile World</div>
+            <div class="unread-count">
+                <div class="circle">22</div>
+                <b>unread message</b></div>
+        </div>
+        <div class="page">
+            <img src="https://scontent-sit4-1.xx.fbcdn.net/v/t1.0-9/14572268_535069473367591_9173241214967493761_n.jpg?oh=4a6d32b54fd6e59874fb528de048e8ca&oe=58983C8F">
+            <div class="name">Kitty Bang Bang</div>
+            <div class="unread-count">
+                <div class="circle">0</div>
+                unread message
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="background-color: white">
+    <div class="page" style="border-bottom: 0">
+        <img src="https://www.zineone.com/wp-content/uploads/2014/11/no-user-image-square.jpg">
+        <div class="name">CellphoneS - Hệ thống bán lẻ di động toàn quốc</div>
+        <div class="unread-count">
+            Mobilephone,Smartphone</div>
+    </div>
+    <div style="padding-left: 5px">
+        <img style="border-radius: 3px" src="https://www.zineone.com/wp-content/uploads/2014/11/no-user-image-square.jpg" height="50px" width="50px">
+    </div>
+</div>
+
+<div id="chat-box" class="collapse">
+    <div style="margin-bottom: 20px; background-color: inherit">
+        <div style="padding: 0 5px 0 5px">
+            <div style="background-color: white; text-align: center; margin-bottom: 10px; font-size: 20px; font-weight: bold">
+                Jack Sparrows
+            </div>
+
+            <div style="padding-bottom: 0px; height: 80vh;  overflow: auto">
+                <ul class="chat">
+                    <li class="left clearfix"><span class="chat-img pull-left"> <img
+                            src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar"/> </span>
+                        <div class="chat-body clearfix">
+                            <div class="header">
+                                <strong class="primary-font">Jack Sparrow</strong>
+                                <small class="pull-right text-muted">
+                                    12 mins ago
+                                </small>
+                            </div>
+                            <p>
+                                Xin chào
+                            </p>
+                        </div>
+                    </li>
+                    <li class="left clearfix"><span class="chat-img pull-left"> <img
+                            src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar"/> </span>
+                        <div class="chat-body clearfix">
+                            <div class="header">
+                                <strong class="primary-font">Jack Sparrow</strong>
+                                <small class="pull-right text-muted">
+                                    12 mins ago
+                                </small>
+                            </div>
+                            <p>
+                                Mình cần hỗ trợ
+                            </p>
+                        </div>
+                    </li>
+                    <li class="left clearfix"><span class="chat-img pull-left"> <img
+                            src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar"/> </span>
+                        <div class="chat-body clearfix">
+                            <div class="header">
+                                <strong class="primary-font">Jack Sparrow</strong>
+                                <small class="pull-right text-muted">
+                                    12 mins ago
+                                </small>
+                            </div>
+                            <p>
+                                Về đổi trả Galaxy note 7
+                            </p>
+                        </div>
+                    </li>
+                    <li class="right clearfix"><span class="chat-img pull-right">
+                            <img src="http://placehold.it/50/FA6F57/fff&text=ME" alt="User Avatar"/>
+                        </span>
+                        <div class="chat-body clearfix">
+                            <div class="header">
+                                <small class=" text-muted ">13 mins ago
+                                </small>
+                                <strong class="pull-right primary-font">Bhaumik Patel</strong>
+                            </div>
+                            <p>
+                                Chào bạn, chúng tôi đên từ SCC
+                            </p>
+                        </div>
+                    </li>
+                    <li class="left clearfix"><span class="chat-img pull-left">
+                            <img src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar"/>
+                        </span>
+                        <div class="chat-body clearfix">
+                            <div class="header">
+                                <strong class="primary-font">Jack Sparrow</strong>
+                                <small class="pull-right text-muted">
+                                    14 mins ago
+                                </small>
+                            </div>
+                            <p>
+                                Vâng cho mình hỏi thủ tục đổi trả
+                            </p>
+                        </div>
+                    </li>
+                    <li class="right clearfix"><span class="chat-img pull-right">
+                            <img src="http://placehold.it/50/FA6F57/fff&text=ME" alt="User Avatar"/>
+                        </span>
+                        <div class="chat-body clearfix">
+                            <div class="header">
+                                <small class=" text-muted">15 mins
+                                    ago
+                                </small>
+                                <strong class="pull-right primary-font">Bhaumik Patel</strong>
+                            </div>
+                            <p>
+                                Để đổi trả bạn hãy mang đến trung tâm bảo hành gần nhất
+                            </p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div style="bottom: 0; position: relative;">
+                <div class="input-group">
+                    <input id="btn-input" type="text" class="form-control input-sm"
+                           placeholder="Type your message here..."/>
+                    <span class="input-group-btn">
+                            <button class="btn btn-warning btn-sm" id="btn-chat">
+                                Send</button>
+                        </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function getAllActivePage()
+    {
+
+    }
+</script>

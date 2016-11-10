@@ -13,7 +13,7 @@ import java.util.List;
  * Created by Thien on 9/24/2016.
  */
 public interface UserRepository extends JpaRepository<UserEntity, Integer> {
-
+    UserEntity findByBrandidAndRoleidEquals(int brandid, int roleid);
     //find user brand by username
     @Query("SELECT u.brandid FROM UserEntity u WHERE u.username = :username")
     Integer getBrandIdByUsername(@Param("username") String username);
