@@ -7,8 +7,9 @@
     <aside class="main-sidebar" th:include="SideBar::aside"></aside>
     <script>
         getBrandInfo();
+        getBrandManager();
+        isBrandManager();
         function getBrandInfo() {
-            $('#ticket-list').empty();
             $.ajax({
                 url: '/brand/getBrandInfo',
                 type: "GET",
@@ -16,14 +17,58 @@
                 success: function (data) {
                     $('#brand-name1').html(data.name);
                     $('#brand-sologan1').html(data.sologan);
-                    $('#brand-img').attr("src",data.image);
+                    $('#brand-img').attr("src", data.image);
                     $('#brand-mail').html(data.email);
                     $('#brand-location').html(data.address);
-                    $('#brand-phone').html(data.phone);
+                    $('#brand-phone').html(localphoneFormat(data.phone));
+
+                    $('#txtName').val(data.name);
+                    $('#txtSologan').val(data.sologan);
+                    $('#txtLogo').val(data.image);
+                    $('#txtMail').val(data.email);
+                    $('#txtAddress').val(data.address);
+                    $('#txtPhone').val(data.phone);
                 }
             });
-            $('#ticket-modal').modal('toggle');
+
         }
+
+        function getBrandManager() {
+            $.ajax({
+                url: '/brand/getBrandManager',
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+
+                    if (data.gender == "male")$('#brand-manager-name').html("Mr. " + data.firstname + " " + data.lastname);
+                    else $('#brand-manager-name').html("Mrs. " + data.firstname + " " + data.lastname);
+                    $('#brand-manager-phone').html(phoneFormat(data.phone));
+                    $('#brand-manager-mail').html(data.email);
+                }
+            });
+
+        }
+
+        function isBrandManager() {
+            $.ajax({
+                url: '/brand/isBrandManager',
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    if (data == true) $('#btn-edit-info').show();
+                }
+            });
+
+        }
+        function phoneFormat(text) {
+            return text.replace(/(\d{3})(\d{3})(\d{4})/, '$1.$2.$3');
+        }
+        ;
+
+        function localphoneFormat(text) {
+            return text.replace(/(\d{2})/, '$1.');
+        }
+        ;
     </script>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -35,31 +80,102 @@
                      style="border: 5px solid white; box-shadow: 10px 10px 10px #888888;height: 200px;width: 200px ">
             </div>
             <div style="margin-top: -200px; margin-left: 230px">
-                <div id="brand-name1" style="color: cornflowerblue; font-size: 30px; font-weight: bolder">Thế giới di
-                    động
+                <div id="brand-name1" style="color: cornflowerblue; font-size: 30px; font-weight: bolder">
                 </div>
                 <div style="color: white; background-color: cornflowerblue; width: 300px; padding-left: 10px;font-size: 15px">
                     <span class="fa fa-bullhorn"></span><span id="brand-sologan1"
-                                                              style="font-style: italic; margin-left: 5px">Lắng nghe và chia sẻ</span>
+                                                              style="font-style: italic; margin-left: 5px"></span>
                 </div>
                 <hr>
                 <div><span class="glyphicon glyphicon-earphone" style="margin-right: 10px"></span><span
                         id="brand-phone">08.09021028</span></div>
-                <div><span class="glyphicon glyphicon-envelope" style="margin-right: 10px"></span><span id="brand-mail">thegioididong@tgdd.com</span>
+                <div><span class="glyphicon glyphicon-envelope" style="margin-right: 10px"></span><span
+                        id="brand-mail"></span>
                 </div>
                 <div><span class="glyphicon glyphicon-map-marker" style="margin-right: 10px"></span><span
-                        id="brand-location">Lầu 5 Etown 2, 364
-                    Cộng Hòa, Q.Tân Bình, TP.Hồ Chí Minh</span>
+                        id="brand-location"></span>
                 </div>
+                <button data-toggle="modal" data-target="#brand-info-modal" id="btn-edit-info" class="btn btn-primary"
+                        style="margin-top: 5px;display: none"><span class="glyphicon glyphicon-pencil"
+                                                                    style="margin-right: 10px"></span>Update Brand Info
+                </button>
             </div>
 
             <div style="margin-left: 230px">
                 <div style="color: cornflowerblue; margin-top:10px;font-size: 20px; font-weight: bold">Top level
                     manager
                 </div>
-                <div style="font-size: 15px;font-weight: bold">Mr. Đỗ Nam Trâm</div>
-                <div><span class="glyphicon glyphicon-earphone" style="margin-right: 10px"></span>090.210.2810</div>
-                <div><span class="glyphicon glyphicon-envelope" style="margin-right: 10px"></span>trump@tgdd.com
+                <div style="font-size: 15px;font-weight: bold" id="brand-manager-name"></div>
+                <div><span class="glyphicon glyphicon-earphone" style="margin-right: 10px"></span><span
+                        id="brand-manager-phone"></span></div>
+                <div><span class="glyphicon glyphicon-envelope" style="margin-right: 10px"></span><span
+                        id="brand-manager-mail"></span>
+                </div>
+            </div>
+
+
+            <div class="modal fade" id="brand-info-modal" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Update information</h4>
+                        </div>
+                        <form class="form-horizontal" action="/brand/updateInfo" method="post">
+                            <div class="modal-body">
+
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2" for="txtName">Name:</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="txtName" name="txtName" placeholder="Enter name">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2" for="txtSologan">Sologan:</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="txtSologan" name="txtSologan"
+                                               placeholder="Enter sologan">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2" for="txtPhone">Phone:</label>
+                                    <div class="col-sm-10">
+                                        <input type="tel" class="form-control" id="txtPhone" name="txtPhone"
+                                               placeholder="Enter phone">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2" for="txtMail">Email:</label>
+                                    <div class="col-sm-10">
+                                        <input type="email" class="form-control" id="txtMail" name="txtMail"
+                                               placeholder="Enter email">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2" for="txtAddress">Address:</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="txtAddress" name="txtAddress"
+                                               placeholder="Enter address">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2" for="txtLogo">Logo:</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="txtLogo" name="txtLogo"
+                                               placeholder="Enter address">
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Update</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </form>
+                    </div>
+
                 </div>
             </div>
         </div>

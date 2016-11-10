@@ -26,13 +26,13 @@ import java.util.List;
 @Controller
 public class FacebookAccountController {
     @Autowired
-    FacebookaccountService fbService;
+    private FacebookaccountService fbService;
 
     @Autowired
-    UserfacebookaccountService userfacebookaccountService;
+    private UserfacebookaccountService userfacebookaccountService;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @RequestMapping("/facebook-account/index")
     public String manageFb(HttpServletRequest request, Model model) {

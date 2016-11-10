@@ -1,8 +1,10 @@
 package com.scc.ticketmanagement.controllers;
 
 
+import com.scc.ticketmanagement.Entities.BrandEntity;
 import com.scc.ticketmanagement.Entities.ProfileEntity;
 import com.scc.ticketmanagement.Entities.UserEntity;
+import com.scc.ticketmanagement.repositories.BrandRepository;
 import com.scc.ticketmanagement.services.FacebookaccountService;
 import com.scc.ticketmanagement.services.ProfileService;
 import com.scc.ticketmanagement.services.UserService;
@@ -29,6 +31,8 @@ public class HomeController {
     @Autowired
     FacebookaccountService fbService;
 
+    @Autowired
+    private BrandRepository brandRepository;
 
     @RequestMapping("/testadmin")
     public String test() {
@@ -61,7 +65,7 @@ public class HomeController {
     }
 
     @RequestMapping("/manageticket")
-    public String manageticket(){
+    public String manageticket() {
         return "manageticket";
     }
 
@@ -100,26 +104,26 @@ public class HomeController {
     public String loginacc(HttpSession session
             , @RequestParam("txtUsername") String username, @RequestParam("txtPassword") String password) {
         UserEntity userEntity = userService.findUser(username, password);
-        if(userEntity==null){
+        if (userEntity == null) {
             return "login";
         }
 
         session.setAttribute("username", userEntity.getUsername());
 
-        if (userEntity.getProfileid()!=null) {
+        if (userEntity.getProfileid() != null) {
             ProfileEntity profileEntity = profileService.getProfileByID(userEntity.getProfileid());
 
             session.setAttribute("fullname", profileEntity.getFirstname() + " " + profileEntity.getLastname());
 
 
         }
-        if(userEntity.getRoleid()== Constant.ROLE_ADMIN){
+        if (userEntity.getRoleid() == Constant.ROLE_ADMIN) {
             return "redirect:admin";
-        }else if (userEntity.getRoleid() == Constant.ROLE_STAFF) {
+        } else if (userEntity.getRoleid() == Constant.ROLE_STAFF) {
             return "CustomerCare";
-        }else if (userEntity.getRoleid() == Constant.ROLE_SUPERVISOR) {
+        } else if (userEntity.getRoleid() == Constant.ROLE_SUPERVISOR) {
             return "manageticket";
-        }else if (userEntity.getRoleid() == Constant.ROLE_BRAND) {
+        } else if (userEntity.getRoleid() == Constant.ROLE_BRAND) {
             return "manageticket";
         }
         return "404";
@@ -156,7 +160,6 @@ public class HomeController {
     }
 
 
-
     @RequestMapping("/engagement")
     public String home() {
         return "engagement";
@@ -168,14 +171,16 @@ public class HomeController {
     }
 
     @RequestMapping("/getcurrentticket")
-    public String getcurrentticket(@RequestParam("ticketid") Integer ticketid){
+    public String getcurrentticket(@RequestParam("ticketid") Integer ticketid) {
 
         return "customercare";
     }
 
     @RequestMapping("/followticket")
-    public String followticket(@RequestParam("ticketid") Integer ticketid, Model model){
-        model.addAttribute("ticketid",ticketid);
+    public String followticket(@RequestParam("ticketid") Integer ticketid, Model model) {
+        model.addAttribute("ticketid", ticketid);
         return "followticket";
     }
+
+
 }

@@ -20,6 +20,8 @@ public interface UserService {
 
     Integer getBrandIdByUsername(String username);
 
+    UserEntity findUserByBrandIdAndRole(int brandId, int role);
+
     void Delete(int id);
 
     void updateUser(Integer id, String username, String password, Integer roleid);
