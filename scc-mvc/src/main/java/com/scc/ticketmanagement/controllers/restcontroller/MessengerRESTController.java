@@ -3,6 +3,8 @@ package com.scc.ticketmanagement.controllers.restcontroller;
 import com.scc.ticketmanagement.Entities.ContactEntity;
 import com.scc.ticketmanagement.Entities.MessageitemEntity;
 import com.scc.ticketmanagement.Entities.MessageEntity;
+import com.scc.ticketmanagement.Entities.TicketitemEntity;
+import com.scc.ticketmanagement.ServiceImp.TicketIteamServiceImp;
 import com.scc.ticketmanagement.exentities.Conversation;
 import com.scc.ticketmanagement.repositories.ContactRepository;
 import com.scc.ticketmanagement.services.MessageItemService;
@@ -35,6 +37,9 @@ public class MessengerRESTController {
 
     @Autowired
     MessageItemService messageItemService;
+
+    @Autowired
+    TicketIteamServiceImp ticketIteamServiceImp;
 
     @RequestMapping(value = "/getAllConversations", method = RequestMethod.GET)
     public List<MessageEntity> getAllConversations() {
@@ -92,15 +97,24 @@ public class MessengerRESTController {
     @RequestMapping(value = "/messenger/setMessageRead", method = RequestMethod.POST)
     public MessageEntity setRead(@RequestParam("pageId") String pageId,
                                  @RequestParam("senderId") String senderId) {
-        MessageEntity messageEntity = messageService.getLastMessage(pageId,senderId);
-        if (messageEntity!=null && messageEntity.getMessageRead() == false){
+        MessageEntity messageEntity = messageService.getLastMessage(pageId, senderId);
+        if (messageEntity != null && messageEntity.getMessageRead() == false) {
             messageService.setMessageRead(messageEntity.getId());
         }
         return messageEntity;
     }
 
-    @RequestMapping(value = "/messenger/startTicket", method = RequestMethod.POST)
-    public MessageitemEntity startTicket(@RequestParam("messageId") String messageId){
-        return messageItemService.startTicket(messageId);
+    @RequestMapping(value = "/messenger/addTicket", method = RequestMethod.POST)
+    public TicketitemEntity startTicket(@RequestParam("ticketId") Integer ticketId,
+                                        @RequestParam("messageId") String messageId) {
+        System.out.println(ticketId);
+        System.out.println(messageId);
+        TicketitemEntity result = null;
+        MessageitemEntity messageitemEntity = messageItemService.startTicket(messageId);
+        if (messageitemEntity != null){
+            result=  ticketIteamServiceImp.addMessageItemToTicket(ticketId, messageitemEntity.getItemId());
+
+        }
+        return result;
     }
 }

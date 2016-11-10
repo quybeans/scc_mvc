@@ -56,9 +56,7 @@ public class MessageServiceImp implements MessageService {
             try {
                 contactEntity = contactRepository.getContactById(senderId);
                 if (contactEntity != null) {
-                    System.out.println("co contact");
                 } else {
-                    System.out.println("ko co contact");
                     try {
                         //neu khong co trong database thi gui api len fb kiem
                         fbContact = FacebookUtility.getContact(senderId, accessToken);

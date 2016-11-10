@@ -113,13 +113,7 @@ public class TicketItemController {
     @RequestMapping("/addmessagetoitem")
     public void addmessagetoitem(@RequestParam("ticketid") Integer ticketid,
                                  @RequestParam("messageid") String messageid){
-        TicketitemEntity item = new TicketitemEntity();
-        item.setCommentid("0");
-        item.setPostid("0");
-        item.setCreatedAt(new Timestamp(new Date().getTime()));
-        item.setMessageid(messageid);
-        item.setTicketid(ticketid);
-        ticketitemRepository.save(item);
+
     }
 
 }

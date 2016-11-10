@@ -173,7 +173,7 @@ function getConversationBySenderId(pageId, senderId) {
                             '<span class="pull-right">' +
                             changeIconSentimentScore(score) +
                             '</br>' +
-                            '<button value="'+a+'" onclick="createTicket(this)"><span class="fa fa-plus"></span></button>' +
+                            '<button value="' + a + '" onclick="showTicket(this)"><span class="fa fa-plus"></span></button>' +
                             '</span>' +
                             '</li>');
                     } else {
@@ -193,7 +193,7 @@ function getConversationBySenderId(pageId, senderId) {
                             '</div>' +
                             changeIconSentimentScore(score) +
                             '</br>' +
-                            '<button value="'+a+'" onclick="createTicket(this)"><span class="fa fa-plus"></span></button>' +
+                            '<button value="' + a + '" onclick="showTicket(this)"><span class="fa fa-plus"></span></button>' +
                             '</li>');
                     }
 
@@ -240,7 +240,7 @@ function getConversationBySenderId(pageId, senderId) {
                             '<span class="pull-right">' +
                             changeIconSentimentScore(score) +
                             '</br>' +
-                            '<button value="'+a+'" onclick="createTicket(this)"><span class="fa fa-plus"></span></button>' +
+                            '<button value="' + a + '" onclick="showTicket(this)"><span class="fa fa-plus"></span></button>' +
                             '</span>' +
                             '</li>'
                         )
@@ -262,7 +262,7 @@ function getConversationBySenderId(pageId, senderId) {
                             '</div>' +
                             changeIconSentimentScore(score) +
                             '</br>' +
-                            '<button value="'+a+'" onclick="createTicket(this)"><span class="fa fa-plus"></span></button>' +
+                            '<button value="' + a + '" onclick="showTicket(this)"><span class="fa fa-plus"></span></button>' +
                             '</li>'
                         );
                     }
@@ -315,7 +315,7 @@ function getConversationBySenderIdWithPage() {
                             '<span class="pull-right">' +
                             changeIconSentimentScore(score) +
                             '</br>' +
-                            '<button value="'+a+'" onclick="createTicket(this)"><span class="fa fa-plus"></span></button>' +
+                            '<button value="' + a + '" onclick="showTicket(this)"><span class="fa fa-plus"></span></button>' +
                             '</span>' +
                             '</li>'
                         );
@@ -336,7 +336,7 @@ function getConversationBySenderIdWithPage() {
                             '</div>' +
                             changeIconSentimentScore(score) +
                             '</br>' +
-                            '<button value="'+a+'" onclick="createTicket(this)"><span class="fa fa-plus"></span></button>' +
+                            '<button value="' + a + '" onclick="showTicket(this)"><span class="fa fa-plus"></span></button>' +
                             '</li>'
                         );
                     }
@@ -405,27 +405,31 @@ function getCustomerInfo(customerId) {
     });
 }
 
-function createTicket(a) {
+function createTicket(ticketId,messageId) {
     $.ajax({
-        url: '/messenger/startTicket',
+        url: '/messenger/addTicket',
         type: "POST",
         data: {
-            messageId: a.value
+            ticketId: ticketId,
+            messageId: messageId
         },
         dataType: "json",
         success: function (data) {
+            alert("Add ticket successfully");
         },
         error: function (data) {
+            alert("Add ticket fail, please try again later");
         }
     });
 }
 
-function endTicket(a) {
+function endTicket(ticketId, messageId) {
     $.ajax({
         url: '/messenger/endTicket',
         type: "POST",
         data: {
-            messageId: a.value
+            ticketId: ticketId,
+            messageId: messageId
         },
         dataType: "json",
         success: function (data) {
@@ -449,4 +453,39 @@ function changeIconSentimentScore(score) {
             break;
     }
     return result;
+}
+
+function showTicket(a) {
+    var messageId = a.value;
+    $('#ticket-list').empty();
+    $.ajax({
+        url: '/getallticket',
+        type: "GET",
+        dataType: "json",
+        success: function (data) {
+            $.each(data, function (index) {
+                var statusColor = 'solved';
+                if (data[index].statusid == 3) statusColor = 'process';
+                else if (data[index].statusid == 2) statusColor = 'assigned';
+
+
+                $('#ticket-list').append(
+                    '<div id="' + data[index].id + '" class="ticket" onclick="createTicket(' + data[index].id + ', \'' + messageId + '\')">'
+                    + '<div class="title ' + statusColor + '">' + data[index].name + '</div>'
+                    + '<div>Status:&nbsp;'
+                    + '<span class="fa fa-circle"></span>&nbsp;'
+                    + data[index].currentstatus
+                    + '</div>'
+                    + '<div>Created by:&nbsp;<span style="color: black; font-weight: bold">'
+                    + data[index].createbyuser
+                    + '</span></div>'
+                    + '<div>Current assignee:&nbsp;<span style="color: black; font-weight: bold">' + data[index].assigneeuser + '</span>'
+                    + '</div>'
+                    + '<div></div>'
+                    + '</div>'
+                )
+            })
+        }
+    });
+    $('#ticket-modal').modal('toggle');
 }
