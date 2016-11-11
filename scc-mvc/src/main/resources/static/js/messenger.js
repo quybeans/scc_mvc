@@ -53,14 +53,19 @@ function getAllConversationsByPageId(pageId) {
                 if (data[i].read) {
                     $('#messagesList').append(
                         '<div class="item" style="position: relative" id="conversation' + i + '" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId + '\')">'
-                        + '<div><img class="senderAvt" src="' + data[i].senderPicture + '">' + data[i].senderName + '</div>'
+                        + '<div>' +
+                        '<img class="senderAvt" src="' + data[i].senderPicture + '">' + data[i].senderName + '' +
+                        '<div class="sentTime text-muted pull-right"> ' + moment( data[i].sentTime).fromNow()  +'</div>' +
+                        '</div>'
                         + '<div>' + data[i].lastMessage + '</div>'
                         + '</div>'
                     )
                 } else {
                     $('#messagesList').append(
                         '<div class="item" style="position: relative" id="conversation' + i + '" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId + '\')">'
-                        + '<div><img class="senderAvt" src="' + data[i].senderPicture + '"><b>' + data[i].senderName + '</b></div>'
+                        + '<div><img class="senderAvt" src="' + data[i].senderPicture + '"><b>' + data[i].senderName + '</b>' +
+                        '<div class="sentTime text-muted pull-right"> ' + moment( data[i].sentTime).fromNow() +'</div>' +
+                        '</div>'
                         + '<div><b>' + data[i].lastMessage + '</b></div>'
                         + '</div>'
                     )
@@ -70,7 +75,7 @@ function getAllConversationsByPageId(pageId) {
             $('#conversation0').click();
         }
     });
-    if (!isFirstLoadPage){
+    if (!isFirstLoadPage) {
         $('#filter-page-modal').modal('toggle');
     }
     isFirstLoadPage = false;
@@ -89,16 +94,19 @@ function getAllConversationsByPageId(pageId) {
                     if (data[i].read) {
                         $('#messagesList').append(
                             '<div class="item" style="position: relative" id="conversation' + i + '" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId + '\')">'
-                            + '<div><img class="senderAvt" src="' + data[i].senderPicture + '">' + data[i].senderName + '</div>'
-                            // + '<div>' + data[i].senderName + '</div>'
+                            + '<div>' +
+                            '<img class="senderAvt" src="' + data[i].senderPicture + '">' + data[i].senderName + '' +
+                            '<div class="sentTime text-muted pull-right"> ' + moment( data[i].sentTime).fromNow()  +'</div>' +
+                            '</div>'
                             + '<div>' + data[i].lastMessage + '</div>'
                             + '</div>'
                         )
                     } else {
                         $('#messagesList').append(
                             '<div class="item" style="position: relative" id="conversation' + i + '" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId + '\')">'
-                            + '<div><img class="senderAvt" src="' + data[i].senderPicture + '"><b>' + data[i].senderName + '</b></div>'
-                            // + '<div>' + data[i].senderName + '</div>'
+                            + '<div><img class="senderAvt" src="' + data[i].senderPicture + '"><b>' + data[i].senderName + '</b>' +
+                            '<div class="sentTime text-muted pull-right"> ' + moment( data[i].sentTime).fromNow() +'</div>' +
+                            '</div>'
                             + '<div><b>' + data[i].lastMessage + '</b></div>'
                             + '</div>'
                         )
@@ -393,6 +401,7 @@ function getCustomerInfo(customerId) {
         success: function (data) {
             currentCustomerName = data.name;
             currentCustomerAvt = data.picture;
+            $('#currentSenderName').text(currentCustomerName);
             $('#customer-info').empty();
             $('#customer-info').append(
                 '<div>'
@@ -409,7 +418,7 @@ function getCustomerInfo(customerId) {
     });
 }
 
-function createTicket(ticketId,messageId) {
+function createTicket(ticketId, messageId) {
     $.ajax({
         url: '/messenger/addTicket',
         type: "POST",

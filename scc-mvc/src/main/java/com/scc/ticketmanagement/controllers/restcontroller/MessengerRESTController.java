@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -48,7 +50,14 @@ public class MessengerRESTController {
 
     @RequestMapping(value = "/messenger/getAllConversationsByPageId", method = RequestMethod.GET)
     public List<Conversation> getAllConversations(@RequestParam("pageId") String pageId) {
-        return messageService.getAllConversationsByPageId(pageId);
+
+        List<Conversation> result = messageService.getAllConversationsByPageId(pageId);
+        Comparator<Conversation> comp = (Conversation a, Conversation b) -> {
+            return b.getSentTime().compareTo(a.getSentTime());
+        };
+
+        Collections.sort(result, comp);
+        return result;
     }
 
     @RequestMapping(value = "/messenger/getConversationBySenderIdAndPageId", method = RequestMethod.POST)

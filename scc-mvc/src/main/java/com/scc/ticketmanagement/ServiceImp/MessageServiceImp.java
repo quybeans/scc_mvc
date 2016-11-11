@@ -83,6 +83,7 @@ public class MessageServiceImp implements MessageService {
                 conversation.setLastMessage(this.getLastMessageContent(pageId, senderId));
                 conversation.setRead(this.getLastMessage(pageId, senderId).getMessageRead());
                 conversation.setLastMessageId(this.getLastMessage(pageId, senderId).getId());
+                conversation.setSentTime(this.getLastMessage(pageId, senderId).getCreatedAt());
                 conversationList.add(conversation);
             } catch (javax.persistence.EntityNotFoundException e) {
                 e.printStackTrace();

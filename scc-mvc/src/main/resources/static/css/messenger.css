@@ -129,6 +129,291 @@
 .senderAvt  {
     max-height: 50px;
     max-width: 50px;
-    margin-right: 10px;
+    margin: 10px 10px 10px 0px;
+}
+
+.sentTime {
+    margin-top: 10px;
+}
+
+/* Chat widget (DEPRECATED - this will be removed in the next major release. Use Direct Chat instead)*/
+.chat {
+    padding: 0px 0px 0px 0px;
+
+}
+
+.postlist {
+    height: 90vh;
+    padding: 0px;
+    background-color: white;
+    position: relative;
+    overflow: auto;
+    margin-right: 0px;
+}
+
+.cmtbox {
+    height: 95vh;
+    padding: 0 0 2%;
+    background-color: white;
+    overflow-y: scroll;
+
+}
+
+.chat .lcs {
+
+    color: gray;
+}
+
+.lcs p {
+    display: inline;
+    margin-right: 25%;
+
+}
+
+.lcs p:last-child {
+    margin-right: 0;
+}
+
+.chat .item {
+    cursor: pointer;
+    height: 100px;
+    border-bottom: 1px solid #D3D3D3;
+    margin-bottom: 0px;
+    margin-top: 0px;
+    padding: 0px 20px 0px 15px;
+    margin-right: 0px;
+}
+
+.chat .item:first-child {
+    border-top: 0px solid #D3D3D3;
+}
+
+.chat .item:hover {
+    background-color: #F2F2F2;
+}
+
+#post-box .active {
+    background-color: lightskyblue;
+    color: black;
+}
+
+.chat .item:before,
+.chat .item:after {
+    content: " ";
+    display: table;
+}
+
+.chat .item:after {
+    clear: both;
+}
+
+.chat .item > img {
+    width: 50px;
+    height: 50px;
+    margin-top: 10px;
+    border-radius: 3px;
+    border: 0px solid black;
+
+}
+
+.chat .item > .message {
+    margin-left: 65px;
+    margin-top: -50px;
+
+}
+
+.chat .item > .p {
+    padding-left: 3px;
+    overflow: hidden;
+
+}
+
+.chat .item > .message > .name {
+    display: block;
+    font-weight: bold;
+    color: cornflowerblue;
+
+}
+
+.box-input {
+    max-width: 200px;
+}
+
+::-webkit-scrollbar-track {
+    background: white;
+    border-left: 1px solid lightgray;
+}
+
+.postdetail {
+    margin: 10px 20px 10px 20px;
+    background-color: white;
+    display: block;
+    overflow: auto;
+    padding: 10px 0px 10px 15px;
+    border-radius: 3px;
+}
+
+.postdetail img {
+    height: 50px;
+    width: 50px;
+}
+
+.postdetail .author {
+    margin-top: -50px;
+
+    font-weight: bold;
+    margin-left: 60px;
+    font-size: 15px;
+}
+
+/*--------------------------------COMMENT LIST------------------------------*/
+.cmtList {
+    margin: 10px 20px 45px 20px;
+    background-color: white;
+    overflow-y: auto;
+    border-radius: 3px;
+
+}
+
+.cmtList .cmt {
+    cursor: pointer;
+    max-heightheight: 20vh;
+    overflow: hidden;
+    border-bottom: 1px solid lightgray;
+    margin-bottom: 0px;
+    margin-top: 0px;
+    padding: 0px 0px 0px 0px;
+    margin-right: 0px;
+}
+
+.cmtList :hover {
+    background-color: #F2F2F2;
+}
+
+.cmtList .cmtContent > img {
+    width: 50px;
+    height: 50px;
+    margin-top: 10px;
+    border-radius: 3px;
+    border: 0px solid black;
+
+}
+
+.cmtList .cmtContent .message {
+    margin-top: -45px;
+    margin-left: 65px;
+}
+
+.sad {
+    font-size: 20px;
+    color: indianred;
+}
+
+.happy {
+    font-size: 20px;
+    color: #50D050
+}
+
+.question {
+    font-size: 20px;
+    color: #ffbf00;
+}
+
+/* PAGE LIST SELECTED*/
+.page-selected {
+    border: 1px solid cornflowerblue;
+    background-color: lightblue;
+}
+
+.page-unselected {
+    border: 0px solid lightgray;
+    border-bottom: 1px solid lightgray;
+    background-color: transparent;
+}
+
+.pagination li:first-child a, .pagination li:last-child a {
+    border-radius: 0px;
+}
+
+.pagination li a {
+    font-weight: bold;
+    margin-left: 4px;
+}
+
+/*.cmtList .cmt  .message {*/
+/*margin-left: 65px;*/
+/*margin-top: 0px;*/
+
+/*}*/
+/*.cmtList .cmt >.p{*/
+/*padding-left: 3px;*/
+/*overflow: hidden;*/
+
+/*}*/
+/*.cmtList .cmt> .message > .name {*/
+/*display: block;*/
+/*font-weight: 600;*/
+/*}*/
+
+/*Ticket list style*/
+.ticket {
+    border: 1px solid lightgray;
+    padding-left: 10px;
+    display: inline-block;
+    width: 200px;
+    cursor: pointer;
+    background-color: transparent;
+    margin-left: 5px;
+    margin-bottom: 5px;
+}
+
+
+.ticket .title {
+    background-color: cornflowerblue;
+    margin-left: -10px;
+    font-size: 20px;
+    color: white;
+    padding: 10px 10px 10px 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ticket-row {
     margin-bottom: 10px;
+}
+
+.ticket .process {
+    background-color: #00d600;
+}
+
+.ticket .solved {
+    background-color: gray;
+}
+
+.ticket .assigned {
+    background-color: #cece00;
+}
+
+
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0;
+}
+
+/*cmt */
+::-webkit-scrollbar {
+    width: 8px;
+    margin-right: 3px;
+
+}
+
+::-webkit-scrollbar-thumb {
+    background: dimgray;
+    border-radius: 0px;
+
 }
