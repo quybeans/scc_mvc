@@ -3,7 +3,9 @@ package com.scc.ticketmanagement.controllers;
 import com.scc.ticketmanagement.Entities.*;
 import com.scc.ticketmanagement.exentities.ExtendTicketItem;
 import com.scc.ticketmanagement.exentities.TicketHistory;
+import com.scc.ticketmanagement.facebook.Contact;
 import com.scc.ticketmanagement.repositories.*;
+import com.scc.ticketmanagement.utilities.FacebookUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +19,9 @@ import java.util.*;
  */
 @RestController
 public class TicketItemController {
+
+    @Autowired
+    ContactRepository contactRepository;
 
     @Autowired
     PostRepository postRepository;
@@ -87,6 +92,11 @@ public class TicketItemController {
                     ExtendTicketItem item = new ExtendTicketItem();
                     item.setMessage(message);
                     item.setCreatedAt(ti.getCreatedAt());
+                    ContactEntity contact = contactRepository.findOne(message.getSenderid());
+                        item.setSendername(contact.getName());
+                        item.setSenderavt(contact.getPicture());
+
+
                     customizelist.add(item);
                 }
 

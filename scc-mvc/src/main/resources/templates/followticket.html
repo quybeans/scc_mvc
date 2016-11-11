@@ -417,8 +417,8 @@
                                 +moment(data[index].message.createdAt).format("D/MM/YYYY, hh:mm:ss")
                                 +'</span>'
                                 +'<h3 class="timeline-header">'
-                                +'<img src="http://graph.facebook.com/'+data[index].message.senderName+'/picture" alt="user image" style="width: 50px;height: 50px;border-radius: 50px;margin-left: 5px" alt="user image"/>'
-                                +'<span style="margin-left: 10px">'+data[index].message.senderName+'</span>'
+                                +'<img src="'+data[index].senderavt+'" alt="user image" style="width: 50px;height: 50px;border-radius: 50px;margin-left: 5px" alt="user image"/>'
+                                +'<span style="margin-left: 10px">'+data[index].sendername+'</span>'
                                 +'</h3>'
                                 +'<div class="timeline-body">'
                                 +'<a href="messenger?senderid='+data[index].message.senderid+'&receiverid='+data[index].message.receiverid+'&messageid='+data[index].message.id+'">'+data[index].message.content+'</a>'
