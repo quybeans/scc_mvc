@@ -129,7 +129,48 @@
             </div>
         </div>
 
+
+        <div class="modal fade" id="replyModal" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Reply to comment</h4>
+                    </div>
+                    <div class="modal-body" style=" height: auto;">
+
+                        <div id="reply-list" class="cmtList" style="max-height: 45vh; overflow-y: scroll;">
+
+                        </div>
+                        <input type="hidden" id="reply-token" value="">
+                        <div class="dropdown">
+                            <button class="btn btn-info dropdown-toggle" style="width: 180px; margin-top: 10px"
+                                    type="button" data-toggle="dropdown">
+                                <img width="30px" id='reply-img' height="30px" style="border-radius: 3px"
+                                     src="http://globalgamejam.org/sites/default/files/styles/game_sidebar__normal/public/game/featured_image/promo_5.png?itok=9dymM8JD"
+                                     alt="user image">
+                                <p class="inline" id="reply-name"> Reply as... </p>  <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" id="list-fb-account">
+                                <!--This is facebook account list-->
+                            </ul>
+                        </div>
+                        <textarea style="margin-top: 10px" placeholder="Write a reply...." type="text"
+                                  class="form-control" rows="3" id="txtReply"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary " id="btnReply"><i id="send-progress"
+                                                                          class="fa fa-paper-plane"></i>&nbsp;Reply
+                        </button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <input type="hidden" th:value="${ticketid}" id="ticketid"/>
+
 
         <section class="col-lg-9 " style="overflow: auto;max-height: 630px">
            <ul class="timeline" id="ticketitem" >
@@ -204,7 +245,7 @@
     var staff;
     getcurrentuser()
     loadticketitem(ticketid)
-
+    getAllPageAccount();
     getticket(ticketid)
     function getticketduetime(ticketid) {
         $.ajax({
@@ -339,7 +380,7 @@
                     if(data[index].comment!==null){
                         timelineitem =
                                 '<li class="time-label">'
-                                +'<span class="bg-red" id="createtime">'
+                                +'<span class="bg-orange" id="createtime">'
                                 +moment(data[index].createdAt).format("D/MM/YYYY , hh:mm:ss")
                                 +'</span>'
                                 +'</li>'
@@ -356,10 +397,32 @@
                                 +data[index].comment.content
                                 +'</div>'
                                 +'<div class="timeline-footer">'
-                                +'<a class="btn btn-primary btn-xs"><i class="fa fa-send"></i>Reply</a>'
+                                +'<button class="btn btn-primary btn-xs"  onclick="replyToComment()"><i class="fa fa-send"></i>Reply</button>'
                                 +'</div>'
                                 +'</div>'
                                 +'<div class="pull-right"  id="reply'+data[index].comment.id+'" style="width: 70%;margin-right: 20px;margin-top: 10px;border-radius: 10px;display: none">'
+                                +'</div>'
+                                +'</li>'
+                    }
+                    if(data[index].message!==null){
+                        timelineitem =
+                                '<li class="time-label">'
+                                +'<span class="bg-blue" id="createtime">'
+                                +moment(data[index].createdAt).format("D/MM/YYYY , hh:mm:ss")
+                                +'</span>'
+                                +'</li>'
+                                +'<li>'
+                                +'<div class="timeline-item" >'
+                                +'<span class="time"><i class="fa fa-clock-o"></i>'
+                                +moment(data[index].message.createdAt).format("D/MM/YYYY, hh:mm:ss")
+                                +'</span>'
+                                +'<h3 class="timeline-header">'
+                                +'<img src="http://graph.facebook.com/'+data[index].message.senderName+'/picture" alt="user image" style="width: 50px;height: 50px;border-radius: 50px;margin-left: 5px" alt="user image"/>'
+                                +'<span style="margin-left: 10px">'+data[index].message.senderName+'</span>'
+                                +'</h3>'
+                                +'<div class="timeline-body">'
+                                +'<a href="messenger?senderid='+data[index].message.senderid+'&receiverid='+data[index].message.receiverid+'&messageid='+data[index].message.id+'">'+data[index].message.content+'</a>'
+                                +'</div>'
                                 +'</div>'
                                 +'</li>'
                     }
@@ -392,9 +455,7 @@
                                 +'</div>'
                                 +'</li>'
                     }
-                    if(data[index].message!==null){
-                        alert(data[index].message.content)
-                    }
+
                     $('#ticketitem').append(timelineitem);
                 }
             },
@@ -416,17 +477,17 @@
                for(var i =0;i<data.length;i++){
 
                    $("#"+element+"").append(
-                           '<div class="timeline-item" style="background-color:white;border: 1px solid lightgray;border-radius: 10px">'
-                           +'<h3 class="timeline-header" style="border-bottom: 1px solid lightgray;">'
+                           '<div class="timeline-item" style="background-color:white;border: 1px solid lightgray;">'
+                           +'<h5 class="timeline-header" style="border-bottom: 1px solid lightgray;">'
                            +'<small class="time pull-right"><i class="fa fa-clock-o"></i>'
                            +moment(data[i].createdAt).format("D/MM/YYYY, hh:mm:ss")
                            +'</small>'
                            +'<img src="http://graph.facebook.com/'+data[i].createdBy+'/picture" alt="user image" style="width: 50px;height: 50px;border-radius: 50px;margin-left: 5px" alt="user image"/>'
                            +'<span style="margin-left: 10px">'+data[i].createdByName+'</span>'
-                           +'</h3>'
+                           +'</h5>'
                            +'<div class="timeline-body" style="margin-left: 20px">'+data[i].content+'</div>'
                            +'<div class="timeline-footer">'
-                           +'<a class="btn btn-primary btn-xs"><i class="fa fa-send"></i>Reply</a>'
+                           +'<a class="btn btn-primary btn-xs" onclick="replyToComment()"><i class="fa fa-send"></i>Reply</a>'
                            +'</div>'
                            +'</div>'
                    )
@@ -472,8 +533,6 @@
             }
         })
     }
-
-
 
     //assign ticket
     function assign(ticketid) {
@@ -708,6 +767,76 @@
                 }
             })
         })
+    }
+
+    function replyToComment(objId) {
+
+        $('#send-progress').attr('class', 'fa fa-paper-plane');
+        $('#replyModal').modal('toggle');
+        $('#btnReply').unbind().click(function () {
+            var token = $('#reply-token').val();
+            if ($('#txtReply').val().length > 0) {
+                sendComment(objId, $('#txtReply').val(), token);
+            }
+            else {
+                alert("Enter some thing to comment..")
+            }
+        });
+    }
+
+    function sendComment(objId, message, token) {
+        $('#send-progress').attr('class', 'fa fa-spin fa-spinner');
+        $.ajax({
+            url: '/commentOnObj',
+            type: "POST",
+            data: {objId: objId, message: message, token: token},
+            dataType: "json",
+            success: function (data) {
+                $('#send-progress').attr('class', 'fa fa-check');
+                $('#txtComment').val('');
+                $('#txtReply').val('');
+                $('#replyModal').modal('hide');
+            }
+        });
+    }
+
+    //get All Facebook account belong to user
+    function getAllFBAccount() {
+        $.ajax({
+            url: '/allFbAccount',
+            type: "GET",
+            dataType: "json",
+            success: function (data) {
+                $('#list-fb-account').append('<li class="dropdown-header" style="text-align: center">Facebook account</li>');
+                $.each(data, function (index) {
+                    $('#list-fb-account').append(
+                            '<li onclick="setOnclickReplyAccount(' + data[index].facebookuserid + ',\'' + data[index].facebookusername + '\',\'' + data[index].accesstoken + '\')">'
+                            + '<a><img height="30px" width="30px" style="border-radius: 3px" src="http://graph.facebook.com/' + data[index].facebookuserid + '/picture" alt="user image"> &nbsp;' + data[index].facebookusername + '</a>' +
+                            '</li>'
+                    )
+                })
+            }
+        });
+    }
+    //get All Facebook account belong to user
+    function getAllPageAccount() {
+        $.ajax({
+            url: '/allPageAccount',
+            type: "GET",
+            dataType: "json",
+            success: function (data) {
+                $('#list-fb-account').append('<li class="dropdown-header" style="text-align: center">Page account</li>');
+                $.each(data, function (index) {
+                    $('#list-fb-account').append(
+                            '<li onclick="setOnclickReplyAccount(' + data[index].pageid + ',\'' + data[index].name + '\',\'' + data[index].accesstoken + '\')">'
+                            + '<a><img height="30px" width="30px" style="border-radius: 3px" src="http://graph.facebook.com/' + data[index].pageid + '/picture" alt="user image"> &nbsp;' + data[index].name + '</a>' +
+                            '</li>'
+                    )
+                });
+                setOnclickReplyAccount(data[0].pageid, data[0].name, data[0].accesstoken);
+                getAllFBAccount();
+            }
+        });
     }
 </script>
 </body>

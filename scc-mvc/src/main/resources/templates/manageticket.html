@@ -53,9 +53,9 @@
                         targets: 5,
                     render: (data, type, row) => {
                 if(type=== 'display'){
-                    return moment(row.createdtime).format("d/MM/YYYY h:mm:ss");
+                    return moment(row.createdtime).format("D/MM/YYYY h:mm:ss");
                 }
-                return data;
+                return moment(data).format("D/MM/YYYY");
             },
             },
             {
@@ -101,7 +101,7 @@
             ],
             initComplete:  function() {
                 this.api().columns().every( function (i) {
-                    if(i < 7){
+                    if(i < 7 && i != 1 ){
                         var column = this;
                         var select = $('<select><option value=""></option></select>')
                                 .appendTo( $(column.footer()).empty() )
@@ -114,10 +114,13 @@
                                             .search( val ? '^'+val+'$' : '', true, false )
                                             .draw();
                                 } );
-
+                        var array = [];
                         column.data().unique().sort().each( function ( d, j ) {
                             if(typeof d ==='number'){
-                                select.append( '<option value="'+d+'">'+moment(d).format("D/MM/YYYY h:mm:ss")+'</option>' )
+                                if(jQuery.inArray(moment(d).format("D/MM/YYYY"), array) < 0) {
+                                    select.append( '<option value="'+moment(d).format("D/MM/YYYY")+'">'+moment(d).format("D/MM/YYYY")+'</option>' );
+                                }
+                                array.push(moment(d).format("D/MM/YYYY"));
                             }else{
                                 select.append( '<option value="'+d+'">'+d+'</option>' )
                             }
