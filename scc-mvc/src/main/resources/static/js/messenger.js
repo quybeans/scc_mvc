@@ -14,6 +14,7 @@ var currentCustomerName = '';
 var currentCustomerAvt = '';
 var currentPageName = '';
 var currentPageAvt = '';
+var isFirstLoadPage = true;
 $(document).ready(function () {
 
     currentPageId = $("#ddlPages option:first").val();
@@ -35,6 +36,7 @@ function getAllConversation(a) {
 function getAllConversationsByPageId(pageId) {
     currentPageName = $("#ddlPages option:selected").text();
     currentPageAvt = 'https://graph.facebook.com/' + pageId + '/picture';
+
     clearInterval(currentInterval);
     $('#conversationContent').empty();
     $('#messagesList').empty();
@@ -50,17 +52,15 @@ function getAllConversationsByPageId(pageId) {
             $.each(data, function (i) {
                 if (data[i].read) {
                     $('#messagesList').append(
-                        '<div class="item" id="conversation' + i + '" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId + '\')">'
-                        + '<div><img style="max-height: 30px" src="' + data[i].senderPicture + '">' + data[i].senderName + '</div>'
-                        // + '<div>' + data[i].senderName + '</div>'
+                        '<div class="item" style="position: relative" id="conversation' + i + '" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId + '\')">'
+                        + '<div><img class="senderAvt" src="' + data[i].senderPicture + '">' + data[i].senderName + '</div>'
                         + '<div>' + data[i].lastMessage + '</div>'
                         + '</div>'
                     )
                 } else {
                     $('#messagesList').append(
-                        '<div class="item" id="conversation' + i + '" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId + '\')">'
-                        + '<div><img style="max-height: 30px" src="' + data[i].senderPicture + '"><b>' + data[i].senderName + '</b></div>'
-                        // + '<div>' + data[i].senderName + '</div>'
+                        '<div class="item" style="position: relative" id="conversation' + i + '" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId + '\')">'
+                        + '<div><img class="senderAvt" src="' + data[i].senderPicture + '"><b>' + data[i].senderName + '</b></div>'
                         + '<div><b>' + data[i].lastMessage + '</b></div>'
                         + '</div>'
                     )
@@ -70,6 +70,10 @@ function getAllConversationsByPageId(pageId) {
             $('#conversation0').click();
         }
     });
+    if (!isFirstLoadPage){
+        $('#filter-page-modal').modal('toggle');
+    }
+    isFirstLoadPage = false;
 
     loadConversationInterval = setInterval(function () {
         $.ajax({
@@ -84,16 +88,16 @@ function getAllConversationsByPageId(pageId) {
                 $.each(data, function (i) {
                     if (data[i].read) {
                         $('#messagesList').append(
-                            '<div class="item" id="conversation' + i + '" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId + '\')">'
-                            + '<div><img style="max-height: 30px" src="' + data[i].senderPicture + '">' + data[i].senderName + '</div>'
+                            '<div class="item" style="position: relative" id="conversation' + i + '" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId + '\')">'
+                            + '<div><img class="senderAvt" src="' + data[i].senderPicture + '">' + data[i].senderName + '</div>'
                             // + '<div>' + data[i].senderName + '</div>'
                             + '<div>' + data[i].lastMessage + '</div>'
                             + '</div>'
                         )
                     } else {
                         $('#messagesList').append(
-                            '<div class="item" id="conversation' + i + '" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId + '\')">'
-                            + '<div><img style="max-height: 30px" src="' + data[i].senderPicture + '"><b>' + data[i].senderName + '</b></div>'
+                            '<div class="item" style="position: relative" id="conversation' + i + '" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId + '\')">'
+                            + '<div><img class="senderAvt" src="' + data[i].senderPicture + '"><b>' + data[i].senderName + '</b></div>'
                             // + '<div>' + data[i].senderName + '</div>'
                             + '<div><b>' + data[i].lastMessage + '</b></div>'
                             + '</div>'
