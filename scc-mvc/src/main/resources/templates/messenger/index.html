@@ -30,16 +30,50 @@
         <section class="content chat">
 
             <!--Cot ben trai. All conversation of page-->
-            <div class="col-md-3" id="messagesList"
-                 style="background-color: white; height: 100vh; overflow: scroll">
-                <div class="item"></div>
+            <div class="col-md-3">
+                <div class="row"
+                     style="padding-bottom: 5px; text-align:center; background-color: white; padding-top: 5px; border: 1px solid lightgray">
+                    <div class="btn-group pull-right" style="margin-right: 20px" data-toggle="modal"
+                         data-target="#filter-page-modal">
+                        <a class="btn btn-default" style="border-radius: 0px">
+                            <i class="fa fa-newspaper-o"></i>
+                            &nbsp; Pages &nbsp;
+
+                        </a>
+                    </div>
+
+                    <button data-toggle="collapse" data-target="#search-box" class="btn btn-default pull-left"
+                            style="border-radius:0px; margin-left: 20px"><span class="fa fa-search"></span> &nbsp;Search
+                    </button>
+                    <div class="btn-group" style="margin-left: 5px">
+                        <a class="btn btn-default"
+                           onclick="postListCurPage=1;getAllPosts(listPageFilter,postListCurPage)"
+                           style="border-radius: 100px">
+                            <i class="fa fa-refresh"></i>
+
+                        </a>
+                    </div>
+                </div>
+                <div class="collapse" id="search-box" style="padding: 10px">
+                    <div class="input-group">
+                        <input type="text" class="form-control" value="" id="txtSearchPost"
+                               placeholder="Search by post content"/>
+                        <span class="input-group-addon" onclick="findPostByContent(listPageFilter)"> <i
+                                class="fa fa-search"></i></span>
+                    </div>
+                </div>
+                <div class="postlist" id="post-list">
+                    <div id="messagesList" class="box-body chat">
+                        <div class="item"></div>
+                    </div>
+
+                </div>
             </div>
 
             <!--Cot o giua. Noi dung chat-->
             <div class="col-md-6" id="conversation"
                  style="background-color: inherit; height: 100vh; overflow: scroll">
                 <ul class="chat" id="conversationContent" style="overflow: scroll; height: 80vh;">
-
 
                 </ul>
                 <div style="position: fixed; bottom: 10px;" id="conversationReply">
@@ -58,6 +92,130 @@
                 Customer info
             </div>
 
+            <!--All ticket modal-->
+            <div class="modal fade" id="ticket-modal" role="dialog">
+                <div class="modal-dialog modal-lg">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Tickets in the system</h4>
+                        </div>
+                        <div class="modal-body" id="ticket-list">
+                            <div class="ticket-row">
+                                <div class="ticket">
+                                    <div class="title process">Thái độ nhân viên
+                                        tệ
+                                    </div>
+                                    <div>Status:
+                                        <span class="fa fa-circle" style="color: #00d600"></span>
+                                        In Process
+                                    </div>
+                                    <div>Created by:<span
+                                            style="color: black; font-weight: bold">User</span></div>
+                                    <div>Current assignee:<span style="color: black; font-weight: bold">Admin</span>
+                                    </div>
+                                    <div></div>
+                                </div>
+                                <div class="ticket">
+                                    <div class="title process">Thái độ nhân viên
+                                        tệ
+                                    </div>
+                                    <div>Status:
+                                        <span class="fa fa-circle" style="color: #00d600"></span>
+                                        In Process
+                                    </div>
+                                    <div>Created by:<span
+                                            style="color: black; font-weight: bold">User</span></div>
+                                    <div>Current assignee:<span style="color: black; font-weight: bold">Admin</span>
+                                    </div>
+                                    <div></div>
+                                </div>
+                                <div class="ticket">
+                                    <div class="title solved">
+                                        Galaxy Note 7 phát nổ cần được tư vấn đổi trả
+                                    </div>
+                                    <div style="color: gray">Status: <span class="fa fa-circle"
+                                                                           style="color: gray"></span>
+                                        Solved
+                                    </div>
+                                    <div style="color: gray">Created by:<span
+                                            style="color: black; font-weight: bold">User</span></div>
+                                    <div style="color: gray">Current assignee:<span
+                                            style="color: black; font-weight: bold">Admin</span>
+                                    </div>
+                                    <div></div>
+                                </div>
+                                <div class="ticket">
+                                    <div class="title assigned">
+                                        Hỗ trợ kỹ thuật
+                                    </div>
+                                    <div style="color: gray">Status: <span class="fa fa-circle"
+                                                                           style="color: #cece00"></span> Assigned
+                                    </div>
+                                    <div style="color: gray">Created by:<span
+                                            style="color: black; font-weight: bold">User</span></div>
+                                    <div style="color: gray">Current assignee:<span
+                                            style="color: black; font-weight: bold">QuyDV</span>
+                                    </div>
+                                    <div></div>
+                                </div>
+                            </div>
+                            <div class="ticket-row">
+                                <div class="ticket">
+                                    <div class="title process">Thái độ nhân viên
+                                        tệ
+                                    </div>
+                                    <div style="color: gray">Status: <span class="fa fa-circle"
+                                                                           style="color: #00d600"></span> In Process
+                                    </div>
+                                    <div style="color: gray">Created by:<span
+                                            style="color: black; font-weight: bold">User</span></div>
+                                    <div style="color: gray">Current assignee:<span
+                                            style="color: black; font-weight: bold">Admin</span>
+                                    </div>
+                                    <div></div>
+                                </div>
+                                <div class="ticket">
+                                    <div class="title solved">
+                                        Galaxy Note 7 phát nổ cần được tư vấn đổi trả
+                                    </div>
+                                    <div style="color: gray">Status: <span class="fa fa-circle"
+                                                                           style="color: gray"></span>
+                                        Solved
+                                    </div>
+                                    <div style="color: gray">Created by:<span
+                                            style="color: black; font-weight: bold">User</span></div>
+                                    <div style="color: gray">Current assignee:<span
+                                            style="color: black; font-weight: bold">Admin</span>
+                                    </div>
+                                    <div></div>
+                                </div>
+                                <div class="ticket">
+                                    <div class="title assigned">
+                                        Hỗ trợ kỹ thuật
+                                    </div>
+                                    <div style="color: gray">Status: <span class="fa fa-circle"
+                                                                           style="color: #cece00"></span> Assigned
+                                    </div>
+                                    <div style="color: gray">Created by:<span
+                                            style="color: black; font-weight: bold">User</span></div>
+                                    <div style="color: gray">Current assignee:<span
+                                            style="color: black; font-weight: bold">QuyDV</span>
+                                    </div>
+                                    <div></div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!--MODALS END HERE-->
         </section>
     </div>
 
