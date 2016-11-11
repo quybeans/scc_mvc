@@ -20,6 +20,12 @@ import java.util.List;
 @RestController
 public class TicketItemController {
     @Autowired
+    MessageitemRepository messageitemRepository;
+
+    @Autowired
+    MessageRepository messageRepository;
+
+    @Autowired
     PriorityReposioty priorityReposioty;
 
     @Autowired
@@ -53,8 +59,12 @@ public class TicketItemController {
                     customizelist.add(item);
                 }
 
-                if(!ti.getMessageid().equals("0")){
-
+                if(ti.getMessageid()!=0){
+                    MessageitemEntity messageitem = messageitemRepository.findOne(ti.getMessageid());
+                    MessageEntity message = messageRepository.findOne(messageitem.getMessageIdStart());
+                    ExtendTicketItem item = new ExtendTicketItem();
+                    item.setMessage(message);
+                    customizelist.add(item);
                 }
 
                 if(!ti.getPostid().equals("0")){

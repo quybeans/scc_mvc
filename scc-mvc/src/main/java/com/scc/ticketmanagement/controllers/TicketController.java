@@ -397,7 +397,7 @@ public class TicketController {
         TicketitemEntity item = new TicketitemEntity();
         item.setCommentid(commentid);
         item.setTicketid(ticketid);
-        item.setMessageid("0");
+        item.setMessageid(0);
         item.setPostid("0");
         ticketitemRepository.save(item);
     }

@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 /**
- * Created by user on 11/7/2016.
+ * Created by user on 11/11/2016.
  */
 @Entity
 @Table(name = "ticketitem", schema = "scc", catalog = "")
@@ -13,7 +13,7 @@ public class TicketitemEntity {
     private int ticketid;
     private String commentid;
     private String postid;
-    private String messageid;
+    private int messageid;
     private Timestamp createdAt;
 
     @Id
@@ -48,11 +48,11 @@ public class TicketitemEntity {
 
     @Id
     @Column(name = "messageid")
-    public String getMessageid() {
+    public int getMessageid() {
         return messageid;
     }
 
-    public void setMessageid(String messageid) {
+    public void setMessageid(int messageid) {
         this.messageid = messageid;
     }
 
@@ -74,9 +74,9 @@ public class TicketitemEntity {
         TicketitemEntity that = (TicketitemEntity) o;
 
         if (ticketid != that.ticketid) return false;
+        if (messageid != that.messageid) return false;
         if (commentid != null ? !commentid.equals(that.commentid) : that.commentid != null) return false;
         if (postid != null ? !postid.equals(that.postid) : that.postid != null) return false;
-        if (messageid != null ? !messageid.equals(that.messageid) : that.messageid != null) return false;
         if (createdAt != null ? !createdAt.equals(that.createdAt) : that.createdAt != null) return false;
 
         return true;
@@ -87,7 +87,7 @@ public class TicketitemEntity {
         int result = ticketid;
         result = 31 * result + (commentid != null ? commentid.hashCode() : 0);
         result = 31 * result + (postid != null ? postid.hashCode() : 0);
-        result = 31 * result + (messageid != null ? messageid.hashCode() : 0);
+        result = 31 * result + messageid;
         result = 31 * result + (createdAt != null ? createdAt.hashCode() : 0);
         return result;
     }

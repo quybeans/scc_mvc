@@ -5,13 +5,13 @@ import javax.persistence.Id;
 import java.io.Serializable;
 
 /**
- * Created by user on 11/6/2016.
+ * Created by user on 11/11/2016.
  */
 public class TicketitemEntityPK implements Serializable {
     private int ticketid;
     private String commentid;
     private String postid;
-    private String messageid;
+    private int messageid;
 
     @Column(name = "ticketid")
     @Id
@@ -45,11 +45,11 @@ public class TicketitemEntityPK implements Serializable {
 
     @Column(name = "messageid")
     @Id
-    public String getMessageid() {
+    public int getMessageid() {
         return messageid;
     }
 
-    public void setMessageid(String messageid) {
+    public void setMessageid(int messageid) {
         this.messageid = messageid;
     }
 
@@ -61,9 +61,9 @@ public class TicketitemEntityPK implements Serializable {
         TicketitemEntityPK that = (TicketitemEntityPK) o;
 
         if (ticketid != that.ticketid) return false;
+        if (messageid != that.messageid) return false;
         if (commentid != null ? !commentid.equals(that.commentid) : that.commentid != null) return false;
         if (postid != null ? !postid.equals(that.postid) : that.postid != null) return false;
-        if (messageid != null ? !messageid.equals(that.messageid) : that.messageid != null) return false;
 
         return true;
     }
@@ -73,7 +73,7 @@ public class TicketitemEntityPK implements Serializable {
         int result = ticketid;
         result = 31 * result + (commentid != null ? commentid.hashCode() : 0);
         result = 31 * result + (postid != null ? postid.hashCode() : 0);
-        result = 31 * result + (messageid != null ? messageid.hashCode() : 0);
+        result = 31 * result + messageid;
         return result;
     }
 }

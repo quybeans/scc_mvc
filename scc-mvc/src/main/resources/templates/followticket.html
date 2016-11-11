@@ -392,6 +392,9 @@
                                 +'</div>'
                                 +'</li>'
                     }
+                    if(data[index].message!==null){
+                        alert(data[index].message.content)
+                    }
                     $('#ticketitem').append(timelineitem);
                 }
             },
