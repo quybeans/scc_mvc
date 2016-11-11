@@ -115,7 +115,7 @@ public class TicketController {
 
             TicketstatuschangeEntity changes = new TicketstatuschangeEntity();
             changes.setNote("this ticket is expired, System return to assigner");
-            changes.setPriorityid(ticket.getPriority());
+            changes.setPriorityid(0);
             changes.setAssignee(ticket.getCreatedby());
             changes.setChangeby(0);
             changes.setStatusid(Constant.STATUS_ASSIGN);
@@ -169,7 +169,7 @@ public class TicketController {
             extendticket.setAssigneeuser(assigneeTicketProfile.getFirstname() + " " + assigneeTicketProfile.getLastname());
 
             switch (extendticket.getStatusid()){
-                case Constant.STATUS_ASSIGN: extendticket.setCurrentstatus("Assign"); break;
+                case Constant.STATUS_ASSIGN: extendticket.setCurrentstatus("Assigned"); break;
                 case Constant.STATUS_INPROCESS: extendticket.setCurrentstatus("Inprocess"); break;
                 case Constant.STATUS_REVIEWING: extendticket.setCurrentstatus("Reviewing"); break;
                 case Constant.STATUS_SOLVED: extendticket.setCurrentstatus("Solved"); break;
@@ -488,10 +488,11 @@ public class TicketController {
 
     }
 
-    /*@RequestMapping("/createticketforstaff")
+    @RequestMapping("/createticketforstaff")
     public TicketEntity createticketforstaff(HttpServletRequest request,
-                                             @RequestParam("commentid") String commentid,
-                                             @RequestParam("priority") Integer priority){
+                                             @RequestParam("ticketname") String ticketname,
+                                             @RequestParam("ticketpriority") Integer ticketpriority,
+                                             @RequestParam("ticketnote") String ticketnote){
         HttpSession session = request.getSession();
         String loginUser = (String) session.getAttribute("username");
         UserEntity user = userRepository.findUserByUsername(loginUser);
@@ -500,28 +501,30 @@ public class TicketController {
             //Tao moi 1 ticket
             TicketEntity ticketEntity = new TicketEntity();
             ticketEntity.setCreatedby(user.getUserid());
-//            ticketEntity.setCommentid(commentid);
-            ticketEntity.setStatusid(1);
+            ticketEntity.setStatusid(Constant.STATUS_ASSIGN);
             ticketEntity.setAssignee(user.getUserid());
+            ticketEntity.setName(ticketname);
+            ticketEntity.setNote(ticketnote);
             ticketEntity.setActive(true);
-            ticketEntity.setStatusid(2);
-            ticketEntity.setPriority(priority);
+            ticketEntity.setPriority(ticketpriority);
             ticketEntity.setCreatedtime(new Timestamp(new Date().getTime()));
+            ticketEntity.setDuetime(new Timestamp(new Date().getTime()));
 
             TicketEntity ticket= ticketRepository.save(ticketEntity);
 
             //Tao 1 ticket history
             TicketstatuschangeEntity status = new TicketstatuschangeEntity();
             status.setTicketid(ticket.getId());
-            status.setStatusid(2);
+            status.setStatusid(Constant.STATUS_ASSIGN);
             status.setChangeby(user.getUserid());
             status.setAssignee(user.getUserid());
             status.setCreatedat(new Timestamp(new Date().getTime()));
 
             ticketStatusChangeRepository.save(status);
+            return ticket;
         }
         return null;
-    }*/
+    }
 
 
 }

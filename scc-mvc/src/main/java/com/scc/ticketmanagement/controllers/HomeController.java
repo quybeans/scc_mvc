@@ -46,6 +46,7 @@ public class HomeController {
 
     private BrandRepository brandRepository;
 
+    @Autowired
     TicketRepository ticketRepository;
 
     @Autowired
@@ -195,11 +196,12 @@ public class HomeController {
     }
 
     @RequestMapping("/followticket")
-    public String followticket(@RequestParam("ticketid") Integer ticketid, Model model,HttpServletRequest request){
-        TicketEntity ticket = ticketRepository.findOne(ticketid);
+    public String followticket(@RequestParam("ticketid") Integer ticketid,
+                               Model model,HttpServletRequest request){
         HttpSession session = request.getSession();
         String loginUser = (String) session.getAttribute("username");
         UserEntity user = userRepository.findUserByUsername(loginUser);
+        TicketEntity ticket = ticketRepository.findOne(ticketid);
         if(ticket.getStatusid()==Constant.STATUS_ASSIGN){
             if(ticket.getAssignee()==user.getUserid())
             {

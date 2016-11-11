@@ -265,6 +265,7 @@
             data:{"ticketid":ticketid,"duration":duration},
             success:function (data) {
                     alert("This ticket is expired ")
+                $('#ticketitem').html("");
                     getticketduetime(ticketid);
                     getticket(ticketid);
                     loadticketitem(ticketid);
