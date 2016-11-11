@@ -443,14 +443,14 @@
                         }
                         timelineitem=
                                 '<li class="time-label tickethistory" style="display: none">'
-                                +'<span class="bg-green tickethistory"style="display: none">'
+                                +'<span class="bg-green tickethistory" style="display: none">'
                                 +moment(data[index].createdAt).format("D/MM/YYYY, hh:mm:ss")
                                 +'</span>'
                                 +'</li>'
-                                +'<li>'
+                                +'<li style="display: none" class=" tickethistory">'
                                 +'<div class="timeline-item tickethistory"style="display: none" >'
                                 +'<h3 class="timeline-header tickethistory"style="display: none">'
-                                +'<span style="margin-left: 10px">'+status+ note + '</span>'
+                                +'<span style="margin-left: 10px;display: none" class=" tickethistory">'+status+ note + '</span>'
                                 +'</h3>'
                                 +'</div>'
                                 +'</li>'
