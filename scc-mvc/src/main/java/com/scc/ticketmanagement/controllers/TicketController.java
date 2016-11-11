@@ -122,8 +122,9 @@ public class TicketController {
             changes.setTicketid(ticketid);
             changes.setCreatedat(new Timestamp(new Date().getTime()));
             ticketStatusChangeRepository.save(changes);
+            return null;
         }
-        return null;
+
     }
 
 
