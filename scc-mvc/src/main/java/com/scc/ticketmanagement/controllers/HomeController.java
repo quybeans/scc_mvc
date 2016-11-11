@@ -43,9 +43,9 @@ public class HomeController {
     FacebookaccountService fbService;
 
     @Autowired
-
     private BrandRepository brandRepository;
 
+    @Autowired
     TicketRepository ticketRepository;
 
     @Autowired
@@ -161,7 +161,7 @@ public class HomeController {
                     case Constant.ROLE_STAFF:
                         return "redirect:customercare";
                     case Constant.ROLE_SUPERVISOR:
-                        return "Report";
+                        return "redirect:/customercare";
                 }//end switch
             }//end if user
         }//end if session

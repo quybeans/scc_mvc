@@ -416,6 +416,7 @@ function createTicket(ticketId,messageId) {
         dataType: "json",
         success: function (data) {
             alert("Add ticket successfully");
+            $('#ticket-modal').modal('toggle');
         },
         error: function (data) {
             alert("Add ticket fail, please try again later");
