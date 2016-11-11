@@ -1,7 +1,9 @@
+.customer-username {
+    font-size: 40px;
+    margin-top: 5px
+}
 
-
-.messenger .header
-{
+.messenger .header {
     width: 100%;
     background-color: white;
     text-align: center;
@@ -11,25 +13,21 @@
     border-bottom: 1px solid lightgray;
 }
 
-.messenger .header span
-{
+.messenger .header span {
     margin-right: 10px;
 }
 
-.pages-body
-{
+.pages-body {
     padding: 10px 0px 0px 0px;
 
 }
 
-.page img
-{
+.page img {
     height: 50px;
     width: 50px;
 }
 
-.page .name
-{
+.page .name {
     margin-top: -50px;
     margin-left: 65px;
     color: cornflowerblue;
@@ -39,12 +37,12 @@
     overflow: hidden;
     white-space: nowrap;
 }
-.page .unread-count
-{
+
+.page .unread-count {
     margin-left: 65px;
 }
-.page
-{
+
+.page {
     background-color: white;
     padding: 10px 0px 10px 5px;
     height: 70px;
@@ -53,8 +51,7 @@
     margin-bottom: 10px;
 }
 
-.page:hover
-{
+.page:hover {
     background-color: lightgray;
 }
 
@@ -126,10 +123,29 @@
     border-radius: 3px;
 }
 
-.senderAvt  {
-    max-height: 50px;
-    max-width: 50px;
+.conversation-sender-name {
+    margin-top: 4%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 115px;
+}
+
+/* Rounded avatars */
+.senderAvt {
+    height: 50px;
+    width: 50px;
+    float: left;
     margin: 10px 10px 10px 0px;
+    position: relative;
+
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+
+    -webkit-box-shadow: 0 0 0 3px #fff, 0 0 0 4px #999, 0 2px 5px 4px rgba(0, 0, 0, .2);
+    -moz-box-shadow: 0 0 0 3px #fff, 0 0 0 4px #999, 0 2px 5px 4px rgba(0, 0, 0, .2);
+    box-shadow: 0 0 0 3px #fff, 0 0 0 4px #999, 0 2px 5px 4px rgba(0, 0, 0, .2);
 }
 
 .sentTime {
@@ -367,7 +383,6 @@
     margin-bottom: 5px;
 }
 
-
 .ticket .title {
     background-color: cornflowerblue;
     margin-left: -10px;
@@ -395,8 +410,6 @@
     background-color: #cece00;
 }
 
-
-
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
@@ -417,3 +430,12 @@ input[type=number]::-webkit-outer-spin-button {
     border-radius: 0px;
 
 }
+
+.crop {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 270px;
+}
+
+​

@@ -86,6 +86,7 @@ public class TicketItemController {
                     MessageEntity message = messageRepository.findOne(messageitem.getMessageIdStart());
                     ExtendTicketItem item = new ExtendTicketItem();
                     item.setMessage(message);
+                    item.setEndmessage(messageitem.getMessageIdEnd());
                     item.setCreatedAt(ti.getCreatedAt());
                     customizelist.add(item);
                 }

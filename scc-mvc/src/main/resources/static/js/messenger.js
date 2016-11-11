@@ -54,19 +54,19 @@ function getAllConversationsByPageId(pageId) {
                     $('#messagesList').append(
                         '<div class="item" style="position: relative" id="conversation' + i + '" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId + '\')">'
                         + '<div>' +
-                        '<img class="senderAvt" src="' + data[i].senderPicture + '">' + data[i].senderName + '' +
+                        '<img class="senderAvt" src="' + data[i].senderPicture + '"><div class="conversation-sender-name pull-left">'+ data[i].senderName +'</div>' +
                         '<div class="sentTime text-muted pull-right"> ' + moment( data[i].sentTime).fromNow()  +'</div>' +
                         '</div>'
-                        + '<div>' + data[i].lastMessage + '</div>'
+                        + '<div class="crop">' + data[i].lastMessage + '</div>'
                         + '</div>'
                     )
                 } else {
                     $('#messagesList').append(
                         '<div class="item" style="position: relative" id="conversation' + i + '" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId + '\')">'
-                        + '<div><img class="senderAvt" src="' + data[i].senderPicture + '"><b>' + data[i].senderName + '</b>' +
+                        + '<div><img class="senderAvt" src="' + data[i].senderPicture + '"><div class="conversation-sender-name pull-left"><b>' + data[i].senderName + '</b></div>' +
                         '<div class="sentTime text-muted pull-right"> ' + moment( data[i].sentTime).fromNow() +'</div>' +
                         '</div>'
-                        + '<div><b>' + data[i].lastMessage + '</b></div>'
+                        + '<div class="crop"><b>' + data[i].lastMessage + '</b></div>'
                         + '</div>'
                     )
                 }
@@ -95,19 +95,19 @@ function getAllConversationsByPageId(pageId) {
                         $('#messagesList').append(
                             '<div class="item" style="position: relative" id="conversation' + i + '" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId + '\')">'
                             + '<div>' +
-                            '<img class="senderAvt" src="' + data[i].senderPicture + '">' + data[i].senderName + '' +
+                            '<img class="senderAvt" src="' + data[i].senderPicture + '"><div class="conversation-sender-name pull-left">'+ data[i].senderName +'</div>' +
                             '<div class="sentTime text-muted pull-right"> ' + moment( data[i].sentTime).fromNow()  +'</div>' +
                             '</div>'
-                            + '<div>' + data[i].lastMessage + '</div>'
+                            + '<div class="crop">' + data[i].lastMessage + '</div>'
                             + '</div>'
                         )
                     } else {
                         $('#messagesList').append(
                             '<div class="item" style="position: relative" id="conversation' + i + '" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId + '\')">'
-                            + '<div><img class="senderAvt" src="' + data[i].senderPicture + '"><b>' + data[i].senderName + '</b>' +
+                            + '<div><img class="senderAvt" src="' + data[i].senderPicture + '"><div class="conversation-sender-name pull-left"><b>' + data[i].senderName + '</b></div>' +
                             '<div class="sentTime text-muted pull-right"> ' + moment( data[i].sentTime).fromNow() +'</div>' +
                             '</div>'
-                            + '<div><b>' + data[i].lastMessage + '</b></div>'
+                            + '<div class="crop"><b>' + data[i].lastMessage + '</b></div>'
                             + '</div>'
                         )
                     }
@@ -402,18 +402,28 @@ function getCustomerInfo(customerId) {
             currentCustomerName = data.name;
             currentCustomerAvt = data.picture;
             $('#currentSenderName').text(currentCustomerName);
-            $('#customer-info').empty();
-            $('#customer-info').append(
-                '<div>'
-                + '<div><img style="max-height: 200px; text-align: center" src="' + data.picture + '"</div>'
-                + '<div><label>Facebook ID: </label>' + data.facebookid + '</div>'
-                + '<div><label>Name: </label>' + " " + data.name + '</div>'
-                + '<div><label>Location: </label>' + " " + data.locale + '</div>'
-                + '<div><label>Timezone: </label>' + " " + data.timezone + '</div>'
-                + '<div><label>Gender: </label>' + " " + data.gender + '</div>'
-                + '<div><label>Note: </label>' + " " + data.note + '</div>'
-                + '</div>'
-            )
+            $("#customer-picture").attr("src", data.picture);
+            $('#customer-facebook-id').text(data.facebookid);
+            $('#customer-name').text(data.name);
+            $('#customer-timezone').text(data.timezone);
+            $('#customer-gender').text(data.gender);
+            $('#customer-locale').text(data.locale);
+            $('#customer-note').text(data.note);
+
+
+
+            // $('#customer-info').empty();
+            // $('#customer-info').append(
+            //     '<div>'
+            //     + '<div><img style="max-height: 200px; text-align: center" src="' + data.picture + '"</div>'
+            //     + '<div><label>Facebook ID: </label>' + data.facebookid + '</div>'
+            //     + '<div><label>Name: </label>' + " " + data.name + '</div>'
+            //     + '<div><label>Location: </label>' + " " + data.locale + '</div>'
+            //     + '<div><label>Timezone: </label>' + " " + data.timezone + '</div>'
+            //     + '<div><label>Gender: </label>' + " " + data.gender + '</div>'
+            //     + '<div><label>Note: </label>' + " " + data.note + '</div>'
+            //     + '</div>'
+            // )
         }
     });
 }

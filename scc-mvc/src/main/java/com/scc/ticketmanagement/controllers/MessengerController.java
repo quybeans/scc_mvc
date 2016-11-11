@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -34,6 +35,24 @@ public class MessengerController {
 
     @RequestMapping("/messenger")
     public String messenger(Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+
+        if (session!=null) {
+            String username = (String) session.getAttribute("username");
+            int userid = userRepository.findUseridByUser(username);
+            UserEntity user = userRepository.findOne(userid);
+            List<PageEntity> pages = pageRepository.getAllPageByBrandId(user.getBrandid());
+            model.addAttribute("pages",pages) ;
+        }
+
+        return "/messenger/index";
+    }
+
+    @RequestMapping("/messenger/ticket")
+    public String messengerTicket(Model model, HttpServletRequest request,
+                                  @RequestParam("senderid") String senderId,
+                                  @RequestParam("receiverid") String receiverId,
+                                  @RequestParam("messageid") String messageId) {
         HttpSession session = request.getSession(false);
 
         if (session!=null) {
