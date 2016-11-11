@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -52,6 +53,22 @@ public class MessengerRESTController {
     public List<Conversation> getAllConversations(@RequestParam("pageId") String pageId) {
 
         List<Conversation> result = messageService.getAllConversationsByPageId(pageId);
+        Comparator<Conversation> comp = (Conversation a, Conversation b) -> {
+            return b.getSentTime().compareTo(a.getSentTime());
+        };
+
+        Collections.sort(result, comp);
+        return result;
+    }
+
+    @RequestMapping(value = "/messenger/getAllConversationsByPageIdAndSenderName", method = RequestMethod.POST)
+    public List<Conversation> getAllConversationsByPageIdAndSenderName(@RequestParam("pageId") String pageId,
+                                                                       @RequestParam("senderName") String senderName) {
+
+        List<Conversation> result = messageService.getAllConversationsByPageId(pageId);
+
+        result.removeIf(e -> (!e.getSenderName().toLowerCase().contains(senderName.toLowerCase())));
+
         Comparator<Conversation> comp = (Conversation a, Conversation b) -> {
             return b.getSentTime().compareTo(a.getSentTime());
         };
@@ -120,8 +137,8 @@ public class MessengerRESTController {
         System.out.println(messageId);
         TicketitemEntity result = null;
         MessageitemEntity messageitemEntity = messageItemService.startTicket(messageId);
-        if (messageitemEntity != null){
-            result=  ticketIteamServiceImp.addMessageItemToTicket(ticketId, messageitemEntity.getItemId());
+        if (messageitemEntity != null) {
+            result = ticketIteamServiceImp.addMessageItemToTicket(ticketId, messageitemEntity.getItemId());
 
         }
         return result;

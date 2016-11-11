@@ -16,6 +16,8 @@ public class ExtendTicketItem extends TicketitemEntity {
     private String postidofcomment;
     private String sendername;
     private String senderavt;
+    private String endmessage;
+
 
     public CommentEntity getComment() {
         return comment;
@@ -57,6 +59,7 @@ public class ExtendTicketItem extends TicketitemEntity {
         this.postidofcomment = postidofcomment;
     }
 
+
     public String getSendername() {
         return sendername;
     }
@@ -71,5 +74,12 @@ public class ExtendTicketItem extends TicketitemEntity {
 
     public void setSenderavt(String senderavt) {
         this.senderavt = senderavt;
+    }
+    public String getEndmessage() {
+        return endmessage;
+    }
+
+    public void setEndmessage(String endmessage) {
+        this.endmessage = endmessage;
     }
 }

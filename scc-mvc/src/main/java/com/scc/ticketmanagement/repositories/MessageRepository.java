@@ -21,6 +21,7 @@ public interface MessageRepository extends JpaRepository<MessageEntity, String> 
     @Query("SELECT m.senderid FROM  MessageEntity m WHERE m.receiverid=:pageId group by m.senderid")
     public List<String> getAllSenderIdByPageId(@Param("pageId") String pageId);
 
+
     //Get last message
     @Query("SELECT m FROM MessageEntity m WHERE (m.receiverid =:receiverId and m.senderid =:senderId) " +
             "or (m.receiverid =:senderId and m.senderid =:receiverId)" +

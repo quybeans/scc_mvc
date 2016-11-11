@@ -91,6 +91,7 @@ public class TicketItemController {
                     MessageEntity message = messageRepository.findOne(messageitem.getMessageIdStart());
                     ExtendTicketItem item = new ExtendTicketItem();
                     item.setMessage(message);
+                    item.setEndmessage(messageitem.getMessageIdEnd());
                     item.setCreatedAt(ti.getCreatedAt());
                     ContactEntity contact = contactRepository.findOne(message.getSenderid());
                         item.setSendername(contact.getName());
