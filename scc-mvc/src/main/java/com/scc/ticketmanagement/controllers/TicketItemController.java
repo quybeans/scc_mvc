@@ -17,6 +17,10 @@ import java.util.*;
  */
 @RestController
 public class TicketItemController {
+
+    @Autowired
+    PostRepository postRepository;
+
     @Autowired
     MessageitemRepository messageitemRepository;
 
@@ -51,10 +55,30 @@ public class TicketItemController {
             for (TicketitemEntity ti: listitem) {
                 if(!ti.getCommentid().equals("0")){
                     CommentEntity cmt= commentRepository.findOne(ti.getCommentid());
+                    PostEntity post = postRepository.findOne(cmt.getPostId());
+              //      System.out.println("Post ID cua comment:"+post.getId());
                     ExtendTicketItem item = new ExtendTicketItem();
                     item.setComment(cmt);
                     item.setCreatedAt(ti.getCreatedAt());
+                    if(post!=null){
+                        System.out.println("Post ID cua comment:"+post.getId());
+                        item.setPostid(post.getId());
+                    }else{
+                        while (post==null){
+                            cmt= commentRepository.findOne(cmt.getPostId());
+                            post=postRepository.findOne(cmt.getPostId());
+                            if(post!=null){
+                                item.setPostid(post.getId());
+                                System.out.println("Post ID cua comment:"+post.getId());
+                            }
+                        }
+
+                    }
+
+
+
                     customizelist.add(item);
+
                 }
 
                 if(ti.getMessageid()!=0){

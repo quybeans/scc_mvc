@@ -13,6 +13,7 @@ public class ExtendTicketItem extends TicketitemEntity {
     private TicketHistory history;
     private MessageEntity message;
     private PostEntity post;
+    private String postidofcomment;
 
     public CommentEntity getComment() {
         return comment;
@@ -44,5 +45,13 @@ public class ExtendTicketItem extends TicketitemEntity {
 
     public void setPost(PostEntity post) {
         this.post = post;
+    }
+
+    public String getPostidofcomment() {
+        return postidofcomment;
+    }
+
+    public void setPostidofcomment(String postidofcomment) {
+        this.postidofcomment = postidofcomment;
     }
 }
