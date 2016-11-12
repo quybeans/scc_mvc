@@ -45,8 +45,9 @@ public class ProfileServiceImp implements ProfileService {
         profileRepository.save(profileEntity);
     }
 
+
     @Override
     public List<ProfileEntity> findAllByid(List<Integer> profileIds) {
-        return null;
+        return profileRepository.findByProfileidIn(profileIds);
     }
 }

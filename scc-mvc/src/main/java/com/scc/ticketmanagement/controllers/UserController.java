@@ -1,7 +1,9 @@
 package com.scc.ticketmanagement.controllers;
 
+import com.scc.ticketmanagement.Entities.ProfileEntity;
 import com.scc.ticketmanagement.Entities.UserEntity;
 import com.scc.ticketmanagement.exentities.User;
+import com.scc.ticketmanagement.repositories.ProfileRepository;
 import com.scc.ticketmanagement.repositories.UserRepository;
 import com.scc.ticketmanagement.services.ProfileService;
 import com.scc.ticketmanagement.services.UserService;

@@ -2,6 +2,7 @@ package com.scc.ticketmanagement.controllers.restcontroller;
 
 import com.scc.ticketmanagement.Entities.BrandEntity;
 
+import com.scc.ticketmanagement.Entities.ProfileEntity;
 import com.scc.ticketmanagement.Entities.UserEntity;
 import com.scc.ticketmanagement.repositories.BrandRepository;
 import com.scc.ticketmanagement.repositories.UserRepository;
