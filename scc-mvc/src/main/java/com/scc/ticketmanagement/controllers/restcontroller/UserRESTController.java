@@ -45,4 +45,11 @@ public class UserRESTController {
         else userService.changeActive(userEntity.getUserid(),true);
     }
 
+    @RequestMapping("user/checkExistedUsername")
+    public boolean checkUsername(String username)
+    {
+       if (userService.getUserByUsername(username)!=null) return true;
+        else  return false;
+    }
+
 }
