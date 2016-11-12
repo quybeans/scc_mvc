@@ -77,6 +77,22 @@ public class MessengerRESTController {
         return result;
     }
 
+    @RequestMapping(value = "/messenger/getAllConversationsByPageIdAndSenderId", method = RequestMethod.POST)
+    public List<Conversation> getAllConversationsByPageIdAndSenderId(@RequestParam("pageId") String pageId,
+                                                                       @RequestParam("senderId") String senderId) {
+
+        List<Conversation> result = messageService.getAllConversationsByPageId(pageId);
+
+        result.removeIf(e -> (!e.getSenderId().contains(senderId)));
+
+        Comparator<Conversation> comp = (Conversation a, Conversation b) -> {
+            return b.getSentTime().compareTo(a.getSentTime());
+        };
+
+        Collections.sort(result, comp);
+        return result;
+    }
+
     @RequestMapping(value = "/messenger/getConversationBySenderIdAndPageId", method = RequestMethod.POST)
     public List<MessageEntity> getAllConversations(@RequestParam("pageId") String pageId,
                                                    @RequestParam("senderId") String senderId,

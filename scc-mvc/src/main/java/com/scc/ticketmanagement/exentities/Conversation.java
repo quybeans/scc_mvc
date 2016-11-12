@@ -6,6 +6,7 @@ import java.sql.Timestamp;
  * Created by Thien on 11/2/2016.
  */
 public class Conversation {
+    private String messageId;
     private String senderName;
     private String senderId;
     private String senderPicture;
@@ -13,6 +14,14 @@ public class Conversation {
     private String lastMessageId;
     private Timestamp sentTime;
     private boolean read;
+
+    public String getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
+    }
 
     public boolean isRead() {
         return read;

@@ -11,6 +11,7 @@ import java.util.List;
  */
 public interface MessageService {
     List<MessageEntity> getAllConversations();
+    MessageEntity getMessageById(String messageId);
 
     List<Conversation> getAllConversationsByPageId(String pageId);
 
