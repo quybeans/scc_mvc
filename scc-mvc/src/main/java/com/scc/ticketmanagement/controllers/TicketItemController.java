@@ -1,7 +1,6 @@
 package com.scc.ticketmanagement.controllers;
 
 import com.scc.ticketmanagement.Entities.CommentEntity;
-import com.scc.ticketmanagement.Entities.ProfileEntity;
 import com.scc.ticketmanagement.Entities.TicketitemEntity;
 import com.scc.ticketmanagement.Entities.TicketstatuschangeEntity;
 import com.scc.ticketmanagement.exentities.TicketItemAndHistory;

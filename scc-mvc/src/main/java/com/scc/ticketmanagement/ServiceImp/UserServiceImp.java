@@ -112,5 +112,11 @@ public class UserServiceImp implements UserService {
         userRepository.changeActive(userid,active);
     }
 
+    @Override
+    public List<UserEntity> findAllUserByBrand(int brandid) {
+
+        return userRepository.findByBrandid(brandid);
+    }
+
 
 }

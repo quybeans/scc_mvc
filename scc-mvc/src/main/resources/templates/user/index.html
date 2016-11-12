@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Brand infomation</title>
+    <header class="main-header" th:include="Head::header"></header>
+    <aside class="main-sidebar" th:include="SideBar::aside"></aside>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="content-wrapper">
+    <section class="content">
+        <div style="margin-top: 10px;margin-bottom: 10px;margin-left: 10px; background-color: white; min-height: 300px; padding: 10px 20px 20px 20px">
+            <div style="text-align: left; margin-bottom: 20px">
+                <h2>Manage user in this Brand</h2>
+            </div >
+            *Note: These are user within your Brand.
+            <table class="table table-hover">
+                <thead style="border-top: 1px solid lightgray">
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Last Name</th>
+                    <th>First Name</th>
+                    <th>Gender</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="person: ${listUser}">
+                    <td th:text="${person.userid}" class="col-md-1"></td>
+                    <td th:text="${person.username}"></td>
+                    <td th:text="${person.roleid}"></td>
+                    <td th:text="${person.active}"></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <button class="btn btn-primary">Add user</button>
+        </div>
+    </section>
+</div>
+</body>
+</html>

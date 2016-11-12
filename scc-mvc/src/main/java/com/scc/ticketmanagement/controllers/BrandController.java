@@ -8,6 +8,7 @@ import com.scc.ticketmanagement.utilities.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -35,7 +36,7 @@ public class BrandController {
             , @RequestParam("txtPhone") String phone
             , @RequestParam("txtMail") String mail
             , @RequestParam("txtAddress") String address
-            , @RequestParam("txtLogo") String logo) throws DataAccessException{
+            , @RequestParam("txtLogo") String logo) throws DataAccessException {
         HttpSession session = request.getSession();
         if (session != null) {
             String username = (String) session.getAttribute("username");
@@ -57,5 +58,27 @@ public class BrandController {
             }
         }
         return "/brand/index";
+    }
+
+    @RequestMapping("/brand/user")
+    public String brandUserManagement(HttpServletRequest request, Model model) {
+
+        UserEntity userEntity = checkUserSession(request);
+        model.addAttribute("listUser",userService.findAllUserByBrand(userEntity.getBrandid()));
+        return "user/index";
+    }
+
+
+    public UserEntity checkUserSession(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        if (session != null) {
+            String username = (String) session.getAttribute("username");
+            if (username != null) {
+                UserEntity user = userService.getUserByUsername(username);
+                user.setPassword("");
+                return user;
+            }
+        }
+        return null;
     }
 }
