@@ -12,6 +12,7 @@ public class TicketHistory {
     private Timestamp createdat;
     private String assignee;
     private String note;
+    private String priority;
 
     public String getUserid() {
         return userid;
@@ -59,5 +60,13 @@ public class TicketHistory {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public String getPriority() {
+        return priority;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority;
     }
 }

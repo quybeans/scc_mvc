@@ -18,6 +18,7 @@ public class MessageEntity {
     private String senderid;
     private int seq;
     private Boolean messageRead;
+    private int sentimentScrore;
 
     @Id
     @Column(name = "id")
@@ -141,5 +142,15 @@ public class MessageEntity {
         result = 31 * result + seq;
         result = 31 * result + (messageRead != null ? messageRead.hashCode() : 0);
         return result;
+    }
+
+    @Basic
+    @Column(name = "sentiment_scrore")
+    public int getSentimentScrore() {
+        return sentimentScrore;
+    }
+
+    public void setSentimentScrore(int sentimentScrore) {
+        this.sentimentScrore = sentimentScrore;
     }
 }

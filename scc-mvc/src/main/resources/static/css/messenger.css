@@ -1,107 +1,419 @@
-@media only screen and (max-width : 540px)
-{
-    .chat-sidebar
-    {
-        display: none !important;
-    }
 
-    .chat-popup
-    {
-        display: none !important;
-    }
+
+.messenger .header
+{
+    width: 100%;
+    background-color: white;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bolder;
+    color: dodgerblue;
+    border-bottom: 1px solid lightgray;
 }
 
-body
+.messenger .header span
 {
-    background-color: #e9eaed;
+    margin-right: 10px;
 }
 
-.chat-sidebar
+.pages-body
 {
-    width: 200px;
-    position: fixed;
-    height: 100%;
-    right: 0px;
-    top: 0px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    border: 1px solid rgba(29, 49, 91, .3);
+    padding: 10px 0px 0px 0px;
+
 }
 
-.sidebar-name
+.page img
 {
-    padding-left: 10px;
-    padding-right: 10px;
-    margin-bottom: 4px;
-    font-size: 12px;
+    height: 50px;
+    width: 50px;
 }
 
-.sidebar-name span
+.page .name
 {
-    padding-left: 5px;
-}
-
-.sidebar-name a
-{
-    display: block;
-    height: 100%;
-    text-decoration: none;
-    color: inherit;
-}
-
-.sidebar-name:hover
-{
-    background-color:#e1e2e5;
-}
-
-.sidebar-name img
-{
-    width: 32px;
-    height: 32px;
-    vertical-align:middle;
-}
-
-.popup-box
-{
-    display: none;
-    position: fixed;
-    bottom: 0px;
-    right: 220px;
-    height: 285px;
-    background-color: rgb(237, 239, 244);
-    width: 300px;
-    border: 1px solid rgba(29, 49, 91, .3);
-}
-
-.popup-box .popup-head
-{
-    background-color: #6d84b4;
-    padding: 5px;
-    color: white;
+    margin-top: -50px;
+    margin-left: 65px;
+    color: cornflowerblue;
+    font-size: 15px;
     font-weight: bold;
-    font-size: 14px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.page .unread-count
+{
+    margin-left: 65px;
+}
+.page
+{
+    background-color: white;
+    padding: 10px 0px 10px 5px;
+    height: 70px;
+    cursor: pointer;
+    border-bottom: 1px solid lightgray;
+    margin-bottom: 10px;
+}
+
+.page:hover
+{
+    background-color: lightgray;
+}
+
+.circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50px;
+    font-size: 13px;
+    color: #fff;
+    display: inline-block;
+    text-align: center;
+    background: rgba(255, 0, 6, 0.71);
+    margin-right: 4px;
+    vertical-align: middle;
+    font-weight: bold;
+}
+
+.chat {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.chat li {
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+
+}
+
+.chat li.left .chat-body {
+    margin-left: 10px;
+    background-color: white;
+    padding: 5px 10px 5px 5px;
+    border-radius: 5px;
+    max-width: 75%;
+    min-width: 33%;
+}
+
+.chat li.right .chat-body {
+    padding: 5px 5px 5px 10px;
+    margin-right: 10px;
+    background-color: lightblue;
+    border-radius: 5px;
+    max-width: 75%;
+    min-width: 33%;
+}
+
+.chat li.right .chat-body p {
+    color: black;
+}
+
+.chat li .chat-body p {
+    margin: 0;
+    color: #777777;
+}
+
+.panel .slidedown .glyphicon, .chat .glyphicon {
+    margin-right: 5px;
+}
+
+.panel-body {
+    overflow-y: scroll;
+
+}
+
+.chat li span img {
+    height: 30px;
+    width: 30px;
+    border-radius: 3px;
+}
+
+.senderAvt  {
+    max-height: 50px;
+    max-width: 50px;
+    margin: 10px 10px 10px 0px;
+}
+
+.sentTime {
+    margin-top: 10px;
+}
+
+/* Chat widget (DEPRECATED - this will be removed in the next major release. Use Direct Chat instead)*/
+.chat {
+    padding: 0px 0px 0px 0px;
+
+}
+
+.postlist {
+    height: 90vh;
+    padding: 0px;
+    background-color: white;
+    position: relative;
+    overflow: auto;
+    margin-right: 0px;
+}
+
+.cmtbox {
+    height: 95vh;
+    padding: 0 0 2%;
+    background-color: white;
+    overflow-y: scroll;
+
+}
+
+.chat .lcs {
+
+    color: gray;
+}
+
+.lcs p {
+    display: inline;
+    margin-right: 25%;
+
+}
+
+.lcs p:last-child {
+    margin-right: 0;
+}
+
+.chat .item {
+    cursor: pointer;
+    height: 100px;
+    border-bottom: 1px solid #D3D3D3;
+    margin-bottom: 0px;
+    margin-top: 0px;
+    padding: 0px 20px 0px 15px;
+    margin-right: 0px;
+}
+
+.chat .item:first-child {
+    border-top: 0px solid #D3D3D3;
+}
+
+.chat .item:hover {
+    background-color: #F2F2F2;
+}
+
+#post-box .active {
+    background-color: lightskyblue;
+    color: black;
+}
+
+.chat .item:before,
+.chat .item:after {
+    content: " ";
+    display: table;
+}
+
+.chat .item:after {
     clear: both;
 }
 
-.popup-box .popup-head .popup-head-left
-{
-    float: left;
+.chat .item > img {
+    width: 50px;
+    height: 50px;
+    margin-top: 10px;
+    border-radius: 3px;
+    border: 0px solid black;
+
 }
 
-.popup-box .popup-head .popup-head-right
-{
-    float: right;
-    opacity: 0.5;
+.chat .item > .message {
+    margin-left: 65px;
+    margin-top: -50px;
+
 }
 
-.popup-box .popup-head .popup-head-right a
-{
-    text-decoration: none;
-    color: inherit;
+.chat .item > .p {
+    padding-left: 3px;
+    overflow: hidden;
+
 }
 
-.popup-box .popup-messages
-{
-    height: 100%;
-    overflow-y: scroll;
+.chat .item > .message > .name {
+    display: block;
+    font-weight: bold;
+    color: cornflowerblue;
+
+}
+
+.box-input {
+    max-width: 200px;
+}
+
+::-webkit-scrollbar-track {
+    background: white;
+    border-left: 1px solid lightgray;
+}
+
+.postdetail {
+    margin: 10px 20px 10px 20px;
+    background-color: white;
+    display: block;
+    overflow: auto;
+    padding: 10px 0px 10px 15px;
+    border-radius: 3px;
+}
+
+.postdetail img {
+    height: 50px;
+    width: 50px;
+}
+
+.postdetail .author {
+    margin-top: -50px;
+
+    font-weight: bold;
+    margin-left: 60px;
+    font-size: 15px;
+}
+
+/*--------------------------------COMMENT LIST------------------------------*/
+.cmtList {
+    margin: 10px 20px 45px 20px;
+    background-color: white;
+    overflow-y: auto;
+    border-radius: 3px;
+
+}
+
+.cmtList .cmt {
+    cursor: pointer;
+    max-heightheight: 20vh;
+    overflow: hidden;
+    border-bottom: 1px solid lightgray;
+    margin-bottom: 0px;
+    margin-top: 0px;
+    padding: 0px 0px 0px 0px;
+    margin-right: 0px;
+}
+
+.cmtList :hover {
+    background-color: #F2F2F2;
+}
+
+.cmtList .cmtContent > img {
+    width: 50px;
+    height: 50px;
+    margin-top: 10px;
+    border-radius: 3px;
+    border: 0px solid black;
+
+}
+
+.cmtList .cmtContent .message {
+    margin-top: -45px;
+    margin-left: 65px;
+}
+
+.sad {
+    font-size: 20px;
+    color: indianred;
+}
+
+.happy {
+    font-size: 20px;
+    color: #50D050
+}
+
+.question {
+    font-size: 20px;
+    color: #ffbf00;
+}
+
+/* PAGE LIST SELECTED*/
+.page-selected {
+    border: 1px solid cornflowerblue;
+    background-color: lightblue;
+}
+
+.page-unselected {
+    border: 0px solid lightgray;
+    border-bottom: 1px solid lightgray;
+    background-color: transparent;
+}
+
+.pagination li:first-child a, .pagination li:last-child a {
+    border-radius: 0px;
+}
+
+.pagination li a {
+    font-weight: bold;
+    margin-left: 4px;
+}
+
+/*.cmtList .cmt  .message {*/
+/*margin-left: 65px;*/
+/*margin-top: 0px;*/
+
+/*}*/
+/*.cmtList .cmt >.p{*/
+/*padding-left: 3px;*/
+/*overflow: hidden;*/
+
+/*}*/
+/*.cmtList .cmt> .message > .name {*/
+/*display: block;*/
+/*font-weight: 600;*/
+/*}*/
+
+/*Ticket list style*/
+.ticket {
+    border: 1px solid lightgray;
+    padding-left: 10px;
+    display: inline-block;
+    width: 200px;
+    cursor: pointer;
+    background-color: transparent;
+    margin-left: 5px;
+    margin-bottom: 5px;
+}
+
+
+.ticket .title {
+    background-color: cornflowerblue;
+    margin-left: -10px;
+    font-size: 20px;
+    color: white;
+    padding: 10px 10px 10px 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ticket-row {
+    margin-bottom: 10px;
+}
+
+.ticket .process {
+    background-color: #00d600;
+}
+
+.ticket .solved {
+    background-color: gray;
+}
+
+.ticket .assigned {
+    background-color: #cece00;
+}
+
+
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0;
+}
+
+/*cmt */
+::-webkit-scrollbar {
+    width: 8px;
+    margin-right: 3px;
+
+}
+
+::-webkit-scrollbar-thumb {
+    background: dimgray;
+    border-radius: 0px;
+
 }

@@ -1,20 +1,23 @@
 package com.scc.ticketmanagement.Entities;
 
-import javax.persistence.Basic;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.sql.Timestamp;
 
 /**
- * Created by Thien on 10/28/2016.
+ * Created by user on 11/10/2016.
  */
 @Entity
-@javax.persistence.Table(name = "ticketrequest", schema = "scc", catalog = "")
+@Table(name = "ticketrequest", schema = "scc", catalog = "")
 public class TicketrequestEntity {
     private int id;
+    private Integer ticketid;
+    private Integer assigner;
+    private Integer assignee;
+    private Timestamp requestat;
+    private String note;
 
     @Id
-    @javax.persistence.Column(name = "id")
+    @Column(name = "id")
     public int getId() {
         return id;
     }
@@ -23,10 +26,8 @@ public class TicketrequestEntity {
         this.id = id;
     }
 
-    private Integer ticketid;
-
     @Basic
-    @javax.persistence.Column(name = "ticketid")
+    @Column(name = "ticketid")
     public Integer getTicketid() {
         return ticketid;
     }
@@ -35,10 +36,8 @@ public class TicketrequestEntity {
         this.ticketid = ticketid;
     }
 
-    private Integer assigner;
-
     @Basic
-    @javax.persistence.Column(name = "assigner")
+    @Column(name = "assigner")
     public Integer getAssigner() {
         return assigner;
     }
@@ -47,10 +46,8 @@ public class TicketrequestEntity {
         this.assigner = assigner;
     }
 
-    private Integer assignee;
-
     @Basic
-    @javax.persistence.Column(name = "assignee")
+    @Column(name = "assignee")
     public Integer getAssignee() {
         return assignee;
     }
@@ -59,10 +56,8 @@ public class TicketrequestEntity {
         this.assignee = assignee;
     }
 
-    private Timestamp requestat;
-
     @Basic
-    @javax.persistence.Column(name = "requestat")
+    @Column(name = "requestat")
     public Timestamp getRequestat() {
         return requestat;
     }
@@ -71,22 +66,8 @@ public class TicketrequestEntity {
         this.requestat = requestat;
     }
 
-    private Boolean status;
-
     @Basic
-    @javax.persistence.Column(name = "status")
-    public Boolean getStatus() {
-        return status;
-    }
-
-    public void setStatus(Boolean status) {
-        this.status = status;
-    }
-
-    private String note;
-
-    @Basic
-    @javax.persistence.Column(name = "note")
+    @Column(name = "note")
     public String getNote() {
         return note;
     }
@@ -107,7 +88,6 @@ public class TicketrequestEntity {
         if (assigner != null ? !assigner.equals(that.assigner) : that.assigner != null) return false;
         if (assignee != null ? !assignee.equals(that.assignee) : that.assignee != null) return false;
         if (requestat != null ? !requestat.equals(that.requestat) : that.requestat != null) return false;
-        if (status != null ? !status.equals(that.status) : that.status != null) return false;
         if (note != null ? !note.equals(that.note) : that.note != null) return false;
 
         return true;
@@ -120,7 +100,6 @@ public class TicketrequestEntity {
         result = 31 * result + (assigner != null ? assigner.hashCode() : 0);
         result = 31 * result + (assignee != null ? assignee.hashCode() : 0);
         result = 31 * result + (requestat != null ? requestat.hashCode() : 0);
-        result = 31 * result + (status != null ? status.hashCode() : 0);
         result = 31 * result + (note != null ? note.hashCode() : 0);
         return result;
     }

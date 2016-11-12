@@ -1,9 +1,13 @@
 package com.scc.ticketmanagement.controllers.restcontroller;
 
 import com.scc.ticketmanagement.Entities.ContactEntity;
+import com.scc.ticketmanagement.Entities.MessageitemEntity;
 import com.scc.ticketmanagement.Entities.MessageEntity;
+import com.scc.ticketmanagement.Entities.TicketitemEntity;
+import com.scc.ticketmanagement.ServiceImp.TicketIteamServiceImp;
 import com.scc.ticketmanagement.exentities.Conversation;
 import com.scc.ticketmanagement.repositories.ContactRepository;
+import com.scc.ticketmanagement.services.MessageItemService;
 import com.scc.ticketmanagement.services.MessageService;
 import com.scc.ticketmanagement.services.PageService;
 import com.scc.ticketmanagement.utilities.FacebookUtility;
@@ -14,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -31,6 +37,12 @@ public class MessengerRESTController {
     @Autowired
     ContactRepository contactService;
 
+    @Autowired
+    MessageItemService messageItemService;
+
+    @Autowired
+    TicketIteamServiceImp ticketIteamServiceImp;
+
     @RequestMapping(value = "/getAllConversations", method = RequestMethod.GET)
     public List<MessageEntity> getAllConversations() {
         return messageService.getAllConversations();
@@ -38,7 +50,14 @@ public class MessengerRESTController {
 
     @RequestMapping(value = "/messenger/getAllConversationsByPageId", method = RequestMethod.GET)
     public List<Conversation> getAllConversations(@RequestParam("pageId") String pageId) {
-        return messageService.getAllConversationsByPageId(pageId);
+
+        List<Conversation> result = messageService.getAllConversationsByPageId(pageId);
+        Comparator<Conversation> comp = (Conversation a, Conversation b) -> {
+            return b.getSentTime().compareTo(a.getSentTime());
+        };
+
+        Collections.sort(result, comp);
+        return result;
     }
 
     @RequestMapping(value = "/messenger/getConversationBySenderIdAndPageId", method = RequestMethod.POST)
@@ -87,11 +106,24 @@ public class MessengerRESTController {
     @RequestMapping(value = "/messenger/setMessageRead", method = RequestMethod.POST)
     public MessageEntity setRead(@RequestParam("pageId") String pageId,
                                  @RequestParam("senderId") String senderId) {
-        MessageEntity messageEntity = messageService.getLastMessage(pageId,senderId);
-        if (messageEntity!=null && messageEntity.getMessageRead() == false){
+        MessageEntity messageEntity = messageService.getLastMessage(pageId, senderId);
+        if (messageEntity != null && messageEntity.getMessageRead() == false) {
             messageService.setMessageRead(messageEntity.getId());
         }
         return messageEntity;
     }
 
+    @RequestMapping(value = "/messenger/addTicket", method = RequestMethod.POST)
+    public TicketitemEntity startTicket(@RequestParam("ticketId") Integer ticketId,
+                                        @RequestParam("messageId") String messageId) {
+        System.out.println(ticketId);
+        System.out.println(messageId);
+        TicketitemEntity result = null;
+        MessageitemEntity messageitemEntity = messageItemService.startTicket(messageId);
+        if (messageitemEntity != null){
+            result=  ticketIteamServiceImp.addMessageItemToTicket(ticketId, messageitemEntity.getItemId());
+
+        }
+        return result;
+    }
 }

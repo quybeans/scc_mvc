@@ -133,4 +133,14 @@ public class UserController {
     public UserEntity getUser(@RequestParam("txtUserid") Integer userid){
         return userRepository.findOne(userid);
     }
+
+    @RequestMapping("/getcurrentuser")
+    @ResponseBody
+    public UserEntity getcurrentuser(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String loginUser = (String) session.getAttribute("username");
+        UserEntity loginuser = userRepository.findUserByUsername(loginUser);
+
+        return loginuser;
+    }
 }

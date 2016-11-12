@@ -56,9 +56,7 @@ public class MessageServiceImp implements MessageService {
             try {
                 contactEntity = contactRepository.getContactById(senderId);
                 if (contactEntity != null) {
-                    System.out.println("co contact");
                 } else {
-                    System.out.println("ko co contact");
                     try {
                         //neu khong co trong database thi gui api len fb kiem
                         fbContact = FacebookUtility.getContact(senderId, accessToken);
@@ -85,6 +83,7 @@ public class MessageServiceImp implements MessageService {
                 conversation.setLastMessage(this.getLastMessageContent(pageId, senderId));
                 conversation.setRead(this.getLastMessage(pageId, senderId).getMessageRead());
                 conversation.setLastMessageId(this.getLastMessage(pageId, senderId).getId());
+                conversation.setSentTime(this.getLastMessage(pageId, senderId).getCreatedAt());
                 conversationList.add(conversation);
             } catch (javax.persistence.EntityNotFoundException e) {
                 e.printStackTrace();

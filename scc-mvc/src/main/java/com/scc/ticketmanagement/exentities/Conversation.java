@@ -1,5 +1,7 @@
 package com.scc.ticketmanagement.exentities;
 
+import java.sql.Timestamp;
+
 /**
  * Created by Thien on 11/2/2016.
  */
@@ -9,7 +11,7 @@ public class Conversation {
     private String senderPicture;
     private String lastMessage;
     private String lastMessageId;
-    private String sentTime;
+    private Timestamp sentTime;
     private boolean read;
 
     public boolean isRead() {
@@ -31,14 +33,14 @@ public class Conversation {
     public Conversation() {
     }
 
-    public Conversation(String senderName, String senderPicture, String lastMessage, String sentTime) {
+    public Conversation(String senderName, String senderPicture, String lastMessage, Timestamp sentTime) {
         this.senderName = senderName;
         this.senderPicture = senderPicture;
         this.lastMessage = lastMessage;
         this.sentTime = sentTime;
     }
 
-    public Conversation(String senderName, String senderId, String senderPicture, String lastMessage, String sentTime) {
+    public Conversation(String senderName, String senderId, String senderPicture, String lastMessage, Timestamp sentTime) {
         this.senderName = senderName;
         this.senderId = senderId;
         this.senderPicture = senderPicture;
@@ -62,11 +64,11 @@ public class Conversation {
         this.lastMessage = lastMessage;
     }
 
-    public String getSentTime() {
+    public Timestamp getSentTime() {
         return sentTime;
     }
 
-    public void setSentTime(String sentTime) {
+    public void setSentTime(Timestamp sentTime) {
         this.sentTime = sentTime;
     }
 
