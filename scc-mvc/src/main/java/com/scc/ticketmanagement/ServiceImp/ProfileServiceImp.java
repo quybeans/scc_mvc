@@ -6,13 +6,15 @@ import com.scc.ticketmanagement.services.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created by user on 9/30/2016.
  */
 @Service
-public class ProfileImp implements ProfileService {
+public class ProfileServiceImp implements ProfileService {
     @Autowired
-    ProfileRepository profileRepository;
+    private ProfileRepository profileRepository;
 
     @Override
     public ProfileEntity getProfileByID(Integer id) {
@@ -32,7 +34,7 @@ public class ProfileImp implements ProfileService {
     }
 
     @Override
-    public void updateProfile(Integer profileid,String firstname, String lastname, String address, String gender, String phone, String email) {
+    public void updateProfile(Integer profileid, String firstname, String lastname, String address, String gender, String phone, String email) {
         ProfileEntity profileEntity = profileRepository.findOne(profileid);
         profileEntity.setFirstname(firstname);
         profileEntity.setLastname(lastname);
@@ -41,5 +43,11 @@ public class ProfileImp implements ProfileService {
         profileEntity.setPhone(phone);
         profileEntity.setEmail(email);
         profileRepository.save(profileEntity);
+    }
+
+
+    @Override
+    public List<ProfileEntity> findAllByid(List<Integer> profileIds) {
+        return profileRepository.findByProfileidIn(profileIds);
     }
 }

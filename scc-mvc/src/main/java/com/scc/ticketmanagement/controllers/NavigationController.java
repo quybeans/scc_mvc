@@ -14,9 +14,10 @@ import javax.servlet.http.HttpSession;
 public class NavigationController {
 
     @RequestMapping("/brand/index")
-    public String LogOut(HttpServletRequest request) {
+    public String brandInfo(HttpServletRequest request) {
         HttpSession session = request.getSession();
-
         return "brand/index";
     }
+
+
 }

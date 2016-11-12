@@ -20,7 +20,7 @@
       <mapping class="com.scc.ticketmanagement.Entities.NotificationEntity"/>
       <mapping class="com.scc.ticketmanagement.Entities.TicketitemEntity"/>
       <mapping class="com.scc.ticketmanagement.Entities.TicketstatuschangeEntity"/>
-      <mapping class="com.scc.ticketmanagement.Entities.TicketrequestEntity"/>
+      <mapping class="com.scc.ticketmanagement.Entities.ProfileEntity"/>
       <!-- DB schema will be updated if needed -->
     <!-- <property name="hbm2ddl.auto">update</property> -->
   </session-factory>

@@ -11,6 +11,9 @@ public interface UserService {
     //get all user
     List<UserEntity> findAll();
 
+    //Find all by brand
+    List<UserEntity> findAllUserByBrand(int brandid);
+
     //check login
     UserEntity getUserByUsername(String username, String password);
 
@@ -37,4 +40,6 @@ public interface UserService {
     UserEntity getUserByID(Integer id);
 
     void changeActive(Integer userid, boolean active);
+
+
 }

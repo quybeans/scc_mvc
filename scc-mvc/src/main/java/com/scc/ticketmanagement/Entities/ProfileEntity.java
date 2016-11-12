@@ -3,7 +3,7 @@ package com.scc.ticketmanagement.Entities;
 import javax.persistence.*;
 
 /**
- * Created by QuyBeans on 10-Oct-16.
+ * Created by QuyBean on 11/11/2016.
  */
 @Entity
 @Table(name = "profile", schema = "scc", catalog = "")
@@ -18,7 +18,6 @@ public class ProfileEntity {
     private String image;
 
     @Id
-    @GeneratedValue
     @Column(name = "profileid")
     public int getProfileid() {
         return profileid;

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Brand infomation</title>
+    <header class="main-header" th:include="Head::header"></header>
+    <aside class="main-sidebar" th:include="SideBar::aside"></aside>
+    <style>
+        .active {
+            color: #00c200;
+            margin-right: 10px;
+        }
+
+        .inactive {
+            color: gray;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<script>
+    function getUserDetail(userId) {
+        $.ajax({
+            url: '/user/getUserDetail',
+            type: "GET",
+            data: {userId: userId},
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                $('#user-username').html(data.username);
+                setRoleByRoleId(data.roleid);
+                getProfileByProfileId(data.userid);
+                $("#user-status").removeAttr('class');
+                if (data.active == true) {
+                    $('#user-status').addClass('fa fa-circle active');
+                    $('#btn-active-account').hide();
+                    $('#btn-deactive-account').show().click(function () {
+                        onclickDeactive(data.userid);
+                    });
+                } else {
+                    $('#user-status').addClass('fa fa-circle inactive');
+                    $('#btn-deactive-account').hide();
+                    $('#btn-active-account').show().click(function () {
+                        onclickActive(data.userid);
+                    });
+                }
+            }
+        });
+    }
+
+    function getProfileByProfileId(userId) {
+        $.ajax({
+            url: '/user/profile',
+            type: "GET",
+            data: {userId: userId},
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                $('#user-name').html(data.lastname + " " + data.firstname);
+                $('#user-location').html(data.address);
+                $('#user-phone').html(data.phone);
+                $('#user-mail').html(data.email);
+            }
+        });
+    }
+
+    function setRoleByRoleId(roleId) {
+        switch (roleId) {
+            case 1:
+                $('#user-role').html("Admin");
+                break;
+            case 2:
+                $('#user-role').html("Brand Manager");
+                break;
+            case 3:
+                $('#user-role').html("Supervisor");
+                break;
+            case 4:
+                $('#user-role').html("Staff");
+                break;
+        }
+
+    }
+
+    function onclickDeactive(userId) {
+        var answer = confirm("Are you sure want to deactive this account ?");
+        if (answer) {
+            changeStatus(userId);
+        }
+
+    }
+
+    function onclickActive(userId) {
+        changeStatus(userId);
+    }
+
+    function changeStatus(userId) {
+
+        $.ajax({
+            url: '/user/switchActive',
+            type: "GET",
+            async: false,
+            data: {userId: userId}
+        });
+
+        location.reload();
+
+    }
+</script>
+
+<div class="content-wrapper">
+    <section class="content">
+        <div style="margin-top: 10px;margin-bottom: 10px;margin-left: 10px; background-color: white; min-height: 300px; padding: 10px 20px 20px 20px">
+            <div style="text-align: left; margin-bottom: 20px">
+                <h2>Manage user in this Brand</h2>
+            </div>
+            *Note: These are user within your Brand.
+            <table class="table table-hover">
+                <thead style="border-top: 1px solid lightgray">
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Last Name</th>
+                    <th>First Name</th>
+                    <th>Gender</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="person: ${listUser}" style="cursor: pointer" data-toggle="modal" data-target="#myModal"
+                    th:onclick="'getUserDetail('+${person.userid}+')'">
+                    <td th:text="${person.userid}" class="col-md-1"></td>
+                    <td th:text="${person.username}"></td>
+                    <td th:each="profile: ${listprofile}" th:if="${profile.profileid==person.profileid}"
+                        th:text="${profile.lastname}"></td>
+                    <td th:each="profile: ${listprofile}" th:if="${profile.profileid==person.profileid}"
+                        th:text="${profile.firstname}"></td>
+                    <td th:each="profile: ${listprofile}" th:if="${profile.profileid==person.profileid}"
+                        th:text="${profile.gender}"></td>
+                    <td th:switch="${person.roleid}">
+                        <span th:case="1">Admin</span>
+                        <span th:case="2">Brand Manager</span>
+                        <span th:case="3">Supervisor</span>
+                        <span th:case="4">Staff</span>
+                    </td>
+                    <td th:switch="${person.active}">
+                        <span th:case="true"><span class="fa fa-circle active"></span>Active</span>
+                        <span th:case="false"><span class="fa fa-circle inactive"></span>Inactive</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <button class="btn btn-primary">Add user</button>
+        </div>
+    </section>
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content ">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">User detail</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <div style="font-size: 30px; font-weight: bold; color: cornflowerblue;text-align: center"
+                             id="user-name">
+                        </div>
+
+                        <div style="text-align: center">
+                            <span class="fa fa-circle" id="user-status"></span>
+                            <span id="user-role"></span>
+                        </div>
+
+                        <hr>
+                        <div><span class="glyphicon glyphicon-user" style="margin-right: 10px"></span><span
+                                id="user-username">quybeans</span></div>
+                        <div><span class="glyphicon glyphicon-earphone" style="margin-right: 10px"></span><span
+                                id="user-phone">08.09021028</span></div>
+                        <div><span class="glyphicon glyphicon-envelope" style="margin-right: 10px"></span><span
+                                id="user-mail">quybeans@gmail.com</span>
+                        </div>
+                        <div><span class="glyphicon glyphicon-map-marker" style="margin-right: 10px"></span><span
+                                id="user-location">64 Phạm Văn Bạch, Quận Tân Bình TPHCM</span>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" style="display: none" id="btn-deactive-account">
+                            Deactive
+                        </button>
+                        <button type="button" class="btn btn-success" style="display: none" id="btn-active-account">
+                            Active
+                        </button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
