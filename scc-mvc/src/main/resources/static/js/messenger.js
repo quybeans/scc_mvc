@@ -15,11 +15,46 @@ var currentCustomerAvt = '';
 var currentPageName = '';
 var currentPageAvt = '';
 var isFirstLoadPage = true;
+
+function getParameterByName(name, url) {
+    if (!url) {
+        url = window.location.href;
+    }
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
 $(document).ready(function () {
 
-    currentPageId = $("#ddlPages option:first").val();
-    getAllConversationsByPageId(currentPageId);
 
+
+    var senderid = getParameterByName('senderid');
+    var messageId = getParameterByName('messageid');
+    var pageId = getParameterByName('receiverid');
+    var isSenderPage = false;
+    if (senderid!=null && messageId != null && pageId!= null ){
+        $('select#ddlPages').find('option').each(function() {
+            var page = $(this).val();
+            if (senderid == page){
+                isSenderPage = true;
+            }
+        });
+        if (isSenderPage){
+            currentPageId = senderid;
+            searchConversationBySenderId(pageId);
+        }else {
+            currentPageId = pageId;
+            searchConversationBySenderId(senderid);
+        }
+
+    }else{
+        currentPageId = $("#ddlPages option:first").val();
+        getAllConversationsByPageId(currentPageId);
+    }
 
     $('#replyText').keypress(function (e) {
         if (e.keyCode == 13)
@@ -42,6 +77,7 @@ function getAllConversation(a) {
 }
 
 function getAllConversationsByPageId(pageId) {
+    $('#conversation-content-loading-icon').removeClass("hidden");
     currentPageName = $("#ddlPages option:selected").text();
     currentPageAvt = 'https://graph.facebook.com/' + pageId + '/picture';
 
@@ -144,6 +180,7 @@ function setRead() {
 }
 
 function firstLoadConversationBySenderId() {
+    $('#conversation-content-loading-icon').addClass("hidden");
     $.ajax({
         url: '/messenger/getConversationBySenderIdWithPage',
         type: "POST",
@@ -154,6 +191,7 @@ function firstLoadConversationBySenderId() {
         },
         dataType: "json",
         success: function (data) {
+            // $('#conversation-content-loading-icon').removeClass("hidden");
             $('#conversationContent').empty();
             var dataReversed = data.reverse();
             var a;
@@ -532,6 +570,7 @@ function searchConversation() {
         dataType: "json",
         success: function (data) {
             $('#messagesList').empty();
+            $('#conversation-content-loading-icon').addClass("hidden");
             $.each(data, function (i) {
                 if (data[i].read) {
                     $('#messagesList').append(
@@ -556,6 +595,49 @@ function searchConversation() {
 
             });
              $('#conversation0').click();
+        }
+    });
+}
+
+function searchConversationBySenderId(senderId) {
+    // clearInterval(currentInterval);
+    clearInterval(loadConversationInterval);
+    $('#conversationContent').empty();
+    $.ajax({
+        url: '/messenger/getAllConversationsByPageIdAndSenderId',
+        type: "POST",
+        data: {
+            pageId: currentPageId,
+            senderId: senderId
+        },
+        dataType: "json",
+        success: function (data) {
+            $('#messagesList').empty();
+            $('#conversation-content-loading-icon').addClass("hidden");
+            $.each(data, function (i) {
+                if (data[i].read) {
+                    $('#messagesList').append(
+                        '<div class="item" style="position: relative" id="conversation' + i + '" onclick="getConversationBySenderId(' + currentPageId + ',\'' + data[i].senderId + '\')">'
+                        + '<div>' +
+                        '<img class="senderAvt" src="' + data[i].senderPicture + '"><div class="conversation-sender-name pull-left">'+ data[i].senderName +'</div>' +
+                        '<div class="sentTime text-muted pull-right"> ' + $.format.date(data[i].sentTime, "HH:mm")  +'</div>' +
+                        '</div>'
+                        + '<div class="crop">' + data[i].lastMessage + '</div>'
+                        + '</div>'
+                    )
+                } else {
+                    $('#messagesList').append(
+                        '<div class="item" style="position: relative" id="conversation' + i + '" onclick="getConversationBySenderId(' + currentPageId + ',\'' + data[i].senderId + '\')">'
+                        + '<div><img class="senderAvt" src="' + data[i].senderPicture + '"><div class="conversation-sender-name text-danger pull-left unread-conversation"><b>' + data[i].senderName + '</b></div>' +
+                        '<div class="sentTime text-danger pull-right"> ' +$.format.date(data[i].sentTime, "HH:mm") +'</div>' +
+                        '</div>'
+                        + '<div class="crop text-danger unread-conversation"><b>' + data[i].lastMessage + '</b></div>'
+                        + '</div>'
+                    )
+                }
+
+            });
+            $('#conversation0').click();
         }
     });
 }

@@ -41,6 +41,11 @@ public class MessageServiceImp implements MessageService {
     }
 
     @Override
+    public MessageEntity getMessageById(String messageId) {
+        return this.messageRepository.getMessageById(messageId);
+    }
+
+    @Override
     public List<Conversation> getAllConversationsByPageId(String pageId) {
         List<Conversation> conversationList = new ArrayList<>();
 

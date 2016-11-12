@@ -61,6 +61,9 @@ public class MessengerController {
             UserEntity user = userRepository.findOne(userid);
             List<PageEntity> pages = pageRepository.getAllPageByBrandId(user.getBrandid());
             model.addAttribute("pages",pages) ;
+            model.addAttribute("senderId", senderId);
+            model.addAttribute("receiverid", receiverId);
+            model.addAttribute("messageid", messageId);
         }
 
         return "/messenger/index";
