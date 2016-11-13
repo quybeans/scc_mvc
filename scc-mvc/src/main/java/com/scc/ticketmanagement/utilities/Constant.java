@@ -14,13 +14,16 @@ public class Constant {
     public static final int ROLE_SUPERVISOR = 3;
     public static final int ROLE_STAFF = 4;
 
-    public static final int STATUS_ASSIGN=1;
-    public static final int STATUS_INPROCESS=2;
-    public static final int STATUS_REVIEWING=3;
-    public static final int STATUS_SOLVED=4;
+    public static final int STATUS_ASSIGN = 1;
+    public static final int STATUS_INPROCESS = 2;
+    public static final int STATUS_REVIEWING = 3;
+    public static final int STATUS_SOLVED = 4;
 
-    public static final boolean ACTIVE=true;
-    public static final boolean DEACTIVE=false;
+    public static final boolean ACTIVE = true;
+    public static final boolean DEACTIVE = false;
 
     public static final int PAGE_SIZE = 15;
+
+    public static final int MALE = 1;
+    public static final int FEMALE = 2;
 }

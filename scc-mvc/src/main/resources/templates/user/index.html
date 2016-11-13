@@ -182,7 +182,10 @@
                     <td th:each="profile: ${listprofile}" th:if="${profile.userid==person.userid}"
                         th:text="${profile.firstname}"></td>
                     <td th:each="profile: ${listprofile}" th:if="${profile.userid==person.userid}"
-                        th:text="${profile.gender}"></td>
+                        th:switch="${profile.gender}">
+                        <span th:case="1">Male</span>
+                        <span th:case="2">Female</span>
+                    </td>
                     <td th:switch="${person.roleid}">
                         <span th:case="1">Admin</span>
                         <span th:case="2">Brand Manager</span>

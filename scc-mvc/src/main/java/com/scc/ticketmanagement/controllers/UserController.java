@@ -166,22 +166,39 @@ public class UserController {
         UserEntity loginuser = userRepository.findUserByUsername(loginUser);
 
 
-
-
         UserEntity newUser = new UserEntity();
         if (username.length() > 0 && password.length() > 0 && role.length() > 0) {
-
             newUser.setUsername(username);
             newUser.setPassword(password);
             if (role.equals("sup")) newUser.setRoleid(Constant.ROLE_SUPERVISOR);
             else if (role.equals("staff")) newUser.setRoleid(Constant.ROLE_STAFF);
             newUser.setActive(true);
-          //  newUser.setProfileid(1);
+            //  newUser.setProfileid(1);
             newUser.setCreatedby(loginuser.getUserid());
             newUser.setBrandid(loginuser.getBrandid());
         }
-        UserEntity userEntity = userRepository.save(newUser);
-        System.out.println(newUser.getUserid());
+        if (userRepository.save(newUser) != null) {
 
+
+            ProfileEntity profileEntity = new ProfileEntity();
+            if (firstname.length() > 0 && lastname.length() > 0) {
+                profileEntity.setUserid(userService.getUserByUsername(newUser.getUsername()).getUserid());
+                profileEntity.setFirstname(firstname);
+                profileEntity.setLastname(lastname);
+
+                //Aditional information
+                if(address.length()>0)profileEntity.setAddress(address);
+                if(phone.length()>0)profileEntity.setPhone(phone);
+                if(email.length()>0)profileEntity.setEmail(email);
+
+                if (gender.equals("male")) {
+                    profileEntity.setGender(Constant.MALE);
+                } else profileEntity.setGender(Constant.FEMALE);
+            }
+
+            profileRepository.save(profileEntity);
+
+            System.out.println(newUser.getUserid());
+        }
     }
 }
