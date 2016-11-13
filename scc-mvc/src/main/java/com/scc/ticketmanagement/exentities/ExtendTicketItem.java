@@ -15,6 +15,7 @@ public class ExtendTicketItem extends TicketitemEntity {
     private PostEntity post;
     private String sendername;
     private String senderavt;
+    private boolean page;
     private String endmessage;
 
 
@@ -73,5 +74,13 @@ public class ExtendTicketItem extends TicketitemEntity {
 
     public void setEndmessage(String endmessage) {
         this.endmessage = endmessage;
+    }
+
+    public boolean isPage() {
+        return page;
+    }
+
+    public void setPage(boolean page) {
+        this.page = page;
     }
 }

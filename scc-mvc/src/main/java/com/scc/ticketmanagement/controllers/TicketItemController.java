@@ -21,6 +21,9 @@ import java.util.*;
 public class TicketItemController {
 
     @Autowired
+    PageRepository pageRepository;
+
+    @Autowired
     ContactRepository contactRepository;
 
     @Autowired
@@ -94,8 +97,19 @@ public class TicketItemController {
                     item.setEndmessage(messageitem.getMessageIdEnd());
                     item.setCreatedAt(ti.getCreatedAt());
                     ContactEntity contact = contactRepository.findOne(message.getSenderid());
+                    if(contact!=null){
                         item.setSendername(contact.getName());
                         item.setSenderavt(contact.getPicture());
+                        item.setPage(false);
+                    }else{
+                        PageEntity page = pageRepository.findOne(message.getSenderid());
+                        if(page!=null){
+                            item.setSendername(page.getName());
+                            item.setSenderavt(page.getPageid());
+                            item.setPage(true);
+                        }
+                    }
+
 
 
                     customizelist.add(item);
