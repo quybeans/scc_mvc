@@ -31,27 +31,26 @@ function getParameterByName(name, url) {
 $(document).ready(function () {
 
 
-
     var senderid = getParameterByName('senderid');
     var messageId = getParameterByName('messageid');
     var pageId = getParameterByName('receiverid');
     var isSenderPage = false;
-    if (senderid!=null && messageId != null && pageId!= null ){
-        $('select#ddlPages').find('option').each(function() {
+    if (senderid != null && messageId != null && pageId != null) {
+        $('select#ddlPages').find('option').each(function () {
             var page = $(this).val();
-            if (senderid == page){
+            if (senderid == page) {
                 isSenderPage = true;
             }
         });
-        if (isSenderPage){
+        if (isSenderPage) {
             currentPageId = senderid;
             searchConversationBySenderId(pageId);
-        }else {
+        } else {
             currentPageId = pageId;
             searchConversationBySenderId(senderid);
         }
 
-    }else{
+    } else {
         currentPageId = $("#ddlPages option:first").val();
         getAllConversationsByPageId(currentPageId);
     }
@@ -63,7 +62,7 @@ $(document).ready(function () {
 
 
     $('#txtSearchConversation').keydown(function (e) {
-        var txtSearch =  $('#txtSearchConversation').val();
+        var txtSearch = $('#txtSearchConversation').val();
 
         if (e.keyCode == 13)
             $('#btn-search-conversation').click();
@@ -100,8 +99,8 @@ function getAllConversationsByPageId(pageId) {
                     $('#messagesList').append(
                         '<div class="item" style="position: relative" id="conversation' + i + '" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId + '\')">'
                         + '<div>' +
-                        '<img class="senderAvt" src="' + data[i].senderPicture + '"><div class="conversation-sender-name pull-left">'+ data[i].senderName +'</div>' +
-                        '<div class="sentTime text-muted pull-right"> ' + $.format.date(data[i].sentTime, "HH:mm")  +'</div>' +
+                        '<img class="senderAvt" src="' + data[i].senderPicture + '"><div class="conversation-sender-name pull-left">' + data[i].senderName + '</div>' +
+                        '<div class="sentTime text-muted pull-right"> ' + $.format.date(data[i].sentTime, "HH:mm") + '</div>' +
                         '</div>'
                         + '<div class="crop">' + data[i].lastMessage + '</div>'
                         + '</div>'
@@ -110,7 +109,7 @@ function getAllConversationsByPageId(pageId) {
                     $('#messagesList').append(
                         '<div class="item" style="position: relative" id="conversation' + i + '" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId + '\')">'
                         + '<div><img class="senderAvt" src="' + data[i].senderPicture + '"><div class="conversation-sender-name text-danger pull-left unread-conversation"><b>' + data[i].senderName + '</b></div>' +
-                        '<div class="sentTime text-danger pull-right"> ' +$.format.date(data[i].sentTime, "HH:mm") +'</div>' +
+                        '<div class="sentTime text-danger pull-right"> ' + $.format.date(data[i].sentTime, "HH:mm") + '</div>' +
                         '</div>'
                         + '<div class="crop text-danger unread-conversation"><b>' + data[i].lastMessage + '</b></div>'
                         + '</div>'
@@ -141,8 +140,8 @@ function getAllConversationsByPageId(pageId) {
                         $('#messagesList').append(
                             '<div class="item" style="position: relative" id="conversation' + i + '" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId + '\')">'
                             + '<div>' +
-                            '<img class="senderAvt" src="' + data[i].senderPicture + '"><div class="conversation-sender-name text-info pull-left">'+ data[i].senderName +'</div>' +
-                            '<div class="sentTime text-muted pull-right"> ' + $.format.date(data[i].sentTime, "HH:mm")  +'</div>' +
+                            '<img class="senderAvt" src="' + data[i].senderPicture + '"><div class="conversation-sender-name text-info pull-left">' + data[i].senderName + '</div>' +
+                            '<div class="sentTime text-muted pull-right"> ' + $.format.date(data[i].sentTime, "HH:mm") + '</div>' +
                             '</div>'
                             + '<div class="crop text-info">' + data[i].lastMessage + '</div>'
                             + '</div>'
@@ -151,7 +150,7 @@ function getAllConversationsByPageId(pageId) {
                         $('#messagesList').append(
                             '<div class="item" style="position: relative" id="conversation' + i + '" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId + '\')">'
                             + '<div><img class="senderAvt" src="' + data[i].senderPicture + '"><div class="conversation-sender-name text-danger pull-left unread-conversation"><b>' + data[i].senderName + '</b></div>' +
-                            '<div class="sentTime text-muted pull-right"> ' + $.format.date(data[i].sentTime, "HH:mm") +'</div>' +
+                            '<div class="sentTime text-muted pull-right"> ' + $.format.date(data[i].sentTime, "HH:mm") + '</div>' +
                             '</div>'
                             + '<div class="crop text-danger unread-conversation"><b>' + data[i].lastMessage + '</b></div>'
                             + '</div>'
@@ -217,7 +216,7 @@ function firstLoadConversationBySenderId() {
                         '<span class="pull-right">' +
                         changeIconSentimentScore(score) +
                         '</br>' +
-                        '<span style="margin-right: 12px" id="'+a+'" onclick="showTicket(this)" class="fa fa-plus-square-o fa-2x pull-right"></span>' +
+                        '<span style="margin-right: 12px" id="' + a + '" onclick="showTicket(this)" class="fa fa-plus-square-o fa-2x pull-right"></span>' +
                         '</span>' +
                         '</li>'
                     )
@@ -239,7 +238,7 @@ function firstLoadConversationBySenderId() {
                         '</div>' +
                         changeIconSentimentScore(score) +
                         '</br>' +
-                        '<span style="margin-left: 7px"  id="'+a+'" onclick="showTicket(this)" class="fa fa-plus-square-o fa-2x pull-left"></span>' +
+                        '<span style="margin-left: 7px"  id="' + a + '" onclick="showTicket(this)" class="fa fa-plus-square-o fa-2x pull-left"></span>' +
                         '</li>'
                     );
                 }
@@ -286,7 +285,7 @@ function reloadConversationBySenderId() {
                         '<span class="pull-right">' +
                         changeIconSentimentScore(score) +
                         '</br>' +
-                        '<span style="margin-right: 12px" id="'+a+'" onclick="showTicket(this)" class="fa fa-plus-square-o fa-2x pull-right"></span>' +
+                        '<span style="margin-right: 12px" id="' + a + '" onclick="showTicket(this)" class="fa fa-plus-square-o fa-2x pull-right"></span>' +
                         '</span>' +
                         '</li>'
                     )
@@ -308,7 +307,7 @@ function reloadConversationBySenderId() {
                         '</div>' +
                         changeIconSentimentScore(score) +
                         '</br>' +
-                        '<span style="margin-left: 7px"  id="'+a+'" onclick="showTicket(this)" class="fa fa-plus-square-o fa-2x pull-left"></span>' +
+                        '<span style="margin-left: 7px"  id="' + a + '" onclick="showTicket(this)" class="fa fa-plus-square-o fa-2x pull-left"></span>' +
                         '</li>'
                     );
                 }
@@ -382,7 +381,7 @@ function getConversationBySenderIdWithPage() {
                             '<span class="pull-right">' +
                             changeIconSentimentScore(score) +
                             '</br>' +
-                            '<span style="margin-right: 12px" id="'+a+'" onclick="showTicket(this)" class="fa fa-plus-square-o fa-2x pull-right"></span>' +
+                            '<span style="margin-right: 12px" id="' + a + '" onclick="showTicket(this)" class="fa fa-plus-square-o fa-2x pull-right"></span>' +
                             '</span>' +
                             '</li>'
                         )
@@ -404,7 +403,7 @@ function getConversationBySenderIdWithPage() {
                             '</div>' +
                             changeIconSentimentScore(score) +
                             '</br>' +
-                            '<span style="margin-left: 7px"  id="'+a+'" onclick="showTicket(this)" class="fa fa-plus-square-o fa-2x pull-left"></span>' +
+                            '<span style="margin-left: 7px"  id="' + a + '" onclick="showTicket(this)" class="fa fa-plus-square-o fa-2x pull-left"></span>' +
                             '</li>'
                         );
                     }
@@ -460,9 +459,9 @@ function getCustomerInfo(customerId) {
             $("#customer-picture").attr("src", data.picture);
             $('#customer-facebook-id').text(data.facebookid);
             $('#customer-name').text(data.name);
-            $('#customer-timezone').text(data.timezone);
-            $('#customer-gender').text(data.gender);
-            $('#customer-locale').text(data.locale);
+            $('#customer-timezone').text(convertNumberToTimezone(data.timezone));
+            $('#customer-gender').text(convertGender(data.gender));
+            $('#customer-locale').text(convertLocale(data.locale));
             $('#customer-note').text(data.note);
 
         }
@@ -556,7 +555,7 @@ function showTicket(a) {
 }
 
 function searchConversation() {
-   // clearInterval(currentInterval);
+    // clearInterval(currentInterval);
     clearInterval(loadConversationInterval);
     $('#conversationContent').empty();
     var txtSearch = $('#txtSearchConversation').val();
@@ -576,8 +575,8 @@ function searchConversation() {
                     $('#messagesList').append(
                         '<div class="item" style="position: relative" id="conversation' + i + '" onclick="getConversationBySenderId(' + currentPageId + ',\'' + data[i].senderId + '\')">'
                         + '<div>' +
-                        '<img class="senderAvt" src="' + data[i].senderPicture + '"><div class="conversation-sender-name pull-left">'+ data[i].senderName +'</div>' +
-                        '<div class="sentTime text-muted pull-right"> ' + $.format.date(data[i].sentTime, "HH:mm")  +'</div>' +
+                        '<img class="senderAvt" src="' + data[i].senderPicture + '"><div class="conversation-sender-name pull-left">' + data[i].senderName + '</div>' +
+                        '<div class="sentTime text-muted pull-right"> ' + $.format.date(data[i].sentTime, "HH:mm") + '</div>' +
                         '</div>'
                         + '<div class="crop">' + data[i].lastMessage + '</div>'
                         + '</div>'
@@ -586,7 +585,7 @@ function searchConversation() {
                     $('#messagesList').append(
                         '<div class="item" style="position: relative" id="conversation' + i + '" onclick="getConversationBySenderId(' + currentPageId + ',\'' + data[i].senderId + '\')">'
                         + '<div><img class="senderAvt" src="' + data[i].senderPicture + '"><div class="conversation-sender-name text-danger pull-left unread-conversation"><b>' + data[i].senderName + '</b></div>' +
-                        '<div class="sentTime text-danger pull-right"> ' +$.format.date(data[i].sentTime, "HH:mm") +'</div>' +
+                        '<div class="sentTime text-danger pull-right"> ' + $.format.date(data[i].sentTime, "HH:mm") + '</div>' +
                         '</div>'
                         + '<div class="crop text-danger unread-conversation"><b>' + data[i].lastMessage + '</b></div>'
                         + '</div>'
@@ -594,7 +593,7 @@ function searchConversation() {
                 }
 
             });
-             $('#conversation0').click();
+            $('#conversation0').click();
         }
     });
 }
@@ -619,8 +618,8 @@ function searchConversationBySenderId(senderId) {
                     $('#messagesList').append(
                         '<div class="item" style="position: relative" id="conversation' + i + '" onclick="getConversationBySenderId(' + currentPageId + ',\'' + data[i].senderId + '\')">'
                         + '<div>' +
-                        '<img class="senderAvt" src="' + data[i].senderPicture + '"><div class="conversation-sender-name pull-left">'+ data[i].senderName +'</div>' +
-                        '<div class="sentTime text-muted pull-right"> ' + $.format.date(data[i].sentTime, "HH:mm")  +'</div>' +
+                        '<img class="senderAvt" src="' + data[i].senderPicture + '"><div class="conversation-sender-name pull-left">' + data[i].senderName + '</div>' +
+                        '<div class="sentTime text-muted pull-right"> ' + $.format.date(data[i].sentTime, "HH:mm") + '</div>' +
                         '</div>'
                         + '<div class="crop">' + data[i].lastMessage + '</div>'
                         + '</div>'
@@ -629,7 +628,7 @@ function searchConversationBySenderId(senderId) {
                     $('#messagesList').append(
                         '<div class="item" style="position: relative" id="conversation' + i + '" onclick="getConversationBySenderId(' + currentPageId + ',\'' + data[i].senderId + '\')">'
                         + '<div><img class="senderAvt" src="' + data[i].senderPicture + '"><div class="conversation-sender-name text-danger pull-left unread-conversation"><b>' + data[i].senderName + '</b></div>' +
-                        '<div class="sentTime text-danger pull-right"> ' +$.format.date(data[i].sentTime, "HH:mm") +'</div>' +
+                        '<div class="sentTime text-danger pull-right"> ' + $.format.date(data[i].sentTime, "HH:mm") + '</div>' +
                         '</div>'
                         + '<div class="crop text-danger unread-conversation"><b>' + data[i].lastMessage + '</b></div>'
                         + '</div>'
@@ -642,15 +641,112 @@ function searchConversationBySenderId(senderId) {
     });
 }
 
-function showForm(a){
-    $('#testbtn').removeClass("hidden");
-}
-
-function hideForm(a){
-    $('#testbtn').addClass("hidden");
-}
-
 function refreshConversations() {
     isFirstLoadPage = true;
     getAllConversationsByPageId(currentPageId);
 }
+
+function convertNumberToTimezone(number) {
+    var result = number;
+    number = parseInt(number);
+    switch (number) {
+        case 0:
+            result = 'Greenwich Mean Time: Dublin, Edinburgh, Lisbon, London';
+            break;
+        case 1:
+            result = 'Belgrade, Bratislava, Budapest, Ljubljana, Prague';
+            break;
+        case 2:
+            result = 'Helsinki, Kiev, Riga, Sofia, Tallinn, Vilnius';
+            break;
+        case 3:
+            result = 'Moscow, St. Petersburg, Volgograd';
+            break;
+        case 4:
+            result = 'Baku, Tbilisi, Yerevan';
+            break;
+        case 5:
+            result = 'Islamabad, Karachi, Tashkent';
+            break;
+        case 6:
+            result = 'Astana, Dhaka';
+            break;
+        case 7:
+            result = 'Bangkok, Hanoi, Jakarta';
+            break;
+        case 8:
+            result = 'Kuala Lumpur, Singapore';
+            break;
+        case 9:
+            result = 'Osaka, Sapporo, Tokyo';
+            break;
+        case 10:
+            result = 'Canberra, Melbourne, Sydney';
+            break;
+        case 11:
+            result = 'Magadan, Solomon Islands, New Caledonia';
+            break;
+        case 12:
+            result = 'Fiji Islands, Kamchatka, Marshall Islands';
+            break;
+        case 13:
+            result = "Nuku'alofa";
+            break;
+        case -1:
+            result = 'Cape Verde Islands';
+            break;
+        case -2:
+            result = 'Mid-Atlantic';
+            break;
+        case -3:
+            result = 'Greenland';
+            break;
+        case -4:
+            result = 'Atlantic Time (Canada)';
+            break;
+        case -5:
+            result = 'Eastern Time (US and Canada)';
+            break;
+        case -6:
+            result = 'Central Time (US and Canada)';
+            break;
+        case -7:
+            result = 'Chihuahua, La Paz, Mazatlan';
+            break;
+        case -8:
+            result = 'Pacific Time (US and Canada); Tijuana';
+            break;
+        case -9:
+            result = 'Alaska';
+            break;
+        case -10:
+            result = 'Hawaii';
+            break;
+        case -11:
+            result = 'Midway Island, Samoa';
+            break;
+        case -12:
+            result = 'International Date Line West';
+            break;
+
+    }
+    return result;
+}
+
+function convertLocale(locale) {
+    var result = 'locale';
+    switch (locale){
+        case 'en_US': result = 'English - United States'; break;
+    }
+    return result;
+}
+
+function convertGender(gender) {
+    var result = 'Female';
+    if (gender == 'male'){
+        result = 'Male'
+    }
+    return result;
+}
+
+

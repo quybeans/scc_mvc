@@ -49,4 +49,20 @@ public interface MessageRepository extends JpaRepository<MessageEntity, String> 
     @Modifying
     @Transactional
     void setMessageRead(@Param("id") String id);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE MessageEntity m set m.messageRead = TRUE WHERE (m.receiverid =:receiverId and m.senderid =:senderId) " +
+            "or (m.receiverid =:senderId and m.senderid =:receiverId)")
+    void setConversationRead(@Param("receiverId") String receiverId,
+                                            @Param("senderId") String senderId);
+
+    @Query("SELECT count(m) FROM MessageEntity m WHERE m.messageRead = false AND ((m.receiverid =:receiverId and m.senderid =:senderId) " +
+            "or (m.receiverid =:senderId and m.senderid =:receiverId))")
+    Integer getNumberOfUnreadMessageInConversation(@Param("receiverId") String receiverId,
+                                            @Param("senderId") String senderId);
+
+    @Query("SELECT count(m) FROM MessageEntity m WHERE m.messageRead = FALSE AND m.receiverid = :receiverId")
+    Integer getNumberOfUnreadMessageInPage(@Param("receiverId") String receiverId);
+
 }
