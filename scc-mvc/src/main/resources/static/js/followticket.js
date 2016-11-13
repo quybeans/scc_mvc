@@ -168,6 +168,12 @@ function loadticketitem(ticketid) {
                         +'</li>'
                 }
                 if(data[index].message!==null){
+                    var avt;
+                    if(data[index].page){
+                       avt='https://graph.facebook.com/' + data[index].senderavt + '/picture';
+                    }else{
+                        avt=data[index].senderavt;
+                    }
                     timelineitem =
                         '<li class="time-label">'
                         +'<span class="bg-blue" id="createtime">'
@@ -180,7 +186,7 @@ function loadticketitem(ticketid) {
                         +moment(data[index].message.createdAt).format("D/MM/YYYY, hh:mm:ss")
                         +'</span>'
                         +'<h3 class="timeline-header">'
-                        +'<img src="'+data[index].senderavt+'" alt="user image" style="width: 50px;height: 50px;border-radius: 50px;margin-left: 5px" alt="user image"/>'
+                        +'<img src="'+avt+'" alt="user image" style="width: 50px;height: 50px;border-radius: 50px;margin-left: 5px" alt="user image"/>'
                         +'<span style="margin-left: 10px">'+data[index].sendername+'</span>'
                         +'</h3>'
                         +'<div class="timeline-body">'
