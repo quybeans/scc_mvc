@@ -70,10 +70,10 @@ public class BrandController {
     public String brandUserManagement(HttpServletRequest request, Model model) {
 
         UserEntity userEntity = checkUserSession(request);
-        List<Integer> idLlist = userService.findAllUserByBrand(userEntity.getBrandid()).stream().map(UserEntity::getProfileid).collect(Collectors.toList());
-//        System.out.println(idLlist);
-        List<ProfileEntity> profileEntityList = profileService.findAllByid(idLlist);
-        model.addAttribute("listprofile",profileEntityList);
+          List<Integer> idLlist = userService.findAllUserByBrand(userEntity.getBrandid()).stream().map(UserEntity::getUserid).collect(Collectors.toList());
+        System.out.println(idLlist);
+          List<ProfileEntity> profileEntityList = profileService.findAllByid(idLlist);
+          model.addAttribute("listprofile",profileEntityList);
         model.addAttribute("listUser", userService.findAllUserByBrand(userEntity.getBrandid()));
 
         return "user/index";

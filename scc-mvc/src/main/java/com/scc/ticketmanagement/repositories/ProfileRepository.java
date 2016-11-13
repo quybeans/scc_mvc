@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface ProfileRepository extends JpaRepository<ProfileEntity,Integer> {
     //Named Query
-    List<ProfileEntity> findByProfileidIn (List<Integer> listProfileId);
+    List<ProfileEntity> findByUseridIn (List<Integer> listProfileId);
 
     //Custom Query
 }

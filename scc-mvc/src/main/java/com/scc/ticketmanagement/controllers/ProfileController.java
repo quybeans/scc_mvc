@@ -38,7 +38,7 @@ public class ProfileController {
     public String updateProfile(@RequestParam("txtFirstName") String firstname,
                                 @RequestParam("txtLastName") String lastname,
                                 @RequestParam("txtAddress") String address,
-                                @RequestParam("txtGender") String gender,
+                                @RequestParam("txtGender") int gender,
                                 @RequestParam("txtEmail") String email,
                                 @RequestParam("txtPhone") String phone,
                                 @RequestParam("profileid") Integer profileid){
@@ -50,6 +50,6 @@ public class ProfileController {
     @ResponseBody
     public ProfileEntity getuserprofile(@RequestParam("userid") Integer userid){
         UserEntity user = userRepository.findOne(userid);
-        return profileRepository.findOne(user.getProfileid());
+        return profileRepository.findOne(user.getUserid());
     }
 }

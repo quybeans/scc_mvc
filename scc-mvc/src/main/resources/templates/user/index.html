@@ -146,6 +146,10 @@
 
         }
     }
+
+    function onDropdownRoleClick() {
+
+    }
 </script>
 
 <div class="content-wrapper">
@@ -173,11 +177,11 @@
                     th:onclick="'getUserDetail('+${person.userid}+')'">
                     <td th:text="${person.userid}" class="col-md-1"></td>
                     <td th:text="${person.username}"></td>
-                    <td th:each="profile: ${listprofile}" th:if="${profile.profileid==person.profileid}"
+                    <td th:each="profile: ${listprofile}" th:if="${profile.userid==person.userid}"
                         th:text="${profile.lastname}"></td>
-                    <td th:each="profile: ${listprofile}" th:if="${profile.profileid==person.profileid}"
+                    <td th:each="profile: ${listprofile}" th:if="${profile.userid==person.userid}"
                         th:text="${profile.firstname}"></td>
-                    <td th:each="profile: ${listprofile}" th:if="${profile.profileid==person.profileid}"
+                    <td th:each="profile: ${listprofile}" th:if="${profile.userid==person.userid}"
                         th:text="${profile.gender}"></td>
                     <td th:switch="${person.roleid}">
                         <span th:case="1">Admin</span>
@@ -249,7 +253,7 @@
 
             <!-- Modal content-->
             <div class="modal-content">
-                <form class="form-horizontal">
+                <form class="form-horizontal" action="/user/createUserwProfile" method="POST">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <h4 class="modal-title">Add new user</h4>
@@ -257,39 +261,61 @@
 
                     <div class="modal-body">
                         <div class="form-group">
-                            <label class="control-label col-sm-3" for="username">Username</label>
+                            <label class="control-label col-sm-3" for="username">Username*</label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" id="username" placeholder="Enter username"
+                                       name="txtUsername"
                                        onblur="checkUsername($('#username').val())">
                                 <a class="glyphicon glyphicon-remove form-control-feedback"
                                    style="margin-right: 10px;color: red; display: none" id="checkUserIcon"></a>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-sm-3">Gender</label>
+                            <label class="control-label col-sm-3" for="username">Role*</label>
                             <div class="col-sm-9">
-                                <label class="radio-inline"><input type="radio" name="optradio" checked>Male</label>
-                                <label class="radio-inline"><input type="radio" name="optradio">Female</label>
+                                <div class="dropdown">
+                                    <!--<button class="btn btn-primary dropdown-toggle" type="button"-->
+                                    <!--data-toggle="dropdown">Select role-->
+                                    <!--<span class="caret"></span></button>-->
+                                    <!--<input type="hidden" class="form-control" id="txtRole"-->
+                                    <!--name="txtRole">-->
+                                    <select class="btn btn-primary" name="ddlRole">
+                                        <option value="sup">Supervisor</option>
+                                        <option value="staff">Staff</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-sm-3" for="firstname">Firstname</label>
-                            <div class="col-sm-3"  style="padding-right: 0px">
-                                <input type="text" class="form-control" id="firstname" placeholder="Enter firstname">
+                            <label class="control-label col-sm-3">Gender*</label>
+                            <div class="col-sm-9">
+                                <label class="radio-inline"><input type="radio" name="rdGender" checked value="male">Male</label>
+                                <label class="radio-inline"><input type="radio" name="rdGender"
+                                                                   value="female">Female</label>
                             </div>
-                            <label class="control-label col-sm-2" for="lastname">Lastname</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="firstname">Firstname*</label>
+                            <div class="col-sm-3" style="padding-right: 0px">
+                                <input type="text" class="form-control" id="firstname" placeholder="Enter firstname"
+                                       name="txtFirstname">
+                            </div>
+                            <label class="control-label col-sm-2" for="lastname">Lastname*</label>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" id="lastname" placeholder="Enter lastname">
+                                <input type="text" class="form-control" id="lastname" placeholder="Enter lastname"
+                                       name="txtLastname">
                             </div>
                         </div>
+
                         <div class="form-group">
-                            <label class="control-label col-sm-3" for="password">Password</label>
+                            <label class="control-label col-sm-3" for="password">Password*</label>
                             <div class="col-sm-9">
-                                <input type="password" class="form-control" id="password" placeholder="Enter password">
+                                <input type="password" class="form-control" id="password" placeholder="Enter password"
+                                       name="txtPassword">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-sm-3" for="password-retype">Retype password</label>
+                            <label class="control-label col-sm-3" for="password-retype">Retype password*</label>
                             <div class="col-sm-9">
                                 <input onblur="checkRetypePassword()" type="password" class="form-control"
                                        id="password-retype" placeholder="Retype password">
@@ -297,16 +323,32 @@
                                    style="margin-right: 10px;color: red; display: none" id="checkReypeIcon"></a>
                             </div>
                         </div>
+                        <hr>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="password">Address</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="address" placeholder="Enter address"
+                                       name="txtAddress">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="password">Phone</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="phone" placeholder="Enter phone"
+                                       name="txtPhone">
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label class="control-label col-sm-3" for="email">Email</label>
                             <div class="col-sm-9">
-                                <input type="email" class="form-control" id="email" placeholder="Enter email">
+                                <input type="email" class="form-control" id="email" placeholder="Enter email"
+                                       name="txtEmail">
                             </div>
                         </div>
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary">Create</button>
+                        <button type="submit" class="btn btn-primary">Create</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     </div>
                 </form>

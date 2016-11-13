@@ -11,11 +11,9 @@ public interface ProfileService {
 
     ProfileEntity getProfileByID(Integer id);
 
-    ProfileEntity createProfile(String firstname, String lastname, String address, String gender,
-                                String phone, String email);
+    ProfileEntity createProfile(String firstname, String lastname, String address, int gender, String phone, String email);
 
-    void updateProfile(Integer profileID,String firstname,String lastname,String address,String gender,
-                       String phone,String email);
+    void updateProfile(Integer profileid, String firstname, String lastname, String address, int gender, String phone, String email);
 
     List<ProfileEntity> findAllByid (List<Integer> profileIds);
 }

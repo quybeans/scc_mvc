@@ -50,7 +50,7 @@ public class TickRequestController {
             extendrequest.setId(request.getId());
             extendrequest.setRequestat(request.getRequestat());
 
-            ProfileEntity pro = profileRepository.findOne(userRepository.findOne(request.getAssigner()).getProfileid());
+            ProfileEntity pro = profileRepository.findOne(userRepository.findOne(request.getAssigner()).getUserid());
             extendrequest.setAssignername(pro.getFirstname()+ " " + pro.getLastname());
 
             TicketEntity ticket = ticketRepository.findOne(request.getTicketid());

@@ -3,7 +3,7 @@ package com.scc.ticketmanagement.Entities;
 import javax.persistence.*;
 
 /**
- * Created by QuyBean on 10/26/2016.
+ * Created by QuyBean on 11/13/2016.
  */
 @Entity
 @Table(name = "user", schema = "scc", catalog = "")
@@ -12,7 +12,6 @@ public class UserEntity {
     private String username;
     private String password;
     private int roleid;
-    private Integer profileid;
     private Integer createdby;
     private boolean active;
     private Integer brandid;
@@ -58,16 +57,6 @@ public class UserEntity {
     }
 
     @Basic
-    @Column(name = "profileid")
-    public Integer getProfileid() {
-        return profileid;
-    }
-
-    public void setProfileid(Integer profileid) {
-        this.profileid = profileid;
-    }
-
-    @Basic
     @Column(name = "createdby")
     public Integer getCreatedby() {
         return createdby;
@@ -109,7 +98,6 @@ public class UserEntity {
         if (active != that.active) return false;
         if (username != null ? !username.equals(that.username) : that.username != null) return false;
         if (password != null ? !password.equals(that.password) : that.password != null) return false;
-        if (profileid != null ? !profileid.equals(that.profileid) : that.profileid != null) return false;
         if (createdby != null ? !createdby.equals(that.createdby) : that.createdby != null) return false;
         if (brandid != null ? !brandid.equals(that.brandid) : that.brandid != null) return false;
 
@@ -122,7 +110,6 @@ public class UserEntity {
         result = 31 * result + (username != null ? username.hashCode() : 0);
         result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + roleid;
-        result = 31 * result + (profileid != null ? profileid.hashCode() : 0);
         result = 31 * result + (createdby != null ? createdby.hashCode() : 0);
         result = 31 * result + (active ? 1 : 0);
         result = 31 * result + (brandid != null ? brandid.hashCode() : 0);

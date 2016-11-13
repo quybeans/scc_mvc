@@ -22,7 +22,7 @@ public class ProfileServiceImp implements ProfileService {
     }
 
     @Override
-    public ProfileEntity createProfile(String firstname, String lastname, String address, String gender, String phone, String email) {
+    public ProfileEntity createProfile(String firstname, String lastname, String address, int gender, String phone, String email) {
         ProfileEntity profileEntity = new ProfileEntity();
         profileEntity.setFirstname(firstname);
         profileEntity.setLastname(lastname);
@@ -34,7 +34,7 @@ public class ProfileServiceImp implements ProfileService {
     }
 
     @Override
-    public void updateProfile(Integer profileid, String firstname, String lastname, String address, String gender, String phone, String email) {
+    public void updateProfile(Integer profileid, String firstname, String lastname, String address, int gender, String phone, String email) {
         ProfileEntity profileEntity = profileRepository.findOne(profileid);
         profileEntity.setFirstname(firstname);
         profileEntity.setLastname(lastname);
@@ -48,6 +48,7 @@ public class ProfileServiceImp implements ProfileService {
 
     @Override
     public List<ProfileEntity> findAllByid(List<Integer> profileIds) {
-        return profileRepository.findByProfileidIn(profileIds);
+        System.out.println(profileIds);
+        return profileRepository.findByUseridIn(profileIds);
     }
 }

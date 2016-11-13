@@ -33,7 +33,7 @@ public class UserRESTController {
     public ProfileEntity getUserProfile(int userId)
     {
         UserEntity userEntity =userService.getUserByID(userId);
-        return  profileService.getProfileByID(userEntity.getProfileid());
+        return  profileService.getProfileByID(userId);
     }
 
     @RequestMapping("user/switchActive")
@@ -51,5 +51,7 @@ public class UserRESTController {
        if (userService.getUserByUsername(username)!=null) return true;
         else  return false;
     }
+
+
 
 }

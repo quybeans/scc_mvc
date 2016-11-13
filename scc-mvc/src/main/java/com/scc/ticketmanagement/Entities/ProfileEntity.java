@@ -1,30 +1,31 @@
 package com.scc.ticketmanagement.Entities;
 
 import javax.persistence.*;
+import java.sql.Date;
 
 /**
- * Created by QuyBean on 11/11/2016.
+ * Created by QuyBean on 11/13/2016.
  */
 @Entity
 @Table(name = "profile", schema = "scc", catalog = "")
 public class ProfileEntity {
-    private int profileid;
+    private int userid;
     private String firstname;
     private String lastname;
     private String address;
-    private String gender;
+    private Integer gender;
     private String phone;
     private String email;
-    private String image;
+    private Date doB;
 
     @Id
-    @Column(name = "profileid")
-    public int getProfileid() {
-        return profileid;
+    @Column(name = "userid")
+    public int getUserid() {
+        return userid;
     }
 
-    public void setProfileid(int profileid) {
-        this.profileid = profileid;
+    public void setUserid(int userid) {
+        this.userid = userid;
     }
 
     @Basic
@@ -59,11 +60,11 @@ public class ProfileEntity {
 
     @Basic
     @Column(name = "gender")
-    public String getGender() {
+    public Integer getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(Integer gender) {
         this.gender = gender;
     }
 
@@ -88,13 +89,13 @@ public class ProfileEntity {
     }
 
     @Basic
-    @Column(name = "image")
-    public String getImage() {
-        return image;
+    @Column(name = "DoB")
+    public Date getDoB() {
+        return doB;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setDoB(Date doB) {
+        this.doB = doB;
     }
 
     @Override
@@ -104,28 +105,28 @@ public class ProfileEntity {
 
         ProfileEntity that = (ProfileEntity) o;
 
-        if (profileid != that.profileid) return false;
+        if (userid != that.userid) return false;
         if (firstname != null ? !firstname.equals(that.firstname) : that.firstname != null) return false;
         if (lastname != null ? !lastname.equals(that.lastname) : that.lastname != null) return false;
         if (address != null ? !address.equals(that.address) : that.address != null) return false;
         if (gender != null ? !gender.equals(that.gender) : that.gender != null) return false;
         if (phone != null ? !phone.equals(that.phone) : that.phone != null) return false;
         if (email != null ? !email.equals(that.email) : that.email != null) return false;
-        if (image != null ? !image.equals(that.image) : that.image != null) return false;
+        if (doB != null ? !doB.equals(that.doB) : that.doB != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = profileid;
+        int result = userid;
         result = 31 * result + (firstname != null ? firstname.hashCode() : 0);
         result = 31 * result + (lastname != null ? lastname.hashCode() : 0);
         result = 31 * result + (address != null ? address.hashCode() : 0);
         result = 31 * result + (gender != null ? gender.hashCode() : 0);
         result = 31 * result + (phone != null ? phone.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
-        result = 31 * result + (image != null ? image.hashCode() : 0);
+        result = 31 * result + (doB != null ? doB.hashCode() : 0);
         return result;
     }
 }

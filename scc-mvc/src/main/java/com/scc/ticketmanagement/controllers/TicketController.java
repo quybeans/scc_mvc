@@ -158,14 +158,14 @@ public class TicketController {
             //Get UserEntity cua ng tao ra ticket
             UserEntity createTicketUser =userRepository.findOne(extendticket.getCreatedby());
             //Get ProfileEntity cua ng tao ra ticket
-            ProfileEntity createTicketProfile = profileRepository.findOne(createTicketUser.getProfileid());
+            ProfileEntity createTicketProfile = profileRepository.findOne(createTicketUser.getUserid());
             //Get Fullname cua ng ta ticket de set vao extendTicket
             extendticket.setCreatebyuser(createTicketProfile.getFirstname() + " " +createTicketProfile.getLastname());
 
             //Get UserEntity cua ng duoc assign  ticket
             UserEntity assigneeUser =userRepository.findOne(extendticket.getAssignee());
             //Get ProfileEntity cua ng duoc assign  ticket
-            ProfileEntity assigneeTicketProfile = profileRepository.findOne(assigneeUser.getProfileid());
+            ProfileEntity assigneeTicketProfile = profileRepository.findOne(assigneeUser.getUserid());
             //Get Fullname cua ng ta ticket de set vao extendTicket
             extendticket.setAssigneeuser(assigneeTicketProfile.getFirstname() + " " + assigneeTicketProfile.getLastname());
 
@@ -260,13 +260,13 @@ public class TicketController {
             //Get Full name cua nguoi tao ra ticket
             ProfileEntity profileEntity = new ProfileEntity();
             if(ticket.getCreatedby()!=null){
-                profileEntity = profileRepository.findOne(userRepository.findOne(ticket.getCreatedby()).getProfileid());
+                profileEntity = profileRepository.findOne(userRepository.findOne(ticket.getCreatedby()).getUserid());
                 detail.setCreateby(profileEntity.getFirstname()+ " " + profileEntity.getLastname());
             }
 
             //Get Full name cua nguoi duoc assign ticket
             if(ticket.getAssignee()!=0){
-                profileEntity= profileRepository.findOne(userRepository.findOne(ticket.getAssignee()).getProfileid());
+                profileEntity= profileRepository.findOne(userRepository.findOne(ticket.getAssignee()).getUserid());
 
                 detail.setAssignee(profileEntity.getFirstname() + " " + profileEntity.getLastname());
             }
@@ -299,10 +299,10 @@ public class TicketController {
         PriorityEntity pri = priorityReposioty.findOne(ticket.getPriority());
         extendTicket.setCurrentpriority(pri.getName());
 
-        ProfileEntity profileEntity = profileRepository.findOne(userRepository.findOne(ticket.getAssignee()).getProfileid());
+        ProfileEntity profileEntity = profileRepository.findOne(userRepository.findOne(ticket.getAssignee()).getUserid());
         extendTicket.setAssigneeuser(profileEntity.getFirstname());
 
-        profileEntity = profileRepository.findOne(userRepository.findOne(ticket.getCreatedby()).getProfileid());
+        profileEntity = profileRepository.findOne(userRepository.findOne(ticket.getCreatedby()).getUserid());
         extendTicket.setCreatebyuser(profileEntity.getFirstname());
 
         extendTicket.setCreatedtime(ticket.getCreatedtime());
@@ -331,14 +331,14 @@ public class TicketController {
                     //Get Full name cua user thay doi trang thai ticket
                     ProfileEntity pro;
                     if(tk.getChangeby()!=null){
-                        pro = profileRepository.findOne(userRepository.findOne(tk.getChangeby()).getProfileid());
+                        pro = profileRepository.findOne(userRepository.findOne(tk.getChangeby()).getUserid());
                         th.setUserid(pro.getFirstname() + " " + pro.getLastname());
                     }
 
 
                     //Get Full name cua nguoi duoc assign
                     if(tk.getAssignee()!=0){
-                        pro=profileRepository.findOne(userRepository.findOne(tk.getAssignee()).getProfileid());
+                        pro=profileRepository.findOne(userRepository.findOne(tk.getAssignee()).getUserid());
                         th.setAssignee(pro.getFirstname() + " " + pro.getLastname());
                     }
 

@@ -38,14 +38,14 @@ public class UserController {
     @Autowired
     ProfileRepository profileRepository;
 
-    @RequestMapping( value = "/getuser",method = RequestMethod.GET,produces = "application/json")
+    @RequestMapping(value = "/getuser", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public List<UserEntity> admin(Model model) {
         List<UserEntity> entity = userService.findAll();
         return entity;
     }
 
-    @RequestMapping( value = "/getalluser")
+    @RequestMapping(value = "/getalluser")
     @ResponseBody
     public List<User> getalluser(HttpServletRequest request) {
         HttpSession session = request.getSession();
@@ -54,8 +54,8 @@ public class UserController {
 
         List<UserEntity> entity = userRepository.getAllUserInBrand(loginuser.getBrandid());
         List<User> userlist = new ArrayList<User>();
-        for (UserEntity u: entity) {
-            ProfileEntity p = profileRepository.findOne(u.getProfileid());
+        for (UserEntity u : entity) {
+            ProfileEntity p = profileRepository.findOne(u.getUserid());
             User user = new User();
             user.setUserid(u.getUserid());
             user.setFirstname(p.getFirstname());
@@ -64,6 +64,7 @@ public class UserController {
         }
         return userlist;
     }
+
     @RequestMapping("/delete")
     public String deleteUser(@RequestParam("userid") Integer id) {
 
@@ -86,28 +87,29 @@ public class UserController {
     @ResponseBody
     public UserEntity create(@RequestParam("txtUsername") String username,
                              @RequestParam("txtPassword") String password,
-                             @RequestParam("slRoleId") Integer roleId){
-        ProfileEntity profileEntity= profileService.createProfile("","","","","","");
-        UserEntity user = userService.createUser(username, password, roleId,profileEntity.getProfileid(),true);
+                             @RequestParam("slRoleId") Integer roleId) {
+        ProfileEntity profileEntity = profileService.createProfile("", "", "", 1, "", "");
+        UserEntity user = userService.createUser(username, password, roleId, profileEntity.getUserid(), true);
         return user;
     }
+
     @RequestMapping("/Search")
     public String search(Model model, @RequestParam("txtSearch") String name) {
-        List<UserEntity> lst= userService.searchUser(name);
+        List<UserEntity> lst = userService.searchUser(name);
         model.addAttribute("Entities", lst);
         return "Admin";
     }
 
     @RequestMapping("GetStaffs")
     public String getStaffs(Model model) {
-        List<UserEntity> lst= userService.getUsersByRole(Constant.ROLE_STAFF);
+        List<UserEntity> lst = userService.getUsersByRole(Constant.ROLE_STAFF);
         model.addAttribute("Entities", lst);
         return "Admin";
     }
 
     @RequestMapping("GetAdmins")
     public String getAdmins(Model model) {
-        List<UserEntity> lst= userService.getUsersByRole(Constant.ROLE_ADMIN);
+        List<UserEntity> lst = userService.getUsersByRole(Constant.ROLE_ADMIN);
 
         model.addAttribute("Entities", lst);
         return "Admin";
@@ -115,14 +117,14 @@ public class UserController {
 
     @RequestMapping("GetSupervisors")
     public String getSupervisors(Model model) {
-        List<UserEntity> supervisorList  = userService.getUsersByRole(Constant.ROLE_SUPERVISOR);
+        List<UserEntity> supervisorList = userService.getUsersByRole(Constant.ROLE_SUPERVISOR);
         model.addAttribute("Entities", supervisorList);
         return "Admin";
     }
 
     @RequestMapping("/ChangeActive")
     @ResponseBody
-    public String deactiveUser(@RequestParam("txtUserid") Integer userid){
+    public String deactiveUser(@RequestParam("txtUserid") Integer userid) {
         UserEntity user = userRepository.findOne(userid);
         //set user active = true khi active = false va nguoc lai
         user.setActive(!user.isActive());
@@ -132,17 +134,54 @@ public class UserController {
 
     @RequestMapping("/GetUser")
     @ResponseBody
-    public UserEntity getUser(@RequestParam("txtUserid") Integer userid){
+    public UserEntity getUser(@RequestParam("txtUserid") Integer userid) {
         return userRepository.findOne(userid);
     }
 
     @RequestMapping("/getcurrentuser")
     @ResponseBody
-    public UserEntity getcurrentuser(HttpServletRequest request){
+    public UserEntity getcurrentuser(HttpServletRequest request) {
         HttpSession session = request.getSession();
         String loginUser = (String) session.getAttribute("username");
         UserEntity loginuser = userRepository.findUserByUsername(loginUser);
 
         return loginuser;
+    }
+
+    @RequestMapping("/user/createUserwProfile")
+    @ResponseBody
+    public void createUserWithProfile(HttpServletRequest request,
+                                      @RequestParam("txtUsername") String username
+            , @RequestParam("txtPassword") String password
+            , @RequestParam("ddlRole") String role
+            , @RequestParam("rdGender") String gender
+            , @RequestParam("txtFirstname") String firstname
+            , @RequestParam("txtLastname") String lastname
+            , @RequestParam("txtAddress") String address
+            , @RequestParam("txtPhone") String phone
+            , @RequestParam("txtEmail") String email) {
+
+        HttpSession session = request.getSession();
+        String loginUser = (String) session.getAttribute("username");
+        UserEntity loginuser = userRepository.findUserByUsername(loginUser);
+
+
+
+
+        UserEntity newUser = new UserEntity();
+        if (username.length() > 0 && password.length() > 0 && role.length() > 0) {
+
+            newUser.setUsername(username);
+            newUser.setPassword(password);
+            if (role.equals("sup")) newUser.setRoleid(Constant.ROLE_SUPERVISOR);
+            else if (role.equals("staff")) newUser.setRoleid(Constant.ROLE_STAFF);
+            newUser.setActive(true);
+          //  newUser.setProfileid(1);
+            newUser.setCreatedby(loginuser.getUserid());
+            newUser.setBrandid(loginuser.getBrandid());
+        }
+        UserEntity userEntity = userRepository.save(newUser);
+        System.out.println(newUser.getUserid());
+
     }
 }

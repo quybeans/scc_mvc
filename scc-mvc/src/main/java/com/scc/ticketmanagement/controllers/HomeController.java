@@ -23,7 +23,7 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class HomeController {
     @Autowired
-    ProfileService profileService;
+    private ProfileService profileService;
 
     @Autowired
     UserService userService;
@@ -109,13 +109,12 @@ public class HomeController {
 
         session.setAttribute("username", userEntity.getUsername());
 
-        if (userEntity.getProfileid() != null) {
-            ProfileEntity profileEntity = profileService.getProfileByID(userEntity.getProfileid());
 
-            session.setAttribute("fullname", profileEntity.getFirstname() + " " + profileEntity.getLastname());
+        ProfileEntity profileEntity = profileService.getProfileByID(userEntity.getUserid());
+
+        session.setAttribute("fullname", profileEntity.getFirstname() + " " + profileEntity.getLastname());
 
 
-        }
         if (userEntity.getRoleid() == Constant.ROLE_ADMIN) {
             return "redirect:admin";
         } else if (userEntity.getRoleid() == Constant.ROLE_STAFF) {
