@@ -29,4 +29,5 @@ public interface MessageService {
     void setConversationRead(String receiverId, String senderId);
     Integer getNumberOfUnreadMessageInConversation(String receiverId, String senderId);
     Integer getNumberOfUnreadMessageInPage(String receiverId);
+
 }

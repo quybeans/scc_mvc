@@ -1,9 +1,6 @@
 package com.scc.ticketmanagement.controllers.restcontroller;
 
-import com.scc.ticketmanagement.Entities.ContactEntity;
-import com.scc.ticketmanagement.Entities.MessageitemEntity;
-import com.scc.ticketmanagement.Entities.MessageEntity;
-import com.scc.ticketmanagement.Entities.TicketitemEntity;
+import com.scc.ticketmanagement.Entities.*;
 import com.scc.ticketmanagement.ServiceImp.TicketIteamServiceImp;
 import com.scc.ticketmanagement.exentities.Conversation;
 import com.scc.ticketmanagement.repositories.ContactRepository;
@@ -18,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.naming.AuthenticationException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -134,6 +134,11 @@ public class MessengerRESTController {
     @RequestMapping(value = "/messenger/getCustomerInfo", method = RequestMethod.POST)
     public ContactEntity getCustomerInfo(@RequestParam("customerId") String customerId) {
         return contactService.getContactById(customerId);
+    }
+
+    @RequestMapping(value = "/messenger/getProfileId", method = RequestMethod.GET)
+    public String getProfileId(@RequestParam("avtId") String avtId) throws AuthenticationException {
+        return FacebookUtility.getProfileId(avtId);
     }
 
     @RequestMapping(value = "/messenger/setMessageRead", method = RequestMethod.POST)
