@@ -26,4 +26,7 @@ public interface MessageService {
     String getLastMessageContent(String receiverId, String senderId);
     MessageEntity getLastMessage(String receiverId, String senderId);
     MessageEntity setMessageRead(String messageId);
+    void setConversationRead(String receiverId, String senderId);
+    Integer getNumberOfUnreadMessageInConversation(String receiverId, String senderId);
+    Integer getNumberOfUnreadMessageInPage(String receiverId);
 }

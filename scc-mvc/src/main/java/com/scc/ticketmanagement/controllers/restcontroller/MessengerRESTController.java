@@ -79,7 +79,7 @@ public class MessengerRESTController {
 
     @RequestMapping(value = "/messenger/getAllConversationsByPageIdAndSenderId", method = RequestMethod.POST)
     public List<Conversation> getAllConversationsByPageIdAndSenderId(@RequestParam("pageId") String pageId,
-                                                                       @RequestParam("senderId") String senderId) {
+                                                                     @RequestParam("senderId") String senderId) {
 
         List<Conversation> result = messageService.getAllConversationsByPageId(pageId);
 
@@ -158,5 +158,23 @@ public class MessengerRESTController {
 
         }
         return result;
+    }
+
+    @RequestMapping(value = "/messenger/setConversationRead", method = RequestMethod.GET)
+    public boolean setConversationRead(@RequestParam("pageId") String pageId,
+                                       @RequestParam("senderId") String senderId) {
+        messageService.setConversationRead(pageId, senderId);
+        return true;
+    }
+
+    @RequestMapping(value = "/messenger/getNumberOfUnreadMessagesInConversation", method = RequestMethod.GET)
+    public Integer getNumberOfUnreadMessagesInConversation(@RequestParam("pageId") String pageId,
+                                                           @RequestParam("senderId") String senderId) {
+        return messageService.getNumberOfUnreadMessageInConversation(pageId, senderId);
+    }
+
+    @RequestMapping(value = "/messenger/getNumberOfUnreadMessageInPage", method = RequestMethod.GET)
+    public Integer getNumberOfUnreadMessageInPage(@RequestParam("pageId") String pageId) {
+        return messageService.getNumberOfUnreadMessageInPage(pageId);
     }
 }

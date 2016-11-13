@@ -148,4 +148,19 @@ public class MessageServiceImp implements MessageService {
         messageRepository.setMessageRead(messageId);
         return null;
     }
+
+    @Override
+    public void setConversationRead(String receiverId, String senderId) {
+         messageRepository.setConversationRead(receiverId, senderId);
+    }
+
+    @Override
+    public Integer getNumberOfUnreadMessageInConversation(String receiverId, String senderId) {
+        return messageRepository.getNumberOfUnreadMessageInConversation(receiverId,senderId);
+    }
+
+    @Override
+    public Integer getNumberOfUnreadMessageInPage(String receiverId) {
+        return messageRepository.getNumberOfUnreadMessageInPage(receiverId);
+    }
 }
