@@ -165,7 +165,7 @@ public class MessengerRESTController {
         return result;
     }
 
-    @RequestMapping(value = "/messenger/setConversationRead", method = RequestMethod.GET)
+    @RequestMapping(value = "/messenger/setConversationRead", method = RequestMethod.POST)
     public boolean setConversationRead(@RequestParam("pageId") String pageId,
                                        @RequestParam("senderId") String senderId) {
         messageService.setConversationRead(pageId, senderId);

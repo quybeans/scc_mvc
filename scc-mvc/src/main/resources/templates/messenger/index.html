@@ -220,16 +220,16 @@
             <div class="col-md-6 cmtbox" id="conversation"
                  style=" background-color: inherit;">
 
-                <div style="border-bottom: 1px; height: 5%; text-align: center">
+                <div style="border-bottom: 1px solid white; height: 5%; text-align: center">
                     <h4 id="currentSenderName">Teen</h4>
                     <div id="conversation-content-loading-icon" class="hidden"><i
                             class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>
                 </div>
                 <ul class="chat" id="conversationContent"
-                    style="overflow: scroll; height: 80vh; margin-left: 10px; margin-right: 10px">
+                    style="overflow: scroll; height: 630px; margin-left: 10px; margin-right: 10px">
 
                 </ul>
-                <div style="position: fixed; bottom: 10px;" id="conversationReply">
+                <div style="position: fixed; bottom: 0px; background-color: white; padding: 20px 22px 10px 0px" id="conversationReply">
                     <div class="col-md-10">
                         <input style="width: 450px" class="form-control" type="text" placeholder="Type a message..." id="replyText" name="replyText"
                                value="" autofocus/>
@@ -261,14 +261,14 @@
                             <li class="list-group-item">
                                 <b>Gender</b> <a id="customer-gender" class="pull-right"></a>
                             </li>
-                            <form>
-                                <li class="list-group-item">
-                                    <b>Note</b> <a onmouseover="showForm(this);" onmouseout="hideForm(this);"
-                                                   id="customer-note"
-                                                   class="pull-right"></a>
-                                </li>
-                                <button id="testbtn" style="display: none" value="Add">Add</button>
-                            </form>
+                            <!--<form>-->
+                                <!--<li class="list-group-item">-->
+                                    <!--<b>Note</b> <a onmouseover="showForm(this);" onmouseout="hideForm(this);"-->
+                                                   <!--id="customer-note"-->
+                                                   <!--class="pull-right"></a>-->
+                                <!--</li>-->
+                                <!--<button id="testbtn" style="display: none" value="Add">Add</button>-->
+                            <!--</form>-->
                         </ul>
 
                         <!--<a href="#" class="btn btn-primary btn-block"><b>Follow</b></a>-->

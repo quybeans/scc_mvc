@@ -1,7 +1,10 @@
 <link rel="stylesheet" type="text/css" th:href="@{/css/mini-messenger.css}" xmlns:th="http://www.w3.org/1999/xhtml">
 
-<div class="header"><span class="fa fa-weixin"></span>Social Messenger</div>
-<button onclick="getAllActivePageUnreadMessage()">Back</button>
+<div class="header">
+    <i id="back-button" style="margin: 3px 0px 0px 10px" onclick="getAllActivePageUnreadMessage()" class="fa fa-arrow-left pull-left" aria-hidden="true"></i>
+    <span class="fa fa-weixin"></span>
+    Social Messenger</div>
+
 
 <div id="mess-page-list" class="collapse">
     <div id="page-conversations" class="pages-body">

@@ -167,7 +167,7 @@ function getAllConversationsByPageId(pageId) {
 
 function setRead() {
     $.ajax({
-        url: '/messenger/setMessageRead',
+        url: '/messenger/setConversationRead',
         type: "POST",
         data: {
             pageId: currentPageId,
@@ -207,7 +207,8 @@ function firstLoadConversationBySenderId() {
                         '<div class="chat-body clearfix pull-right">' +
                         ' <div class="header">' +
                         '<small class=" text-muted ">' +
-                        moment(dataReversed[i].createdAt).fromNow() +
+                        // moment(dataReversed[i].createdAt).fromNow() +
+                        $.format.date(dataReversed[i].createdAt, "HH:mm")+
                         '</small>' +
                         '<strong class="pull-right primary-font">' + currentPageName + '</strong>' +
                         '</div>' +
@@ -231,7 +232,7 @@ function firstLoadConversationBySenderId() {
                         '<div class="header">' +
                         '<strong class="primary-font">' + currentCustomerName + '</strong>' +
                         '<small class="pull-right text-muted">' +
-                        moment(dataReversed[i].createdAt).fromNow() +
+                        $.format.date(dataReversed[i].createdAt, "HH:mm")+
                         '</small>' +
                         '</div>' +
                         '<p>' +
@@ -276,7 +277,7 @@ function reloadConversationBySenderId() {
                         '<div class="chat-body clearfix pull-right">' +
                         ' <div class="header">' +
                         '<small class=" text-muted ">' +
-                        moment(dataReversed[i].createdAt).fromNow() +
+                        $.format.date(dataReversed[i].createdAt, "HH:mm")+
                         '</small>' +
                         '<strong class="pull-right primary-font">' + currentPageName + '</strong>' +
                         '</div>' +
@@ -294,13 +295,13 @@ function reloadConversationBySenderId() {
                     ;
                 } else {
                     $('#conversationContent').append(
-                        '<li onmouseover="showForm(this)" onmouseleave="hideForm(this)" class="left clearfix"><span class="chat-img pull-left"> ' +
+                        '<li class="left clearfix"><span class="chat-img pull-left"> ' +
                         '<img src="' + currentCustomerAvt + '"/> </span>' +
                         '<div class="chat-body clearfix pull-left">' +
                         '<div class="header">' +
                         '<strong class="primary-font">' + currentCustomerName + '</strong>' +
                         '<small class="pull-right text-muted">' +
-                        moment(dataReversed[i].createdAt).fromNow() +
+                        $.format.date(dataReversed[i].createdAt, "HH:mm")+
                         '</small>' +
                         '</div>' +
                         '<p>' +
@@ -372,7 +373,7 @@ function getConversationBySenderIdWithPage() {
                             '<div class="chat-body clearfix pull-right">' +
                             ' <div class="header">' +
                             '<small class=" text-muted ">' +
-                            moment(dataReversed[i].createdAt).fromNow() +
+                            $.format.date(dataReversed[i].createdAt, "HH:mm")+
                             '</small>' +
                             '<strong class="pull-right primary-font">' + currentPageName + '</strong>' +
                             '</div>' +
@@ -396,7 +397,7 @@ function getConversationBySenderIdWithPage() {
                             '<div class="header">' +
                             '<strong class="primary-font">' + currentCustomerName + '</strong>' +
                             '<small class="pull-right text-muted">' +
-                            moment(dataReversed[i].createdAt).fromNow() +
+                            $.format.date(dataReversed[i].createdAt, "HH:mm")+
                             '</small>' +
                             '</div>' +
                             '<p>' +
@@ -465,7 +466,7 @@ function getCustomerInfo(customerId) {
             $('#customer-timezone').text(convertNumberToTimezone(data.timezone));
             $('#customer-gender').text(convertGender(data.gender));
             $('#customer-locale').text(convertLocale(data.locale));
-            $('#customer-note').text(data.note);
+            // $('#customer-note').text(data.note);
              getCustomerProfileId();
         }
     });

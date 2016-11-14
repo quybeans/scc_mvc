@@ -121,7 +121,7 @@
     cursor: pointer;
     height: 70px;
     margin: 0px 10px 1px 10px;
-    position: relative;
+    /*position: relative;*/
     border-bottom: 1px solid #D3D3D3;
     background-color: white;
 }
@@ -163,7 +163,7 @@
 }
 
 .conversation-lastmessage {
-    margin-top: 5px;
+    margin-top: 2px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
