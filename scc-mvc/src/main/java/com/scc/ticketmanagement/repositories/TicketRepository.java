@@ -29,5 +29,6 @@ public interface TicketRepository extends JpaRepository<TicketEntity,Integer> {
     List<TicketEntity> getStaffTicketOrderByPriority(@Param("assignee") Integer assignee,
                                                      @Param("brandid") Integer brandid);
 
-
+    @Query("select t from TicketEntity t where t.assignee=:userid or t.createdby=:userid")
+    List<TicketEntity> getListTicketOfUser(@Param("userid") Integer userid);
 }

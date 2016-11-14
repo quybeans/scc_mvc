@@ -1,8 +1,11 @@
 package com.scc.ticketmanagement.ServiceImp;
 
+import com.scc.ticketmanagement.Entities.TicketEntity;
 import com.scc.ticketmanagement.Entities.UserEntity;
+import com.scc.ticketmanagement.repositories.TicketRepository;
 import com.scc.ticketmanagement.repositories.UserRepository;
 import com.scc.ticketmanagement.services.UserService;
+import com.scc.ticketmanagement.utilities.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +16,9 @@ import java.util.List;
  */
 @Service
 public class UserServiceImp implements UserService {
+
+    @Autowired
+    private TicketRepository ticketRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -110,6 +116,17 @@ public class UserServiceImp implements UserService {
     @Override
     public void changeActive(Integer userid,boolean active) {
         userRepository.changeActive(userid,active);
+        if(active==false){
+            UserEntity deactiveuser = userRepository.findOne(userid);
+            UserEntity brandmanager = userRepository.getBrandManager(Constant.ROLE_BRAND,deactiveuser.getBrandid());
+            List<TicketEntity> ticketlist = ticketRepository.getListTicketOfUser(userid);
+            for (TicketEntity tk:ticketlist) {
+                tk.setAssignee(brandmanager.getUserid());
+                tk.setCreatedby(brandmanager.getUserid());
+                tk.setStatusid(Constant.STATUS_ASSIGN);
+                ticketRepository.save(tk);
+            }
+        }
     }
 
     @Override
