@@ -64,6 +64,11 @@ public class PageImp implements PageService {
     }
 
     @Override
+    public List<PageEntity> getAllActivePageByBrandId(int brandId) {
+        return this.pageRepository.getAllActivePageByBrandId(brandId);
+    }
+
+    @Override
     public List<PageEntity> getCrawlerPagesByBrandId(int brandId) {
         return pageRepository.getAllCrawlerPageByBrandId(brandId);
     }

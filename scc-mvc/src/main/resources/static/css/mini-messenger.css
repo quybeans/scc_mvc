@@ -120,8 +120,8 @@
 .conversation {
     cursor: pointer;
     height: 70px;
-    margin: 0px 10px 1px 10px;
-    /*position: relative;*/
+    /*margin: 0px 10px 1px 10px;*/
+    position: relative;
     border-bottom: 1px solid #D3D3D3;
     background-color: white;
 }

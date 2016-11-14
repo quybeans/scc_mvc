@@ -41,7 +41,7 @@ public class MessengerController {
             String username = (String) session.getAttribute("username");
             int userid = userRepository.findUseridByUser(username);
             UserEntity user = userRepository.findOne(userid);
-            List<PageEntity> pages = pageRepository.getAllPageByBrandId(user.getBrandid());
+            List<PageEntity> pages = pageRepository.getAllActivePageByBrandId(user.getBrandid());
             model.addAttribute("pages",pages) ;
         }
 

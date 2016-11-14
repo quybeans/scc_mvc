@@ -1,5 +1,5 @@
 .customer-username {
-    font-size: 40px;
+    font-size: 25px;
     margin-top: 5px
 }
 
@@ -175,8 +175,6 @@
     height: 95vh;
     padding: 0 0 2%;
     background-color: white;
-    overflow-y: scroll;
-
 }
 
 .chat .lcs {
