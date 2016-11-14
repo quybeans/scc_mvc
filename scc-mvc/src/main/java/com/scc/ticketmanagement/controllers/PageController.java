@@ -7,6 +7,7 @@ import com.scc.ticketmanagement.services.PageService;
 import com.scc.ticketmanagement.services.UserService;
 import com.scc.ticketmanagement.utilities.AccessTokenUtility;
 import com.scc.ticketmanagement.utilities.Constant;
+import com.scc.ticketmanagement.utilities.FacebookUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -96,6 +97,8 @@ public class PageController {
                 String longLivedToken = AccessTokenUtility.getMessengerExtendedAccessToken(pageToken);
                 System.out.println(longLivedToken);
                 pageService.createPage(pageName, pageId, longLivedToken, pageCategory);
+
+
                 brandPageService.addBrandPage(brandId, pageId);
             } catch (AuthenticationException e) {
                 e.printStackTrace();
@@ -156,8 +159,8 @@ public class PageController {
 
     @RequestMapping(value = "/crawl-page/deactivateCrawlerPage", method = RequestMethod.POST)
     public String deactivateCrawlerPage(HttpServletRequest request,
-                        @RequestParam("pageId") String pageId,
-                        @RequestParam("btnAction") String button) {
+                                        @RequestParam("pageId") String pageId,
+                                        @RequestParam("btnAction") String button) {
 
         if (!this.isCurrentUserAuthorized(request)) {
             return "page/403";
