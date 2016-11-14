@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 /**
- * Created by user on 11/8/2016.
+ * Created by user on 11/14/2016.
  */
 @Entity
 @Table(name = "ticket", schema = "scc", catalog = "")
@@ -19,9 +19,9 @@ public class TicketEntity {
     private String note;
     private Integer priority;
     private Timestamp duetime;
+    private Integer brandId;
 
     @Id
-    @GeneratedValue
     @Column(name = "id")
     public int getId() {
         return id;
@@ -121,6 +121,16 @@ public class TicketEntity {
         this.duetime = duetime;
     }
 
+    @Basic
+    @Column(name = "brand_id")
+    public Integer getBrandId() {
+        return brandId;
+    }
+
+    public void setBrandId(Integer brandId) {
+        this.brandId = brandId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -138,6 +148,7 @@ public class TicketEntity {
         if (note != null ? !note.equals(that.note) : that.note != null) return false;
         if (priority != null ? !priority.equals(that.priority) : that.priority != null) return false;
         if (duetime != null ? !duetime.equals(that.duetime) : that.duetime != null) return false;
+        if (brandId != null ? !brandId.equals(that.brandId) : that.brandId != null) return false;
 
         return true;
     }
@@ -154,6 +165,7 @@ public class TicketEntity {
         result = 31 * result + (note != null ? note.hashCode() : 0);
         result = 31 * result + (priority != null ? priority.hashCode() : 0);
         result = 31 * result + (duetime != null ? duetime.hashCode() : 0);
+        result = 31 * result + (brandId != null ? brandId.hashCode() : 0);
         return result;
     }
 }

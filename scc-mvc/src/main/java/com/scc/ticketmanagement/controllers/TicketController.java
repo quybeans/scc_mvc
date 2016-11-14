@@ -67,7 +67,7 @@ public class TicketController {
             ticketEntity.setCreatedtime(new Timestamp(new Date().getTime()));
             ticketEntity.setNote(note);
             ticketEntity.setDuetime(new Timestamp(new Date().getTime()));
-
+            ticketEntity.setBrandId(user.getBrandid());
 
             TicketEntity ticket= ticketRepository.save(ticketEntity);
             //Tao 1 ticket history
@@ -136,9 +136,9 @@ public class TicketController {
 
         List<TicketEntity> listticket = new ArrayList<TicketEntity>();
         if(user.getRoleid()!=Constant.ROLE_STAFF){
-            listticket = ticketRepository.getTicketOrderByPriority();
+            listticket = ticketRepository.getTicketOrderByPriority(user.getBrandid());
         }else {
-            listticket=ticketRepository.getStaffTicketOrderByPriority(user.getUserid());
+            listticket=ticketRepository.getStaffTicketOrderByPriority(user.getUserid(),user.getBrandid());
         }
 
 
@@ -511,7 +511,7 @@ public class TicketController {
             ticketEntity.setPriority(ticketpriority);
             ticketEntity.setCreatedtime(new Timestamp(new Date().getTime()));
             ticketEntity.setDuetime(new Timestamp(new Date().getTime()));
-
+            ticketEntity.setBrandId(user.getBrandid());
             TicketEntity ticket= ticketRepository.save(ticketEntity);
 
             //Tao 1 ticket history
