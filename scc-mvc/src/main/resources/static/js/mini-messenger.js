@@ -34,7 +34,7 @@ function getAllActivePageUnreadMessage() {
                         '<div class="name">' + data[i].name + '</div>' +
                         '<div class="unread-count">' +
                         // '<div class="circle">' + data[i].unreadMessage + '</div>' +
-                        'All messages is read' +
+                        'All messages are read' +
                         '</div>' +
                         ' </div>'
                     )
@@ -61,7 +61,7 @@ function loadConversationsByPage(pageId) {
             $.each(data, function (i) {
                 if (data[i].read) {
                     $('#chat-box').append(
-                        '<div class="conversation" style="position: relative" id="conversation' + i + '">'
+                        '<div class="conversation" style="position: relative" id="conversation' + i + '" onclick="register_popup(\' ' + data[i].senderName + '\', \'' +  data[i].senderName + '\')">'
                         + '<div>' +
                         '<img class="senderAvt" src="' + data[i].senderPicture + '"><div class="conversation-sender-name pull-left"><a>' + data[i].senderName + '</a></div>' +
                         '<div class="sentTime text-muted pull-right"> ' + $.format.date(data[i].sentTime, "HH:mm") + '</div>' +
