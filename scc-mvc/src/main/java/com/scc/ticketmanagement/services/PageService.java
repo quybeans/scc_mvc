@@ -12,6 +12,7 @@ public interface PageService {
     PageEntity getPageById(String uid);
     List<PageEntity> getAllPages();
     List<PageEntity> getPagesByBrandId(int brandId);
+    List<PageEntity> getAllActivePageByBrandId(int brandId);
     List<PageEntity> getCrawlerPagesByBrandId(int brandId);
 
     void deactivatePage(String pageUid);

@@ -74,6 +74,8 @@ $(document).ready(function () {
 function getAllConversation(a) {
     clearInterval(loadConversationInterval);
     clearInterval(currentInterval);
+    currentPageId = "0";
+    currentCustomer = "0";
     getAllConversationsByPageId(a.value);
 }
 

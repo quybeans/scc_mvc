@@ -1,0 +1,9 @@
+.inactive {
+    color: gray;
+    margin-right: 10px;
+}
+
+.active {
+    color: #00c200;
+    margin-right: 10px;
+}

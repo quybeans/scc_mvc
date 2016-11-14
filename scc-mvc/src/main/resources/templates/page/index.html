@@ -5,6 +5,8 @@
     <title>Manage page</title>
     <header class="main-header" th:include="Head::header"></header>
     <aside class="main-sidebar" th:include="SideBar::aside"> </aside>
+    <link rel="stylesheet" href="/css/page.css">
+
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -27,6 +29,7 @@
                         <th>Name</th>
                         <th>Type</th>
                         <th>Category</th>
+                        <th>Status</th>
                         <th>Action</th>
                     </tr>
                     </thead>
@@ -42,6 +45,10 @@
                             </td>
                             <td th:text="${page.type}"></td>
                             <td th:text="${page.category}"></td>
+                            <td th:switch="${page.active}">
+                                <span  th:case="true"><span class="fa fa fa-circle active"></span>Active</span>
+                                <span  th:case="false"><span class="fa fa fa-circle inactive"></span>Inactive</span>
+                            </td>
                             <td th:switch="${page.active}">
                                 <button class="btn btn-danger" type="submit" name="btnAction" id="btnDeactive"
                                         value="Deactivate"
@@ -71,7 +78,8 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                <h4 class="modal-title">Add page to manage</h4>
+                                <h2 class="modal-title">Add page to manage</h2>
+                                <h4 id="current-fb-user"></h4>
                             </div>
                             <div class="modal-body">
                                 <div style="margin-top: 10px;margin-bottom: 10px;margin-left: 10px; background-color: white; padding: 10px 20px 20px 20px">
@@ -91,6 +99,36 @@
                                         </div>
 
                                         <div id="status"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="modal fade" id="page-detail-modal" role="dialog">
+                    <div class="modal-dialog">
+
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Page Details</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div style="margin-top: 10px;margin-bottom: 10px;margin-left: 10px; background-color: white; padding: 10px 20px 20px 20px">
+                                    <div>
+                                        <form id="page-form" action="processPageAccessToken" method="post">
+                                            <input type="hidden" name="pageAccessToken" id="page-form-accesstoken" value=""/>
+                                            <input type="hidden" name="pageName" id="page-form-name" value=""/>
+                                            <input type="hidden" name="pageCategory" id="page-form-category" value=""/>
+                                            <input type="hidden" name="pageId" id="page-form-id" value=""/>
+                                            <button type="submit"></button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -125,6 +163,7 @@
             // getToken();
             getListPage();
             $("#fbLoginButton").hide();
+            getFBUsername();
 
         } else if (response.status === 'not_authorized') {
             // The person is logged into Facebook, but not your app.
@@ -210,10 +249,26 @@
                         '<td><button class="btn btn-primary" type="button" onclick="getToken(\'' + i + '\')">Add</button></td>' +
                         '</tr>');
                 table.append(row);
+
             });
             $('#here_table').append(table);
 
         });
+    }
+
+    function  getFBUsername() {
+        FB.api('/me', function (response) {
+            console.log(response);
+            $('#current-fb-user').text("Current account logged: " +response.name);
+        });
+    }
+
+    function showPageDetails(a, b, c) {
+        $('#page-form-name').text(b);
+        $('#page-form-category').text(c);
+        $('#page-form-type').text('toggle');
+        $('#page-detail-modal').modal('toggle');
+
     }
 
 </script>

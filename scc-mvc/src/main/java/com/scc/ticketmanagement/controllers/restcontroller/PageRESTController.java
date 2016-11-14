@@ -33,7 +33,7 @@ public class PageRESTController {
 
         if (userid!=0)
         {
-            List<PageEntity> pages = pageRepository.getAllCrawlerPageByBrandId(userService.getUserByID(userid).getBrandid());
+            List<PageEntity> pages = pageRepository.getAllActivePageByBrandId(userService.getUserByID(userid).getBrandid());
             List<PageEntity> rs = new ArrayList<>();
             for (PageEntity page : pages)
             {
