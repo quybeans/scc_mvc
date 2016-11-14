@@ -36,12 +36,11 @@ public class FacebookUtility {
     private static final JsonFactory JSON_FACTORY = new JacksonFactory();
 
     /**
-     *
-     * @param fbId: ID of the facebook account
+     * @param fbId:         ID of the facebook account
      * @param access_token: access_token must have
      * @return
      */
-    public static String getFBName(String fbId, String access_token){
+    public static String getFBName(String fbId, String access_token) {
         try {
             HttpRequestFactory requestFactory = HTTP_TRANSPORT.createRequestFactory();
             UserUri url = UserUri.fromObjectId(fbId);
@@ -59,17 +58,15 @@ public class FacebookUtility {
     }
 
     /**
-     *
-     * @param object : ID of target object
-     * @param message: message String
+     * @param object        : ID of target object
+     * @param message:      message String
      * @param access_token: user access token to send
      * @return
      */
 
-    public static boolean commentOnObj(String object, String message, String access_token)
-    {
+    public static boolean commentOnObj(String object, String message, String access_token) {
         HttpClient httpclient = HttpClients.createDefault();
-        HttpPost httpPost =  new HttpPost("https://graph.facebook.com/"+object+"/comments/");
+        HttpPost httpPost = new HttpPost("https://graph.facebook.com/" + object + "/comments/");
 
         List<NameValuePair> params = new ArrayList<>(2);
         params.add(new BasicNameValuePair("message", message));
@@ -79,11 +76,9 @@ public class FacebookUtility {
             httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
             //Execute and get the response.
             org.apache.http.HttpResponse response = httpclient.execute(httpPost);
-            if (response!=null)
+            if (response != null)
                 return true;
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -91,18 +86,47 @@ public class FacebookUtility {
         return false;
     }
 
-    public static String sendMessage(String content, String recipientId, String accessToken) throws Exception
-    {
+    /**
+     * @param pageAccessToken: a page Access Token String get by app (SCC Messenger)
+     * @return
+     */
+    public static boolean subscribePageToWebhook(String pageId, String pageAccessToken) {
         HttpClient httpclient = HttpClients.createDefault();
-        HttpPost httpPost =  new HttpPost("https://graph.facebook.com/me/messages?access_token="+accessToken);
+        HttpPost httpPost = new HttpPost("https://graph.facebook.com/" + pageId + "/subscribed_apps");
+
+        List<NameValuePair> params = new ArrayList<>(1);
+        params.add(new BasicNameValuePair("access_token", pageAccessToken));
+        try {
+            httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+            org.apache.http.HttpResponse response = httpclient.execute(httpPost);
+
+            if (response != null) {
+                if(response.getStatusLine().getStatusCode()==200)
+                return true;
+                else {
+                    System.out.println(response.getStatusLine().getStatusCode());
+                    System.out.println(response);
+                    return false;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
+    public static String sendMessage(String content, String recipientId, String accessToken) throws Exception {
+        HttpClient httpclient = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost("https://graph.facebook.com/me/messages?access_token=" + accessToken);
         Gson gson = new Gson();
 
         Payload.Recipient recipient = new Payload.Recipient(recipientId);
         Payload.Message message = new Payload.Message(content);
 
-        Payload payloads = new Payload(recipient,message);
+        Payload payloads = new Payload(recipient, message);
 
-        StringEntity payload = new StringEntity(gson.toJson(payloads),"UTF-8");
+        StringEntity payload = new StringEntity(gson.toJson(payloads), "UTF-8");
 
         httpPost.setEntity(payload);
 
@@ -115,7 +139,7 @@ public class FacebookUtility {
         return response.toString();
     }
 
-    public static class Payload{
+    public static class Payload {
         public Recipient recipient;
         public Message message;
 
@@ -123,28 +147,42 @@ public class FacebookUtility {
             this.recipient = recipient;
             this.message = message;
         }
+
         public static class Recipient {
             public String id;
 
-            public Recipient(String id) {this.id = id;}
+            public Recipient(String id) {
+                this.id = id;
+            }
 
-            public String getId() {return id;}
+            public String getId() {
+                return id;
+            }
 
-            public void setId(String id) {this.id = id; }
+            public void setId(String id) {
+                this.id = id;
+            }
         }
-        public static class Message
-        {
+
+        public static class Message {
             public String text;
 
-            public Message(String text) {  this.text = text;}
+            public Message(String text) {
+                this.text = text;
+            }
 
-            public String getText() { return text;}
+            public String getText() {
+                return text;
+            }
 
-            public void setText(String text) {  this.text = text;   }
+            public void setText(String text) {
+                this.text = text;
+            }
         }
     }
 
-    public static Contact getContact(String senderId,String accessToken) throws AuthenticationException {
+
+    public static Contact getContact(String senderId, String accessToken) throws AuthenticationException {
         FacebookClient facebookClient = new DefaultFacebookClient(accessToken);
         Contact contact = facebookClient.fetchObject(senderId, Contact.class);
         return contact;
