@@ -38,7 +38,7 @@
                                 <img th:src="@{'https://graph.facebook.com/' + ${page.pageid}+ '/picture'}"/>
                             </td>
                             <td>
-                                <a th:href="@{'http://www.fb.com/' + ${page.pageid}}" th:text="${page.name}"></a>
+                                <a th:href="@{'http://www.fb.com/' + ${page.pageid}}" th:text="${page.name}" target="_blank"></a>
                             </td>
                             <td th:text="${page.type}"></td>
                             <td th:text="${page.category}"></td>

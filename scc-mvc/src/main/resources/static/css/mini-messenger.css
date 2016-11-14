@@ -117,9 +117,55 @@
 
 }
 
+.conversation {
+    cursor: pointer;
+    height: 70px;
+    margin: 0px 10px 1px 10px;
+    /*position: relative;*/
+    border-bottom: 1px solid #D3D3D3;
+    background-color: white;
+}
+
 .chat li span img {
     height: 30px;
     width: 30px;
     border-radius: 3px;
 }
 
+.senderAvt {
+    height: 50px;
+    width: 50px;
+    float: left;
+    margin: 10px 10px 10px 10px;
+    position: relative;
+    border-radius: 3px;
+}
+
+.sentTime {
+    margin-top: 6px;
+    margin-right: 10px;
+}
+
+
+.crop {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 190px;
+}
+
+.conversation-sender-name {
+    margin-top: 7px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 115px;
+}
+
+.conversation-lastmessage {
+    margin-top: 2px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 190px;
+}

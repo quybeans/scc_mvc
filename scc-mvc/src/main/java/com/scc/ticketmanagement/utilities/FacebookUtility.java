@@ -11,9 +11,8 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.gson.Gson;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
-import com.scc.ticketmanagement.facebook.Contact;
-import com.scc.ticketmanagement.facebook.UserResponse;
-import com.scc.ticketmanagement.facebook.UserUri;
+import com.restfb.Parameter;
+import com.scc.ticketmanagement.facebook.*;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -187,6 +186,13 @@ public class FacebookUtility {
         Contact contact = facebookClient.fetchObject(senderId, Contact.class);
         return contact;
     }
+
+    public static String getProfileId(String avtId) throws AuthenticationException {
+        FacebookClient facebookClient = new DefaultFacebookClient(Constant.NEVER_EXPIRED_USER_TOKEN);
+        FacebookProfile profile = facebookClient.fetchObject(avtId, FacebookProfile.class, Parameter.with("fields", "from"));
+        return profile.getFrom().getId();
+    }
+
 
 
 }

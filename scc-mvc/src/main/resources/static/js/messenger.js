@@ -37,9 +37,11 @@ $(document).ready(function () {
     var isSenderPage = false;
     if (senderid != null && messageId != null && pageId != null) {
         $('select#ddlPages').find('option').each(function () {
+
             var page = $(this).val();
             if (senderid == page) {
                 isSenderPage = true;
+                currentPageName = $(this).text();
             }
         });
         if (isSenderPage) {
@@ -165,7 +167,7 @@ function getAllConversationsByPageId(pageId) {
 
 function setRead() {
     $.ajax({
-        url: '/messenger/setMessageRead',
+        url: '/messenger/setConversationRead',
         type: "POST",
         data: {
             pageId: currentPageId,
@@ -205,7 +207,8 @@ function firstLoadConversationBySenderId() {
                         '<div class="chat-body clearfix pull-right">' +
                         ' <div class="header">' +
                         '<small class=" text-muted ">' +
-                        moment(dataReversed[i].createdAt).fromNow() +
+                        // moment(dataReversed[i].createdAt).fromNow() +
+                        $.format.date(dataReversed[i].createdAt, "HH:mm")+
                         '</small>' +
                         '<strong class="pull-right primary-font">' + currentPageName + '</strong>' +
                         '</div>' +
@@ -229,7 +232,7 @@ function firstLoadConversationBySenderId() {
                         '<div class="header">' +
                         '<strong class="primary-font">' + currentCustomerName + '</strong>' +
                         '<small class="pull-right text-muted">' +
-                        moment(dataReversed[i].createdAt).fromNow() +
+                        $.format.date(dataReversed[i].createdAt, "HH:mm")+
                         '</small>' +
                         '</div>' +
                         '<p>' +
@@ -274,7 +277,7 @@ function reloadConversationBySenderId() {
                         '<div class="chat-body clearfix pull-right">' +
                         ' <div class="header">' +
                         '<small class=" text-muted ">' +
-                        moment(dataReversed[i].createdAt).fromNow() +
+                        $.format.date(dataReversed[i].createdAt, "HH:mm")+
                         '</small>' +
                         '<strong class="pull-right primary-font">' + currentPageName + '</strong>' +
                         '</div>' +
@@ -298,7 +301,7 @@ function reloadConversationBySenderId() {
                         '<div class="header">' +
                         '<strong class="primary-font">' + currentCustomerName + '</strong>' +
                         '<small class="pull-right text-muted">' +
-                        moment(dataReversed[i].createdAt).fromNow() +
+                        $.format.date(dataReversed[i].createdAt, "HH:mm")+
                         '</small>' +
                         '</div>' +
                         '<p>' +
@@ -370,7 +373,7 @@ function getConversationBySenderIdWithPage() {
                             '<div class="chat-body clearfix pull-right">' +
                             ' <div class="header">' +
                             '<small class=" text-muted ">' +
-                            moment(dataReversed[i].createdAt).fromNow() +
+                            $.format.date(dataReversed[i].createdAt, "HH:mm")+
                             '</small>' +
                             '<strong class="pull-right primary-font">' + currentPageName + '</strong>' +
                             '</div>' +
@@ -394,7 +397,7 @@ function getConversationBySenderIdWithPage() {
                             '<div class="header">' +
                             '<strong class="primary-font">' + currentCustomerName + '</strong>' +
                             '<small class="pull-right text-muted">' +
-                            moment(dataReversed[i].createdAt).fromNow() +
+                            $.format.date(dataReversed[i].createdAt, "HH:mm")+
                             '</small>' +
                             '</div>' +
                             '<p>' +
@@ -457,15 +460,25 @@ function getCustomerInfo(customerId) {
             currentCustomerAvt = data.picture;
             $('#currentSenderName').text(currentCustomerName);
             $("#customer-picture").attr("src", data.picture);
-            $('#customer-facebook-id').text(data.facebookid);
+            $('#customer-facebook-id').text(currentCustomerName);
+            $('#customer-facebook-id').attr('href','https://fb.com/' + getCustomerProfileId());
             $('#customer-name').text(data.name);
             $('#customer-timezone').text(convertNumberToTimezone(data.timezone));
             $('#customer-gender').text(convertGender(data.gender));
             $('#customer-locale').text(convertLocale(data.locale));
-            $('#customer-note').text(data.note);
-
+            // $('#customer-note').text(data.note);
+             getCustomerProfileId();
         }
     });
+
+}
+
+function getCustomerProfileId() {
+    var string = $('#customer-picture').attr('src');
+
+    var objectID = string.substring(string.lastIndexOf('/'))+1;
+    var rs = objectID.split("_");
+    return(rs[1]);
 }
 
 function createTicket(ticketId, messageId) {
@@ -601,6 +614,7 @@ function searchConversation() {
 function searchConversationBySenderId(senderId) {
     // clearInterval(currentInterval);
     clearInterval(loadConversationInterval);
+    currentPageAvt = 'https://graph.facebook.com/' + currentPageId + '/picture';
     $('#conversationContent').empty();
     $.ajax({
         url: '/messenger/getAllConversationsByPageIdAndSenderId',
@@ -734,9 +748,11 @@ function convertNumberToTimezone(number) {
 }
 
 function convertLocale(locale) {
-    var result = 'locale';
+    var result = locale;
     switch (locale){
         case 'en_US': result = 'English - United States'; break;
+        case 'vi_VN': result = 'Vietnamese - Việt Nam'; break;
+        case 'en_GB': result = 'English - Global'; break;
     }
     return result;
 }
@@ -749,4 +765,11 @@ function convertGender(gender) {
     return result;
 }
 
+function showForm(a){
+    $("#testbtn").css("display", "block");
+}
+
+function hideForm(a){
+    $("#testbtn").css("display", "none");
+}
 
