@@ -199,20 +199,22 @@ public class HomeController {
 
         TicketEntity ticket = ticketRepository.findOne(ticketid);
         if(ticket.getStatusid()==Constant.STATUS_ASSIGN){
-            if(ticket.getAssignee()==user.getUserid())
-            ticket.setStatusid(Constant.STATUS_INPROCESS);
-            ticket.setNote("Start follow ticket");
-            ticketRepository.save(ticket);
+            if(ticket.getAssignee()==user.getUserid()){
+                ticket.setStatusid(Constant.STATUS_INPROCESS);
+                ticket.setNote("Start follow ticket");
+                ticketRepository.save(ticket);
 
-            TicketstatuschangeEntity change = new TicketstatuschangeEntity();
-            change.setChangeby(user.getUserid());
-            change.setCreatedat(new Timestamp(new Date().getTime()));
-            change.setStatusid(Constant.STATUS_INPROCESS);
-            change.setTicketid(ticketid);
-            change.setNote("Start follow ticket");
-            change.setAssignee(0);
-            change.setPriorityid(0);
-            ticketStatusChangeRepository.save(change);
+                TicketstatuschangeEntity change = new TicketstatuschangeEntity();
+                change.setChangeby(user.getUserid());
+                change.setCreatedat(new Timestamp(new Date().getTime()));
+                change.setStatusid(Constant.STATUS_INPROCESS);
+                change.setTicketid(ticketid);
+                change.setNote("Start follow ticket");
+                change.setAssignee(0);
+                change.setPriorityid(0);
+                ticketStatusChangeRepository.save(change);
+            }
+
         }
 
         model.addAttribute("ticketid", ticketid);

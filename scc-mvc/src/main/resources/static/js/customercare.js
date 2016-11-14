@@ -276,7 +276,7 @@ function getReplyByCommentId(commentId) {
 //
 //             // Pagination
 //             var data = result.content;
-//             commentPagination(parseInt(result.totalPages),postId);
+//             commentPagination(parsseInt(result.totalPages),postId);
 //
 //
 //             $('#comment-box').empty();
@@ -606,7 +606,7 @@ function createticket(comtID, postID) {
     })
 }
 
-//assign ticket
+    //assign ticket
 function assign(comID) {
     //Load list user de assign
     $.ajax({

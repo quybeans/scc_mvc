@@ -17,6 +17,7 @@ public class ExtendTicketItem extends TicketitemEntity {
     private String senderavt;
     private boolean page;
     private String endmessage;
+    private String addedby;
 
 
     public CommentEntity getComment() {
@@ -82,5 +83,13 @@ public class ExtendTicketItem extends TicketitemEntity {
 
     public void setPage(boolean page) {
         this.page = page;
+    }
+
+    public String getAddedby() {
+        return addedby;
+    }
+
+    public void setAddedby(String addedby) {
+        this.addedby = addedby;
     }
 }

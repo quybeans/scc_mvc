@@ -86,7 +86,7 @@ public class TicketController {
     }
 
     @RequestMapping("/updateexpiredticket")
-    public PriorityEntity updateexpiredticket(@RequestParam("ticketid") Integer ticketid,
+    public String updateexpiredticket(@RequestParam("ticketid") Integer ticketid,
                                     @RequestParam("duration") Integer duration){
         List<PriorityEntity> priority = priorityReposioty.getNextPriority(duration);
         TicketEntity ticket = ticketRepository.findOne(ticketid);
@@ -105,16 +105,16 @@ public class TicketController {
             change.setTicketid(ticketid);
             change.setCreatedat(new Timestamp(new Date().getTime()));
             ticketStatusChangeRepository.save(change);
-            return priority.get(0);
+            return "This ticket is expired,System change priority to "+priority.get(0).getName();
         }else{
             ticket.setStatusid(Constant.STATUS_ASSIGN);
             ticket.setAssignee(ticket.getCreatedby());
             ticket.setDuetime(new Timestamp(new Date().getTime()));
-            ticket.setNote("this ticket is expired ,System return to assigner");
+            ticket.setNote("This ticket is expired ,System return to assigner");
             ticketRepository.save(ticket);
 
             TicketstatuschangeEntity changes = new TicketstatuschangeEntity();
-            changes.setNote("this ticket is expired, System return to assigner");
+            changes.setNote("This ticket is expired, System return to assigner");
             changes.setPriorityid(0);
             changes.setAssignee(ticket.getCreatedby());
             changes.setChangeby(0);
@@ -122,7 +122,7 @@ public class TicketController {
             changes.setTicketid(ticketid);
             changes.setCreatedat(new Timestamp(new Date().getTime()));
             ticketStatusChangeRepository.save(changes);
-            return null;
+            return "This ticket is expired, System return to assigner";
         }
 
     }
@@ -200,6 +200,7 @@ public class TicketController {
         //Thay doi assignee
         ticket.setAssignee(assignee);
         ticket.setNote(assignnote);
+        ticket.setStatusid(Constant.STATUS_ASSIGN);
         ticket.setDuetime(new Timestamp(new Date().getTime()));
 
         //Luu 1 TicketHistory
@@ -260,7 +261,7 @@ public class TicketController {
             //Get Full name cua nguoi tao ra ticket
             ProfileEntity profileEntity = new ProfileEntity();
             if(ticket.getCreatedby()!=null){
-                profileEntity = profileRepository.findOne(userRepository.findOne(ticket.getCreatedby()).getUserid());
+                profileEntity = profileRepository.findOne(ticket.getCreatedby());
                 detail.setCreateby(profileEntity.getFirstname()+ " " + profileEntity.getLastname());
             }
 
@@ -280,7 +281,7 @@ public class TicketController {
             PriorityEntity priority = priorityReposioty.findOne(ticket.getPriority());
             detail.setPriority(priority.getName());
             switch (ticket.getStatusid()){
-                case Constant.STATUS_ASSIGN: detail.setStatusid("Assign"); break;
+                case Constant.STATUS_ASSIGN: detail.setStatusid("Assigned"); break;
                 case Constant.STATUS_INPROCESS: detail.setStatusid("Inprocess"); break;
                 case Constant.STATUS_REVIEWING: detail.setStatusid("Reviewing"); break;
                 case Constant.STATUS_SOLVED: detail.setStatusid("Solved"); break;
@@ -331,14 +332,14 @@ public class TicketController {
                     //Get Full name cua user thay doi trang thai ticket
                     ProfileEntity pro;
                     if(tk.getChangeby()!=null){
-                        pro = profileRepository.findOne(userRepository.findOne(tk.getChangeby()).getUserid());
+                        pro = profileRepository.findOne(tk.getChangeby());
                         th.setUserid(pro.getFirstname() + " " + pro.getLastname());
                     }
 
 
                     //Get Full name cua nguoi duoc assign
                     if(tk.getAssignee()!=0){
-                        pro=profileRepository.findOne(userRepository.findOne(tk.getAssignee()).getUserid());
+                        pro=profileRepository.findOne(tk.getAssignee());
                         th.setAssignee(pro.getFirstname() + " " + pro.getLastname());
                     }
 
@@ -373,7 +374,7 @@ public class TicketController {
         TicketEntity ticket = ticketRepository.findOne(ticketid);
         ticket.setNote(ticketnote);
         ticket.setPriority(ticketpriority);
-        ticket.setDuetime(new Timestamp(new Date().getTime()));
+//        ticket.setDuetime(new Timestamp(new Date().getTime()));
 
         TicketstatuschangeEntity change = new TicketstatuschangeEntity();
         change.setTicketid(ticketid);

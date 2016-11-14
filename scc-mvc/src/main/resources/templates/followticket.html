@@ -7,7 +7,7 @@
     <aside class="main-sidebar" th:include="SideBar::aside"></aside>
     <script th:src="@{/js/jquery_dateFormat.js}"></script>
     <script src="js/moment.min.js"></script>
-
+    <link rel="stylesheet" th:href="@{/css/scc-post.css}"/>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -230,7 +230,8 @@
                 </div>
             </div>
             <div style="border-top: solid 1px lightgray;width: 250px;margin-top:8px" >
-                <button  style="margin-left: 70px;margin-top: 10px" class="btn btn-default" onclick="showhistory()">Show history</button>
+               <!--<button  style="margin-left: 70px;margin-top: 10px" class="btn btn-default" onclick="showhistory()">Show history</button>-->
+                <input style="margin-left: 70px;margin-top: 10px" type="checkbox" onclick="showhistory()">Show history
             </div>
 
         </section>
