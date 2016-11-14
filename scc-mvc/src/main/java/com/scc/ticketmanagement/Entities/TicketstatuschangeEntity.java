@@ -19,6 +19,7 @@ public class TicketstatuschangeEntity {
     private Integer priorityid;
 
     @Id
+    @GeneratedValue
     @Column(name = "id")
     public int getId() {
         return id;

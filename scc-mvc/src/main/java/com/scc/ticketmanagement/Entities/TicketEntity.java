@@ -22,6 +22,7 @@ public class TicketEntity {
     private Integer brandId;
 
     @Id
+    @GeneratedValue
     @Column(name = "id")
     public int getId() {
         return id;
