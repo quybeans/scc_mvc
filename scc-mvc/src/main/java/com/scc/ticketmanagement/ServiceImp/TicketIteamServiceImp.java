@@ -34,13 +34,14 @@ public class TicketIteamServiceImp implements TicketItemService {
     }
 
     @Override
-    public TicketitemEntity addCommentItemToTicket(Integer ticketId, String commentId) {
+    public TicketitemEntity addCommentItemToTicket(Integer ticketId, String commentId, int createdBy) {
         TicketitemEntity item = new TicketitemEntity();
         item.setCommentid(commentId);
         item.setMessageid(0);
         item.setCreatedAt(new Timestamp(new Date().getTime()));
         item.setPostid("0");
         item.setTicketid(ticketId);
+        item.setCreateBy(createdBy);
 
         return ticketitemRepository.saveAndFlush(item);
     }

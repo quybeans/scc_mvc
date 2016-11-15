@@ -10,5 +10,5 @@ public interface TicketItemService {
 
     TicketitemEntity getTicketItemByCommentId(String cmtId);
 
-    TicketitemEntity addCommentItemToTicket(Integer ticketId, String commentId);
+    TicketitemEntity addCommentItemToTicket(Integer ticketId, String commentId, int createdBy);
 }

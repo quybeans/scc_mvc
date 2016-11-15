@@ -197,8 +197,8 @@ public class UserController {
 
             profileRepository.save(profileEntity);
 
-            System.out.println(newUser.getUserid());
+
         }
-        return "redirect:/user/index";
+        return "redirect:/brand/user";
     }
 }
