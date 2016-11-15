@@ -42,7 +42,7 @@ public class MessengerRESTController {
     MessageItemService messageItemService;
 
     @Autowired
-    TicketIteamServiceImp ticketIteamServiceImp;
+    private TicketIteamServiceImp ticketIteamServiceImp;
 
     @RequestMapping(value = "/getAllConversations", method = RequestMethod.GET)
     public List<MessageEntity> getAllConversations() {

@@ -21,6 +21,7 @@ public class TicketRESTController {
     @Autowired
     private TicketService ticketService;
 
+
     @RequestMapping("comment/checkTicket")
     public TicketEntity checkCmtisTicketItem(String cmtID) {
 
@@ -30,11 +31,16 @@ public class TicketRESTController {
                 return ticketService.getTicketByID(rs);
             }
             return null;
-        }catch (NullPointerException e)
-        {
-            System.out.println("Null ticketitem");
+        } catch (NullPointerException e) {
+//            System.out.println("Null ticketitem");
             return null;
         }
+    }
+
+    @RequestMapping("comment/addToTicket")
+    public Boolean checkCmtisTicketItem(int ticketId, String cmtId) {
+        if (ticketItemService.addCommentItemToTicket(ticketId, cmtId) != null) return true;
+        return false;
     }
 
 }

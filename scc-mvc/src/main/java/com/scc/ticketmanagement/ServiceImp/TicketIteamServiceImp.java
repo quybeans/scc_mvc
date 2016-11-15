@@ -32,4 +32,16 @@ public class TicketIteamServiceImp implements TicketItemService {
     public TicketitemEntity getTicketItemByCommentId(String cmtId) {
         return ticketitemRepository.getTicketItemByCommentID(cmtId);
     }
+
+    @Override
+    public TicketitemEntity addCommentItemToTicket(Integer ticketId, String commentId) {
+        TicketitemEntity item = new TicketitemEntity();
+        item.setCommentid(commentId);
+        item.setMessageid(0);
+        item.setCreatedAt(new Timestamp(new Date().getTime()));
+        item.setPostid("0");
+        item.setTicketid(ticketId);
+
+        return ticketitemRepository.saveAndFlush(item);
+    }
 }
