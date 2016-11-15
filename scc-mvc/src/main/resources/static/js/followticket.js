@@ -5,6 +5,9 @@ var ticketid = $("#ticketid").val();
 var currentstatus;
 var duration;
 var staff;
+var happyicon = 'fa fa-smile-o pull-right happy';
+var sadicon = 'fa fa-frown-o pull-right sad';
+var questionicon = 'fa fa-question-circle-o pull-right question'
 getcurrentuser()
 loadticketitem(ticketid)
 getAllPageAccount();
@@ -68,7 +71,7 @@ function updateexpiredticket(ticketid,duration) {
         data:{"ticketid":ticketid,"duration":duration},
         success:function (data) {
 
-            alert("This ticket is expired ")
+            alert(data)
             getticketduetime(ticketid);
             getticket(ticketid);
             loadticketitem(ticketid);
@@ -102,20 +105,20 @@ function getticket(ticketid) {
                 +statusname
             );
             $("#ticketname").html(data.name);
-            $("#createdat").html('<i  class="fa fa-chevron-right" ></i><b style="margin-left: 5px">Created At: </b>'+createat);
-            $("#ticketnotedetail").html('<i  class="fa fa-chevron-right" ></i><b style="margin-left: 5px">Note: </b>'+data.note);
-            $("#ticketprioritydetail").html('<i  class="fa fa-chevron-right" ></i><b style="margin-left: 5px">Priority: </b>'+data.currentpriority);
+            $("#createdat").html('<i  class="fa fa-minus" ></i><b style="margin-left: 5px">Created At: </b>'+createat);
+            $("#ticketnotedetail").html('<i  class="fa fa-minus" ></i><b style="margin-left: 5px">Note: </b>'+data.note);
+            $("#ticketprioritydetail").html('<i  class="fa fa-minus" ></i><b style="margin-left: 5px">Priority: </b>'+data.currentpriority);
             $("#getassigner").html('<h4><i  class="fa fa-chevron-right" onclick="getassignerinfo('+data.createdby+')"></i><b style="margin-left: 5px">Assigner:</b> '+data.createbyuser+'</h4>');
             $("#getassignee").html('<h4><i  class="fa fa-chevron-right" onclick="getassigneeinfo('+data.assignee+')"></i><b style="margin-left: 5px">Assignee:</b> '+data.assigneeuser+'</h4>');
             var groupbtn;
             if(staff){
                 groupbtn = '<button class="btn btn-success" style="width: 60px" onclick="forwardticket('+data.id+')">Foward</button>'
                     +'<button class="btn btn-primary" style="width: 60px" onclick="status('+data.id+')">Status</button>'
-                    +'<button class=" btn btn-danger" style="width: 60px" onclick="updateticket('+data.id+')">Edit</button>'
+                    +'<button class=" btn btn-danger" style="width: 60px" onclick="updateticket('+data.id+')">Priority</button>'
             }else{
                 groupbtn = '<button class="btn btn-success" style="width: 60px" onclick="assign('+data.id+')">Assign</button>'
                     +'<button class="btn btn-primary" style="width: 60px" onclick="status('+data.id+')">Status</button>'
-                    +'<button class=" btn btn-danger" style="width: 60px" onclick="updateticket('+data.id+')">Edit</button>'
+                    +'<button class=" btn btn-danger" style="width: 60px" onclick="updateticket('+data.id+')">Priority</button>'
             }
 
             $("#ticketbutton").html(
@@ -140,35 +143,55 @@ function loadticketitem(ticketid) {
             for(var index =0;index<data.length;index++){
                 var timelineitem;
                 if(data[index].comment!==null){
+                    var senIcon = sadicon;
+                    if (data[index].comment.sentimentScore == 1)
+                        senIcon = happyicon;
+                    if (data[index].comment.sentimentScore == 3)
+                        senIcon = questionicon;
                     var objid = "'"+data[index].comment.postId+ "_" +data[index].comment.id+"'";
                     timelineitem =
                         '<li class="time-label">'
-                        +'<span class="bg-orange" id="createtime">'
+                        +'<span class="bg-gray-active" id="createtime">'
                         +moment(data[index].createdAt).format("D/MM/YYYY , hh:mm:ss")
+                        +'</span>'
+                        +'<span class="bg-orange" id="createtime">'
+                        +'<i class="glyphicon glyphicon-comment"></i>'
                         +'</span>'
                         +'</li>'
                         +'<li>'
                         +'<div class="timeline-item" >'
-                        +'<span class="time"><i class="fa fa-clock-o"></i>'
-                        +moment(data[index].comment.createdAt).format("D/MM/YYYY, hh:mm:ss")
-                        +'</span>'
                         +'<h3 class="timeline-header">'
-                        +'<img src="http://graph.facebook.com/'+data[index].comment.createdBy+'/picture" alt="user image" style="width: 50px;height: 50px;border-radius: 50px;margin-left: 5px" alt="user image"/>'
-                        +'<span style="margin-left: 10px">'+data[index].comment.createdByName+'</span>'
+                        +'<a>'+data[index].addedby+'</a>'+' added this comment to ticket'
                         +'</h3>'
-                        +'<div class="timeline-body" onclick="getCommentReply('+data[index].comment.id+')">'
-                        +data[index].comment.content
-                        +'</div>'
-                        +'<div class="timeline-footer">'
-                        +'<button class="btn btn-primary btn-xs" onclick="replyToComment('+objid+')"><i class="fa fa-send"></i>Reply</button>'
-                        +'</div>'
-                        +'</div>'
-                        +'<div class="pull-right"  id="reply'+data[index].comment.id+'" style="width: 70%;margin-right: 20px;margin-top: 10px;border-radius: 10px;display: none">'
-                        +'</div>'
-                        +'</li>'
+                        +'<div class="timeline-body">'
+                        +'<img style="border-radius: 50px" onload="http://localhost:9000/img/user_img.jpg" src="http://graph.facebook.com/' + data[index].comment.createdBy + '/picture" alt="user image">'
+                        + '<p class="message" style="margin-top: -53px">'
+                        + '<a style="margin-left: 70px" href="https:/fb.com/' + data[index].comment.createdBy + '" target="_blank">'
+                        + data[index].comment.createdByName
+                        + ' </a>' +' Commented at'
+                        + '<small class="text-muted" style="margin-left: 10px">'
+                        + moment(data[index].comment.createdAt).format("D/MM/YYYY, hh:mm:ss")
+                        + '</small>'
+                        + '<p style="margin-left: 85px;margin-top: -10px ">' + data[index].comment.content + '</p>'
+                        + '</p>'
+                    // Day la nut reply
+                    + '<button  onclick="replyToComment(' + objid + ');getReplyByCommentId(' + "'" + data[index].comment.id + "'" + ');" class="btn btn-default btn-xs inline"' +
+                    ' style="margin-left: 65px;margin-top: -10px; "><span class="glyphicon glyphicon-comment"' +
+                    ' style="color:gray;margin-right: 10px "  title="Reply to this comment"   data-placement="bottom" ' +
+                    'data-toggle="tooltip" ></span>' + countReply(data[index].comment.id) + ' replies</button>'
+                    + '<small class="' + senIcon + '" style="font-size: 20px;margin-top: -50px"></small>'
+                    +'</div>'
+                    +'</div>'
+                     +'</li>'
                 }
                 if(data[index].message!==null){
                     var avt;
+                    var senIcon = sadicon;
+                    if (data[index].message.sentimentScrore == 1)
+                        senIcon = happyicon;
+                    if (data[index].message.sentimentScrore == 3)
+                        senIcon = questionicon;
+
                     if(data[index].page){
                        avt='https://graph.facebook.com/' + data[index].senderavt + '/picture';
                     }else{
@@ -176,21 +199,33 @@ function loadticketitem(ticketid) {
                     }
                     timelineitem =
                         '<li class="time-label">'
-                        +'<span class="bg-blue" id="createtime">'
+                        +'<span class="bg-gray-active" id="createtime">'
                         +moment(data[index].createdAt).format("D/MM/YYYY , hh:mm:ss")
+                        +'</span>'
+                        +'<span class="bg-blue-gradient" id="createtime">'
+                        +'<i class="fa fa-comments"></i>'
                         +'</span>'
                         +'</li>'
                         +'<li>'
                         +'<div class="timeline-item" >'
-                        +'<span class="time"><i class="fa fa-clock-o"></i>'
-                        +moment(data[index].message.createdAt).format("D/MM/YYYY, hh:mm:ss")
-                        +'</span>'
                         +'<h3 class="timeline-header">'
-                        +'<img src="'+avt+'" alt="user image" style="width: 50px;height: 50px;border-radius: 50px;margin-left: 5px" alt="user image"/>'
-                        +'<span style="margin-left: 10px">'+data[index].sendername+'</span>'
+                        +'<a>'+data[index].addedby+'</a>'+' added this message to ticket'
                         +'</h3>'
+
                         +'<div class="timeline-body">'
+                        +'<img src="'+avt+'" alt="user image" style="width: 50px;height: 50px;border-radius: 50px;margin-left: 5px" alt="user image"/>'
+                        + '<p class="message" style="margin-top: -53px">'
+                        + '<a style="margin-left: 70px" href="https:/fb.com/' + data[index].sendername + '" target="_blank">'
+                        + data[index].sendername
+                        + ' </a>' +' Sended message at'
+                        + '<small class="text-muted" style="margin-left: 10px">'
+                        + moment(data[index].message.createdAt).format("D/MM/YYYY, hh:mm:ss")
+                        + '</small>'
+                        + '</p>'
+                        + '<p style="margin-left: 85px;margin-top: -10px ">'
                         +'<a href="messenger/ticket?senderid='+data[index].message.senderid+'&receiverid='+data[index].message.receiverid+'&messageid='+data[index].message.id+'&messageEnd='+data[index].endmessage+'">'+data[index].message.content+'</a>'
+                        + '</p>'
+                        + '<small class="' + senIcon + '" style="font-size: 20px;margin-top: -50px"></small>'
                         +'</div>'
                         +'</div>'
                         +'</li>'
@@ -212,8 +247,11 @@ function loadticketitem(ticketid) {
                     }
                     timelineitem=
                         '<li class="time-label tickethistory" style="display: none">'
-                        +'<span class="bg-green tickethistory" style="display: none">'
+                        +'<span class="bg-gray-active tickethistory" style="display: none">'
                         +moment(data[index].createdAt).format("D/MM/YYYY, hh:mm:ss")
+                        +'</span>'
+                        +'<span class="bg-green tickethistory" id="createtime" style="display: none">'
+                        +'<i class="glyphicon glyphicon-info-sign tickethistory" style="display: none;"></i>'
                         +'</span>'
                         +'</li>'
                         +'<li style="display: none" class=" tickethistory">'
@@ -261,10 +299,12 @@ function getCommentReply(comId) {
                     +'<img src="http://graph.facebook.com/'+data[i].createdBy+'/picture" alt="user image" style="width: 50px;height: 50px;border-radius: 50px;margin-left: 5px" alt="user image"/>'
                     +'<span style="margin-left: 10px">'+data[i].createdByName+'</span>'
                     +'</h5>'
-                    +'<div class="timeline-body" style="margin-left: 20px">'+data[i].content+'</div>'
-                    +'<div class="timeline-footer">'
-                    +'<a class="btn btn-primary btn-xs" onclick="replyToComment('+objid+')"><i class="fa fa-send"></i>Reply</a>'
+                    +'<div class="timeline-body" style="margin-left: 20px">'
+                    +data[i].content
                     +'</div>'
+                    // +'<div class="timeline-footer">'
+                    // +'<a class="btn btn-primary btn-xs" onclick="replyToComment('+objid+')"><i class="fa fa-send"></i>Reply</a>'
+                    // +'</div>'
                     +'</div>'
                 )
             }
@@ -396,17 +436,17 @@ function updateticket(ticketid) {
         }
     })
 
-    $.ajax({
-        url: "/getupdateticket",
-        type: "POST",
-        data: {"ticketid": ticketid},
-        success: function (data) {
-            $("#ticketnote").val(data.note);
-        },
-        error: function () {
-            alert("Fail ne");
-        }
-    })
+    // $.ajax({
+    //     url: "/getupdateticket",
+    //     type: "POST",
+    //     data: {"ticketid": ticketid},
+    //     success: function (data) {
+    //         $("#ticketnote").val(data.note);
+    //     },
+    //     error: function () {
+    //         alert("Fail ne");
+    //     }
+    // })
 
     $("#btnChangeTicket").unbind().click(function () {
         var ticketnote= $("#ticketnote").val();
@@ -552,7 +592,9 @@ function replyToComment(objId) {
     $('#btnReply').unbind().click(function () {
         var token = $('#reply-token').val();
         if ($('#txtReply').val().length > 0) {
+
             sendComment(objId, $('#txtReply').val(), token);
+            loadticketitem(ticketid);
         }
         else {
             alert("Enter some thing to comment..")
@@ -594,6 +636,7 @@ function getAllFBAccount() {
         }
     });
 }
+
 //get All Facebook account belong to user
 function getAllPageAccount() {
     $.ajax({
@@ -613,4 +656,50 @@ function getAllPageAccount() {
             getAllFBAccount();
         }
     });
+}
+
+//Ger reply for comment
+function getReplyByCommentId(commentId) {
+    $('#reply-list').empty();
+    $('#reply-list').html('Loading....');
+    $.ajax({
+        url: '/commentbypost',
+        type: "GET",
+        data: {postId: commentId},
+        dataType: "json",
+        success: function (data) {
+            $('#reply-list').empty();
+            $.each(data, function (index) {
+                $('#reply-list').append(
+                    '<div class="cmt" style="max-height:10vh;">'
+                    + '<div class="cmtContent">'
+                    + '<img src="http://graph.facebook.com/' + data[index].createdBy + '/picture" height="50px" width="50px">'
+                    + '<p class="message">'
+                    + '<a>' + data[index].createdByName + '</a>'
+                    + '<p style="margin-left: 65px; margin-top: -10px">' + data[index].content + '</p>'
+                    + '</p>'
+                    + '</div>'
+                    + '</div>'
+                )
+            })
+
+        }
+    })
+}
+
+function countReply(commentId) {
+
+    var rs = 0;
+    $.ajax({
+        url: 'comment/reply/count',
+        type: "GET",
+        data: {"commentId": commentId},
+        dataType: "json",
+        async: false,
+        success: function (data) {
+            rs = data;
+        }
+    });
+
+    return rs;
 }

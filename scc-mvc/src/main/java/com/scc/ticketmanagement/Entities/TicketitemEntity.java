@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 /**
- * Created by user on 11/11/2016.
+ * Created by user on 11/14/2016.
  */
 @Entity
 @Table(name = "ticketitem", schema = "scc", catalog = "")
@@ -15,6 +15,7 @@ public class TicketitemEntity {
     private String postid;
     private int messageid;
     private Timestamp createdAt;
+    private Integer createBy;
 
     @Id
     @Column(name = "ticketid")
@@ -66,6 +67,16 @@ public class TicketitemEntity {
         this.createdAt = createdAt;
     }
 
+    @Basic
+    @Column(name = "create_by")
+    public Integer getCreateBy() {
+        return createBy;
+    }
+
+    public void setCreateBy(Integer createBy) {
+        this.createBy = createBy;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -78,6 +89,7 @@ public class TicketitemEntity {
         if (commentid != null ? !commentid.equals(that.commentid) : that.commentid != null) return false;
         if (postid != null ? !postid.equals(that.postid) : that.postid != null) return false;
         if (createdAt != null ? !createdAt.equals(that.createdAt) : that.createdAt != null) return false;
+        if (createBy != null ? !createBy.equals(that.createBy) : that.createBy != null) return false;
 
         return true;
     }
@@ -89,6 +101,7 @@ public class TicketitemEntity {
         result = 31 * result + (postid != null ? postid.hashCode() : 0);
         result = 31 * result + messageid;
         result = 31 * result + (createdAt != null ? createdAt.hashCode() : 0);
+        result = 31 * result + (createBy != null ? createBy.hashCode() : 0);
         return result;
     }
 }

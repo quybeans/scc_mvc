@@ -87,17 +87,17 @@ function updateticket(ticketid) {
         }
     })
 
-    $.ajax({
-        url: "/getupdateticket",
-        type: "POST",
-        data: {"ticketid": ticketid},
-        success: function (data) {
-            $("#ticketnote").val(data.note);
-        },
-        error: function () {
-            alert("Fail ne");
-        }
-    })
+    // $.ajax({
+    //     url: "/getupdateticket",
+    //     type: "POST",
+    //     data: {"ticketid": ticketid},
+    //     success: function (data) {
+    //         $("#ticketnote").val(data.note);
+    //     },
+    //     error: function () {
+    //         alert("Fail ne");
+    //     }
+    // })
 
     $("#btnChangeTicket").unbind().click(function () {
         var ticketnote= $("#ticketnote").val();

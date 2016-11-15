@@ -63,7 +63,7 @@ public class TicketItemController {
             for (TicketitemEntity ti: listitem) {
                 if(!ti.getCommentid().equals("0")){
                     CommentEntity cmt= commentRepository.findOne(ti.getCommentid());
-                    PostEntity post = postRepository.findOne(cmt.getPostId());
+//                    PostEntity post = postRepository.findOne(cmt.getPostId());
               //      System.out.println("Post ID cua comment:"+post.getId());
                     ExtendTicketItem item = new ExtendTicketItem();
                     item.setComment(cmt);
@@ -82,8 +82,8 @@ public class TicketItemController {
 //                        }
 //
 //                    }
-
-
+                        ProfileEntity profile =profileRepository.findOne(ti.getCreateBy());
+                        item.setAddedby(profile.getFirstname() + " " + profile.getLastname());
 
                     customizelist.add(item);
 
@@ -96,6 +96,8 @@ public class TicketItemController {
                     item.setMessage(message);
                     item.setEndmessage(messageitem.getMessageIdEnd());
                     item.setCreatedAt(ti.getCreatedAt());
+                    ProfileEntity profile =profileRepository.findOne(ti.getCreateBy());
+                    item.setAddedby(profile.getFirstname() + " " + profile.getLastname());
                     ContactEntity contact = contactRepository.findOne(message.getSenderid());
                     if(contact!=null){
                         item.setSendername(contact.getName());
