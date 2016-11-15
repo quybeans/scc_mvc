@@ -149,8 +149,7 @@ public class UserController {
     }
 
     @RequestMapping("/user/createUserwProfile")
-    @ResponseBody
-    public void createUserWithProfile(HttpServletRequest request,
+    public String createUserWithProfile(HttpServletRequest request,
                                       @RequestParam("txtUsername") String username
             , @RequestParam("txtPassword") String password
             , @RequestParam("ddlRole") String role
@@ -200,5 +199,6 @@ public class UserController {
 
             System.out.println(newUser.getUserid());
         }
+        return "redirect:/user/index";
     }
 }
