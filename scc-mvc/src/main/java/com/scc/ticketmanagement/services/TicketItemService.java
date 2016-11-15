@@ -7,4 +7,6 @@ import com.scc.ticketmanagement.Entities.TicketitemEntity;
  */
 public interface TicketItemService {
     TicketitemEntity addMessageItemToTicket(Integer ticketid, Integer messageItemId);
+
+    TicketitemEntity getTicketItemByCommentId(String cmtId);
 }

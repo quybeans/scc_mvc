@@ -27,4 +27,9 @@ public class TicketIteamServiceImp implements TicketItemService {
         item.setTicketid(ticketid);
         return ticketitemRepository.saveAndFlush(item);
     }
+
+    @Override
+    public TicketitemEntity getTicketItemByCommentId(String cmtId) {
+        return ticketitemRepository.getTicketItemByCommentID(cmtId);
+    }
 }
