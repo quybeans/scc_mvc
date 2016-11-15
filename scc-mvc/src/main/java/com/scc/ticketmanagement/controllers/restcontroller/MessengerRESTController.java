@@ -1,16 +1,15 @@
 package com.scc.ticketmanagement.controllers.restcontroller;
 
-import com.scc.ticketmanagement.Entities.ContactEntity;
-import com.scc.ticketmanagement.Entities.MessageitemEntity;
-import com.scc.ticketmanagement.Entities.MessageEntity;
-import com.scc.ticketmanagement.Entities.TicketitemEntity;
+import com.scc.ticketmanagement.Entities.*;
 import com.scc.ticketmanagement.ServiceImp.TicketIteamServiceImp;
 import com.scc.ticketmanagement.exentities.Conversation;
 import com.scc.ticketmanagement.repositories.ContactRepository;
+import com.scc.ticketmanagement.repositories.UserRepository;
 import com.scc.ticketmanagement.services.MessageItemService;
 import com.scc.ticketmanagement.services.MessageService;
 import com.scc.ticketmanagement.services.PageService;
 import com.scc.ticketmanagement.utilities.FacebookUtility;
+import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpSession;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -28,6 +28,9 @@ import java.util.List;
  */
 @RestController
 public class MessengerRESTController {
+
+    @Autowired
+    UserRepository userRepository;
 
     @Autowired
     MessageService messageService;
@@ -148,13 +151,18 @@ public class MessengerRESTController {
 
     @RequestMapping(value = "/messenger/addTicket", method = RequestMethod.POST)
     public TicketitemEntity startTicket(@RequestParam("ticketId") Integer ticketId,
-                                        @RequestParam("messageId") String messageId) {
+                                        @RequestParam("messageId") String messageId,
+                                        HttpServletRequest request) {
         System.out.println(ticketId);
         System.out.println(messageId);
+
+        HttpSession session = request.getSession();
+        String loginUser = (String) session.getAttribute("username");
+        UserEntity user = userRepository.findUserByUsername(loginUser);
         TicketitemEntity result = null;
         MessageitemEntity messageitemEntity = messageItemService.startTicket(messageId);
         if (messageitemEntity != null) {
-            result = ticketIteamServiceImp.addMessageItemToTicket(ticketId, messageitemEntity.getItemId());
+            result = ticketIteamServiceImp.addMessageItemToTicket(ticketId, messageitemEntity.getItemId(),user.getUserid());
 
         }
         return result;
