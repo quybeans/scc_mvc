@@ -51,13 +51,13 @@ function showTicket() {
         success: function (data) {
             $.each(data, function (index) {
                 var statusColor = 'solved';
-                if (data[index].statusid==3) statusColor = 'process';
-                else if (data[index].statusid==2) statusColor = 'assigned';
+                if (data[index].statusid == 3) statusColor = 'process';
+                else if (data[index].statusid == 2) statusColor = 'assigned';
 
 
                 $('#ticket-list').append(
                     '<div class="ticket">'
-                    + '<div class="title ' +statusColor+'">' + data[index].name + '</div>'
+                    + '<div class="title ' + statusColor + '">' + data[index].name + '</div>'
                     + '<div>Status:&nbsp;'
                     + '<span class="fa fa-circle"></span>&nbsp;'
                     + data[index].currentstatus
@@ -65,7 +65,7 @@ function showTicket() {
                     + '<div>Created by:&nbsp;<span style="color: black; font-weight: bold">'
                     + data[index].createbyuser
                     + '</span></div>'
-                    + '<div>Current assignee:&nbsp;<span style="color: black; font-weight: bold">'+data[index].assigneeuser+'</span>'
+                    + '<div>Current assignee:&nbsp;<span style="color: black; font-weight: bold">' + data[index].assigneeuser + '</span>'
                     + '</div>'
                     + '<div></div>'
                     + '</div>'
@@ -410,6 +410,22 @@ function getCommentByPostIdwPage(postId, page) {
                     senIcon = questionicon;
                 var cmtId = "'" + postId + "_" + data[index].id + "'";
 
+                var btnTicket = '<button onclick="showTicket()" class="btn btn-default btn-xs inline" style="margin-left: 10px;margin-top: -10px;"><span class="fa fa-ticket" style="margin-right:10px"></span>Add to ticket</button>';
+
+                var isTicket = false;
+                $.ajax({
+                    url: "/comment/checkTicket",
+                    type: "GET",
+                    data: {cmtID: data[index].id},
+                    dataType: "json",
+                    async: false,
+                    success: function (ticket) {
+                        if (ticket != null) isTicket = true;
+                        btnTicket = '<button class="btn btn-default btn-xs inline" style="margin-left: 10px;margin-top: -10px; border: 1px solid lightgreen; background-color: transparent;color: lightgreen">'+ticket.name+'</button>';
+                    }
+                });
+
+
                 $('#comment-box').append(
                     '<div class="cmt" >'
                     + '<div class="col-lg-11 cmtContent">' +
@@ -428,7 +444,7 @@ function getCommentByPostIdwPage(postId, page) {
                     ' style="margin-left: 65px;margin-top: -10px; "><span class="glyphicon glyphicon-comment"' +
                     ' style="color:gray;margin-right: 10px "  title="Reply to this comment"   data-placement="bottom" ' +
                     'data-toggle="tooltip" ></span>' + countReply(data[index].id) + ' replies</button>'
-                    + '<button onclick="showTicket()" class="btn btn-default btn-xs inline" style="margin-left: 10px;margin-top: -10px;"><span class="fa fa-ticket"></span>Add to ticket</button>'
+                    + btnTicket
                     + '</div>'
                     + '<div class="col-lg-1" style="margin-top: 30px">' + '<small class="' + senIcon + '" style="font-size: 20px;"></small>'
                     + '</div>'
