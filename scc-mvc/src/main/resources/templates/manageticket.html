@@ -12,124 +12,6 @@
     <script th:src="@{/js/jquery_dateFormat.js}"></script>
     <script>
 
-        $(document).ready(function () {
-            table= $("#table").dataTable({
-                ajax: {
-                    url:"/getallticket",
-                    type: "GET"
-                },
-                sAjaxDataProp : "",
-                columns: [
-                    {title: "ID", data:"id",visible:false},
-                    {title: "Name",data:"name" },
-                    {title: "Created By",data:"createbyuser"},
-                    {title: "Assignee",data:"assigneeuser"},
-                    {title: "Status",data:"currentstatus"},
-                    {title: "Created Time",data:"createdtime"},
-                    {title: "Priority", data:"currentpriority"},
-                    {title: "Note", data:"note"},
-                    {title:"Action",data:"name"},
-                ],
-
-                columnDefs:[
-                    {
-                        width:'20%',
-                        targets: 7,
-                        render: (data, type, row) => {
-                        return '<h5 style="overflow: hidden; max-height: 100px;word-wrap: break-word">'+row.note+'</h5>'
-                    },
-            },
-                    {
-                        width:'20%',
-                        targets: 1,
-                        render: (data, type, row) => {
-                        return '<h5 style="overflow: hidden; max-height: 100px"><a href="followticket?ticketid='+row.id+'">'+row.name+'</a></h5>'
-                    },
-        },
-            {
-                width:'15%',
-                        targets: 5,
-                    render: (data, type, row) => {
-                if(type=== 'display'){
-                    return moment(row.createdtime).format("D/MM/YYYY h:mm:ss");
-                }
-                return moment(data).format("D/MM/YYYY");
-            },
-            },
-            {
-                width:'15%',
-                        targets: 8,
-                    render: (data, type, row) => {
-                if(type==='display'){
-                    if(staff){
-                        return '<div class="btn-group btn-xs">'
-                                +'<button class="btn btn-success btn-xs" onclick="forwardticket('+row.id+')"><i class="fa fa-ticket"></i></button>'
-                                +'<button class="btn btn-primary btn-xs" onclick="status('+row.id+')"><i class="fa fa-navicon"></i></button>'
-                                +'<button class="btn btn-danger btn-xs" onclick="updateticket('+row.id+')"><i class="fa fa-pencil"></i></button>'
-                                +'</div>'
-                    }else{
-                        return '<div class="btn-group btn-xs">'
-                                +'<button class="btn btn-success btn-xs" onclick="assign('+row.id+')"><i class="fa fa-ticket"></i></button>'
-                                +'<button class="btn btn-primary btn-xs" onclick="status('+row.id+')"><i class="fa fa-navicon"></i></button>'
-                                +'<button class="btn btn-danger btn-xs" onclick="updateticket('+row.id+')"><i class="fa fa-pencil"></i></button>'
-                                +'</div>'
-                    }
-
-                }
-                return data;
-            },
-            },
-            {
-                width:'10%',
-                        targets: 4,
-                    render: (data, type, row) => {
-                if(type=== 'display'){
-                    var statuscolor;
-                    switch (row.statusid){
-                        case 1: statuscolor='color:#ffff00'; break;
-                        case 2: statuscolor='color:#00a65a'; break;
-                        case 3: statuscolor='color:#500a6f'; break;
-                        case 4: statuscolor='color:#01ff70'; break;
-                    }
-                    return '<p><i class="fa fa-circle" aria-hidden="true" style="'+statuscolor+'"></i>'+'  ' +row.currentstatus+'</p>'
-                }
-                return data;
-            },
-            },
-            ],
-            initComplete:  function() {
-                this.api().columns().every( function (i) {
-                    if(i < 7 && i != 1 ){
-                        var column = this;
-                        var select = $('<select><option value=""></option></select>')
-                                .appendTo( $(column.footer()).empty() )
-                                .on( 'change', function () {
-                                    var val = $.fn.dataTable.util.escapeRegex(
-                                            $(this).val()
-                                    );
-
-                                    column
-                                            .search( val ? '^'+val+'$' : '', true, false )
-                                            .draw();
-                                } );
-                        var array = [];
-                        column.data().unique().sort().each( function ( d, j ) {
-                            if(typeof d ==='number'){
-                                if(jQuery.inArray(moment(d).format("D/MM/YYYY"), array) < 0) {
-                                    select.append( '<option value="'+moment(d).format("D/MM/YYYY")+'">'+moment(d).format("D/MM/YYYY")+'</option>' );
-                                }
-                                array.push(moment(d).format("D/MM/YYYY"));
-                            }else{
-                                select.append( '<option value="'+d+'">'+d+'</option>' )
-                            }
-
-                        } );
-                    }
-                } );
-            }
-        });
-        });
-
 
     </script>
     <script src="js/manageticket.js"></script>
@@ -163,7 +45,7 @@
             <div class="modal fade" id="ticketrequestModal" role="dialog">
                 <div class="modal-dialog modal-lg">
                     <!-- Modal content-->
-                    <div class="modal-content">
+                    <div id="requestmodal" class="modal-content">
                         <table class="table table-hover">
                             <thead>
                                 <th>Ticket</th>

@@ -130,8 +130,8 @@ public class TicketItemController {
                 item.setTicketid(change.getTicketid());
                 ProfileEntity profile = new ProfileEntity();
                 TicketHistory history = new TicketHistory();
-                if(change.getAssignee()!=0){
-                    profile = profileRepository.findOne(userRepository.findOne(change.getAssignee()).getUserid());
+                if(change.getAssignee()!=null ){
+                    profile = profileRepository.findOne(change.getAssignee());
                     history.setAssignee(profile.getFirstname()+ " " + profile.getLastname());
                 }
 
@@ -144,12 +144,12 @@ public class TicketItemController {
 
 
 
-                if(change.getStatusid()!=0){
+                if(change.getStatusid()!=null){
                     history.setStatusid(change.getStatusid());
                 }
                 history.setCreatedat(change.getCreatedat());
                 history.setNote(change.getNote());
-                if(change.getPriorityid()!=0){
+                if(change.getPriorityid()!=null){
                     PriorityEntity priority = priorityReposioty.findOne(change.getPriorityid());
                     history.setPriority(priority.getName());
                 }

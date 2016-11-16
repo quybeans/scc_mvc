@@ -210,8 +210,6 @@ public class HomeController {
                 change.setStatusid(Constant.STATUS_INPROCESS);
                 change.setTicketid(ticketid);
                 change.setNote("Start follow ticket");
-                change.setAssignee(0);
-                change.setPriorityid(0);
                 ticketStatusChangeRepository.save(change);
             }
 

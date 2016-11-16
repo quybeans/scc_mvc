@@ -16,8 +16,12 @@ public class Constant {
 
     public static final int STATUS_ASSIGN = 1;
     public static final int STATUS_INPROCESS = 2;
-    public static final int STATUS_REVIEWING = 3;
-    public static final int STATUS_SOLVED = 4;
+    public static final int STATUS_SOLVED = 3;
+    public static final int STATUS_CLOSE = 4;
+    public static final int STATUS_EXPIRED = 5;
+    public static final int STATUS_FORWARD = 6;
+    public static final int STATUS_REOPEN = 7;
+    public static final int STATUS_CREATE = 8;
 
     public static final boolean ACTIVE = true;
     public static final boolean DEACTIVE = false;
