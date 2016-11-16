@@ -1,25 +1,157 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Admin</title>
-    <script src="https://code.jquery.com/jquery-1.12.3.js"></script>
-    <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
-
+    <title>SCC Admin</title>
 </head>
-<body>
-<table id="example" class="display" width="100%">
-    <thead>
-    <tr>
-        <th>Userid</th>
-        <th>Username</th>
-        <th>Role</th>
-        <th>CreatedBy</th>
-        <th>isActive</th>
-        <th>Brand</th>
-    </tr>
-    </thead>
-</table>
+<body class="hold-transition skin-green" style="background-color: whitesmoke">
+<header class="main-header">
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/font-awesome-4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/css/AdminLTE.min.css"/>
+    <link rel="stylesheet" href="/css/_all-skins.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="/js/jquery-ui.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/app.min.js"></script>
+    <script th:src="@{/js/jquery_dateFormat.js}"></script>
+
+    <!-- Logo -->
+    <a href="#" class="logo">
+
+        <!-- logo for regular state and mobile devices -->
+        <span class="logo-lg"><span class="glyphicon glyphicon-cog"
+                                    style="margin-right: 10px"></span><b>SCC</b> Admin</span>
+    </a>
+
+    <nav class="navbar navbar-static-top">
+        <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+                <li class="dropdown user user-menu">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <span class="hidden-xs" th:text="${session.fullname}"></span>
+                    </a>
+                </li>
+                <li class="dropdown user user-menu">
+                    <a href="/LogOut" class="bg-green-active" style="text-align: center">Sign out</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+
+<section class="content-header">
+
+</section>
+<section class="content">
+    <div class="col-md-6">
+        <div class="box box-success">
+            <div class="box-header with-border" style="font-size: 20px; font-weight: bold"><span
+                    class="glyphicon glyphicon-wrench"
+                    style="margin-right: 10px"></span>Spider
+                Configure
+            </div>
+            <div class="box-body" style="height: 168px">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-sm-4" style="margin-right: 10px"> Crawling data within:</label>
+                        <div class="col-sm-7">
+                            <input class="input-sm form-control" type="text" value="3"
+                                   style="width: 40px;text-align: center; display: inline; margin-right: 10px">months
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4" style="margin-right: 10px" for="token"> Crawler
+                            token:</label>
+                        <div class=" col-sm-7">
+                            <input class="form-control input-sm" type="text" value="3" id="token">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4" style="margin-right: 10px" for="token"> Limit pages crawl
+                            at a time: </label>
+                        <div class=" col-sm-7">
+                            <input class="input-sm form-control" type="text" value="3"
+                                   style="width: 40px;text-align: center; display: inline; margin-right: 10px">pages
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="box-footer with-border" style="font-size: 20px; font-weight: bold;">
+                <button class="btn btn-success pull-right"><span class="fa fa-floppy-o"
+                                                                 style="margin-right: 10px"></span>Save
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="box box-primary">
+            <div class="box-header with-border" style="font-size: 20px; font-weight: bold"><span
+                    class="glyphicon glyphicon-globe"
+                    style="margin-right: 10px"></span>System
+                overview
+            </div>
+            <div class="box-body">
+                <div class="col-lg-4">
+                    <div class="small-box bg-blue">
+                        <div class="inner">
+                            <h3>6<span style="font-size: 20px;margin-left: 10px">pages</span></h3>
+                            <p>Facebook</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-facebook"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="small-box bg-yellow">
+                        <div class="inner">
+                            <h3>6<span style="font-size: 20px;margin-left: 10px">brands</span></h3>
+                            <p>Registered</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-shopping-cart " style="font-size: 80px"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="small-box bg-teal">
+                        <div class="inner">
+                            <h3>102<span style="font-size: 20px;margin-left: 10px">users</span></h3>
+                            <p>Account</p>
+                        </div>
+                        <div class="icon">
+                            <i class="glyphicon glyphicon-user" style="font-size: 70px"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="box-footer with-border" style="font-size: 20px; font-weight: bold;">
+                <button class="btn btn-primary pull-right"><span class="fa fa-plus"
+                                                                 style="margin-right: 10px"></span>New Brand
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="box box-success">
+            <div class="box-header with-border" style="font-size: 20px; font-weight: bold">
+                <span class="fa fa-users" tyle="margin-right: 10px"></span>User in the System
+            </div>
+            <div class="box-body">
+
+            </div>
+            <div class="box-footer with-border" style="font-size: 20px; font-weight: bold;">
+                <button class="btn btn-success pull-right"><span class="fa fa-floppy-o"
+                                                                 style="margin-right: 10px"></span>Save
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
 </body>
 </html>
