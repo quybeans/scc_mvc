@@ -116,7 +116,7 @@ public class TicketController {
             changes.setChangeby(0);
             changes.setCreatedat(new Timestamp(new Date().getTime()));
             ticketStatusChangeRepository.save(changes);
-            return "This ticket is expired, System return to assigner";
+            return "This ticket is expired";
         }
 
     }
