@@ -235,7 +235,9 @@ function register_popup(id, name) {
                 '<ul class="chat">' +
                 chatMessage +
                 '</ul>' +
-                '</div></div>';
+                '</div>' +
+                '<div class="input-group"><input type="text" placeholder="Type a message..." class="form form-control"><span class="input-group-addon"><i class="fa fa-reply"></i></span></div>' +
+                '</div>';
             $('body').append(element3);
         }
     });
