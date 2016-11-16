@@ -51,8 +51,8 @@ setInterval(function () {
         }else{
             $("#dueday").html(
                 '<div class="btn-group">'
-                +'<button class="btn btn-default" onclick="approve('+ticketid+')"> Approve</button>'
-                +'<button class="btn btn-default" onclick="reject('+ticketid+')"> Reject</button>'
+                +'<button class="btn btn-default" onclick="approve('+ticketid+')" style="width: 80px"> Close</button>'
+                +'<button class="btn btn-default" onclick="reject('+ticketid+')" style="width: 80px"> Reassign</button>'
                 +'</div>'
             )
         }
@@ -75,7 +75,7 @@ function updateexpiredticket(ticketid,duration) {
             getticketduetime(ticketid);
             getticket(ticketid);
             loadticketitem(ticketid);
-
+            $("#historycheckbox").prop("checked", false);
 
         },
         error:function () {
@@ -95,8 +95,9 @@ function getticket(ticketid) {
             switch (data.statusid){
                 case 1: statuscolor='color:#ffff00'; statusname="Assigned"; break;
                 case 2: statuscolor='color:#00a65a'; statusname="Inprocess"; break;
-                case 3: statuscolor='color:#500a6f'; statusname="Reviewing"; break;
-                case 4: statuscolor='color:#01ff70'; statusname="Solved"; break;
+                case 3: statuscolor='color:#500a6f'; statusname="Solved"; break;
+                case 4: statuscolor='color:#01ff70'; statusname="Close"; break;
+                case 5: statuscolor='color:#000000'; statusname="Expired"; break;
             }
             window.currentstatus=data.statusid;
             var createat = moment(data.createdtime).format("D/MM/YYYY, hh:mm:ss");
@@ -235,8 +236,12 @@ function loadticketitem(ticketid) {
                     switch (data[index].history.statusid){
                         case 1: status='<a>'+data[index].history.userid+'</a>' +' assigned this ticket to ' +'<a>'+data[index].history.assignee+'</a>'; break;
                         case 2: status='<a>'+data[index].history.userid+'</a>' +' change this ticket to '+'<span style="color:#00a65a ">Inprocess</span>'; break;
-                        case 3: status='<a>'+data[index].history.userid+'</a>' +' change this ticket to '+'<span style="color:#500a6f ">Reviewing</span>'; break;
-                        case 4: status='<a>'+data[index].history.userid+'</a>' +' change this ticket to '+'<span style="color:#01ff70 ">Solved</span>'; break;
+                        case 3: status='<a>'+data[index].history.userid+'</a>' +' change this ticket to '+'<span style="color:#500a6f ">Solved</span>'; break;
+                        case 4: status='<a>'+data[index].history.userid+'</a>' +' Close this ticket '; break;
+                        case 5: status='This ticket is expired '; break;
+                        case 6: status='<a>'+data[index].history.userid+'</a>' +' forward this ticket to ' +'<a>'+data[index].history.assignee+'</a>'; break;
+                        case 7: status='<a>'+data[index].history.userid+'</a>' +' reopen this ticket '; break;
+                        case 8: status='<a>'+data[index].history.userid+'</a>' +' create ticket for ' +'<a>'+data[index].history.assignee+'</a>'; break;
                     }
                     var note="";
                     if(data[index].history.note!==" "){
@@ -382,6 +387,7 @@ function assign(ticketid) {
             type:"POST",
             success:function (data) {
                 alert("assign ticket successful"+data.assignee);
+                $("#historycheckbox").prop("checked", false);
                 $('#assignModal').modal('toggle');
                 getticket(ticketid)
                 loadticketitem(ticketid)
@@ -407,6 +413,7 @@ function status(ticketid) {
             success:function (data) {
                 $('#statusModal').modal('toggle');
                 alert("change status successfull!");
+                $("#historycheckbox").prop("checked", false);
                 getticket(ticketid)
                 loadticketitem(ticketid)
             },
@@ -457,6 +464,7 @@ function updateticket(ticketid) {
             data: {"ticketid": ticketid,"ticketnote":ticketnote,"ticketpriority":ticketpriority},
             success: function (data) {
                 alert("update ticket successful!");
+                $("#historycheckbox").prop("checked", false);
                 $('#changeticketModal').modal('toggle');
                 getticket(ticketid)
                 loadticketitem(ticketid)
@@ -477,14 +485,14 @@ function getcurrentuser() {
             if(data.roleid==4){
                 $("#status").html(
                     '<option value="2" >Inprocess</option>'
-                    +'<option value="3" >Reviewing</option>'
+                    +'<option value="3" >Solved</option>'
                 )
                 window.staff=true;
             }else{
                 $("#status").html(
                     '<option value="2" >Inprocess</option>'
-                    +'<option value="3" >Reviewing</option>'
-                    +'<option value="4" >Solved</option>'
+                    +'<option value="3" >Solved</option>'
+                    +'<option value="4" >Close</option>'
                 )
                 window.staff=false;
             }
@@ -499,12 +507,13 @@ function showhistory() {
 
 function reopenticket(ticketid) {
     $.ajax({
-        url:"/changeticketstatus",
+        url:"/reopenticket",
         type:"POST",
-        data:{"ticketid":ticketid,"status":1,"statusnote":"This ticket need to rework"},
+        data:{"ticketid":ticketid},
         success:function () {
             alert("reopen ticket successfull");
             $('#ticketitem').html("");
+            $("#historycheckbox").prop("checked", false);
             getticket(ticketid)
             getticketduetime(ticketid)
             loadticketitem(ticketid)
@@ -516,39 +525,48 @@ function reopenticket(ticketid) {
 }
 
 function approve(ticketid) {
-    $.ajax({
-        url:"/changeticketstatus",
-        type:"POST",
-        data:{"ticketid":ticketid,"status":4,"statusnote":"This ticket is solved"},
-        success:function () {
-            alert("approve ticket successfull");
-            $('#ticketitem').html("");
-            getticket(ticketid)
-            getticketduetime(ticketid)
-            loadticketitem(ticketid)
-        },
-        error:function () {
-            alert("approve fail");
-        }
-    })
+    var con = confirm("are you sure?");
+    if(con){
+        $.ajax({
+            url:"/changeticketstatus",
+            type:"POST",
+            data:{"ticketid":ticketid,"status":4,"statusnote":"This ticket is solved"},
+            success:function () {
+
+                alert("approve ticket successfull");
+                $('#ticketitem').html("");
+                getticket(ticketid)
+                getticketduetime(ticketid)
+                loadticketitem(ticketid)
+            },
+            error:function () {
+                alert("approve fail");
+            }
+        })
+    }
+
 }
 
 function reject(ticketid) {
-    $.ajax({
-        url:"/changeticketstatus",
-        type:"POST",
-        data:{"ticketid":ticketid,"status":1,"statusnote":"This ticket is not done yet"},
-        success:function () {
-            alert("Reject ticket successfull");
-            $('#ticketitem').html("");
-            getticket(ticketid)
-            getticketduetime(ticketid)
-            loadticketitem(ticketid)
-        },
-        error:function () {
-            alert("approve fail");
-        }
-    })
+    var con = confirm("are you sure?");
+    if(con){
+        $.ajax({
+            url:"/changeticketstatus",
+            type:"POST",
+            data:{"ticketid":ticketid,"status":1,"statusnote":"This ticket is not done yet"},
+            success:function () {
+                alert("Reject ticket successfull");
+                $('#ticketitem').html("");
+                getticket(ticketid)
+                getticketduetime(ticketid)
+                loadticketitem(ticketid)
+            },
+            error:function () {
+                alert("approve fail");
+            }
+        })
+    }
+
 }
 
 function forwardticket(ticketid) {

@@ -1,8 +1,129 @@
+
 /**
  * Created by user on 11/13/2016.
  */
 var table = null;
 var staff;
+
+$(document).ready(function () {
+    table= $("#table").DataTable({
+        ajax: {
+            url:"/getallticket",
+            type: "GET"
+        },
+        sAjaxDataProp : "",
+        columns: [
+            {title: "ID", data:"id",visible:false},
+            {title: "Name",data:"name" },
+            {title: "Created By",data:"createbyuser"},
+            {title: "Assignee",data:"assigneeuser"},
+            {title: "Status",data:"currentstatus"},
+            {title: "Created Time",data:"createdtime"},
+            {title: "Priority", data:"currentpriority"},
+            {title: "Note", data:"note"},
+            {title:"Action",data:"name"},
+        ],
+
+        columnDefs:[
+            {
+                width:'20%',
+                targets: 7,
+                render: (data, type, row) => {
+                return '<h5 style="overflow: hidden; max-height: 100px;word-wrap: break-word">'+row.note+'</h5>'
+            },
+    },
+        {
+            width:'20%',
+            targets: 1,
+            render: (data, type, row) => {
+            return '<h5 style="overflow: hidden; max-height: 100px"><a href="followticket?ticketid='+row.id+'">'+row.name+'</a></h5>'
+        },
+},
+    {
+        width:'15%',
+            targets: 5,
+        render: (data, type, row) => {
+        if(type=== 'display'){
+            return moment(row.createdtime).format("D/MM/YYYY h:mm:ss");
+        }
+        return moment(data).format("D/MM/YYYY");
+    },
+    },
+    {
+        width:'15%',
+            targets: 8,
+        render: (data, type, row) => {
+        if(type==='display'){
+            if(staff){
+                return '<div class="btn-group btn-xs">'
+                    +'<button class="btn btn-success btn-xs" onclick="forwardticket('+row.id+')"><i class="fa fa-ticket"></i></button>'
+                    +'<button class="btn btn-primary btn-xs" onclick="status('+row.id+')"><i class="fa fa-navicon"></i></button>'
+                    +'<button class="btn btn-danger btn-xs" onclick="updateticket('+row.id+')"><i class="fa fa-pencil"></i></button>'
+                    +'</div>'
+            }else{
+                return '<div class="btn-group btn-xs">'
+                    +'<button class="btn btn-success btn-xs" onclick="assign('+row.id+')"><i class="fa fa-ticket"></i></button>'
+                    +'<button class="btn btn-primary btn-xs" onclick="status('+row.id+')"><i class="fa fa-navicon"></i></button>'
+                    +'<button class="btn btn-danger btn-xs" onclick="updateticket('+row.id+')"><i class="fa fa-pencil"></i></button>'
+                    +'</div>'
+            }
+
+        }
+        return data;
+    },
+    },
+    {
+        width:'10%',
+            targets: 4,
+        render: (data, type, row) => {
+        if(type=== 'display'){
+            var statuscolor;
+            switch (row.statusid){
+                case 1: statuscolor='color:#ffff00'; break;
+                case 2: statuscolor='color:#00a65a'; break;
+                case 3: statuscolor='color:#500a6f'; break;
+                case 4: statuscolor='color:#01ff70'; break;
+            }
+            return '<p><i class="fa fa-circle" aria-hidden="true" style="'+statuscolor+'"></i>'+'  ' +row.currentstatus+'</p>'
+        }
+        return data;
+    },
+    },
+    ],
+    initComplete:  function() {
+        this.api().columns().every( function (i) {
+            if(i < 7 && i != 1 ){
+                var column = this;
+                var select = $('<select><option value=""></option></select>')
+                    .appendTo( $(column.footer()).empty() )
+                    .on( 'change', function () {
+                        var val = $.fn.dataTable.util.escapeRegex(
+                            $(this).val()
+                        );
+
+                        column
+                            .search( val ? '^'+val+'$' : '', true, false )
+                            .draw();
+                    } );
+                var array = [];
+                column.data().unique().sort().each( function ( d, j ) {
+                    if(typeof d ==='number'){
+                        if(jQuery.inArray(moment(d).format("D/MM/YYYY"), array) < 0) {
+                            select.append( '<option value="'+moment(d).format("D/MM/YYYY")+'">'+moment(d).format("D/MM/YYYY")+'</option>' );
+                        }
+                        array.push(moment(d).format("D/MM/YYYY"));
+                    }else{
+                        select.append( '<option value="'+d+'">'+d+'</option>' )
+                    }
+
+                } );
+            }
+        } );
+    }
+});
+});
+
+
 getcurrentuser();
 //assign ticket
 function assign(ticketid) {
@@ -57,9 +178,10 @@ function status(ticketid) {
             data:{"ticketid":ticketid,"status":status,"statusnote":statusnote},
             type:"POST",
             success:function (data) {
+                table.ajax.reload();
                 $('#statusModal').modal('toggle');
                 alert("change status successfull!");
-                table.ajax.reload();
+
             },
             error:function () {
                 alert("fail to change ticket status");
@@ -107,10 +229,10 @@ function updateticket(ticketid) {
             type: "POST",
             data: {"ticketid": ticketid,"ticketnote":ticketnote,"ticketpriority":ticketpriority},
             success: function (data) {
-                console.log(data.ticketid);
+                table.ajax.reload();
                 alert("update ticket successful!");
                 $('#changeticketModal').modal('toggle');
-                table.ajax.reload();
+
             },
             error: function () {
                 alert("Fail ne");
@@ -322,9 +444,10 @@ function newticket() {
             type:"POST",
             data:{"ticketname":ticketname,"priority":priority,"note":note,"assignee":assignee},
             success:function (data) {
+                table.ajax.reload();
                 alert("create ticket: "+data.id+" successful!");
                 $('#createticketModal').modal('toggle');
-                table.ajax.reload();
+
             },
             error:function () {
                 alert("fail to create ticket");
@@ -346,7 +469,7 @@ function getcurrentuser() {
                     +'</button>'
                 $("#status").html(
                     '<option value="2" >Inprocess</option>'
-                    +'<option value="3" >Reviewing</option>'
+                    +'<option value="3" >Solved</option>'
                 )
                 window.staff=true;
             }else{
@@ -355,8 +478,8 @@ function getcurrentuser() {
                     +'</button>'
                 $("#status").html(
                     '<option value="2" >Inprocess</option>'
-                    +'<option value="3" >Reviewing</option>'
-                    +'<option value="4" >Solved</option>'
+                    +'<option value="3" >Solved</option>'
+                    +'<option value="4" >Close</option>'
                 )
                 window.staff=false;
             }
@@ -380,22 +503,29 @@ function ticketrequest(userid) {
         type:"GET",
         data:{"assignee":userid},
         success:function (data) {
-            for(var i=0;i<data.length;i++){
-                $("#request").append(
-                    ' <tr>'
-                    +'<td>'+data[i].ticketname+'</td>'
-                    +'<td>'+data[i].assignername+'</td>'
-                    +'<td>'+moment(data[i].requestat).format("D/MM/YYYY, hh:mm:ss")+'</td>'
-                    +'<td><h4 style="max-width: 300px;word-wrap: break-word">'+data[i].note+'</h4></td>'
-                    +'<td>'
-                    +'<div class="btn-group">'
-                    +'<button class="btn btn-success btn-md" onclick="acceptrequest('+data[i].id+')"><i class="fa fa-check"></i></button>'
-                    +'<button class="btn btn-danger btn-md" onclick="denirequest('+data[i].id+')"><i class="fa fa-remove"></i></button>'
-                    +'</div>'
-                    +'</td>'
-                    +'</tr>'
+            if(data.length!=0){
+                for(var i=0;i<data.length;i++){
+                    $("#request").append(
+                        ' <tr>'
+                        +'<td><h5>'+data[i].ticketname+'</h5></td>'
+                        +'<td><h5>'+data[i].assignername+'</h5></td>'
+                        +'<td><h5>'+moment(data[i].requestat).format("D/MM/YYYY, hh:mm:ss")+'</h5></td>'
+                        +'<td><h5 style="max-width: 300px;word-wrap: break-word">'+data[i].note+'</h5></td>'
+                        +'<td>'
+                        +'<div class="btn-group">'
+                        +'<button class="btn btn-success btn-md" onclick="acceptrequest('+data[i].id+')"><i class="fa fa-check"></i></button>'
+                        +'<button class="btn btn-danger btn-md" onclick="denirequest('+data[i].id+')"><i class="fa fa-remove"></i></button>'
+                        +'</div>'
+                        +'</td>'
+                        +'</tr>'
+                    )
+                }
+            }else {
+                $("#requestmodal").html(
+                    '<h3 style="text-align: center;color: lightgreen">You have 0 ticket request</h3>'
                 )
             }
+
         },
         error:function () {
             alert("fail to load ticket request")
@@ -409,6 +539,8 @@ function acceptrequest(requestid) {
         type:"POST",
         data:{"requestid":requestid},
         success:function () {
+            table.ajax.reload();
+            $("#ticketrequestModal").modal('toggle');
             alert("accept request successfully");
         },
         error:function(){
@@ -423,6 +555,7 @@ function denirequest(requestid) {
         type:"POST",
         data:{"requestid":requestid},
         success:function () {
+            $("#ticketrequestModal").modal('toggle');
             alert("accept request successfully");
         },
         error:function(){
@@ -502,3 +635,4 @@ function createstaffticket(){
         })
     })
 }
+

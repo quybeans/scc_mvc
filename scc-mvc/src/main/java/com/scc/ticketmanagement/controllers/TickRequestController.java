@@ -71,12 +71,11 @@ public class TickRequestController {
 
         TicketstatuschangeEntity status = new TicketstatuschangeEntity();
         status.setTicketid(ticket.getId());
-        status.setStatusid(Constant.STATUS_ASSIGN);
+        status.setStatusid(Constant.STATUS_FORWARD);
         status.setChangeby(request.getAssigner());
         status.setAssignee(request.getAssignee());
         status.setCreatedat(new Timestamp(new Date().getTime()));
         status.setNote(request.getNote());
-        status.setPriorityid(0);
         ticketStatusChangeRepository.save(status);
         ticketRepository.save(ticket);
         ticketRequestRepository.delete(request);
