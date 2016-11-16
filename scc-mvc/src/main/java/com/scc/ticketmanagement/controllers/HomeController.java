@@ -125,15 +125,11 @@ public class HomeController {
         }
 
         session.setAttribute("username", userEntity.getUsername());
-
-
         ProfileEntity profileEntity = profileService.getProfileByID(userEntity.getUserid());
-
         session.setAttribute("fullname", profileEntity.getFirstname() + " " + profileEntity.getLastname());
 
-
         if (userEntity.getRoleid() == Constant.ROLE_ADMIN) {
-            return "redirect:admin";
+            return "redirect:/admin/index";
         } else if (userEntity.getRoleid() == Constant.ROLE_STAFF) {
             return "CustomerCare";
         } else if (userEntity.getRoleid() == Constant.ROLE_SUPERVISOR) {
@@ -154,7 +150,7 @@ public class HomeController {
             if (user != null) {
                 switch (user.getRoleid()) {
                     case Constant.ROLE_ADMIN:
-                        return "redirect:admin";
+                        return "redirect:/admin/index";
                     case Constant.ROLE_STAFF:
                         return "redirect:customercare";
                     case Constant.ROLE_SUPERVISOR:
@@ -174,17 +170,6 @@ public class HomeController {
         return "login";
     }
 
-
-    @RequestMapping("/engagement")
-    public String home() {
-        return "engagement";
-    }
-
-    @RequestMapping("/customercare")
-    public String customercare() {
-        return "customercare";
-    }
-
     @RequestMapping("/getcurrentticket")
     public String getcurrentticket(@RequestParam("ticketid") Integer ticketid) {
 
@@ -192,14 +177,14 @@ public class HomeController {
     }
 
     @RequestMapping("/followticket")
-    public String followticket(@RequestParam("ticketid") Integer ticketid, Model model,HttpServletRequest request) {
+    public String followticket(@RequestParam("ticketid") Integer ticketid, Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         String loginUser = (String) session.getAttribute("username");
         UserEntity user = userRepository.findUserByUsername(loginUser);
 
         TicketEntity ticket = ticketRepository.findOne(ticketid);
-        if(ticket.getStatusid()==Constant.STATUS_ASSIGN){
-            if(ticket.getAssignee()==user.getUserid()){
+        if (ticket.getStatusid() == Constant.STATUS_ASSIGN) {
+            if (ticket.getAssignee() == user.getUserid()) {
                 ticket.setStatusid(Constant.STATUS_INPROCESS);
                 ticket.setNote("Start follow ticket");
                 ticketRepository.save(ticket);

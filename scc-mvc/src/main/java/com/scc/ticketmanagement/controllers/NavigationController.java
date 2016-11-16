@@ -19,5 +19,15 @@ public class NavigationController {
         return "brand/index";
     }
 
+    @RequestMapping("/customercare")
+    public String customercare() {
+        return "customercare";
+    }
+
+    @RequestMapping("/admin/index")
+    public String navAdminPage() {
+        return "admin/index";
+    }
+
 
 }
