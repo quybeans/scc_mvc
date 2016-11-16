@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+
 /**
  * Created by QuyBean on 11/10/2016.
  */
@@ -22,36 +25,49 @@ public class UserRESTController {
     private ProfileService profileService;
 
     @RequestMapping("user/getUserDetail")
-    public UserEntity getUser(int userId)
-    {
-        UserEntity userEntity =userService.getUserByID(userId);
+    public UserEntity getUser(int userId) {
+        UserEntity userEntity = userService.getUserByID(userId);
         userEntity.setPassword("");
         return userEntity;
     }
 
     @RequestMapping("user/profile")
-    public ProfileEntity getUserProfile(int userId)
-    {
-        UserEntity userEntity =userService.getUserByID(userId);
-        return  profileService.getProfileByID(userId);
+    public ProfileEntity getUserProfile(int userId) {
+        UserEntity userEntity = userService.getUserByID(userId);
+        return profileService.getProfileByID(userId);
     }
 
     @RequestMapping("user/switchActive")
-    public void switchActiveUser(int userId)
-    {
+    public void switchActiveUser(int userId) {
         UserEntity userEntity = userService.getUserByID(userId);
-        if(userEntity.isActive())
-        userService.changeActive(userEntity.getUserid(),false);
-        else userService.changeActive(userEntity.getUserid(),true);
+        if (userEntity.isActive())
+            userService.changeActive(userEntity.getUserid(), false);
+        else userService.changeActive(userEntity.getUserid(), true);
     }
 
     @RequestMapping("user/checkExistedUsername")
-    public boolean checkUsername(String username)
-    {
-       if (userService.getUserByUsername(username)!=null) return true;
-        else  return false;
+    public boolean checkUsername(String username) {
+        if (userService.getUserByUsername(username) != null) return true;
+        else return false;
     }
 
+    @RequestMapping("admin/getAllUser")
+    public UserWrapper checkUsername(HttpServletRequest request) {
+        try {
+            if (request.getSession(false).getAttribute("username").equals("admin")) {
+                UserWrapper userWrapper = new UserWrapper();
+                userWrapper.data = userService.findAll();
+               return userWrapper;
+            }
+        }catch (NullPointerException e)
+        {
+            return null;
+        }
+        return null;
+    }
 
-
+    public class UserWrapper
+    {
+        public List<UserEntity> data;
+    }
 }

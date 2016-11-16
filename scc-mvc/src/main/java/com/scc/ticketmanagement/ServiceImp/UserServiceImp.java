@@ -5,6 +5,7 @@ import com.scc.ticketmanagement.Entities.UserEntity;
 import com.scc.ticketmanagement.repositories.TicketRepository;
 import com.scc.ticketmanagement.repositories.UserRepository;
 import com.scc.ticketmanagement.services.UserService;
+import com.scc.ticketmanagement.utilities.CommonUtility;
 import com.scc.ticketmanagement.utilities.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,7 @@ public class UserServiceImp implements UserService {
 
     @Override
     public UserEntity findUser(String username, String password) {
-        return userRepository.findUserByUsernameAndPassword(username, password);
+        return userRepository.findUserByUsernameAndPassword(username, CommonUtility.hashStringToMD5(password));
     }
 
     @Override
@@ -67,7 +68,7 @@ public class UserServiceImp implements UserService {
             userEntity.setUsername(username);
         }
         if (!password.equals("")){
-            userEntity.setPassword(password);
+            userEntity.setPassword(CommonUtility.hashStringToMD5(password));
         }
         if (roleid!=0){
             userEntity.setRoleid(roleid);

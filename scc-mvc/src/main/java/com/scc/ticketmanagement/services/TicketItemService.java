@@ -10,6 +10,9 @@ public interface TicketItemService {
 
     TicketitemEntity getTicketItemByCommentId(String cmtId);
 
+
     TicketitemEntity addMessageItemToTicket(Integer ticketid, Integer messageItemId,Integer createdby);
+
+    TicketitemEntity addCommentItemToTicket(Integer ticketId, String commentId, int createdBy);
 
 }

@@ -7,6 +7,7 @@ import com.scc.ticketmanagement.repositories.ProfileRepository;
 import com.scc.ticketmanagement.repositories.UserRepository;
 import com.scc.ticketmanagement.services.ProfileService;
 import com.scc.ticketmanagement.services.UserService;
+import com.scc.ticketmanagement.utilities.CommonUtility;
 import com.scc.ticketmanagement.utilities.Constant;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -152,8 +153,7 @@ public class UserController {
     }
 
     @RequestMapping("/user/createUserwProfile")
-    @ResponseBody
-    public void createUserWithProfile(HttpServletRequest request,
+    public String createUserWithProfile(HttpServletRequest request,
                                       @RequestParam("txtUsername") String username
             , @RequestParam("txtPassword") String password
             , @RequestParam("ddlRole") String role
@@ -172,7 +172,7 @@ public class UserController {
         UserEntity newUser = new UserEntity();
         if (username.length() > 0 && password.length() > 0 && role.length() > 0) {
             newUser.setUsername(username);
-            newUser.setPassword(password);
+            newUser.setPassword(CommonUtility.hashStringToMD5(password));
             if (role.equals("sup")) newUser.setRoleid(Constant.ROLE_SUPERVISOR);
             else if (role.equals("staff")) newUser.setRoleid(Constant.ROLE_STAFF);
             newUser.setActive(true);
@@ -201,7 +201,8 @@ public class UserController {
 
             profileRepository.save(profileEntity);
 
-            System.out.println(newUser.getUserid());
+
         }
+        return "redirect:/brand/user";
     }
 }
