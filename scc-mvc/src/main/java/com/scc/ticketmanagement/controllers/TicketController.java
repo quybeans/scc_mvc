@@ -521,6 +521,8 @@ public class TicketController {
             status.setChangeby(user.getUserid());
             status.setAssignee(user.getUserid());
             status.setCreatedat(new Timestamp(new Date().getTime()));
+            status.setNote(ticketnote);
+            status.setPriorityid(0);
 
             ticketStatusChangeRepository.save(status);
             return ticket;

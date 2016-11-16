@@ -12,6 +12,7 @@ var graphImage = "https://graph.facebook.com/";
 var postListCurPage = 1;
 var commentListCurPage = 1;
 var currentPost;
+var currentCmt;
 //Sort setting 1: by question, 2: by neg, 3: by time
 var sortCommentBy = 1;
 startup();
@@ -40,6 +41,20 @@ function replyToComment(objId) {
     });
 }
 
+//Add comment to item
+function addCommentToTicket(ticketId, cmtId) {
+    $.ajax({
+        url: '/comment/addToTicket',
+        type: "GET",
+        data: {ticketId: ticketId, cmtId: cmtId},
+        dataType: "json",
+        success: function (data) {
+            alert('Success add to ticket');
+        }
+    })
+}
+
+
 //Show all ticket existed
 
 function showTicket() {
@@ -56,9 +71,9 @@ function showTicket() {
 
 
                 $('#ticket-list').append(
-                    '<div class="ticket">'
+                    '<div class="ticket" onclick="addCommentToTicket('+data[index].id+','+currentCmt+')">'
                     + '<div class="title ' + statusColor + '">' + data[index].name + '</div>'
-                    + '<div>Status:&nbsp;'
+                    + '<div>Statxxxus:&nbsp;'
                     + '<span class="fa fa-circle"></span>&nbsp;'
                     + data[index].currentstatus
                     + '</div>'
@@ -410,7 +425,7 @@ function getCommentByPostIdwPage(postId, page) {
                     senIcon = questionicon;
                 var cmtId = "'" + postId + "_" + data[index].id + "'";
 
-                var btnTicket = '<button onclick="showTicket()" class="btn btn-default btn-xs inline" style="margin-left: 10px;margin-top: -10px;"><span class="fa fa-ticket" style="margin-right:10px"></span>Add to ticket</button>';
+                var btnTicket = '<button onclick="showTicket();currentCmt='+data[index].id+'" class="btn btn-default btn-xs inline" style="margin-left: 10px;margin-top: -10px;"><span class="fa fa-ticket" style="margin-right:10px"></span>Add to ticket</button>';
 
                 var isTicket = false;
                 $.ajax({
@@ -421,7 +436,7 @@ function getCommentByPostIdwPage(postId, page) {
                     async: false,
                     success: function (ticket) {
                         if (ticket != null) isTicket = true;
-                        btnTicket = '<button class="btn btn-default btn-xs inline" style="margin-left: 10px;margin-top: -10px; border: 1px solid lightgreen; background-color: transparent;color: lightgreen">'+ticket.name+'</button>';
+                        btnTicket = '<button class="btn btn-default btn-xs inline" style="margin-left: 10px;margin-top: -10px; border: 1px solid lightgreen; background-color: transparent;color: lightgreen">' + ticket.name + '</button>';
                     }
                 });
 
@@ -622,7 +637,7 @@ function createticket(comtID, postID) {
     })
 }
 
-    //assign ticket
+//assign ticket
 function assign(comID) {
     //Load list user de assign
     $.ajax({

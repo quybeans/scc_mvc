@@ -21,6 +21,7 @@ public class TicketRESTController {
     @Autowired
     private TicketService ticketService;
 
+
     @RequestMapping("comment/checkTicket")
     public TicketEntity checkCmtisTicketItem(String cmtID) {
 
@@ -36,5 +37,11 @@ public class TicketRESTController {
             return null;
         }
     }
+//
+//    @RequestMapping("comment/addToTicket")
+//    public Boolean checkCmtisTicketItem(int ticketId, String cmtId) {
+//        if (ticketItemService.addCommentItemToTicket(ticketId, cmtId) != null) return true;
+//        return false;
+//    }
 
 }

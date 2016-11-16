@@ -96,6 +96,7 @@ public class TicketItemController {
                     item.setMessage(message);
                     item.setEndmessage(messageitem.getMessageIdEnd());
                     item.setCreatedAt(ti.getCreatedAt());
+                    System.out.println("creared"+ti.getCreateBy());
                     ProfileEntity profile =profileRepository.findOne(ti.getCreateBy());
                     item.setAddedby(profile.getFirstname() + " " + profile.getLastname());
                     ContactEntity contact = contactRepository.findOne(message.getSenderid());

@@ -55,12 +55,15 @@ public class UserController {
         List<UserEntity> entity = userRepository.getAllUserInBrand(loginuser.getBrandid());
         List<User> userlist = new ArrayList<User>();
         for (UserEntity u : entity) {
-            ProfileEntity p = profileRepository.findOne(u.getUserid());
-            User user = new User();
-            user.setUserid(u.getUserid());
-            user.setFirstname(p.getFirstname());
-            user.setLastname(p.getLastname());
-            userlist.add(user);
+            if(u.isActive()){
+                ProfileEntity p = profileRepository.findOne(u.getUserid());
+                User user = new User();
+                user.setUserid(u.getUserid());
+                user.setFirstname(p.getFirstname());
+                user.setLastname(p.getLastname());
+                userlist.add(user);
+            }
+
         }
         return userlist;
     }

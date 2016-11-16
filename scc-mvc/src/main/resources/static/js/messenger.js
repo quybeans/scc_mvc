@@ -221,7 +221,7 @@ function firstLoadConversationBySenderId() {
                         '<span class="pull-right">' +
                         changeIconSentimentScore(score) +
                         '</br>' +
-                        '<span style="margin-right: 12px" id="' + a + '" onclick="showTicket(this)" class="fa fa-plus-square-o fa-2x pull-right"></span>' +
+                        '<span style="margin-right: 12px;opacity: 0.3" id="' + a + '" onclick="showTicket(this)" class="fa fa-plus-square-o fa-2x pull-right"></span>' +
                         '</span>' +
                         '</li>'
                     )
@@ -243,7 +243,7 @@ function firstLoadConversationBySenderId() {
                         '</div>' +
                         changeIconSentimentScore(score) +
                         '</br>' +
-                        '<span style="margin-left: 7px"  id="' + a + '" onclick="showTicket(this)" class="fa fa-plus-square-o fa-2x pull-left"></span>' +
+                        '<span style="margin-left: 7px;opacity: 0.3"  id="' + a + '" onclick="showTicket(this)" class="fa fa-plus-square-o fa-2x pull-left"></span>' +
                         '</li>'
                     );
                 }
@@ -290,7 +290,7 @@ function reloadConversationBySenderId() {
                         '<span class="pull-right">' +
                         changeIconSentimentScore(score) +
                         '</br>' +
-                        '<span style="margin-right: 12px" id="' + a + '" onclick="showTicket(this)" class="fa fa-plus-square-o fa-2x pull-right"></span>' +
+                        '<span style="margin-right: 12px; opacity: 0.3" id="' + a + '" onclick="showTicket(this)" class="fa fa-plus-square-o fa-2x pull-right"></span>' +
                         '</span>' +
                         '</li>'
                     )
@@ -312,7 +312,7 @@ function reloadConversationBySenderId() {
                         '</div>' +
                         changeIconSentimentScore(score) +
                         '</br>' +
-                        '<span style="margin-left: 7px"  id="' + a + '" onclick="showTicket(this)" class="fa fa-plus-square-o fa-2x pull-left"></span>' +
+                        '<span style="margin-left: 7px; opacity: 0.3"  id="' + a + '" onclick="showTicket(this)" class="fa fa-plus-square-o fa-2x pull-left"></span>' +
                         '</li>'
                     );
                 }
@@ -386,7 +386,7 @@ function getConversationBySenderIdWithPage() {
                             '<span class="pull-right">' +
                             changeIconSentimentScore(score) +
                             '</br>' +
-                            '<span style="margin-right: 12px" id="' + a + '" onclick="showTicket(this)" class="fa fa-plus-square-o fa-2x pull-right"></span>' +
+                            '<span style="margin-right: 12px;opacity: 0.3" id="' + a + '" onclick="showTicket(this)" class="fa fa-plus-square-o fa-2x pull-right"></span>' +
                             '</span>' +
                             '</li>'
                         )
@@ -408,7 +408,7 @@ function getConversationBySenderIdWithPage() {
                             '</div>' +
                             changeIconSentimentScore(score) +
                             '</br>' +
-                            '<span style="margin-left: 7px"  id="' + a + '" onclick="showTicket(this)" class="fa fa-plus-square-o fa-2x pull-left"></span>' +
+                            '<span style="margin-left: 7px;opacity: 0.3"  id="' + a + '" onclick="showTicket(this)" class="fa fa-plus-square-o fa-2x pull-left"></span>' +
                             '</li>'
                         );
                     }

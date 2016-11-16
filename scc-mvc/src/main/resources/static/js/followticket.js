@@ -223,7 +223,7 @@ function loadticketitem(ticketid) {
                         + '</small>'
                         + '</p>'
                         + '<p style="margin-left: 85px;margin-top: -10px ">'
-                        +'<a href="messenger/ticket?senderid='+data[index].message.senderid+'&receiverid='+data[index].message.receiverid+'&messageid='+data[index].message.id+'&messageEnd='+data[index].endmessage+'">'+data[index].message.content+'</a>'
+                        +'<a target="_blank" href="messenger/ticket?senderid='+data[index].message.senderid+'&receiverid='+data[index].message.receiverid+'&messageid='+data[index].message.id+'&messageEnd='+data[index].endmessage+'">'+data[index].message.content+'</a>'
                         + '</p>'
                         + '<small class="' + senIcon + '" style="font-size: 20px;margin-top: -50px"></small>'
                         +'</div>'
@@ -239,8 +239,8 @@ function loadticketitem(ticketid) {
                         case 4: status='<a>'+data[index].history.userid+'</a>' +' change this ticket to '+'<span style="color:#01ff70 ">Solved</span>'; break;
                     }
                     var note="";
-                    if(data[index].history.note!==null){
-                        note = " with note: " +data[index].history.note;
+                    if(data[index].history.note!==" "){
+                        note = ' with note: ' +'<i>'+data[index].history.note+'</i>';
                     }
                     if(data[index].history.priority!==null){
                         status='<a>'+data[index].history.userid+'</a>'+' change this ticket priority to ' +data[index].history.priority;
@@ -537,7 +537,7 @@ function reject(ticketid) {
     $.ajax({
         url:"/changeticketstatus",
         type:"POST",
-        data:{"ticketid":ticketid,"status":1,"statusnote":"Rework pls"},
+        data:{"ticketid":ticketid,"status":1,"statusnote":"This ticket is not done yet"},
         success:function () {
             alert("Reject ticket successfull");
             $('#ticketitem').html("");
