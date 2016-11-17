@@ -1,6 +1,8 @@
 package com.scc.ticketmanagement.controllers.restcontroller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.scc.ticketmanagement.Entities.BrandEntity;
+import com.scc.ticketmanagement.Entities.PageEntity;
 import com.scc.ticketmanagement.Entities.SettingsSpiderEntity;
 import com.scc.ticketmanagement.repositories.BrandRepository;
 import com.scc.ticketmanagement.repositories.PageRepository;
@@ -59,6 +61,18 @@ public class AdminRESTController {
             return null;
         }
         return null;
+    }
+
+    @RequestMapping("admin/getAllBrand")
+    public List<BrandEntity> allBrand()
+    {
+        return brandRepository.findAll();
+    }
+
+    @RequestMapping("admin/getAllPage")
+    public List<PageEntity> allPage()
+    {
+        return pageRepository.findAll();
     }
 
     @RequestMapping(value = "settings/save", method = RequestMethod.POST)
