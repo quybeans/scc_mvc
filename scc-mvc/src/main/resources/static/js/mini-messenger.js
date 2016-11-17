@@ -4,6 +4,8 @@
 
 var currentPageId = '0';
 var currentPageAvt = '';
+var pageInterval ;
+var conversationInterval;
 $(document).ready(function () {
     getAllActivePageUnreadMessage();
 });
@@ -47,11 +49,53 @@ function getAllActivePageUnreadMessage() {
             });
             $('#mess-page-list').removeClass('collapse');
             $('#chat-box').addClass('collapse');
+            clearInterval(pageInterval);
+            pageInterval = setInterval(getAllActivePageUnreadMessageInterval, 2000);
+        }
+    });
+}
+
+function getAllActivePageUnreadMessageInterval() {
+    currentPageId = '0';
+    currentPageAvt = '';
+    $.ajax({
+        url: '/messenger/getAllActivePageUnreadMessage',
+        type: "GET",
+        dataType: "json",
+        success: function (data) {
+            $('#page-conversations').empty();
+            $.each(data, function (i) {
+                if (data[i].unreadMessage != 0) {
+                    $('#page-conversations').append(
+                        '<div class="page" onclick="loadConversationsByPage(' + data[i].pageid + ')">' +
+                        '<img src="https://graph.facebook.com/' + data[i].pageid + '/picture">' +
+                        '<div class="name">' + data[i].name + '</div>' +
+                        '<div class="unread-count">' +
+                        '<div class="circle">' + data[i].unreadMessage + '</div>' +
+                        '<b>unread message</b>' +
+                        '</div>' +
+                        ' </div>'
+                    )
+                } else {
+                    $('#page-conversations').append(
+                        '<div class="page" onclick="loadConversationsByPage(' + data[i].pageid + ')">' +
+                        '<img src="https://graph.facebook.com/' + data[i].pageid + '/picture">' +
+                        '<div class="name">' + data[i].name + '</div>' +
+                        '<div class="unread-count">' +
+                        // '<div class="circle">' + data[i].unreadMessage + '</div>' +
+                        'All messages are read' +
+                        '</div>' +
+                        ' </div>'
+                    )
+                }
+
+            });
         }
     });
 }
 
 function loadConversationsByPage(pageId) {
+    clearInterval(pageInterval);
     currentPageId = pageId;
     currentPageAvt = 'https://graph.facebook.com/' + pageId + '/picture';
     $('#back-button').removeClass('hidden');
