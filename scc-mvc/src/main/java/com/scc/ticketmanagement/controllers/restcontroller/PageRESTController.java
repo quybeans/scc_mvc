@@ -55,4 +55,11 @@ public class PageRESTController {
         }
         return 0;
     }
+
+    @RequestMapping("page/allpage")
+    public List<PageEntity> countCommentOnPage(String pageId)
+    {
+
+        return null;
+    }
 }
