@@ -1,6 +1,7 @@
 package com.scc.ticketmanagement.repositories;
 
 import com.scc.ticketmanagement.Entities.CommentEntity;
+import com.scc.ticketmanagement.Entities.PostEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -34,5 +35,8 @@ public interface CommentRepository extends JpaRepository<CommentEntity,String> {
 
     @Query("SELECT COUNT(*) FROM CommentEntity u WHERE u.postId= :postId")
     int countReplyByPostId(@Param("postId") String postId);
+
+    @Query("SELECT COUNT(*) FROM CommentEntity c where c.postId in (SELECT p.id FROM PostEntity p where p.createdBy = :pageId)")
+    long countAllCommentFromPage(@Param("pageId") String pageId);
 
 }

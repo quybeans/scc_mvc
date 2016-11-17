@@ -31,7 +31,7 @@ public interface PostRepository extends JpaRepository<PostEntity, String> {
     int findNegCountByPostId(@Param("postId") String postId);
 
     @Query("SELECT COUNT(c) from PostEntity c where c.createdBy=:pageid")
-    int countPostByPageId(@Param("pageid") String pageid);
+    long countPostByPageId(@Param("pageid") String pageid);
 
     @Query("SELECT p from PostEntity p where p.content like %:content%")
     List<PostEntity> findPostByContent(@Param("content")String content);
