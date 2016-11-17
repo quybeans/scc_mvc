@@ -555,4 +555,29 @@ public class TicketController {
         return ticketRepository.save(ticket);
     }
 
+    @RequestMapping("/sortbytime")
+    public List<ExtendTicket> sortbytime(HttpServletRequest request){
+
+       List<ExtendTicket> ticketlist= getallticket(request);
+        Collections.sort(ticketlist, new Comparator<ExtendTicket>() {
+            @Override
+            public int compare(ExtendTicket o1, ExtendTicket o2) {
+                return o2.getCreatedtime().compareTo(o1.getCreatedtime());
+            }
+        });
+        return ticketlist;
+    }
+
+    @RequestMapping("/sortbystatus")
+    public List<ExtendTicket> sortbystatus(HttpServletRequest request){
+
+        List<ExtendTicket> ticketlist= getallticket(request);
+        Collections.sort(ticketlist, new Comparator<ExtendTicket>() {
+            @Override
+            public int compare(ExtendTicket o1, ExtendTicket o2) {
+                return o1.getStatusid().compareTo(o2.getStatusid());
+            }
+        });
+        return ticketlist;
+    }
 }
