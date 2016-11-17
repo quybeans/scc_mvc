@@ -28,7 +28,7 @@ public class DuetimeChecker {
     @Autowired
     private TicketRepository ticketRepository;
 
-    @Scheduled(fixedDelay = 30000)
+    @Scheduled(fixedDelay = 300000)//5 phut
     public void duetimecheck(){
         System.out.println("Checker run at:"+new Date());
         List<TicketEntity> ticketlist= ticketRepository.findAll();
@@ -38,7 +38,6 @@ public class DuetimeChecker {
                 Long duetime = ticket.getDuetime().getTime() + (priority.getDuration()*60*1000);
                 Long currenttime = new Date().getTime();
                 if(duetime-currenttime<0) {
-                    System.out.println(ticket.getName()+ " da qua han");
                     List<PriorityEntity> nextpriority = priorityReposioty.getNextPriority(priority.getDuration());
                     if(nextpriority.size()>0){
                         System.out.println(ticket.getName()+" bi nang priority");
@@ -55,7 +54,6 @@ public class DuetimeChecker {
                         change.setChangeby(0);
                         ticketStatusChangeRepository.save(change);
                     }else{
-                        System.out.println(ticket.getName()+" bi doi thang expired");
                         ticket.setStatusid(Constant.STATUS_EXPIRED);
                         ticket.setNote("This ticket is expired");
                         ticketRepository.save(ticket);
