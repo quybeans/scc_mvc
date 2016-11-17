@@ -5,8 +5,11 @@ import com.scc.ticketmanagement.Entities.*;
 import com.scc.ticketmanagement.exentities.*;
 import com.scc.ticketmanagement.repositories.*;
 import com.scc.ticketmanagement.utilities.Constant;
+import com.scc.ticketmanagement.utilities.FilterCriteria;
+import com.scc.ticketmanagement.utilities.TicketSpecification;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
@@ -136,48 +139,7 @@ public class TicketController {
         }
 
 
-        List<ExtendTicket> listextendticket = new ArrayList<ExtendTicket>();
-        //Tao mot extendticket list de show len bang
-        for (TicketEntity tk: listticket) {
-            ExtendTicket extendticket = new ExtendTicket();
-
-            extendticket.setAssignee(tk.getAssignee());
-            extendticket.setName(tk.getName());
-            extendticket.setActive(tk.getActive());
-            extendticket.setCreatedby(tk.getCreatedby());
-            extendticket.setId(tk.getId());
-            extendticket.setStatusid(tk.getStatusid());
-            extendticket.setCreatedtime(tk.getCreatedtime());
-            extendticket.setNote(tk.getNote());
-            //Get UserEntity cua ng tao ra ticket
-            UserEntity createTicketUser =userRepository.findOne(extendticket.getCreatedby());
-            //Get ProfileEntity cua ng tao ra ticket
-            ProfileEntity createTicketProfile = profileRepository.findOne(createTicketUser.getUserid());
-            //Get Fullname cua ng ta ticket de set vao extendTicket
-            extendticket.setCreatebyuser(createTicketProfile.getFirstname() + " " +createTicketProfile.getLastname());
-
-            //Get UserEntity cua ng duoc assign  ticket
-            UserEntity assigneeUser =userRepository.findOne(extendticket.getAssignee());
-            //Get ProfileEntity cua ng duoc assign  ticket
-            ProfileEntity assigneeTicketProfile = profileRepository.findOne(assigneeUser.getUserid());
-            //Get Fullname cua ng ta ticket de set vao extendTicket
-            extendticket.setAssigneeuser(assigneeTicketProfile.getFirstname() + " " + assigneeTicketProfile.getLastname());
-
-            switch (extendticket.getStatusid()){
-                case Constant.STATUS_ASSIGN: extendticket.setCurrentstatus("Assigned"); break;
-                case Constant.STATUS_INPROCESS: extendticket.setCurrentstatus("Inprocess"); break;
-                case Constant.STATUS_CLOSE: extendticket.setCurrentstatus("Close"); break;
-                case Constant.STATUS_SOLVED: extendticket.setCurrentstatus("Solved"); break;
-                case Constant.STATUS_EXPIRED: extendticket.setCurrentstatus("Expired"); break;
-            }
-
-            //lay ten priority cua ticket
-            PriorityEntity priority = priorityReposioty.findOne(tk.getPriority());
-            extendticket.setCurrentpriority(priority.getName());
-            listextendticket.add(extendticket);
-
-        }
-        return listextendticket;
+       return getExtendTicketList(listticket);
     }
 
 
@@ -579,5 +541,79 @@ public class TicketController {
             }
         });
         return ticketlist;
+    }
+
+    @RequestMapping("/filterticket")
+    public List<ExtendTicket> filterticket(@RequestParam("status") Integer status,
+                             @RequestParam("priority") Integer priority,
+                             @RequestParam("createdby") Integer createdby,
+                             @RequestParam("assignee") Integer assignee){
+        System.out.println("status: " +status+" priority: " + priority+" created by:" +createdby+" assignee: "+assignee );
+        TicketSpecification spec = new TicketSpecification(new FilterCriteria("statusid","%",status));
+        TicketSpecification spec1 = new TicketSpecification(new FilterCriteria("priority","%",priority));
+        TicketSpecification spec2 = new TicketSpecification(new FilterCriteria("createdby","%",createdby));
+        TicketSpecification spec3 = new TicketSpecification(new FilterCriteria("assignee","%",assignee));
+        if(status!=null) {
+            spec = new TicketSpecification(new FilterCriteria("statusid", ":", status));
+        }
+        if(priority!=null) {
+            spec1 = new TicketSpecification(new FilterCriteria("priority", ":", priority));
+        }
+        if(createdby!=null){
+            spec2 = new TicketSpecification(new FilterCriteria("createdby",":",createdby));
+        }
+        if(assignee!=null){
+            spec3 = new TicketSpecification(new FilterCriteria("assignee",":",assignee));
+        }
+
+
+        List<TicketEntity> listticket = ticketRepository.findAll(Specifications.where(spec).and(spec1).and(spec2).and(spec3));
+
+
+        return getExtendTicketList(listticket);
+    }
+
+    private List<ExtendTicket> getExtendTicketList(List<TicketEntity> ticketlist){
+        List<ExtendTicket> listextendticket = new ArrayList<ExtendTicket>();
+        for (TicketEntity tk: ticketlist) {
+            ExtendTicket extendticket = new ExtendTicket();
+
+            extendticket.setAssignee(tk.getAssignee());
+            extendticket.setName(tk.getName());
+            extendticket.setActive(tk.getActive());
+            extendticket.setCreatedby(tk.getCreatedby());
+            extendticket.setId(tk.getId());
+            extendticket.setStatusid(tk.getStatusid());
+            extendticket.setCreatedtime(tk.getCreatedtime());
+            extendticket.setNote(tk.getNote());
+            //Get UserEntity cua ng tao ra ticket
+            UserEntity createTicketUser =userRepository.findOne(extendticket.getCreatedby());
+            //Get ProfileEntity cua ng tao ra ticket
+            ProfileEntity createTicketProfile = profileRepository.findOne(createTicketUser.getUserid());
+            //Get Fullname cua ng ta ticket de set vao extendTicket
+            extendticket.setCreatebyuser(createTicketProfile.getFirstname() + " " +createTicketProfile.getLastname());
+
+            //Get UserEntity cua ng duoc assign  ticket
+            UserEntity assigneeUser =userRepository.findOne(extendticket.getAssignee());
+            //Get ProfileEntity cua ng duoc assign  ticket
+            ProfileEntity assigneeTicketProfile = profileRepository.findOne(assigneeUser.getUserid());
+            //Get Fullname cua ng ta ticket de set vao extendTicket
+            extendticket.setAssigneeuser(assigneeTicketProfile.getFirstname() + " " + assigneeTicketProfile.getLastname());
+
+            switch (extendticket.getStatusid()){
+                case Constant.STATUS_ASSIGN: extendticket.setCurrentstatus("Assigned"); break;
+                case Constant.STATUS_INPROCESS: extendticket.setCurrentstatus("Inprocess"); break;
+                case Constant.STATUS_CLOSE: extendticket.setCurrentstatus("Close"); break;
+                case Constant.STATUS_SOLVED: extendticket.setCurrentstatus("Solved"); break;
+                case Constant.STATUS_EXPIRED: extendticket.setCurrentstatus("Expired"); break;
+            }
+
+            //lay ten priority cua ticket
+            PriorityEntity priority = priorityReposioty.findOne(tk.getPriority());
+            extendticket.setCurrentpriority(priority.getName());
+            listextendticket.add(extendticket);
+
+        }
+        return listextendticket;
     }
 }
