@@ -67,7 +67,7 @@ function loadConversationsByPage(pageId) {
             $.each(data, function (i) {
                 if (data[i].read) {
                     $('#chat-box').append(
-                        '<div class="conversation" style="position: relative" id="conversation' + i + '" onclick="register_popup(\'' + data[i].senderId + '\', \'' +  data[i].senderName + '\')">'
+                        '<div class="conversation" style="position: relative" id="conversation' + i + '" onclick="register_popup(\'' + data[i].senderId + '\', \'' + data[i].senderName + '\')">'
                         + '<div>' +
                         '<img class="senderAvt" src="' + data[i].senderPicture + '"><div class="conversation-sender-name pull-left"><a>' + data[i].senderName + '</a></div>' +
                         '<div class="sentTime text-muted pull-right"> ' + $.format.date(data[i].sentTime, "HH:mm") + '</div>' +
@@ -77,7 +77,7 @@ function loadConversationsByPage(pageId) {
                     )
                 } else {
                     $('#chat-box').append(
-                        '<div class="conversation" style="position: relative" id="conversation' + i + '" onclick="register_popup(\'' + data[i].senderId + '\', \'' +  data[i].senderName + '\')">'
+                        '<div class="conversation" style="position: relative" id="conversation' + i + '" onclick="register_popup(\'' + data[i].senderId + '\', \'' + data[i].senderName + '\')">'
                         + '<div>' +
                         '<img class="senderAvt" src="' + data[i].senderPicture + '"><div class="conversation-sender-name pull-left"><a><b>' + data[i].senderName + '</b></a></div>' +
                         '<div class="sentTime text-muted pull-right"><b> ' + $.format.date(data[i].sentTime, "HH:mm") + '</b></div>' +
@@ -170,7 +170,6 @@ function register_popup(id, name) {
     element = element + '<div style="clear: both"></div></div><div class="popup-messages"></div></div>';
 
 
-
     $.ajax({
         url: '/messenger/getConversationBySenderIdWithPage',
         type: "POST",
@@ -181,7 +180,7 @@ function register_popup(id, name) {
         },
         dataType: "json",
         success: function (data) {
-            var chatMessage = '';
+            var chatMessage = '<input type="hidden" id="chatOfPage' + currentPageId + '" value="' + currentPageId + '"/>';
             var dataReversed = data.reverse();
             var a;
             $.each(dataReversed, function (i) {
@@ -192,7 +191,7 @@ function register_popup(id, name) {
                         '<li class="right clearfix"><span class="chat-img pull-right">' +
                         ' <img src="' + currentPageAvt + '" alt="User Avatar"/>' +
                         ' </span>' +
-                        '<div class="chat-body clearfix pull-right">' +
+                        '<div style="margin-right: 5px" class="chat-body clearfix pull-right">' +
                         ' <div class="header">' +
                         '<small class=" text-muted ">' +
                         $.format.date(dataReversed[i].createdAt, "HH:mm") +
@@ -210,7 +209,7 @@ function register_popup(id, name) {
                     chatMessage = chatMessage.concat(
                         '<li class="left clearfix"><span class="chat-img pull-left"> ' +
                         '<img src="currentCustomerAvt"/> </span>' +
-                        '<div class="chat-body clearfix pull-left">' +
+                        '<div style="margin-left: 5px" class="chat-body clearfix pull-left">' +
                         '<div class="header">' +
                         '<strong class="primary-font">' + name + '</strong>' +
                         '<small class="pull-right text-muted">' +
@@ -235,7 +234,9 @@ function register_popup(id, name) {
                 '<ul class="chat">' +
                 chatMessage +
                 '</ul>' +
-                '</div></div>';
+                '</div>' +
+                '<div class="input-group"><input id="replyText' +id+ '" type="text" placeholder="Type a message..." class="form form-control"><span onclick="sendMessage(\'' +id + '\', \'' + currentPageId + '\')" class="input-group-addon"><i class="fa fa-reply"></i></span></div>' +
+                '</div>';
             $('body').append(element3);
         }
     });
@@ -312,7 +313,7 @@ function firstLoadConversationBySenderId(senderId, currentCustomerName) {
                     )
                     ;
                 } else {
-                    result =   result.concat(
+                    result = result.concat(
                         '<li class="left clearfix"><span class="chat-img pull-left"> ' +
                         '<img src="currentCustomerAvt"/> </span>' +
                         '<div class="chat-body clearfix pull-left">' +
@@ -339,4 +340,25 @@ function firstLoadConversationBySenderId(senderId, currentCustomerName) {
     });
 
     return result;
+}
+
+function sendMessage(customerId, pageId) {
+    var content = $('#replyText' + customerId).val();
+    var pageId = $('#chatOfPage' + pageId + '').val();
+    $.ajax({
+        url: '/messenger/sendMessageToCustomer',
+        type: "POST",
+        data: {
+            pageId: pageId,
+            receiverId: customerId,
+            content: content
+        },
+        dataType: "json",
+        success: function (data) {
+        },
+        error: function (data) {
+        }
+    });
+    $('#replyText' + customerId).val("");
+
 }
