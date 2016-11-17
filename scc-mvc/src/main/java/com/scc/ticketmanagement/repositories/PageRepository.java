@@ -14,6 +14,9 @@ public interface PageRepository extends JpaRepository<PageEntity, String> {
     @Query("select p from PageEntity p where p.pageid = :pageid")
     PageEntity getPageById(@Param("pageid") String pageid);
 
+    @Query("select COUNT(p) from PageEntity p")
+    long countPage();
+
     @Query("select p from PageEntity p where p.pageid IN " +
             "(SELECT m.pageid FROM BrandpageEntity m, BrandEntity b WHERE m.brandid = b.id AND b.id = :brandId)" +
             "AND p.accesstoken !='' ")

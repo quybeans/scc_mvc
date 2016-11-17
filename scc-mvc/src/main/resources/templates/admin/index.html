@@ -16,6 +16,23 @@
     <script>
         getAllSettings();
         getAllUser();
+        doOverview();
+        getAllBrand();
+
+        function doOverview() {
+            $.ajax({
+                url: "/admin/overview",
+                dataType: "json",
+                success: function (data) {
+                    $("#page-count").html(data[0]);
+                    $("#brand-count").html(data[1]);
+                    $("#user-count").html(data[2]);
+                },
+            });
+
+        }
+
+
         function getAllSettings() {
             $.ajax({
                 url: "/admin/getSettings",
@@ -55,6 +72,51 @@
             });
         }
 
+        function getAllBrand() {
+            $.ajax({
+                url: "/admin/getAllBrand",
+                dataType: "json",
+                success: function (data) {
+                    $.each(data, function (index) {
+                        $("#brand-body").append(
+                                '<div style="height: 90px;" class="brand-item col-lg-6">' +
+                                '<img style="margin-top:5px; height: 80px; width: 80px; border: 1px solid lightgray" src="'+data[index].image+'">' +
+                                '<div style="font-size: 20px; color: cornflowerblue; font-weight: bold; margin-top: -70px; margin-left: 90px">'+data[index].name+'</div>' +
+                                '<div style="font-size: 15px; color: black; margin-left: 90px">'+data[index].sologan+'</div>' +
+                                '</div>'
+                        );
+                    });
+                    $("#brand-body").append(
+                            '<div style="height: 90px;" class="brand-item col-lg-6">' +
+                            '<img src="https://www.insidehighered.com/sites/default/server_files/media/plus.png" style="margin-top:5px; height: 80px; width: 80px; border: 1px solid lightgray">' +
+                            '<div style="font-size: 20px; color: black; margin-top: -70px; margin-left: 90px">New brand</div>' +
+                            '</div>'
+                    );
+                },
+            });
+        }
+        getAllPage();
+        function getAllPage() {
+            $.ajax({
+                url: "/admin/getAllPage",
+                dataType: "json",
+                success: function (data) {
+                    $.each(data, function (index) {
+                        $("#page-list").append(
+                                '<div class="col-lg-12" style="border-bottom: 1px solid #ebebeb"><div style="height: 70px;" class="brand-item col-lg-6">' +
+                                '<img style="margin-top:10px; height: 50px; width: 50px; border: 1px solid lightgray" src="http://graph.facebook.com/'+data[index].pageid+'/picture">' +
+                                '<div style="font-size: 15px; color: cornflowerblue; font-weight: bold; margin-top: -50px; margin-left: 60px">'+data[index].name+'</div>' +
+                                '<div style="font-size: 13px; color: black; margin-left: 60px">'+data[index].category+'</div>' +
+                                '</div>'+
+                                '<div style="height: 70px;" class="brand-item col-lg-6">' +
+                                '<div style="margin-top: 10px"><span class="fa fa-comment" style="color: lightgray"></span><span>106</span></div>'+
+                                '</div></div>'
+                        );
+                    });
+                },
+            });
+        }
+
         function saveSettings() {
             $('#save-icon').attr("class", "fa fa-spin fa-circle-o-notch")
             $.ajax({
@@ -81,7 +143,11 @@
 
     </script>
     <style>
-
+        .brandlist .brand-item:hover
+        {
+             background-color: lightblue;
+            cursor: pointer;
+        }
         .active {
             color: #00c200;
             margin-right: 10px;
@@ -188,7 +254,7 @@
                 <div class="col-lg-4">
                     <div class="small-box bg-blue">
                         <div class="inner">
-                            <h3>6<span style="font-size: 20px;margin-left: 10px">pages</span></h3>
+                            <h3><span id="page-count">6</span><span style="font-size: 20px;margin-left: 10px">pages</span></h3>
                             <p>Facebook</p>
                         </div>
                         <div class="icon">
@@ -200,7 +266,7 @@
                 <div class="col-lg-4">
                     <div class="small-box bg-yellow">
                         <div class="inner">
-                            <h3>6<span style="font-size: 20px;margin-left: 10px">brands</span></h3>
+                            <h3><span id="brand-count">6</span><span style="font-size: 20px;margin-left: 10px">brands</span></h3>
                             <p>Registered</p>
                         </div>
                         <div class="icon">
@@ -212,7 +278,7 @@
                 <div class="col-lg-4">
                     <div class="small-box bg-teal">
                         <div class="inner">
-                            <h3>102<span style="font-size: 20px;margin-left: 10px">users</span></h3>
+                            <h3><span id="user-count">6</span><span style="font-size: 20px;margin-left: 10px">users</span></h3>
                             <p>Account</p>
                         </div>
                         <div class="icon">
@@ -237,7 +303,7 @@
             <div class="box-body">
                 <table class="table table-striped" id="user-table">
 
-                    <tr style="background-color: lightblue; color: black">
+                    <tr>
                         <th style="width: 20px">UserID</th>
                         <th>Username</th>
                         <th>Password</th>
@@ -259,7 +325,7 @@
             <div class="box-header with-border" style="font-size: 20px; font-weight: bold">
                 <span class="fa fa-shopping-cart" tyle="margin-right: 10px"></span>Brands registered
             </div>
-            <div class="box-body">
+            <div class="box-body brandlist" id="brand-body">
 
             </div>
             <div class="box-footer with-border" style="font-size: 20px; font-weight: bold;">
@@ -272,7 +338,7 @@
             <div class="box-header with-border" style="font-size: 20px; font-weight: bold">
                 <span class="fa fa-facebook-square" tyle="margin-right: 10px"></span>Facebook pages managing
             </div>
-            <div class="box-body">
+            <div class="box-body" id="page-list">
 
             </div>
             <div class="box-footer with-border" style="font-size: 20px; font-weight: bold;">
