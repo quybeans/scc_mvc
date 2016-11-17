@@ -279,9 +279,13 @@ function register_popup(id, name) {
                 chatMessage +
                 '</ul>' +
                 '</div>' +
-                '<div class="input-group"><input id="replyText' +id+ '" type="text" placeholder="Type a message..." class="form form-control"><span onclick="sendMessage(\'' +id + '\', \'' + currentPageId + '\')" class="input-group-addon"><i class="fa fa-reply"></i></span></div>' +
+                '<div class="input-group"><input id="replyText' +id+ '" type="text" placeholder="Type a message..." class="form form-control"><span id="btn-reply'+id+'" onclick="sendMessage(\'' +id + '\', \'' + currentPageId + '\')" class="input-group-addon"><i class="fa fa-reply"></i></span></div>' +
                 '</div>';
             $('body').append(element3);
+            $('#replyText' + id).keypress(function (e) {
+                if (e.keyCode == 13)
+                    $('#btn-reply'+ id).click();
+            });
         }
     });
 
@@ -387,6 +391,7 @@ function firstLoadConversationBySenderId(senderId, currentCustomerName) {
 }
 
 function sendMessage(customerId, pageId) {
+
     var content = $('#replyText' + customerId).val();
     var pageId = $('#chatOfPage' + pageId + '').val();
     $.ajax({
