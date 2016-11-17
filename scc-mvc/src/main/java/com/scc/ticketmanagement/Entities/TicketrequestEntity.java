@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 /**
- * Created by user on 11/10/2016.
+ * Created by user on 11/17/2016.
  */
 @Entity
 @Table(name = "ticketrequest", schema = "scc", catalog = "")
@@ -17,7 +17,6 @@ public class TicketrequestEntity {
     private String note;
 
     @Id
-    @GeneratedValue
     @Column(name = "id")
     public int getId() {
         return id;

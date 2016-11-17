@@ -14,4 +14,7 @@ public interface TicketRequestRepository extends JpaRepository<TicketrequestEnti
 
     @Query("select t from TicketrequestEntity t where t.assignee=:assignee")
     public List<TicketrequestEntity> getTicketRequestOfUser(@Param("assignee") Integer assignee);
+
+    @Query("SELECT count(t) from TicketrequestEntity t where t.assignee=:assignee")
+    Integer getUserRequestCount(@Param("assignee") Integer assignee);
 }
