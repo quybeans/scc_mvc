@@ -16,6 +16,22 @@
     <script>
         getAllSettings();
         getAllUser();
+        doOverview();
+
+        function doOverview() {
+            $.ajax({
+                url: "/admin/overview",
+                dataType: "json",
+                success: function (data) {
+                   $("#page-count").html(data[0]);
+                    $("#brand-count").html(data[1]);
+                    $("#user-count").html(data[2]);
+                },
+            });
+
+        }
+
+
         function getAllSettings() {
             $.ajax({
                 url: "/admin/getSettings",
@@ -188,7 +204,7 @@
                 <div class="col-lg-4">
                     <div class="small-box bg-blue">
                         <div class="inner">
-                            <h3>6<span style="font-size: 20px;margin-left: 10px">pages</span></h3>
+                            <h3><span id="page-count">6</span><span style="font-size: 20px;margin-left: 10px">pages</span></h3>
                             <p>Facebook</p>
                         </div>
                         <div class="icon">
@@ -200,7 +216,7 @@
                 <div class="col-lg-4">
                     <div class="small-box bg-yellow">
                         <div class="inner">
-                            <h3>6<span style="font-size: 20px;margin-left: 10px">brands</span></h3>
+                            <h3><span id="brand-count">6</span><span style="font-size: 20px;margin-left: 10px">brands</span></h3>
                             <p>Registered</p>
                         </div>
                         <div class="icon">
@@ -212,7 +228,7 @@
                 <div class="col-lg-4">
                     <div class="small-box bg-teal">
                         <div class="inner">
-                            <h3>102<span style="font-size: 20px;margin-left: 10px">users</span></h3>
+                            <h3><span id="user-count">6</span><span style="font-size: 20px;margin-left: 10px">users</span></h3>
                             <p>Account</p>
                         </div>
                         <div class="icon">

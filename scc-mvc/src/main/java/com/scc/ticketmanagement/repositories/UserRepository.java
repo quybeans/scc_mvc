@@ -58,4 +58,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
     @Query("SELECT u FROM UserEntity u WHERE u.roleid = :roleid and u.brandid=:brandid")
     UserEntity getBrandManager(@Param("roleid") Integer roleid,
                                @Param("brandid") Integer brandid);
+
+    @Query("SELECT Count(u) FROM UserEntity u")
+    long countUser();
 }
