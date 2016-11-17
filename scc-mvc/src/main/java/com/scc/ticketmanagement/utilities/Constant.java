@@ -32,4 +32,7 @@ public class Constant {
     public static final int FEMALE = 2;
 
     public static final String NEVER_EXPIRED_USER_TOKEN = "EAAE22kam7LsBAMYrrkQ4D1GzKZB9qzILLyOasfYKr3JZCGZCK2Kut5EWn0mr49eUpUmp0ZA7FU4XuAjHSW9SPgNRikWpobwFOanyazrx2Gkv2jE9JxIBX4lqR2cDb2IYaDNNYV94U5ad5wdL4iFnId39n4aCwyUZD";
+
+    public static final String CRAWLER_TOKEN_SETTINGS = "crawler_token";
+    public static final String CRAWLER_TIME_LIMIT = "crawler_time_limit";
 }

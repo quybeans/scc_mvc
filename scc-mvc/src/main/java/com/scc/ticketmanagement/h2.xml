@@ -21,6 +21,7 @@
       <mapping class="com.scc.ticketmanagement.Entities.TicketitemEntity"/>
       <mapping class="com.scc.ticketmanagement.Entities.TicketstatuschangeEntity"/>
       <mapping class="com.scc.ticketmanagement.Entities.ProfileEntity"/>
+      <mapping class="com.scc.ticketmanagement.Entities.SettingsSpiderEntity"/>
       <!-- DB schema will be updated if needed -->
     <!-- <property name="hbm2ddl.auto">update</property> -->
   </session-factory>

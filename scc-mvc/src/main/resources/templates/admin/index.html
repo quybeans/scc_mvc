@@ -3,19 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <title>SCC Admin</title>
-</head>
-<body class="hold-transition skin-green" style="background-color: whitesmoke">
-<header class="main-header">
     <link rel="stylesheet" href="/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/font-awesome-4.6.3/css/font-awesome.min.css"/>
     <link rel="stylesheet" href="/css/AdminLTE.min.css"/>
     <link rel="stylesheet" href="/css/_all-skins.min.css"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="http://momentjs.com/downloads/moment.min.js"></script>
     <script src="/js/jquery-ui.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/app.min.js"></script>
     <script th:src="@{/js/jquery_dateFormat.js}"></script>
+    <script>
+        getAllSettings();
+        getAllUser();
+        function getAllSettings() {
+            $.ajax({
+                url: "/admin/getSettings",
+                dataType: "json",
+                success: function (data) {
+                    $.each(data, function (index) {
+                        if (data[index].name == "crawler_token") $("#crawler_token").attr("value", data[index].value);
+                        else if (data[index].name == "crawler_time_limit") {
+                            $("#deadTime").attr("value", data[index].value);
+                            deadDateCal(parseInt(data[index].value));
+                        }
+                    })
+                },
+            });
+        }
 
+        function getAllUser() {
+            $.ajax({
+                url: "/user/getAllUser",
+                dataType: "json",
+                success: function (data) {
+                    $.each(data, function (index) {
+                        var active = '<span class="fa fa-circle active"></span>Active</span>';
+                        if (!data[index].active) active = '<span class="fa fa-circle inactive"></span>Inactive</span>';
+
+                        $("#user-table").append('<tr>' +
+                                '<td>' + data[index].userid + '</td>' +
+                                '<td>' + data[index].username + '</td>' +
+                                '<td>' + data[index].password + '</td>' +
+                                '<td>' + data[index].brandIdName + '</td>' +
+                                '<td>' + data[index].createdByName + '</td>' +
+                                '<td>' + active + '</td>' +
+                                '<td><button class="btn btn-pirmary">Deactive</button></td>' +
+                                '</tr>');
+                    })
+                },
+            });
+        }
+
+        function saveSettings() {
+            $('#save-icon').attr("class", "fa fa-spin fa-circle-o-notch")
+            $.ajax({
+                type: "POST",
+                url: "/settings/save",
+                dataType: "json",
+                data: {txtToken: $('#crawler_token').val(), txtDeadTime: $('#deadTime').val()},
+                success: function (data) {
+                    if (data) {
+                        $('#save-icon').attr("class", "fa fa-check")
+                    }
+                },
+            });
+        }
+
+        function onEdit() {
+            $('#save-icon').attr("class", "fa fa-floppy-o");
+        }
+
+        function deadDateCal(month) {
+            var threeMonthsAgo = moment().subtract(month, 'months');
+            $('#deadDate').html("" + threeMonthsAgo.format('LL'));
+        }
+
+    </script>
+    <style>
+
+        .active {
+            color: #00c200;
+            margin-right: 10px;
+        }
+
+        .inactive {
+            color: gray;
+            margin-right: 10px;
+        }
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            /* display: none; <- Crashes Chrome on hover */
+            -webkit-appearance: none;
+            margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+        }</style>
+</head>
+<body class="hold-transition skin-green" style="background-color: whitesmoke">
+<header class="main-header">
     <!-- Logo -->
     <a href="#" class="logo">
 
@@ -41,7 +126,6 @@
 </header>
 
 <section class="content-header">
-
 </section>
 <section class="content">
     <div class="col-md-6">
@@ -49,26 +133,33 @@
             <div class="box-header with-border" style="font-size: 20px; font-weight: bold"><span
                     class="glyphicon glyphicon-wrench"
                     style="margin-right: 10px"></span>Spider
-                Configure
+                configure
             </div>
             <div class="box-body" style="height: 168px">
                 <div class="form-horizontal">
                     <div class="form-group">
                         <label class="control-label col-sm-4" style="margin-right: 10px"> Crawling data within:</label>
                         <div class="col-sm-7">
-                            <input class="input-sm form-control" type="text" value="3"
-                                   style="width: 40px;text-align: center; display: inline; margin-right: 10px">months
+                            <input onfocusout="deadDateCal($('#deadTime').val())" onKeyUp="onEdit()"
+                                   class="input-sm form-control"
+                                   type="number" value="3"
+                                   style="width: 40px;text-align: center; display: inline; margin-right: 10px; font-size: 13px"
+                                   id="deadTime">months
+                            <div class="inline" style="margin-left: 40px"><label>Dead date:</label> <span id="deadDate"
+                                                                                                          style="margin-left: 15px">16/19/2016</span>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-sm-4" style="margin-right: 10px" for="token"> Crawler
+                        <label class="control-label col-sm-4" style="margin-right: 10px" for="crawler_token"> Crawler
                             token:</label>
                         <div class=" col-sm-7">
-                            <input class="form-control input-sm" type="text" value="3" id="token">
+                            <input onKeyUp="onEdit()" class="form-control input-sm" type="text" value="3"
+                                   id="crawler_token">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-sm-4" style="margin-right: 10px" for="token"> Limit pages crawl
+                        <label class="control-label col-sm-4" style="margin-right: 10px"> Limit pages crawl
                             at a time: </label>
                         <div class=" col-sm-7">
                             <input class="input-sm form-control" type="text" value="3"
@@ -79,8 +170,9 @@
                 </div>
             </div>
             <div class="box-footer with-border" style="font-size: 20px; font-weight: bold;">
-                <button class="btn btn-success pull-right"><span class="fa fa-floppy-o"
-                                                                 style="margin-right: 10px"></span>Save
+                <button class="btn btn-success pull-right" onclick="saveSettings()"><span id="save-icon"
+                                                                                          class="fa fa-floppy-o"
+                                                                                          style="margin-right: 10px"></span>Save
                 </button>
             </div>
         </div>
@@ -132,26 +224,64 @@
             </div>
             <div class="box-footer with-border" style="font-size: 20px; font-weight: bold;">
                 <button class="btn btn-primary pull-right"><span class="fa fa-plus"
-                                                                 style="margin-right: 10px"></span>New Brand
+                                                                 style="margin-right: 10px"></span>New brand
                 </button>
             </div>
         </div>
     </div>
     <div class="col-md-12">
-        <div class="box box-success">
+        <div class="box box-info">
             <div class="box-header with-border" style="font-size: 20px; font-weight: bold">
-                <span class="fa fa-users" tyle="margin-right: 10px"></span>User in the System
+                <span class="fa fa-users" tyle="margin-right: 10px"></span>Users in the system
+            </div>
+            <div class="box-body">
+                <table class="table table-striped" id="user-table">
+
+                    <tr style="background-color: lightblue; color: black">
+                        <th style="width: 20px">UserID</th>
+                        <th>Username</th>
+                        <th>Password</th>
+                        <th>Brand</th>
+                        <th>CreatedBy</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+
+                </table>
+            </div>
+            <div class="box-footer with-border" style="font-size: 20px; font-weight: bold;">
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="box box-warning">
+            <div class="box-header with-border" style="font-size: 20px; font-weight: bold">
+                <span class="fa fa-shopping-cart" tyle="margin-right: 10px"></span>Brands registered
             </div>
             <div class="box-body">
 
             </div>
             <div class="box-footer with-border" style="font-size: 20px; font-weight: bold;">
-                <button class="btn btn-success pull-right"><span class="fa fa-floppy-o"
-                                                                 style="margin-right: 10px"></span>Save
-                </button>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="box box-primary">
+            <div class="box-header with-border" style="font-size: 20px; font-weight: bold">
+                <span class="fa fa-facebook-square" tyle="margin-right: 10px"></span>Facebook pages managing
+            </div>
+            <div class="box-body">
+
+            </div>
+            <div class="box-footer with-border" style="font-size: 20px; font-weight: bold;">
+
             </div>
         </div>
     </div>
 </section>
+
+
 </body>
 </html>

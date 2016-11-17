@@ -2,6 +2,8 @@ package com.scc.ticketmanagement.controllers.restcontroller;
 
 import com.scc.ticketmanagement.Entities.ProfileEntity;
 import com.scc.ticketmanagement.Entities.UserEntity;
+import com.scc.ticketmanagement.exentities.ExUser;
+import com.scc.ticketmanagement.repositories.BrandRepository;
 import com.scc.ticketmanagement.services.ProfileService;
 import com.scc.ticketmanagement.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,6 +23,9 @@ public class UserRESTController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private BrandRepository brandRepository;
 
     @Autowired
     private ProfileService profileService;
@@ -51,23 +57,35 @@ public class UserRESTController {
         else return false;
     }
 
-    @RequestMapping("admin/getAllUser")
-    public UserWrapper checkUsername(HttpServletRequest request) {
+    @RequestMapping("user/getAllUser")
+    public  List<ExUser> checkUsername(HttpServletRequest request) {
         try {
             if (request.getSession(false).getAttribute("username").equals("admin")) {
-                UserWrapper userWrapper = new UserWrapper();
-                userWrapper.data = userService.findAll();
-               return userWrapper;
+                List<UserEntity> listold = userService.findAll();
+                List<ExUser> listnew = new ArrayList<>();
+                for(UserEntity user: listold)
+                {
+                    ExUser newU = new ExUser();
+                    newU.setBrandid(user.getBrandid());
+                    newU.setPassword(user.getPassword());
+                    newU.setCreatedby(user.getCreatedby());
+                    newU.setCreatedByName(userService.getUserByID(user.getCreatedby()).getUsername());
+                    newU.setBrandid(user.getBrandid());
+                    newU.setBrandIdName(brandRepository.findOne(user.getBrandid()).getName());
+                    newU.setActive(user.isActive());
+                    newU.setUsername(user.getUsername());
+                    newU.setPassword(user.getPassword());
+                    newU.setRoleid(user.getRoleid());
+                    newU.setUserid(user.getUserid());
+
+                    listnew.add(newU);
+                }
+                return listnew;
             }
-        }catch (NullPointerException e)
-        {
+        } catch (NullPointerException e) {
             return null;
         }
         return null;
     }
 
-    public class UserWrapper
-    {
-        public List<UserEntity> data;
-    }
 }
