@@ -96,7 +96,7 @@ public class TicketController {
             ticketRepository.save(ticket);
 
             TicketstatuschangeEntity change = new TicketstatuschangeEntity();
-            change.setNote("This ticket is expired,System change priority to "+priority.get(0).getName());
+            change.setNote("This ticket is expired");
             change.setPriorityid(priority.get(0).getId());
             change.setTicketid(ticketid);
             change.setCreatedat(new Timestamp(new Date().getTime()));
@@ -116,7 +116,7 @@ public class TicketController {
             changes.setChangeby(0);
             changes.setCreatedat(new Timestamp(new Date().getTime()));
             ticketStatusChangeRepository.save(changes);
-            return "This ticket is expired, System return to assigner";
+            return "This ticket is expired";
         }
 
     }
