@@ -96,7 +96,7 @@ function getticket(ticketid) {
                 case 1: statuscolor='color:#ffff00'; statusname="Assigned"; break;
                 case 2: statuscolor='color:#00a65a'; statusname="Inprocess"; break;
                 case 3: statuscolor='color:#500a6f'; statusname="Solved"; break;
-                case 4: statuscolor='color:#01ff70'; statusname="Close"; break;
+                case 4: statuscolor='color:gray'; statusname="Close"; break;
                 case 5: statuscolor='color:#000000'; statusname="Expired"; break;
             }
             window.currentstatus=data.statusid;
@@ -106,7 +106,7 @@ function getticket(ticketid) {
                 +statusname
             );
             $("#ticketname").html(data.name);
-            $("#createdat").html('<i  class="fa fa-minus" ></i><b style="margin-left: 5px">Created At: </b>'+createat);
+            $("#createdat").html('<i  class="fa fa-minus" ></i><b style="margin-left: 5px;">Created At: </b>'+createat);
             $("#ticketnotedetail").html('<i  class="fa fa-minus" ></i><b style="margin-left: 5px">Note: </b>'+data.note);
             $("#ticketprioritydetail").html('<i  class="fa fa-minus" ></i><b style="margin-left: 5px">Priority: </b>'+data.currentpriority);
             $("#getassigner").html('<h4><i  class="fa fa-chevron-right" onclick="getassignerinfo('+data.createdby+')"></i><b style="margin-left: 5px">Assigner:</b> '+data.createbyuser+'</h4>');

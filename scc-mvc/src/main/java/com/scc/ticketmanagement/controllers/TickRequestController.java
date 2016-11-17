@@ -1,9 +1,6 @@
 package com.scc.ticketmanagement.controllers;
 
-import com.scc.ticketmanagement.Entities.ProfileEntity;
-import com.scc.ticketmanagement.Entities.TicketEntity;
-import com.scc.ticketmanagement.Entities.TicketrequestEntity;
-import com.scc.ticketmanagement.Entities.TicketstatuschangeEntity;
+import com.scc.ticketmanagement.Entities.*;
 import com.scc.ticketmanagement.exentities.ExtendTicketRequest;
 import com.scc.ticketmanagement.repositories.*;
 import com.scc.ticketmanagement.utilities.Constant;
@@ -12,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -81,9 +80,18 @@ public class TickRequestController {
         ticketRequestRepository.delete(request);
     }
 
-    @RequestMapping("denirequest")
+    @RequestMapping("/denirequest")
     public void denirequest(@RequestParam("requestid") Integer requestid){
         TicketrequestEntity request = ticketRequestRepository.findOne(requestid);
         ticketRequestRepository.delete(request);
+    }
+
+    @RequestMapping("/getticketrequestcount")
+    public int getticketrequestcount(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String loginUser = (String) session.getAttribute("username");
+        UserEntity loginuser = userRepository.findUserByUsername(loginUser);
+
+        return ticketRequestRepository.getUserRequestCount(loginuser.getUserid());
     }
 }

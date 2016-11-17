@@ -11,6 +11,7 @@ $(document).ready(function () {
             url:"/getallticket",
             type: "GET"
         },
+        order: [[ 5, "desc" ]],
         sAjaxDataProp : "",
         columns: [
             {title: "ID", data:"id",visible:false},
@@ -55,16 +56,30 @@ $(document).ready(function () {
         render: (data, type, row) => {
         if(type==='display'){
             if(staff){
-                return '<div class="btn-group btn-xs">'
-                    +'<button class="btn btn-success btn-xs" onclick="forwardticket('+row.id+')"><i class="fa fa-ticket"></i></button>'
-                    +'<button class="btn btn-primary btn-xs" onclick="status('+row.id+')"><i class="fa fa-navicon"></i></button>'
-                    +'<button class="btn btn-danger btn-xs" onclick="updateticket('+row.id+')"><i class="fa fa-pencil"></i></button>'
+                return '<div class="dropdown">'
+                        +'<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><i class="fa fa-cog"></i>'
+                        +'<span class="caret"></span></button> '
+                        +'<div class="dropdown-menu" style="width: 10px">'
+                        +'<li><a onclick="forwardticket('+row.id+')">Forward</a></li>'
+                        +'<li><a onclick="forwardticket('+row.id+')">Change Status</a></li>'
+                        +'<li><a onclick="forwardticket('+row.id+')">Change Priority</a></li>'
+                        +'</div>'
+                    // +'<button class="btn btn-success btn-xs" onclick="forwardticket('+row.id+')"><i class="fa fa-ticket"></i></button>'
+                    // +'<button class="btn btn-primary btn-xs" onclick="status('+row.id+')"><i class="fa fa-navicon"></i></button>'
+                    // +'<button class="btn btn-danger btn-xs" onclick="updateticket('+row.id+')"><i class="fa fa-pencil"></i></button>'
                     +'</div>'
             }else{
-                return '<div class="btn-group btn-xs">'
-                    +'<button class="btn btn-success btn-xs" onclick="assign('+row.id+')"><i class="fa fa-ticket"></i></button>'
-                    +'<button class="btn btn-primary btn-xs" onclick="status('+row.id+')"><i class="fa fa-navicon"></i></button>'
-                    +'<button class="btn btn-danger btn-xs" onclick="updateticket('+row.id+')"><i class="fa fa-pencil"></i></button>'
+                return '<div class="dropdown">'
+                    +'<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><i class="fa fa-cog"></i>'
+                    +'<span class="caret"></span></button> '
+                    +'<div class="dropdown-menu" style="width: 10px">'
+                    +'<li><a onclick="assign('+row.id+')">Assign</a></li>'
+                    +'<li><a onclick="status('+row.id+')">Change Status</a></li>'
+                    +'<li><a onclick="updateticket('+row.id+')">Change Priority</a></li>'
+                    +'</div>'
+                    // +'<button class="btn btn-success btn-xs" onclick="assign('+row.id+')"><i class="fa fa-ticket"></i></button>'
+                    // +'<button class="btn btn-primary btn-xs" onclick="status('+row.id+')"><i class="fa fa-navicon"></i></button>'
+                    // +'<button class="btn btn-danger btn-xs" onclick="updateticket('+row.id+')"><i class="fa fa-pencil"></i></button>'
                     +'</div>'
             }
 
@@ -125,6 +140,7 @@ $(document).ready(function () {
 
 
 getcurrentuser();
+getticketrequestcount();
 //assign ticket
 function assign(ticketid) {
     //Load list user de assign
@@ -464,8 +480,8 @@ function getcurrentuser() {
         success:function (data) {
             var btn;
             if(data.roleid==4){
-                btn= '<button class="btn btn-success btn-md " type="button" onclick="createstaffticket()">'
-                    +'<i class="fa fa-plus" aria-hidden="true"></i> <strong>New Ticket</strong>'
+                btn= '<button class="btn btn-success btn-md " type="button" onclick="createstaffticket()" style="margin-left: 3px">'
+                    +'<i class="fa fa-plus" aria-hidden="true" ></i> <strong>New Ticket</strong>'
                     +'</button>'
                 $("#status").html(
                     '<option value="2" >Inprocess</option>'
@@ -473,8 +489,8 @@ function getcurrentuser() {
                 )
                 window.staff=true;
             }else{
-                btn= '<button class="btn btn-success btn-md " type="button" onclick="newticket()">'
-                    +'<i class="fa fa-plus" aria-hidden="true"></i> <strong>New Ticket</strong>'
+                btn= '<button class="btn btn-success btn-md " type="button" onclick="newticket()" style="margin-left: 3px">'
+                    +'<i class="fa fa-plus" aria-hidden="true" ></i> <strong>New Ticket</strong>'
                     +'</button>'
                 $("#status").html(
                     '<option value="2" >Inprocess</option>'
@@ -484,8 +500,11 @@ function getcurrentuser() {
                 window.staff=false;
             }
             $("#topbtn").append(
-                '<button class="btn btn-primary btn-md " type="button" onclick="ticketrequest('+data.userid+')">'
-                +'<i class="fa fa-flag" aria-hidden="true"></i> <strong>Ticket Request</strong>'
+                '<button style="width: 170px" class="btn btn-primary btn-md " type="button" onclick="ticketrequest('+data.userid+')">'
+                +'<div id="ticketrequestbtn">'
+                +'<i class="fa fa-flag" aria-hidden="true"></i> '
+                +'<strong>Ticket Request</strong>'
+                +'</div>'
                 +'</button>'
                 +btn
             )
@@ -494,6 +513,22 @@ function getcurrentuser() {
 
     })
 
+}
+
+function getticketrequestcount() {
+    $.ajax({
+        url:"/getticketrequestcount",
+        type:"GET",
+        success:function (data) {
+            $("#ticketrequestbtn").before(
+               '<div class="pull-left" style="margin-right: 5px; background-color: red;border-radius: 20px;width: 20px" >'+data+'</div>'
+            )
+        },
+        error:function () {
+            alert("fail to count ticket request of current user")
+        }
+    })
+    
 }
 
 function ticketrequest(userid) {

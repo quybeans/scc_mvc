@@ -10,10 +10,8 @@
     <script src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
     <script src="js/moment.min.js"></script>
     <script th:src="@{/js/jquery_dateFormat.js}"></script>
-    <script>
+    <link rel="stylesheet" th:href="@{/css/scc-post.css}"/>
 
-
-    </script>
     <script src="js/manageticket.js"></script>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -60,14 +58,15 @@
                             <h4 class="modal-title">Assign Ticket</h4>
                         </div>
                         <div class="modal-body">
-                            <div class="form group">
-                                <label for="assignnote">Note</label>
-                                <textarea id="assignnote" class="form-control"> </textarea>
-                            </div>
+
                             <div class="form group">
                                 <label for="assign">User</label>
                                 <select class="form-control" id="assign">
                                 </select>
+                            </div>
+                            <div class="form group">
+                                <label for="assignnote">Note</label>
+                                <textarea id="assignnote" class="form-control"> </textarea>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -87,10 +86,7 @@
                             <h4 class="modal-title">Change Ticket Status</h4>
                         </div>
                         <div class="modal-body">
-                            <div class="form group">
-                                <label for="statusnote">Note</label>
-                                <textarea id="statusnote" class="form-control"> </textarea>
-                            </div>
+
                             <div class="form group">
                                 <label for="status">Status</label>
                                 <select class="form-control" id="status">
@@ -100,7 +96,10 @@
                                     <option value="6">Solved</option>
                                 </select>
                             </div>
-
+                            <div class="form group">
+                                <label for="statusnote">Note</label>
+                                <textarea id="statusnote" class="form-control"> </textarea>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-primary " id="btnStatus">Change Status</button>
@@ -119,14 +118,15 @@
                             <h4 class="modal-title">Update Ticket</h4>
                         </div>
                         <div class="modal-body">
-                            <div class="form group">
-                                <label for="ticketnote">Note</label>
-                                <textarea class="form-control" id="ticketnote"></textarea>
-                            </div>
+
                             <div class="form group">
                                 <label for="ticketpriority"> Priority</label>
                                 <select id="ticketpriority" class="form-control" >
                                 </select>
+                            </div>
+                            <div class="form group">
+                                <label for="ticketnote">Note</label>
+                                <textarea class="form-control" id="ticketnote"></textarea>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -255,14 +255,15 @@
                             <h4 class="modal-title">Forward Ticket</h4>
                         </div>
                         <div class="modal-body">
-                            <div class="form group">
-                                <label for="forwardnote">Note</label>
-                                <textarea class="form-control" id="forwardnote"></textarea>
-                            </div>
+
                             <div class="form group">
                                 <label for="forward">Assignee</label>
                                 <select class="form-control" id="forward">
                                 </select>
+                            </div>
+                            <div class="form group">
+                                <label for="forwardnote">Note</label>
+                                <textarea class="form-control" id="forwardnote"></textarea>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -283,7 +284,7 @@
                                 <h2>
                                     Ticket management
                                 </h2>
-                                <span id="topbtn" class="pull-right">
+                                <span id="topbtn" class="pull-right" style="margin-bottom: 10px">
                                     <button class="btn btn-info btn-md " type="button" onclick="configpriority()">
                                     <i class="fa fa-cogs" aria-hidden="true"></i> <strong>Config Priority</strong>
                                     </button>

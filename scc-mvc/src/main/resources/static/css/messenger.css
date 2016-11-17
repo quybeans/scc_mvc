@@ -386,7 +386,7 @@
 }
 
 .ticket .title {
-    background-color: cornflowerblue;
+    /*background-color: cornflowerblue;*/
     margin-left: -10px;
     font-size: 20px;
     color: white;
