@@ -2,6 +2,7 @@ package com.scc.ticketmanagement.repositories;
 
 import com.scc.ticketmanagement.Entities.TicketEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,7 +13,7 @@ import java.util.List;
 /**
  * Created by user on 9/30/2016.
  */
-public interface TicketRepository extends JpaRepository<TicketEntity,Integer> {
+public interface TicketRepository extends JpaRepository<TicketEntity,Integer>,JpaSpecificationExecutor<TicketEntity> {
 
     @Query("update TicketEntity set assignee=:assignee WHERE id=:id")
     @Modifying

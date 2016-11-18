@@ -244,11 +244,38 @@
                             <div class="inline">Sort by :</div>
                             <div class=" inline" style="margin-right: 10px">
 
-                                <input style="padding-top: 100px" type="checkbox" id="tksttcheckbox" >
-                                <h5 class=" inline">Status</h5>
+                                <label><input name="radiobtn"  type="radio" id="tksttcheckbox" >
+                                Status</label>
                             </div>
                             <div class=" inline" style="margin-right: 10px">
-                                <label><input style="margin-top: 10px" type="checkbox" id="tktimecheckbox" >Time</label>
+                                <label><input name="radiobtn" type="radio" id="tktimecheckbox" >Time</label>
+                            </div>
+
+                            <div >
+                                Status:
+                                <select id="filterstatus">
+                                    <option></option>
+                                    <option value="1">
+                                        Assigned
+                                    </option>
+                                    <option value="2">InProcess</option>
+                                    <option value="3">Solved</option>
+                                    <option value="4">Close</option>
+                                    <option value="5">Expired</option>
+                                </select>
+                                Priority:
+                                <select id="filterpriority">
+                                    <option></option>
+                                </select>
+                                Created by:
+                                <select id="filtercreatedby">
+                                    <option></option>
+                                </select>
+                                Assignee:
+                                <select id="filterassignee">
+                                    <option></option>
+                                </select>
+                                <button class="btn btn-default" onclick="filterticket()" ><i class="fa fa-filter"></i>Filter</button>
                             </div>
 
                         </div>

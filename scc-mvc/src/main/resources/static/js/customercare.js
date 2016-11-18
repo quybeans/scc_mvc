@@ -22,7 +22,8 @@ function startup() {
     getAllCrawlPage();
     $('#list-fb-account').empty();
     getAllPageAccount();
-
+    getallpriorityofbrand();
+    getalluser();
 }
 
 //Reply to comment
@@ -1278,3 +1279,86 @@ $(document).on('change', '#tksttcheckbox', function(){
     }
 
 });
+
+function filterticket(){
+   var status= $("#filterstatus").val();
+    var priority= $("#filterpriority").val();
+    var createdby= $("#filtercreatedby").val();
+    var assignee=$("#filterassignee").val();
+    $.ajax({
+        url:"/filterticket",
+        type:"POST",
+        data:{"status":status,"priority":priority,"createdby":createdby,"assignee":assignee},
+        success:function (data) {
+            $('#ticket-list').empty();
+            $.each(data, function (index) {
+                var statusColor;
+                switch (data[index].statusid){
+                    case 1: statusColor='#ffff00'; break;
+                    case 2: statusColor='#00a65a'; break;
+                    case 3: statusColor='#500a6f'; break;
+                    case 4: statusColor='gray'; break;
+                    case 5: statusColor='#000000'; break;
+                }
+
+                $('#ticket-list').append(
+                    '<div class="ticket">'
+                    + '<div class="title" style="background-color:  ' +statusColor+'">' + data[index].name + '</div>'
+                    + '<div>Status:&nbsp;'
+                    + '<span class="fa fa-circle" style="color:' +statusColor+'"></span>&nbsp;'
+                    + data[index].currentstatus
+                    + '</div>'
+                    + '<div>Created by:&nbsp;<span style="color: black; font-weight: bold">'
+                    + data[index].createbyuser
+                    + '</span></div>'
+                    + '<div>Current assignee:&nbsp;<span style="color: black; font-weight: bold">'+data[index].assigneeuser+'</span>'
+                    + '</div>'
+                    + '<div></div>'
+                    + '</div>'
+                )
+            })
+        },
+        error:function () {
+            alert("filter fail")
+        }
+
+    })
+}
+
+function getallpriorityofbrand() {
+    $.ajax({
+        url: "/getallpriorityofbrand",
+        type: "GET",
+        success: function (data) {
+            for (var i = 0; i < data.length; i++) {
+                $("#filterpriority").append(
+                    '<option value="' + data[i].id + '">' + data[i].name + '</option>'
+                )
+            }
+        },
+        error: function () {
+            alert("fail to load priority for update")
+        }
+    })
+}
+
+function getalluser() {
+    $.ajax({
+        url: "getalluser",
+        type: "GET",
+        success: function (data) {
+            for (var i = 0; i < data.length; i++){
+                $("#filtercreatedby").append(
+                    '<option value="' + data[i].userid + '">' + data[i].firstname + ' ' + data[i].lastname + '</option>'
+                );
+                $("#filterassignee").append(
+                    '<option value="' + data[i].userid + '">' + data[i].firstname + ' ' + data[i].lastname + '</option>'
+                );
+            }
+
+        },
+        error: function () {
+            alert("Fail to load list user");
+        }
+    })
+}
