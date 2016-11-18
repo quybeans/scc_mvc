@@ -1,7 +1,9 @@
 package com.scc.ticketmanagement.controllers.restcontroller;
 
 import com.scc.ticketmanagement.Entities.PageEntity;
+import com.scc.ticketmanagement.repositories.CommentRepository;
 import com.scc.ticketmanagement.repositories.PageRepository;
+import com.scc.ticketmanagement.repositories.PostRepository;
 import com.scc.ticketmanagement.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,6 +27,12 @@ public class PageRESTController {
 
     @Autowired
     PageRepository pageRepository;
+
+    @Autowired
+    PostRepository postRepository;
+
+    @Autowired
+    CommentRepository commentRepository;
 
     @RequestMapping("page/allpage")
     public List<PageEntity> getALlPage(HttpServletRequest request)
@@ -55,4 +63,29 @@ public class PageRESTController {
         }
         return 0;
     }
+
+    @RequestMapping("page/countAllPost")
+    public long countAllPostByPage(String pageId)
+    {
+       return postRepository.countPostByPageId(pageId);
+    }
+
+    @RequestMapping("page/countAllComment")
+    public long countAllCommentByPage(String pageId)
+    {
+        return commentRepository.countAllCommentFromPage(pageId);
+    }
+
+    @RequestMapping("page/overview")
+    public List<Long> pageOverview (String pageId)
+    {
+        long postCount = postRepository.countPostByPageId(pageId);
+        long cmtCount = commentRepository.countAllCommentFromPage(pageId);
+        List<Long> l = new ArrayList<>();
+        l.add(postCount);
+        l.add(cmtCount);
+
+        return l;
+    }
+
 }

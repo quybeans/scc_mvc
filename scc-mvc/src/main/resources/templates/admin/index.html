@@ -56,7 +56,10 @@
                 success: function (data) {
                     $.each(data, function (index) {
                         var active = '<span class="fa fa-circle active"></span>Active</span>';
-                        if (!data[index].active) active = '<span class="fa fa-circle inactive"></span>Inactive</span>';
+                        var activeBtn ='<button class="btn btn-pirmary" style="width: 80px">Deactive</button>';
+                        if (!data[index].active){ active = '<span class="fa fa-circle inactive"></span>Inactive</span>';
+                        activeBtn = '<button class="btn btn-success" style="width: 80px">Active</button>';
+                        }
 
                         $("#user-table").append('<tr>' +
                                 '<td>' + data[index].userid + '</td>' +
@@ -65,7 +68,7 @@
                                 '<td>' + data[index].brandIdName + '</td>' +
                                 '<td>' + data[index].createdByName + '</td>' +
                                 '<td>' + active + '</td>' +
-                                '<td><button class="btn btn-pirmary">Deactive</button></td>' +
+                                '<td>'+activeBtn+'</td>' +
                                 '</tr>');
                     })
                 },
@@ -102,15 +105,30 @@
                 dataType: "json",
                 success: function (data) {
                     $.each(data, function (index) {
+                        var postCount=0;
+                        var cmtCount=0;
+                        $.ajax({
+                            url: "/page/overview",
+                            data:{pageId:data[index].pageid},
+                            dataType: "json",
+                            async: false,
+                            success: function (count) {postCount=count[0]; cmtCount=count[1]}});
+
                         $("#page-list").append(
                                 '<div class="col-lg-12" style="border-bottom: 1px solid #ebebeb"><div style="height: 70px;" class="brand-item col-lg-6">' +
                                 '<img style="margin-top:10px; height: 50px; width: 50px; border: 1px solid lightgray" src="http://graph.facebook.com/'+data[index].pageid+'/picture">' +
                                 '<div style="font-size: 15px; color: cornflowerblue; font-weight: bold; margin-top: -50px; margin-left: 60px">'+data[index].name+'</div>' +
                                 '<div style="font-size: 13px; color: black; margin-left: 60px">'+data[index].category+'</div>' +
                                 '</div>'+
-                                '<div style="height: 70px;" class="brand-item col-lg-6">' +
-                                '<div style="margin-top: 10px"><span class="fa fa-comment" style="color: lightgray"></span><span>106</span></div>'+
-                                '</div></div>'
+                                '<div style="height: 70px;" class="brand-item col-lg-3">' +
+                                '<div style="margin-top: 10px"><span class="fa fa-pencil" style="color: lightgray;margin-right: 10px"></span><span>'+postCount+'</span>&nbsp;posts</div>'+
+                                '<div ><span class="fa fa-comment fa-flip-horizontal" style="color: lightgray;margin-right: 10px"></span><span>'+cmtCount+'</span>&nbsp;comments</div>'+
+                                '</div>' +
+                                '<div style="height: 70px;" class="brand-item col-lg-3">' +
+                                '<div style="margin-top: 10px"><span class="fa fa-check active" style="margin-right: 10px"></span><span></span>&nbsp;Crawled</div>'+
+                                '<div ><span class="fa fa-circle" style="color:gray;margin-right: 10px"></span><span></span>&nbsp;Webhooks</div>'+
+                                '</div>'+
+                                '</div>'
                         );
                     });
                 },
