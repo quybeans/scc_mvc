@@ -218,20 +218,20 @@
 
             <!--Cot o giua. Noi dung chat-->
             <div class="col-md-6 cmtbox" id="conversation"
-                 style=" background-color: inherit; overflow: hidden">
+                 style=" background-color: inherit; overflow: hidden; border-right: 1px solid lightgray">
 
                 <div class="header-customer-name">
                     <div id="currentSenderName">Teen</div>
                     <div id="conversation-content-loading-icon" class="hidden"><i
-                            class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>
+                            class="fa fa-circle-o-notch fa-pulse fa-3x fa-fw"></i></div>
                 </div>
                 <ul class="chat" id="conversationContent"
-                    style="overflow: scroll; height: 540px; margin-left: 10px; margin-right: 10px">
+                    style="overflow: scroll; height: 540px; margin-left: 10px;">
 
                 </ul>
                 <div style="position: fixed; bottom: 0px; background-color: white; padding: 10px 0px 10px 0px; margin-left: 0px" id="conversationReply">
                     <div class="col-md-10">
-                        <input style="width: 440px" class="form-control" type="text" placeholder="Type a message..." id="replyText" name="replyText"
+                        <input style="width: 448px" class="form-control" type="text" placeholder="Type a message..." id="replyText" name="replyText"
                                value="" autofocus/>
                     </div>
                     <div class="col-md-2">
@@ -244,8 +244,8 @@
             <div class="col-md-3" id="customer-info" style="background-color: white; max-height: 90vh">
                 <div class="col-md-3 box box-primary" class="">
                     <div class="box-body box-profile">
-                        <img style="height: 150px;width: 150px" id="customer-picture"
-                             class="profile-user-img img-responsive img-circle" src="" alt="">
+                        <img  id="customer-picture"
+                             class="profile-user-img img-responsive img-circle" style="height: 150px;width: 150px; border: none" src="" alt="">
 
                         <h1 id="customer-name" class="customer-username text-center"></h1>
                         <ul class="list-group list-group-unbordered">
