@@ -4,7 +4,8 @@
 
 var currentPageId = '0';
 var currentPageAvt = '';
-var pageInterval ;
+var currentPageName = '';
+var pageInterval;
 var conversationInterval;
 $(document).ready(function () {
     getAllActivePageUnreadMessage();
@@ -12,6 +13,7 @@ $(document).ready(function () {
 
 // $('#mess-page-list').addClass('collapse'); $('#chat-box').addClass('collapse')
 function getAllActivePageUnreadMessage() {
+    clearInterval(conversationInterval);
     currentPageId = '0';
     currentPageAvt = '';
     $('#back-button').addClass('hidden');
@@ -26,7 +28,7 @@ function getAllActivePageUnreadMessage() {
                     $('#page-conversations').append(
                         '<div class="page" onclick="loadConversationsByPage(' + data[i].pageid + ')">' +
                         '<img src="https://graph.facebook.com/' + data[i].pageid + '/picture">' +
-                        '<div class="name">' + data[i].name + '</div>' +
+                        '<div id="pageName' +data[i].pageid +'" class="name">' + data[i].name + '</div>' +
                         '<div class="unread-count">' +
                         '<div class="circle">' + data[i].unreadMessage + '</div>' +
                         '<b>unread message</b>' +
@@ -37,7 +39,7 @@ function getAllActivePageUnreadMessage() {
                     $('#page-conversations').append(
                         '<div class="page" onclick="loadConversationsByPage(' + data[i].pageid + ')">' +
                         '<img src="https://graph.facebook.com/' + data[i].pageid + '/picture">' +
-                        '<div class="name">' + data[i].name + '</div>' +
+                        '<div id="pageName' +data[i].pageid +'" class="name">' + data[i].name + '</div>' +
                         '<div class="unread-count">' +
                         // '<div class="circle">' + data[i].unreadMessage + '</div>' +
                         'All messages are read' +
@@ -69,7 +71,7 @@ function getAllActivePageUnreadMessageInterval() {
                     $('#page-conversations').append(
                         '<div class="page" onclick="loadConversationsByPage(' + data[i].pageid + ')">' +
                         '<img src="https://graph.facebook.com/' + data[i].pageid + '/picture">' +
-                        '<div class="name">' + data[i].name + '</div>' +
+                        '<div id="pageName' +data[i].pageid +'" class="name">' + data[i].name + '</div>' +
                         '<div class="unread-count">' +
                         '<div class="circle">' + data[i].unreadMessage + '</div>' +
                         '<b>unread message</b>' +
@@ -80,7 +82,7 @@ function getAllActivePageUnreadMessageInterval() {
                     $('#page-conversations').append(
                         '<div class="page" onclick="loadConversationsByPage(' + data[i].pageid + ')">' +
                         '<img src="https://graph.facebook.com/' + data[i].pageid + '/picture">' +
-                        '<div class="name">' + data[i].name + '</div>' +
+                        '<div id="pageName' +data[i].pageid +'" class="name">' + data[i].name + '</div>' +
                         '<div class="unread-count">' +
                         // '<div class="circle">' + data[i].unreadMessage + '</div>' +
                         'All messages are read' +
@@ -95,7 +97,10 @@ function getAllActivePageUnreadMessageInterval() {
 }
 
 function loadConversationsByPage(pageId) {
+
     clearInterval(pageInterval);
+    currentPageName = $('#pageName' +pageId).text();
+    // $('#chat-box').append('<input type="hidden" id="current-page-name' + pageId +'" value="'+pageName+'"/>')
     currentPageId = pageId;
     currentPageAvt = 'https://graph.facebook.com/' + pageId + '/picture';
     $('#back-button').removeClass('hidden');
@@ -111,6 +116,7 @@ function loadConversationsByPage(pageId) {
             $.each(data, function (i) {
                 if (data[i].read) {
                     $('#chat-box').append(
+                        '<input type="hidden" id="sender-picture' + data[i].senderId + '" value="'+ data[i].senderPicture +'">'+
                         '<div class="conversation" style="position: relative" id="conversation' + i + '" onclick="register_popup(\'' + data[i].senderId + '\', \'' + data[i].senderName + '\')">'
                         + '<div>' +
                         '<img class="senderAvt" src="' + data[i].senderPicture + '"><div class="conversation-sender-name pull-left"><a>' + data[i].senderName + '</a></div>' +
@@ -121,6 +127,7 @@ function loadConversationsByPage(pageId) {
                     )
                 } else {
                     $('#chat-box').append(
+                        '<input type="hidden" id="sender-picture' + data[i].senderId + '" value="'+ data[i].senderPicture +'">'+
                         '<div class="conversation" style="position: relative" id="conversation' + i + '" onclick="register_popup(\'' + data[i].senderId + '\', \'' + data[i].senderName + '\')">'
                         + '<div>' +
                         '<img class="senderAvt" src="' + data[i].senderPicture + '"><div class="conversation-sender-name pull-left"><a><b>' + data[i].senderName + '</b></a></div>' +
@@ -134,6 +141,51 @@ function loadConversationsByPage(pageId) {
             });
             $('#mess-page-list').addClass('collapse');
             $('#chat-box').removeClass('collapse');
+            clearInterval(conversationInterval);
+            conversationInterval = setInterval(loadConversationsByPageInterval, 2000);
+        }
+    });
+}
+
+function loadConversationsByPageInterval() {
+    clearInterval(pageInterval);
+     //currentPageId = pageId;
+     //currentPageAvt = 'https://graph.facebook.com/' + currentPageId + '/picture';
+    $.ajax({
+        url: '/messenger/getAllConversationsByPageId',
+        type: "GET",
+        data: {
+            pageId: currentPageId
+        },
+        dataType: "json",
+        success: function (data) {
+            $('#chat-box').empty();
+            $.each(data, function (i) {
+                if (data[i].read) {
+                    $('#chat-box').append(
+                        '<input type="hidden" id="sender-picture' + data[i].senderId + '" value="'+ data[i].senderPicture +'">'+
+                        '<div class="conversation" style="position: relative" id="conversation' + i + '" onclick="register_popup(\'' + data[i].senderId + '\', \'' + data[i].senderName + '\')">'
+                        + '<div>' +
+                        '<img class="senderAvt" src="' + data[i].senderPicture + '"><div class="conversation-sender-name pull-left"><a>' + data[i].senderName + '</a></div>' +
+                        '<div class="sentTime text-muted pull-right"> ' + $.format.date(data[i].sentTime, "HH:mm") + '</div>' +
+                        '<div class="conversation-lastmessage pull-left crop">' + data[i].lastMessage + '</div>' +
+                        '</div>' +
+                        '</div>'
+                    )
+                } else {
+                    $('#chat-box').append(
+                        '<input type="hidden" id="sender-picture' + data[i].senderId + '" value="'+ data[i].senderPicture +'">'+
+                        '<div class="conversation" style="position: relative" id="conversation' + i + '" onclick="register_popup(\'' + data[i].senderId + '\', \'' + data[i].senderName + '\')">'
+                        + '<div>' +
+                        '<img class="senderAvt" src="' + data[i].senderPicture + '"><div class="conversation-sender-name pull-left"><a><b>' + data[i].senderName + '</b></a></div>' +
+                        '<div class="sentTime text-muted pull-right"><b> ' + $.format.date(data[i].sentTime, "HH:mm") + '</b></div>' +
+                        '<div class="conversation-lastmessage pull-left crop"><b>' + data[i].lastMessage + '</b></div>' +
+                        '</div>' +
+                        '</div>'
+                    )
+                }
+
+            });
         }
     });
 }
@@ -172,7 +224,7 @@ function close_popup(id) {
 
 //displays the popups. Displays based on the maximum number of popups that can be displayed on the current viewport width
 function display_popups() {
-    var right = 220;
+    var right = 10;
 
     var iii = 0;
     for (iii; iii < total_popups; iii++) {
@@ -214,6 +266,7 @@ function register_popup(id, name) {
     element = element + '<div style="clear: both"></div></div><div class="popup-messages"></div></div>';
 
 
+    var senderAvt = $('#sender-picture'+ id).val();
     $.ajax({
         url: '/messenger/getConversationBySenderIdWithPage',
         type: "POST",
@@ -240,7 +293,7 @@ function register_popup(id, name) {
                         '<small class=" text-muted ">' +
                         $.format.date(dataReversed[i].createdAt, "HH:mm") +
                         '</small>' +
-                        '<strong class="pull-right primary-font">currentPageName</strong>' +
+                        '<strong class="pull-right primary-font">'+currentPageName+'</strong>' +
                         '</div>' +
                         '<p style="text-align: right">' +
                         dataReversed[i].content +
@@ -252,7 +305,7 @@ function register_popup(id, name) {
                 } else {
                     chatMessage = chatMessage.concat(
                         '<li class="left clearfix"><span class="chat-img pull-left"> ' +
-                        '<img src="currentCustomerAvt"/> </span>' +
+                        '<img src="'+senderAvt+'"/> </span>' +
                         '<div style="margin-left: 5px" class="chat-body clearfix pull-left">' +
                         '<div class="header">' +
                         '<strong class="primary-font">' + name + '</strong>' +
@@ -279,12 +332,12 @@ function register_popup(id, name) {
                 chatMessage +
                 '</ul>' +
                 '</div>' +
-                '<div class="input-group"><input id="replyText' +id+ '" type="text" placeholder="Type a message..." class="form form-control"><span id="btn-reply'+id+'" onclick="sendMessage(\'' +id + '\', \'' + currentPageId + '\')" class="input-group-addon"><i class="fa fa-reply"></i></span></div>' +
+                '<div class="input-group"><input id="replyText' + id + '" type="text" placeholder="Type a message..." class="form form-control"><span id="btn-reply' + id + '" onclick="sendMessage(\'' + id + '\', \'' + currentPageId + '\')" class="input-group-addon"><i class="fa fa-reply"></i></span></div>' +
                 '</div>';
             $('body').append(element3);
             $('#replyText' + id).keypress(function (e) {
                 if (e.keyCode == 13)
-                    $('#btn-reply'+ id).click();
+                    $('#btn-reply' + id).click();
             });
         }
     });
@@ -411,3 +464,8 @@ function sendMessage(customerId, pageId) {
     $('#replyText' + customerId).val("");
 
 }
+
+
+$( document ).ready(function() {
+    calculate_popups();
+});
