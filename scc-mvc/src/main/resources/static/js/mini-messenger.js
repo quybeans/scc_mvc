@@ -99,8 +99,8 @@ function getAllActivePageUnreadMessageInterval() {
 function loadConversationsByPage(pageId) {
 
     clearInterval(pageInterval);
-    var pageName = $('#pageName' +pageId).val();
-    $('#chat-box').append('<input type="hidden" id="current-page-name' + pageName +'" value="'+pageName+'"/>')
+    currentPageName = $('#pageName' +pageId).text();
+    // $('#chat-box').append('<input type="hidden" id="current-page-name' + pageId +'" value="'+pageName+'"/>')
     currentPageId = pageId;
     currentPageAvt = 'https://graph.facebook.com/' + pageId + '/picture';
     $('#back-button').removeClass('hidden');
@@ -277,7 +277,6 @@ function register_popup(id, name) {
         },
         dataType: "json",
         success: function (data) {
-            pageName = $('#current-page-name' + id).val();
             var chatMessage = '<input type="hidden" id="chatOfPage' + currentPageId + '" value="' + currentPageId + '"/>';
             var dataReversed = data.reverse();
             var a;
@@ -294,7 +293,7 @@ function register_popup(id, name) {
                         '<small class=" text-muted ">' +
                         $.format.date(dataReversed[i].createdAt, "HH:mm") +
                         '</small>' +
-                        '<strong class="pull-right primary-font">'+pageName+'</strong>' +
+                        '<strong class="pull-right primary-font">'+currentPageName+'</strong>' +
                         '</div>' +
                         '<p style="text-align: right">' +
                         dataReversed[i].content +
