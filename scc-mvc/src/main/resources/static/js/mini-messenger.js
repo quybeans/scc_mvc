@@ -224,7 +224,7 @@ function close_popup(id) {
 
 //displays the popups. Displays based on the maximum number of popups that can be displayed on the current viewport width
 function display_popups() {
-    var right = 10;
+    var right = 290;
 
     var iii = 0;
     for (iii; iii < total_popups; iii++) {
@@ -327,7 +327,7 @@ function register_popup(id, name) {
                 '<div class="popup-head">' +
                 '<div class="popup-head-left">' + name + '</div>' +
                 '<div class="popup-head-right"><a href="javascript:close_popup(\'' + id + '\');">&#10005;</a></div>' +
-                '<div style="clear: both"></div></div><div style="height: 220px" class="popup-messages">' +
+                '<div style="clear: both"></div></div><div style="height: 220px;background: aliceblue;" class="popup-messages">' +
                 '<ul class="chat">' +
                 chatMessage +
                 '</ul>' +
@@ -339,6 +339,8 @@ function register_popup(id, name) {
                 if (e.keyCode == 13)
                     $('#btn-reply' + id).click();
             });
+
+            $('#popup-messages').scrollTop($('#popup-messages').height() + 500);
         }
     });
 
