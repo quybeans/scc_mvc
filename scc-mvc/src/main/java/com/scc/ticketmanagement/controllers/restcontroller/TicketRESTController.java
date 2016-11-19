@@ -30,12 +30,16 @@ public class TicketRESTController {
     private UserService userService;
 
     @RequestMapping("comment/checkTicket")
-    public TicketEntity checkCmtisTicketItem(String cmtID) {
-
+    public TicketEntity checkCmtisTicketItem(HttpServletRequest request, String cmtID) {
+        HttpSession session = request.getSession(false);
         try {
             Integer rs = ticketItemService.getTicketItemByCommentId(cmtID).getTicketid();
             if (rs != null) {
-                return ticketService.getTicketByID(rs);
+                TicketEntity tk = ticketService.getTicketByID(rs);
+                String username = (String) session.getAttribute("username");
+                int branid= userService.getUserByUsername(username).getBrandid();
+                if (branid==tk.getBrandId())
+                return tk;
             }
             return null;
         } catch (NullPointerException e) {
@@ -51,12 +55,12 @@ public class TicketRESTController {
 //    }
 
     @RequestMapping("comment/addToTicket")
-    public Boolean checkCmtisTicketItem(@Param("ticketId") int ticketId,@Param("cmtId") String cmtId, HttpServletRequest request) {
+    public Boolean checkCmtisTicketItem(@Param("ticketId") int ticketId, @Param("cmtId") String cmtId, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         String username = (String) session.getAttribute("username");
         int userid = userService.getUserByUsername(username).getUserid();
         if (username != null) {
-            if (ticketItemService.addCommentItemToTicket(ticketId, cmtId,userid) != null) return true;
+            if (ticketItemService.addCommentItemToTicket(ticketId, cmtId, userid) != null) return true;
         }
         return false;
     }
