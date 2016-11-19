@@ -102,8 +102,8 @@ function getticket(ticketid) {
             window.currentstatus=data.statusid;
             var createat = moment(data.createdtime).format("D/MM/YYYY, hh:mm:ss");
             $("#ticketstatus").html(
-                '<i class="fa fa-circle" aria-hidden="true" style="'+statuscolor+'"></i>'
-                +statusname
+                '<i class="fa fa-circle" aria-hidden="true" style="'+statuscolor+'; margin-right: 10px; font-size: 15px"></i>'
+                +'<span style="font-size: 16px;">'+statusname+'</span>'
             );
             $("#ticketname").html(data.name);
             $("#createdat").html('<i  class="fa fa-minus" ></i><b style="margin-left: 5px;">Created At: </b>'+createat);
@@ -113,13 +113,13 @@ function getticket(ticketid) {
             $("#getassignee").html('<h4><i  class="fa fa-chevron-right" onclick="getassigneeinfo('+data.assignee+')"></i><b style="margin-left: 5px">Assignee:</b> '+data.assigneeuser+'</h4>');
             var groupbtn;
             if(staff){
-                groupbtn = '<button class="btn btn-success" style="width: 60px" onclick="forwardticket('+data.id+')">Foward</button>'
-                    +'<button class="btn btn-primary" style="width: 60px" onclick="status('+data.id+')">Status</button>'
-                    +'<button class=" btn btn-danger" style="width: 60px" onclick="updateticket('+data.id+')">Priority</button>'
+                groupbtn = '<button class="btn btn-success" style="width: 70px" onclick="forwardticket('+data.id+')">Foward</button>'
+                    +'<button class="btn btn-primary" style="width: 70px" onclick="status('+data.id+')">Status</button>'
+                    +'<button class=" btn btn-danger" style="width: 70px" onclick="updateticket('+data.id+')">Priority</button>'
             }else{
-                groupbtn = '<button class="btn btn-success" style="width: 60px" onclick="assign('+data.id+')">Assign</button>'
-                    +'<button class="btn btn-primary" style="width: 60px" onclick="status('+data.id+')">Status</button>'
-                    +'<button class=" btn btn-danger" style="width: 60px" onclick="updateticket('+data.id+')">Priority</button>'
+                groupbtn = '<button class="btn btn-success" style="width: 70px" onclick="assign('+data.id+')">Assign</button>'
+                    +'<button class="btn btn-primary" style="width: 70px" onclick="status('+data.id+')">Status</button>'
+                    +'<button class=" btn btn-danger" style="width: 70px" onclick="updateticket('+data.id+')">Priority</button>'
             }
 
             $("#ticketbutton").html(

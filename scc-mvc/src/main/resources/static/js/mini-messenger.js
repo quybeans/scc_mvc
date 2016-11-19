@@ -259,6 +259,8 @@ function register_popup(id, name) {
         }
     }
 
+
+
     var element = '<div class="popup-box chat-popup" id="' + id + '">';
     element = element + '<div class="popup-head">';
     element = element + '<div class="popup-head-left">' + name + '</div>';
@@ -295,7 +297,7 @@ function register_popup(id, name) {
                         '</small>' +
                         '<strong class="pull-right primary-font">'+currentPageName+'</strong>' +
                         '</div>' +
-                        '<p style="text-align: right">' +
+                        '<p style=" ">' +
                         dataReversed[i].content +
                         '</p>' +
                         '</div>' +
@@ -327,7 +329,7 @@ function register_popup(id, name) {
                 '<div class="popup-head">' +
                 '<div class="popup-head-left">' + name + '</div>' +
                 '<div class="popup-head-right"><a href="javascript:close_popup(\'' + id + '\');">&#10005;</a></div>' +
-                '<div style="clear: both"></div></div><div style="height: 220px;background: aliceblue;" class="popup-messages">' +
+                '<div style="clear: both"></div></div><div id="popup' +id+ '" style="height: 220px;background: aliceblue;" class="popup-messages">' +
                 '<ul class="chat">' +
                 chatMessage +
                 '</ul>' +
@@ -340,13 +342,15 @@ function register_popup(id, name) {
                     $('#btn-reply' + id).click();
             });
 
-            $('#popup-messages').scrollTop($('#popup-messages').height() + 500);
+            $('#popup' +id).scrollTop($('#popup' +id).height() + 200);
+
+            popups.unshift(id);
+
+            calculate_popups();
         }
     });
 
-    popups.unshift(id);
 
-    calculate_popups();
 
 }
 
