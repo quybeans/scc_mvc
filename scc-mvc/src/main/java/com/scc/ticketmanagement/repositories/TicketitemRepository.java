@@ -19,4 +19,7 @@ public interface TicketitemRepository extends JpaRepository<TicketitemEntity,Tic
 
     @Query("select t from TicketitemEntity t where t.commentid=:commentid")
     TicketitemEntity getTicketItemByCommentID(@Param("commentid") String commentid);
+
+    @Query("select count(t) from  TicketitemEntity t where t.ticketid=:ticketid")
+    Integer counTicketItem(@Param("ticketid") Integer ticketid);
 }

@@ -11,6 +11,8 @@ public class ExtendTicket extends TicketEntity {
     private String assigneeuser;
     private String currentstatus;
     private String currentpriority;
+    private Integer countitem;
+    private String assigneerole;
 
     public String getContent() {
         return content;
@@ -50,5 +52,21 @@ public class ExtendTicket extends TicketEntity {
 
     public void setCurrentpriority(String currentpriority) {
         this.currentpriority = currentpriority;
+    }
+
+    public Integer getCountitem() {
+        return countitem;
+    }
+
+    public void setCountitem(Integer countitem) {
+        this.countitem = countitem;
+    }
+
+    public String getAssigneerole() {
+        return assigneerole;
+    }
+
+    public void setAssigneerole(String assigneerole) {
+        this.assigneerole = assigneerole;
     }
 }

@@ -62,6 +62,12 @@ public class UserController {
                 user.setUserid(u.getUserid());
                 user.setFirstname(p.getFirstname());
                 user.setLastname(p.getLastname());
+                switch (u.getRoleid()){
+                    case Constant.ROLE_ADMIN: user.setRole("Admin"); break;
+                    case Constant.ROLE_BRAND: user.setRole("Brand Manager"); break;
+                    case Constant.ROLE_STAFF: user.setRole("Staff"); break;
+                    case Constant.ROLE_SUPERVISOR: user.setRole("Supervisor"); break;
+                }
                 userlist.add(user);
             }
 
