@@ -261,13 +261,13 @@ function register_popup(id, name) {
 
 
 
-    var element = '<div class="popup-box chat-popup" id="' + id + '">';
-    element = element + '<div class="popup-head">';
-    element = element + '<div class="popup-head-left">' + name + '</div>';
-    element = element + '<div class="popup-head-right"><a href="javascript:close_popup(\'' + id + '\');">&#10005;</a></div>';
-    element = element + '<div style="clear: both"></div></div><div class="popup-messages"></div></div>';
+    // var element = '<div class="popup-box chat-popup" id="' + id + '">';
+    // element = element + '<div class="popup-head">';
+    // element = element + '<div class="popup-head-left">' + name + '</div>';
+    // element = element + '<div class="popup-head-right"><a href="javascript:close_popup(\'' + id + '\');">&#10005;</a></div>';
+    // element = element + '<div style="clear: both"></div></div><div class="popup-messages"></div></div>';
 
-
+    var isFirstLoadDone = false;
     var senderAvt = $('#sender-picture'+ id).val();
     $.ajax({
         url: '/messenger/getConversationBySenderIdWithPage',
@@ -330,7 +330,7 @@ function register_popup(id, name) {
                 '<div class="popup-head-left">' + name + '</div>' +
                 '<div class="popup-head-right"><a href="javascript:close_popup(\'' + id + '\');">&#10005;</a></div>' +
                 '<div style="clear: both"></div></div><div id="popup' +id+ '" style="height: 220px;background: aliceblue;" class="popup-messages">' +
-                '<ul class="chat">' +
+                '<ul id="ul' +id+ '" class="chat">' +
                 chatMessage +
                 '</ul>' +
                 '</div>' +
@@ -342,13 +342,83 @@ function register_popup(id, name) {
                     $('#btn-reply' + id).click();
             });
 
-            $('#popup' +id).scrollTop($('#popup' +id).height() + 200);
+            $('#popup' +id).scrollTop(300);
 
             popups.unshift(id);
 
             calculate_popups();
+
+            isFirstLoadDone = true;
         }
     });
+
+    var reload = function reload() {
+        if (isFirstLoadDone){
+            $.ajax({
+                url: '/messenger/getConversationBySenderIdWithPage',
+                type: "POST",
+                data: {
+                    pageId: currentPageId,
+                    senderId: id,
+                    pageNum: 1
+                },
+                dataType: "json",
+                success: function (data) {
+                    $('#ul'+id).empty();
+                    var chatMessage = '<input type="hidden" id="chatOfPage' + currentPageId + '" value="' + currentPageId + '"/>';
+                    var dataReversed = data.reverse();
+                    var a;
+                    $.each(dataReversed, function (i) {
+                        a = dataReversed[i].id;
+                        if (dataReversed[i].senderid == currentPageId) {
+                            chatMessage = chatMessage.concat(
+                                '<li class="right clearfix"><span class="chat-img pull-right">' +
+                                ' <img src="' + currentPageAvt + '" alt="User Avatar"/>' +
+                                ' </span>' +
+                                '<div style="margin-right: 5px" class="chat-body clearfix pull-right">' +
+                                ' <div class="header">' +
+                                '<small class=" text-muted ">' +
+                                $.format.date(dataReversed[i].createdAt, "HH:mm") +
+                                '</small>' +
+                                '<strong class="pull-right primary-font">'+currentPageName+'</strong>' +
+                                '</div>' +
+                                '<p style=" ">' +
+                                dataReversed[i].content +
+                                '</p>' +
+                                '</div>' +
+                                '</li>'
+                            )
+                            ;
+                        } else {
+                            chatMessage = chatMessage.concat(
+                                '<li class="left clearfix"><span class="chat-img pull-left"> ' +
+                                '<img src="'+senderAvt+'"/> </span>' +
+                                '<div style="margin-left: 5px" class="chat-body clearfix pull-left">' +
+                                '<div class="header">' +
+                                '<strong class="primary-font">' + name + '</strong>' +
+                                '<small class="pull-right text-muted">' +
+                                $.format.date(dataReversed[i].createdAt, "HH:mm") +
+                                '</small>' +
+                                '</div>' +
+                                '<p>' +
+                                dataReversed[i].content +
+                                '</p>' +
+                                '</div>' +
+                                '</li>'
+                            );
+                        }
+
+                    });
+
+
+                    $('#ul'+id).append(chatMessage);
+
+                }
+            });
+        }
+    }
+    setInterval(reload,3000);
+
 
 
 

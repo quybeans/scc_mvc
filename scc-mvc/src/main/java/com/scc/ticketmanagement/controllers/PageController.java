@@ -7,7 +7,6 @@ import com.scc.ticketmanagement.services.PageService;
 import com.scc.ticketmanagement.services.UserService;
 import com.scc.ticketmanagement.utilities.AccessTokenUtility;
 import com.scc.ticketmanagement.utilities.Constant;
-import com.scc.ticketmanagement.utilities.FacebookUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -99,7 +98,7 @@ public class PageController {
                 pageService.createPage(pageName, pageId, longLivedToken, pageCategory);
 
 
-                brandPageService.addBrandPage(brandId, pageId);
+                brandPageService.addBrandPageToManage(brandId, pageId);
             } catch (AuthenticationException e) {
                 e.printStackTrace();
             } catch (NullPointerException e) {
@@ -130,8 +129,8 @@ public class PageController {
         System.out.println(pageCategory);
 
         pageService.createPage(pageName, pageId, "", pageCategory);
-        brandPageService.addBrandPage(brandId, pageId);
-        return "Ok";
+        brandPageService.addBrandPageToCrawl(brandId, pageId);
+        return "Add page to crawl successfully";
     }
 
     @RequestMapping(value = "/page/deactivatePage", method = RequestMethod.POST)
@@ -149,10 +148,10 @@ public class PageController {
 
         if (button.equals("Deactivate")) {
             pageService.deactivatePage(pageId);
-            brandPageService.removeBrandPage(brandId, pageId);
+            brandPageService.removeBrandPageToManage(brandId, pageId);
         } else if (button.equals("Activate")) {
             pageService.activatePage(pageId);
-            brandPageService.addBrandPage(brandId, pageId);
+            brandPageService.addBrandPageToManage(brandId, pageId);
         }
         return "redirect:/page/index";
     }
@@ -171,8 +170,10 @@ public class PageController {
 
         if (button.equals("Deactivate")) {
             pageService.deactivateCrawlerPage(pageId);
+            brandPageService.removeBrandPageToCrawl(brandId, pageId);
         } else if (button.equals("Activate")) {
             pageService.activateCrawlerPage(pageId);
+            brandPageService.addBrandPageToCrawl(brandId, pageId);
         }
         return "redirect:/crawl-page/index";
     }

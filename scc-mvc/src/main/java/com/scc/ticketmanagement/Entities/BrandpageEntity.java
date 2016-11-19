@@ -3,7 +3,7 @@ package com.scc.ticketmanagement.Entities;
 import javax.persistence.*;
 
 /**
- * Created by QuyBean on 10/26/2016.
+ * Created by Thien on 11/19/2016.
  */
 @Entity
 @Table(name = "brandpage", schema = "scc", catalog = "")
@@ -11,10 +11,10 @@ public class BrandpageEntity {
     private int brandpageid;
     private int brandid;
     private String pageid;
-    private boolean active;
+    private boolean manage;
+    private boolean crawl;
 
     @Id
-    @GeneratedValue
     @Column(name = "brandpageid")
     public int getBrandpageid() {
         return brandpageid;
@@ -45,13 +45,23 @@ public class BrandpageEntity {
     }
 
     @Basic
-    @Column(name = "active")
-    public boolean isActive() {
-        return active;
+    @Column(name = "manage")
+    public boolean isManage() {
+        return manage;
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
+    public void setManage(boolean manage) {
+        this.manage = manage;
+    }
+
+    @Basic
+    @Column(name = "crawl")
+    public boolean isCrawl() {
+        return crawl;
+    }
+
+    public void setCrawl(boolean crawl) {
+        this.crawl = crawl;
     }
 
     @Override
@@ -63,7 +73,8 @@ public class BrandpageEntity {
 
         if (brandpageid != that.brandpageid) return false;
         if (brandid != that.brandid) return false;
-        if (active != that.active) return false;
+        if (manage != that.manage) return false;
+        if (crawl != that.crawl) return false;
         if (pageid != null ? !pageid.equals(that.pageid) : that.pageid != null) return false;
 
         return true;
@@ -74,7 +85,8 @@ public class BrandpageEntity {
         int result = brandpageid;
         result = 31 * result + brandid;
         result = 31 * result + (pageid != null ? pageid.hashCode() : 0);
-        result = 31 * result + (active ? 1 : 0);
+        result = 31 * result + (manage ? 1 : 0);
+        result = 31 * result + (crawl ? 1 : 0);
         return result;
     }
 }

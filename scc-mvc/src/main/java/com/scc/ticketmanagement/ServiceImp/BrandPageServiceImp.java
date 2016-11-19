@@ -16,7 +16,7 @@ public class BrandPageServiceImp implements BrandPageService {
     BrandPageRepository brandPageRepository;
 
     @Override
-    public void addBrandPage(int brandId, String pageId) {
+    public void addBrandPageToManage(int brandId, String pageId) {
         BrandpageEntity brandpage = null;
         try {
             brandpage = brandPageRepository.getBrandPageByBrandIdAndPageId(brandId, pageId);
@@ -26,7 +26,8 @@ public class BrandPageServiceImp implements BrandPageService {
                 brandpage.setPageid(pageId);
             }
 
-            brandpage.setActive(true);
+            brandpage.setCrawl(true);
+            brandpage.setManage(true);
             brandPageRepository.save(brandpage);
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -35,12 +36,39 @@ public class BrandPageServiceImp implements BrandPageService {
     }
 
     @Override
-    public void removeBrandPage(int brandId, String pageId) {
+    public void removeBrandPageToManage(int brandId, String pageId) {
         BrandpageEntity brandpage = brandPageRepository.getBrandPageByBrandIdAndPageId(brandId, pageId);
         if (brandpage != null){
-            brandpage.setActive(false);
+            brandpage.setManage(false);
             brandPageRepository.save(brandpage);
         }
 
+    }
+
+    @Override
+    public void removeBrandPageToCrawl(int brandId, String pageId) {
+        BrandpageEntity brandpage = brandPageRepository.getBrandPageByBrandIdAndPageId(brandId, pageId);
+        if (brandpage != null){
+            brandpage.setCrawl(false);
+            brandPageRepository.save(brandpage);
+        }
+    }
+
+    @Override
+    public void addBrandPageToCrawl(int brandId, String pageId) {
+        BrandpageEntity brandpage = null;
+        try {
+            brandpage = brandPageRepository.getBrandPageByBrandIdAndPageId(brandId, pageId);
+            if (brandpage == null) {
+                brandpage = new BrandpageEntity();
+                brandpage.setBrandid(brandId);
+                brandpage.setPageid(pageId);
+            }
+
+            brandpage.setCrawl(true);
+            brandPageRepository.save(brandpage);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -44,7 +44,7 @@ public class MiniMessengerRESTController {
             int brandId = this.getCurrentUserBrandId(session);
             PageConversation pConversation = null;
 
-            List<PageEntity> pages = pageService.getPagesByBrandId(brandId);
+            List<PageEntity> pages = pageService.getAllActivePageByBrandId(brandId);
             for (PageEntity page : pages) {
                 pConversation = new PageConversation();
                 pConversation.setPageid(page.getPageid());

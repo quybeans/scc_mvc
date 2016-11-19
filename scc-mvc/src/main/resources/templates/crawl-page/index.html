@@ -34,11 +34,11 @@
                         <form id="managePageForm" action="deactivateCrawlerPage" method="post">
                             <input type="hidden" name="pageId" th:value="${pagesCrawler.pageid}"></input>
                             <td>
-                                <img th:src="@{'https://graph.facebook.com/' + ${pagesCrawler.pageid}+ '/picture'}"/>
+                                <img  th:src="@{'https://graph.facebook.com/' + ${pagesCrawler.pageid}+ '/picture'}" />
                             </td>
                             <td>
                                 <a th:href="@{'http://www.fb.com/' + ${pagesCrawler.pageid}}"
-                                   th:text="${pagesCrawler.name}"></a>
+                                   th:text="${pagesCrawler.name} " target="_blank"></a>
                             </td>
                             <td th:text="${pagesCrawler.type}"></td>
                             <td th:text="${pagesCrawler.category}"></td>
