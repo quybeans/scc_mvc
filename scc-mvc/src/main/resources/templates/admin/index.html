@@ -19,6 +19,12 @@
         doOverview();
         getAllBrand();
 
+        function scrollToElement(element) {
+            $('html, body').animate({
+                scrollTop: element.offset().top
+            }, 2000);
+        };
+
         function doOverview() {
             $.ajax({
                 url: "/admin/overview",
@@ -88,6 +94,8 @@
                                 '<div style="font-size: 15px; color: black; margin-left: 90px">'+data[index].sologan+'</div>' +
                                 '</div>'
                         );
+
+                        $("#brand-list-newuser").append('<option value="sup">'+data[index].name+'</option>');
                     });
                     $("#brand-body").append(
                             '<div  data-toggle="modal" data-target="#brand-info-modal" style="height: 90px;" class="brand-item col-lg-6">' +
@@ -215,6 +223,129 @@
         </div>
     </nav>
 </header>
+<div id="addUserModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <form class="form-horizontal" action="/user/createUserwProfile" method="POST">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Add new user</h4>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label col-sm-3" for="username">Username*</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="username" placeholder="Enter username"
+                                   name="txtUsername"
+                                   onblur="checkUsername($('#username').val())">
+                            <a class="glyphicon glyphicon-remove form-control-feedback"
+                               style="margin-right: 10px;color: red; display: none" id="checkUserIcon"></a>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3" for="username">Brand*</label>
+                        <div class="col-sm-9">
+                            <div class="dropdown">
+                                <!--<button class="btn btn-primary dropdown-toggle" type="button"-->
+                                <!--data-toggle="dropdown">Select role-->
+                                <!--<span class="caret"></span></button>-->
+                                <!--<input type="hidden" class="form-control" id="txtRole"-->
+                                <!--name="txtRole">-->
+                                <select class="btn btn-default" id="brand-list-newuser" name="ddlRole">
+
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3" for="username">Role*</label>
+                        <div class="col-sm-9">
+                            <div class="dropdown">
+                                <!--<button class="btn btn-primary dropdown-toggle" type="button"-->
+                                <!--data-toggle="dropdown">Select role-->
+                                <!--<span class="caret"></span></button>-->
+                                <!--<input type="hidden" class="form-control" id="txtRole"-->
+                                <!--name="txtRole">-->
+                                <select class="btn btn-default" name="ddlRole">
+                                    <option value="sup">Supervisor</option>
+                                    <option value="staff">Staff</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-sm-3" for="password">Password*</label>
+                        <div class="col-sm-9">
+                            <input type="password" class="form-control" id="password" placeholder="Enter password"
+                                   name="txtPassword">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3" for="password-retype">Retype password*</label>
+                        <div class="col-sm-9">
+                            <input onblur="checkRetypePassword()" type="password" class="form-control"
+                                   id="password-retype" placeholder="Retype password">
+                            <a class="glyphicon glyphicon-remove form-control-feedback"
+                               style="margin-right: 10px;color: red; display: none" id="checkReypeIcon"></a>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Gender</label>
+                        <div class="col-sm-9">
+                            <label class="radio-inline"><input type="radio" name="rdGender" checked value="male">Male</label>
+                            <label class="radio-inline"><input type="radio" name="rdGender"
+                                                               value="female">Female</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3" for="firstname">Firstname</label>
+                        <div class="col-sm-3" style="padding-right: 0px">
+                            <input type="text" class="form-control" id="firstname" placeholder="Enter firstname"
+                                   name="txtFirstname">
+                        </div>
+                        <label class="control-label col-sm-2" for="lastname">Lastname</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="lastname" placeholder="Enter lastname"
+                                   name="txtLastname">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3" for="password">Address</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="address" placeholder="Enter address"
+                                   name="txtAddress">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3" for="password">Phone</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="phone" placeholder="Enter phone"
+                                   name="txtPhone">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3" for="email">Email</label>
+                        <div class="col-sm-9">
+                            <input type="email" class="form-control" id="email" placeholder="Enter email"
+                                   name="txtEmail">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
 <div class="modal fade" id="brand-info-modal" role="dialog">
     <div class="modal-dialog">
 
@@ -224,7 +355,7 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">Add a new brand</h4>
             </div>
-            <form class="form-horizontal" action="/brand/updateInfo" method="post">
+            <form class="form-horizontal" action="/brand/newBrand" method="post">
                 <div class="modal-body">
 
                     <div class="form-group">
@@ -279,6 +410,7 @@
 
     </div>
 </div>
+
 <section class="content-header">
 </section>
 <section class="content">
@@ -348,7 +480,7 @@
                         <div class="icon">
                             <i class="fa fa-facebook"></i>
                         </div>
-                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                        <a href="#" onclick="scrollToElement($('#page-list'))" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-4">
@@ -360,7 +492,7 @@
                         <div class="icon">
                             <i class="fa fa-shopping-cart " style="font-size: 80px"></i>
                         </div>
-                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                        <a href="#" onclick="scrollToElement($('#brand-body'))" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-4">
@@ -372,7 +504,7 @@
                         <div class="icon">
                             <i class="glyphicon glyphicon-user" style="font-size: 70px"></i>
                         </div>
-                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                        <a href="#" onclick="scrollToElement($('#user-table'))" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
             </div>
@@ -400,11 +532,12 @@
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
-
                 </table>
             </div>
             <div class="box-footer with-border" style="font-size: 20px; font-weight: bold;">
-
+                <button data-toggle="modal" data-target="#addUserModal" class="btn btn-primary pull-right"><span class="fa fa-plus"
+                                                                                                                     style="margin-right: 10px"></span>New user
+                </button>
             </div>
         </div>
     </div>
