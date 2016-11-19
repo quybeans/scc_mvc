@@ -131,7 +131,7 @@ public class HomeController {
         if (userEntity.getRoleid() == Constant.ROLE_ADMIN) {
             return "redirect:/admin/index";
         } else if (userEntity.getRoleid() == Constant.ROLE_STAFF) {
-            return "CustomerCare";
+            return "customercare";
         } else if (userEntity.getRoleid() == Constant.ROLE_SUPERVISOR) {
             return "manageticket";
         } else if (userEntity.getRoleid() == Constant.ROLE_BRAND) {

@@ -90,7 +90,7 @@
                         );
                     });
                     $("#brand-body").append(
-                            '<div style="height: 90px;" class="brand-item col-lg-6">' +
+                            '<div  data-toggle="modal" data-target="#brand-info-modal" style="height: 90px;" class="brand-item col-lg-6">' +
                             '<img src="https://www.insidehighered.com/sites/default/server_files/media/plus.png" style="margin-top:5px; height: 80px; width: 80px; border: 1px solid lightgray">' +
                             '<div style="font-size: 20px; color: black; margin-top: -70px; margin-left: 90px">New brand</div>' +
                             '</div>'
@@ -122,10 +122,10 @@
                                 '</div>'+
                                 '<div style="height: 70px;" class="brand-item col-lg-3">' +
                                 '<div style="margin-top: 10px"><span class="fa fa-pencil" style="color: lightgray;margin-right: 10px"></span><span>'+postCount+'</span>&nbsp;posts</div>'+
-                                '<div ><span class="fa fa-comment fa-flip-horizontal" style="color: lightgray;margin-right: 10px"></span><span>'+cmtCount+'</span>&nbsp;comments</div>'+
+                                '<div ><span class="fa fa-comment fa-flip-horizontal" style="color: lightgray;margin-right: 10px"></span><span>'+getRepString(cmtCount)+'</span>&nbsp;comments</div>'+
                                 '</div>' +
                                 '<div style="height: 70px;" class="brand-item col-lg-3">' +
-                                '<div style="margin-top: 10px"><span class="fa fa-check active" style="margin-right: 10px"></span><span></span>&nbsp;Crawled</div>'+
+                                '<div style="margin-top: 10px"><span class="fa fa-check active" style="margin-right: 10px"></span><span></span>Crawled</div>'+
                                 '<div ><span class="fa fa-circle" style="color:gray;margin-right: 10px"></span><span></span>&nbsp;Webhooks</div>'+
                                 '</div>'+
                                 '</div>'
@@ -159,6 +159,13 @@
             $('#deadDate').html("" + threeMonthsAgo.format('LL'));
         }
 
+        function getRepString(rep) {
+            rep = rep + ''; // coerce to string
+            if (rep < 1000) {
+                return rep; // return the same number
+            }
+            return (rep / 1000).toFixed(rep % 1000 != 0) + 'k';
+        }
     </script>
     <style>
         .brandlist .brand-item:hover
@@ -208,7 +215,70 @@
         </div>
     </nav>
 </header>
+<div class="modal fade" id="brand-info-modal" role="dialog">
+    <div class="modal-dialog">
 
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Add a new brand</h4>
+            </div>
+            <form class="form-horizontal" action="/brand/updateInfo" method="post">
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="txtName">Name:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="txtName" name="txtName" placeholder="Enter name">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="txtSologan">Sologan:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="txtSologan" name="txtSologan"
+                                   placeholder="Enter sologan">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="txtPhone">Phone:</label>
+                        <div class="col-sm-10">
+                            <input type="tel" class="form-control" id="txtPhone" name="txtPhone"
+                                   placeholder="Enter phone">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="txtMail">Email:</label>
+                        <div class="col-sm-10">
+                            <input type="email" class="form-control" id="txtMail" name="txtMail"
+                                   placeholder="Enter email">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="txtAddress">Address:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="txtAddress" name="txtAddress"
+                                   placeholder="Enter address">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="txtLogo">Logo:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="txtLogo" name="txtLogo"
+                                   placeholder="Enter address">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
 <section class="content-header">
 </section>
 <section class="content">
@@ -307,7 +377,7 @@
                 </div>
             </div>
             <div class="box-footer with-border" style="font-size: 20px; font-weight: bold;">
-                <button class="btn btn-primary pull-right"><span class="fa fa-plus"
+                <button data-toggle="modal" data-target="#brand-info-modal" class="btn btn-primary pull-right"><span class="fa fa-plus"
                                                                  style="margin-right: 10px"></span>New brand
                 </button>
             </div>
