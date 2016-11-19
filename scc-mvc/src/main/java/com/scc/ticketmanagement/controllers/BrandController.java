@@ -92,4 +92,35 @@ public class BrandController {
         }
         return null;
     }
+
+    @RequestMapping("/brand/newBrand")
+    public String createNewBrand(HttpServletRequest request
+            , @RequestParam("txtName") String name
+            , @RequestParam("txtSologan") String sologan
+            , @RequestParam("txtPhone") String phone
+            , @RequestParam("txtMail") String mail
+            , @RequestParam("txtAddress") String address
+            , @RequestParam("txtLogo") String logo) throws DataAccessException {
+        HttpSession session = request.getSession();
+        if (session != null) {
+            String username = (String) session.getAttribute("username");
+            if (username != null) {
+                UserEntity user = userService.getUserByUsername(username);
+                if (user.getRoleid() == Constant.ROLE_ADMIN) {
+
+                    BrandEntity brandEntity = new BrandEntity();
+                    if (name.length() > 0) brandEntity.setName(name);
+                    if (sologan.length() > 0) brandEntity.setSologan(sologan);
+                    if (address.length() > 0) brandEntity.setAddress(address);
+                    if (phone.length() > 0) brandEntity.setPhone(phone);
+                    if (mail.length() > 0) brandEntity.setEmail(mail);
+                    if (logo.length() > 0) brandEntity.setImage(logo);
+
+                    brandRepository.save(brandEntity);
+                    return "/admin/index";
+                }
+            }
+        }
+        return "/admin/index";
+    }
 }
