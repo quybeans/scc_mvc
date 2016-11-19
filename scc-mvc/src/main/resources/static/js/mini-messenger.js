@@ -325,10 +325,13 @@ function register_popup(id, name) {
 
             });
 
+            var fullScreenLink = 'http://localhost:9000/messenger/ticket?senderid=' + id +
+            '&receiverid=' + currentPageId + '&messageid=null&messageEnd=null';
+
             var element3 = '<div class="popup-box chat-popup" id="' + id + '">' +
                 '<div class="popup-head">' +
                 '<div class="popup-head-left">' + name + '</div>' +
-                '<div class="popup-head-right"><a href="javascript:close_popup(\'' + id + '\');">&#10005;</a></div>' +
+                '<div class="popup-head-right"><a target="_blank" style="margin-right: 5px" href="'+fullScreenLink+'"><i class="fa fa-arrows-alt" aria-hidden="true"></i></a><a href="javascript:close_popup(\'' + id + '\');">&#10005;</a></div>' +
                 '<div style="clear: both"></div></div><div id="popup' +id+ '" style="height: 220px;background: aliceblue;" class="popup-messages">' +
                 '<ul id="ul' +id+ '" class="chat">' +
                 chatMessage +
