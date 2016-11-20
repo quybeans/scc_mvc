@@ -23,9 +23,18 @@ $(document).ready(function () {
             {title: "Priority", data:"currentpriority"},
             {title: "Note", data:"note"},
             {title:"Action",data:"name"},
+            {title:"Countitem",data:"countitem",visible:false},
+            {title:"Assignee Role",data:"assigneerole",visible:false},
         ],
 
         columnDefs:[
+            {
+                width:'10%',
+                targets: 3,
+                render: (data, type, row) => {
+                return '<h5 style="overflow: hidden; max-height: 100px;word-wrap: break-word">'+row.assigneeuser+'-'+row.assigneerole+'</h5>'
+            },
+    },
             {
                 width:'20%',
                 targets: 7,
@@ -37,7 +46,7 @@ $(document).ready(function () {
             width:'20%',
             targets: 1,
             render: (data, type, row) => {
-            return '<h5 style="overflow: hidden; max-height: 100px"><a href="followticket?ticketid='+row.id+'">'+row.name+'</a></h5>'
+            return '<h5 style="overflow: hidden; max-height: 100px"><a href="followticket?ticketid='+row.id+'">'+row.name+ ' ('+row.countitem+') '+'</a></h5>'
         },
 },
     {
@@ -61,8 +70,9 @@ $(document).ready(function () {
                         +'<span class="caret"></span></button> '
                         +'<div class="dropdown-menu" style="width: 10px">'
                         +'<li><a onclick="forwardticket('+row.id+')">Forward</a></li>'
-                        +'<li><a onclick="forwardticket('+row.id+')">Change Status</a></li>'
-                        +'<li><a onclick="forwardticket('+row.id+')">Change Priority</a></li>'
+                        +'<li><a onclick="status('+row.id+')">Change Status</a></li>'
+                        +'<li><a onclick="updateticket('+row.id+')">Change Priority</a></li>'
+                        +'<li><a onclick="deleteticket('+row.id+')">Delete ticket</a></li>'
                         +'</div>'
                     // +'<button class="btn btn-success btn-xs" onclick="forwardticket('+row.id+')"><i class="fa fa-ticket"></i></button>'
                     // +'<button class="btn btn-primary btn-xs" onclick="status('+row.id+')"><i class="fa fa-navicon"></i></button>'
@@ -76,6 +86,7 @@ $(document).ready(function () {
                     +'<li><a onclick="assign('+row.id+')">Assign</a></li>'
                     +'<li><a onclick="status('+row.id+')">Change Status</a></li>'
                     +'<li><a onclick="updateticket('+row.id+')">Change Priority</a></li>'
+                    +'<li><a onclick="deleteticket('+row.id+')">Delete ticket</a></li>'
                     +'</div>'
                     // +'<button class="btn btn-success btn-xs" onclick="assign('+row.id+')"><i class="fa fa-ticket"></i></button>'
                     // +'<button class="btn btn-primary btn-xs" onclick="status('+row.id+')"><i class="fa fa-navicon"></i></button>'
@@ -151,7 +162,7 @@ function assign(ticketid) {
             $("#assign").html("");
             for (var i =0;i<data.length;i++){
                 $("#assign").append(
-                    '<option value="'+data[i].userid+'">'+data[i].firstname+ ' ' +data[i].lastname +'</option>'
+                    '<option value="'+data[i].userid+'">'+data[i].firstname+ ' ' +data[i].lastname +'-'+data[i].role+'</option>'
                 );
 
             }
@@ -425,7 +436,7 @@ function newticket() {
             $("#assignee").html("");
             for (var i =0;i<data.length;i++)
                 $("#assignee").append(
-                    '<option value="'+data[i].userid+'">'+data[i].firstname+ ' ' +data[i].lastname +'</option>'
+                    '<option value="'+data[i].userid+'">'+data[i].firstname+ ' ' +data[i].lastname +'-'+data[i].role+'</option>'
                 );
         },
         error:function () {
@@ -500,13 +511,18 @@ function getcurrentuser() {
                 window.staff=false;
             }
             $("#topbtn").append(
-                '<button style="width: 170px" class="btn btn-primary btn-md " type="button" onclick="ticketrequest('+data.userid+')">'
+                btn
+                +'<button class="btn btn-info btn-md " type="button" onclick="configpriority()">'
+                +'<i class="fa fa-cogs" aria-hidden="true"></i> <strong>Config Priority</strong>'
+                +'</button>'
+
+                +'<button style="width: 170px" class="btn btn-primary btn-md " type="button" onclick="ticketrequest('+data.userid+')">'
                 +'<div id="ticketrequestbtn">'
                 +'<i class="fa fa-flag" aria-hidden="true"></i> '
                 +'<strong>Ticket Request</strong>'
                 +'</div>'
                 +'</button>'
-                +btn
+
             )
 
         }
@@ -608,7 +624,7 @@ function forwardticket(ticketid) {
             $("#forward").html("");
             for (var i = 0; i < data.length; i++)
                 $("#forward").append(
-                    '<option value="' + data[i].userid + '">' + data[i].firstname + ' ' + data[i].lastname + '</option>'
+                    '<option value="'+data[i].userid+'">'+data[i].firstname+ ' ' +data[i].lastname +'-'+data[i].role+'</option>'
                 );
         },
         error: function () {
@@ -669,5 +685,20 @@ function createstaffticket(){
             }
         })
     })
+}
+
+function deleteticket(ticketid) {
+    $.ajax({
+        url:"/deleteticket",
+        type:"POST",
+        data:{"ticketid":ticketid},
+        success:function () {
+            alert("Delete ticket successfull")
+        },
+        error:function () {
+            alert("Fail to delete ticket")
+        }
+    })
+
 }
 

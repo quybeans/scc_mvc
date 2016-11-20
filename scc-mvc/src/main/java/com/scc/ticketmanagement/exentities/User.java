@@ -7,6 +7,7 @@ public class User {
     private int userid;
     private String lastname;
     private String firstname;
+    private String role;
 
     public int getUserid() {
         return userid;
@@ -30,5 +31,13 @@ public class User {
 
     public void setFirstname(String firstname) {
         this.firstname = firstname;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

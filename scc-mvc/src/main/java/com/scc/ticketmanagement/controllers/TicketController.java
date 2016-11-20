@@ -577,7 +577,7 @@ public class TicketController {
         List<ExtendTicket> listextendticket = new ArrayList<ExtendTicket>();
         for (TicketEntity tk: ticketlist) {
             ExtendTicket extendticket = new ExtendTicket();
-
+            extendticket.setCountitem(ticketitemRepository.counTicketItem(tk.getId()));
             extendticket.setAssignee(tk.getAssignee());
             extendticket.setName(tk.getName());
             extendticket.setActive(tk.getActive());
@@ -586,6 +586,8 @@ public class TicketController {
             extendticket.setStatusid(tk.getStatusid());
             extendticket.setCreatedtime(tk.getCreatedtime());
             extendticket.setNote(tk.getNote());
+
+
             //Get UserEntity cua ng tao ra ticket
             UserEntity createTicketUser =userRepository.findOne(extendticket.getCreatedby());
             //Get ProfileEntity cua ng tao ra ticket
@@ -599,6 +601,12 @@ public class TicketController {
             ProfileEntity assigneeTicketProfile = profileRepository.findOne(assigneeUser.getUserid());
             //Get Fullname cua ng ta ticket de set vao extendTicket
             extendticket.setAssigneeuser(assigneeTicketProfile.getFirstname() + " " + assigneeTicketProfile.getLastname());
+            switch (assigneeUser.getRoleid()){
+                case Constant.ROLE_ADMIN: extendticket.setAssigneerole("Admin"); break;
+                case Constant.ROLE_BRAND: extendticket.setAssigneerole("Brand Manager"); break;
+                case Constant.ROLE_STAFF: extendticket.setAssigneerole("Staff"); break;
+                case Constant.ROLE_SUPERVISOR: extendticket.setAssigneerole("Supervisor"); break;
+            }
 
             switch (extendticket.getStatusid()){
                 case Constant.STATUS_ASSIGN: extendticket.setCurrentstatus("Assigned"); break;
@@ -615,5 +623,11 @@ public class TicketController {
 
         }
         return listextendticket;
+    }
+
+    @RequestMapping("/deleteticket")
+    public void deleteticket(@RequestParam("ticketid") Integer ticketid){
+        TicketEntity ticket = ticketRepository.findOne(ticketid);
+        ticketRepository.delete(ticket);
     }
 }

@@ -66,33 +66,13 @@ function showTicket() {
         dataType: "json",
         success: function (data) {
             $.each(data, function (index) {
-// <<<<<<< HEAD
-//                 var statusColor = 'solved';
-//                 if (data[index].statusid == 3) statusColor = 'process';
-//                 else if (data[index].statusid == 2) statusColor = 'assigned';
-//
-//
-//                 $('#ticket-list').append(
-//                     '<div class="ticket" onclick="addCommentToTicket('+data[index].id+','+currentCmt+')">'
-//                     + '<div class="title ' + statusColor + '">' + data[index].name + '</div>'
-//                     + '<div>Statxxxus:&nbsp;'
-//                     + '<span class="fa fa-circle"></span>&nbsp;'
-// =======
-                var statusColor;
-                switch (data[index].statusid){
-                    case 1: statusColor='#ffff00'; break;
-                    case 2: statusColor='#00a65a'; break;
-                    case 3: statusColor='#500a6f'; break;
-                    case 4: statusColor='gray'; break;
-                    case 5: statusColor='#000000'; break;
-                }
+                var statusColor=getstatuscolor(data[index].statusid);
 
                 $('#ticket-list').append(
                     '<div class="ticket">'
                     + '<div class="title" style="background-color:  ' +statusColor+'">' + data[index].name + '</div>'
                     + '<div>Status:&nbsp;'
                     + '<span class="fa fa-circle" style="color:' +statusColor+'"></span>&nbsp;'
-// >>>>>>> origin/nguyennvse
                     + data[index].currentstatus
                     + '</div>'
                     + '<div>Created by:&nbsp;<span style="color: black; font-weight: bold">'
@@ -135,6 +115,7 @@ function getAllFBAccount()  {
         }
     });
 }
+
 //get All Facebook account belong to user
 function getAllPageAccount() {
     $.ajax({
@@ -1145,83 +1126,11 @@ function countReply(commentId) {
 }
 
 function sortticketbytime() {
-    $.ajax({
-        url:"/sortbytime",
-        type:"GET",
-        success:function (data) {
-            $('#ticket-list').empty();
-            $.each(data, function (index) {
-                var statusColor;
-                switch (data[index].statusid){
-                    case 1: statusColor='#ffff00'; break;
-                    case 2: statusColor='#00a65a'; break;
-                    case 3: statusColor='#500a6f'; break;
-                    case 4: statusColor='gray'; break;
-                    case 5: statusColor='#000000'; break;
-                }
-
-                $('#ticket-list').append(
-                    '<div class="ticket">'
-                    + '<div class="title" style="background-color:  ' +statusColor+'">' + data[index].name + '</div>'
-                    + '<div>Status:&nbsp;'
-                    + '<span class="fa fa-circle" style="color:' +statusColor+'"></span>&nbsp;'
-                    + data[index].currentstatus
-                    + '</div>'
-                    + '<div>Created by:&nbsp;<span style="color: black; font-weight: bold">'
-                    + data[index].createbyuser
-                    + '</span></div>'
-                    + '<div>Current assignee:&nbsp;<span style="color: black; font-weight: bold">'+data[index].assigneeuser+'</span>'
-                    + '</div>'
-                    + '<div></div>'
-                    + '</div>'
-                )
-
-
-            })
-        },
-        error:function () {
-            alert("Fail to")
-        }
-    })
+    sortticket("/sortbytime")
 }
 
 function sortticketbystatus() {
-    $.ajax({
-        url:"/sortbystatus",
-        type:"GET",
-        success:function (data) {
-            $('#ticket-list').empty();
-            $.each(data, function (index) {
-                var statusColor;
-                switch (data[index].statusid){
-                    case 1: statusColor='#ffff00'; break;
-                    case 2: statusColor='#00a65a'; break;
-                    case 3: statusColor='#500a6f'; break;
-                    case 4: statusColor='gray'; break;
-                    case 5: statusColor='#000000'; break;
-                }
-
-                $('#ticket-list').append(
-                    '<div class="ticket">'
-                    + '<div class="title" style="background-color:  ' +statusColor+'">' + data[index].name + '</div>'
-                    + '<div>Status:&nbsp;'
-                    + '<span class="fa fa-circle" style="color:' +statusColor+'"></span>&nbsp;'
-                    + data[index].currentstatus
-                    + '</div>'
-                    + '<div>Created by:&nbsp;<span style="color: black; font-weight: bold">'
-                    + data[index].createbyuser
-                    + '</span></div>'
-                    + '<div>Current assignee:&nbsp;<span style="color: black; font-weight: bold">'+data[index].assigneeuser+'</span>'
-                    + '</div>'
-                    + '<div></div>'
-                    + '</div>'
-                )
-            })
-        },
-        error:function () {
-            alert("Fail to")
-        }
-    })
+    sortticket("/sortbystatus")
 }
 
 function showallticket() {
@@ -1232,14 +1141,7 @@ function showallticket() {
         dataType: "json",
         success: function (data) {
             $.each(data, function (index) {
-                var statusColor;
-                switch (data[index].statusid){
-                    case 1: statusColor='#ffff00'; break;
-                    case 2: statusColor='#00a65a'; break;
-                    case 3: statusColor='#500a6f'; break;
-                    case 4: statusColor='gray'; break;
-                    case 5: statusColor='#000000'; break;
-                }
+                var statusColor=getstatuscolor(data[index].statusid);
 
                 $('#ticket-list').append(
                     '<div class="ticket">'
@@ -1292,14 +1194,8 @@ function filterticket(){
         success:function (data) {
             $('#ticket-list').empty();
             $.each(data, function (index) {
-                var statusColor;
-                switch (data[index].statusid){
-                    case 1: statusColor='#ffff00'; break;
-                    case 2: statusColor='#00a65a'; break;
-                    case 3: statusColor='#500a6f'; break;
-                    case 4: statusColor='gray'; break;
-                    case 5: statusColor='#000000'; break;
-                }
+                var statusColor=getstatuscolor(data[index].statusid);
+
 
                 $('#ticket-list').append(
                     '<div class="ticket">'
@@ -1359,6 +1255,50 @@ function getalluser() {
         },
         error: function () {
             alert("Fail to load list user");
+        }
+    })
+}
+
+function getstatuscolor(statusid) {
+    switch (statusid){
+        case 1: return'#ffff00'; break;
+        case 2: return'#00a65a'; break;
+        case 3: return'#500a6f'; break;
+        case 4: return'gray'; break;
+        case 5: return'#000000'; break;
+    }
+}
+
+function sortticket(url) {
+    $.ajax({
+        url:url,
+        type:"GET",
+        success:function (data) {
+            $('#ticket-list').empty();
+            $.each(data, function (index) {
+                var statusColor=getstatuscolor(data[index].statusid);
+
+                $('#ticket-list').append(
+                    '<div class="ticket">'
+                    + '<div class="title" style="background-color:  ' +statusColor+'">' + data[index].name + '</div>'
+                    + '<div>Status:&nbsp;'
+                    + '<span class="fa fa-circle" style="color:' +statusColor+'"></span>&nbsp;'
+                    + data[index].currentstatus
+                    + '</div>'
+                    + '<div>Created by:&nbsp;<span style="color: black; font-weight: bold">'
+                    + data[index].createbyuser
+                    + '</span></div>'
+                    + '<div>Current assignee:&nbsp;<span style="color: black; font-weight: bold">'+data[index].assigneeuser+'</span>'
+                    + '</div>'
+                    + '<div></div>'
+                    + '</div>'
+                )
+
+
+            })
+        },
+        error:function () {
+            alert("Fail to")
         }
     })
 }
