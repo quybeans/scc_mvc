@@ -16,4 +16,5 @@ public interface TicketService {
     void assignticket(Integer id,Integer assignee);
     TicketEntity getTicketByID(Integer ticketid);
     List<TicketEntity> getTicketUser(Integer userid);
+    List<TicketEntity> getTicketByMessageId(String messageId);
 }

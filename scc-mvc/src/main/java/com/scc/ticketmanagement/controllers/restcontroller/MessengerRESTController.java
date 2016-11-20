@@ -3,11 +3,13 @@ package com.scc.ticketmanagement.controllers.restcontroller;
 import com.scc.ticketmanagement.Entities.*;
 import com.scc.ticketmanagement.ServiceImp.TicketIteamServiceImp;
 import com.scc.ticketmanagement.exentities.Conversation;
+import com.scc.ticketmanagement.exentities.ExMessage;
 import com.scc.ticketmanagement.repositories.ContactRepository;
 import com.scc.ticketmanagement.repositories.UserRepository;
 import com.scc.ticketmanagement.services.MessageItemService;
 import com.scc.ticketmanagement.services.MessageService;
 import com.scc.ticketmanagement.services.PageService;
+import com.scc.ticketmanagement.services.TicketService;
 import com.scc.ticketmanagement.utilities.FacebookUtility;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +25,7 @@ import java.net.URL;
 
 import javax.servlet.http.HttpSession;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Thien on 11/2/2016.
@@ -51,6 +50,9 @@ public class MessengerRESTController {
 
     @Autowired
     private TicketIteamServiceImp ticketIteamServiceImp;
+
+    @Autowired
+    TicketService ticketService;
 
     @RequestMapping(value = "/getAllConversations", method = RequestMethod.GET)
     public List<MessageEntity> getAllConversations() {
@@ -111,12 +113,30 @@ public class MessengerRESTController {
     }
 
     @RequestMapping(value = "/messenger/getConversationBySenderIdWithPage", method = RequestMethod.POST)
-    public List<MessageEntity> getConversationBySenderIdWithPage(@RequestParam("pageId") String pageId,
-                                                                 @RequestParam("senderId") String senderId,
-                                                                 @RequestParam("pageNum") Integer pageNum) {
+    public List<ExMessage> getConversationBySenderIdWithPage(@RequestParam("pageId") String pageId,
+                                                             @RequestParam("senderId") String senderId,
+                                                             @RequestParam("pageNum") Integer pageNum) {
         Page<MessageEntity> messages = messageService.getMessageDescWithPageSize(pageId, senderId, pageNum);
 
-        return messages.getContent();
+        List<ExMessage> result = new ArrayList<>();
+        ExMessage exMessage;
+        for (MessageEntity message : messages.getContent()) {
+            exMessage = new ExMessage();
+            exMessage.setId(message.getId());
+            exMessage.setContent(message.getContent());
+            exMessage.setCreatedAt(message.getCreatedAt());
+            exMessage.setReceiverName(message.getReceiverName());
+            exMessage.setReceiverid(message.getReceiverid());
+            exMessage.setSenderName(message.getSenderName());
+            exMessage.setSenderid(message.getSenderid());
+            exMessage.setSeq(message.getSeq());
+            exMessage.setMessageRead(message.getMessageRead());
+            exMessage.setSentimentScrore(message.getSentimentScrore());
+            exMessage.setTicket(ticketService.getTicketByMessageId(message.getId()).size() != 0);
+            result.add(exMessage);
+        }
+
+        return result;
     }
 
     @RequestMapping(value = "/messenger/sendMessageToCustomer", method = RequestMethod.POST)
@@ -172,7 +192,7 @@ public class MessengerRESTController {
         TicketitemEntity result = null;
         MessageitemEntity messageitemEntity = messageItemService.startTicket(messageId);
         if (messageitemEntity != null) {
-            result = ticketIteamServiceImp.addMessageItemToTicket(ticketId, messageitemEntity.getItemId(),user.getUserid());
+            result = ticketIteamServiceImp.addMessageItemToTicket(ticketId, messageitemEntity.getItemId(), user.getUserid());
 
         }
         return result;
@@ -194,5 +214,10 @@ public class MessengerRESTController {
     @RequestMapping(value = "/messenger/getNumberOfUnreadMessageInPage", method = RequestMethod.GET)
     public Integer getNumberOfUnreadMessageInPage(@RequestParam("pageId") String pageId) {
         return messageService.getNumberOfUnreadMessageInPage(pageId);
+    }
+
+    @RequestMapping(value = "/messenger/getTicketByMessage", method = RequestMethod.POST)
+    public List<TicketEntity> getTicketByMessage(@RequestParam("messageId") String messageId) {
+        return ticketService.getTicketByMessageId(messageId);
     }
 }
