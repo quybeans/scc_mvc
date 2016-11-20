@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Brand infomation</title>
     <header class="main-header" th:include="Head::header"></header>
     <aside class="main-sidebar" th:include="SideBar::aside"></aside>
+
 
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -72,11 +73,23 @@
 
                     </div>
                     <div class="box-body">
-
+                        <div class="col-lg-3">
+                            <canvas id="countries" width="150px" height="150px"></canvas>
+                        </div>
+                        <div class="col-lg-3">
+                            <div id="chart-legend" class="chart-legend">
+                                <div><span class="fa fa-square" style="color: #ffbf00;margin-right: 10px"></span>Question
+                                </div>
+                                <div><span class="fa fa-square" style="color:#CD2D00;margin-right: 10px"></span>Negative
+                                </div>
+                                <div><span class="fa fa-square" style="color:#1AD018;margin-right: 10px"></span>Positive
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <!-- /.box-body -->
                     <div class="box-footer">
-                        Footer
+                        <div class="col-lg-2" style="text-align: center">Comments pie chart</div>
                     </div>
                     <!-- /.box-footer-->
                 </div>
@@ -89,5 +102,43 @@
 </div>
 
 </div>
+<script src="/js/Chart.bundle.js"></script>
+<script>
+    var options = {
+        responsive: false,
+        maintainAspectRatio: false,
+        legend: {
+            display: false
+        },
+    };
+    var data = {
+        labels: [
+            "Question",
+            "Negative",
+            "Positive"
+        ],
+        datasets: [
+            {
+                data: [300, 50, 100],
+                backgroundColor: [
+                    "#ffbf00",
+                    "#CD2D00",
+                    "#1AD018"
+                ],
+                hoverBackgroundColor: [
+                    "#ffbf00",
+                    "#CD2D00",
+                    "#1AD018"
+                ]
+            }]
+    };
+    var ctx = document.getElementById("countries").getContext("2d");
+    var myPieChart = new Chart(ctx, {
+        type: 'pie',
+        data: data,
+        options: options
+    });
+
+</script>
 </body>
 </html>
