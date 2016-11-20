@@ -28,6 +28,8 @@ function getParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
+
+
 $(document).ready(function () {
 
 
@@ -210,7 +212,7 @@ function firstLoadConversationBySenderId() {
                         ' <div class="header">' +
                         '<small class=" text-muted ">' +
                         // moment(dataReversed[i].createdAt).fromNow() +
-                        $.format.date(dataReversed[i].createdAt, "HH:mm")+
+                        $.format.date(dataReversed[i].createdAt, "HH:mm") +
                         '</small>' +
                         '<strong class="pull-right primary-font">' + currentPageName + '</strong>' +
                         '</div>' +
@@ -221,7 +223,7 @@ function firstLoadConversationBySenderId() {
                         '<span class="pull-right">' +
                         changeIconSentimentScore(score) +
                         '</br>' +
-                        '<span style="cursor:pointer; margin-right: 12px;opacity: 0.3" id="' + a + '" onclick="showTicket(this)" class="fa fa-plus-square-o fa-2x pull-right"></span>' +
+                        showButtonAddTicketAtPage(dataReversed[i].ticket, a) +
                         '</span>' +
                         '</li>'
                     )
@@ -234,7 +236,7 @@ function firstLoadConversationBySenderId() {
                         '<div class="header">' +
                         '<strong class="primary-font">' + currentCustomerName + '</strong>' +
                         '<small class="pull-right text-muted">' +
-                        $.format.date(dataReversed[i].createdAt, "HH:mm")+
+                        $.format.date(dataReversed[i].createdAt, "HH:mm") +
                         '</small>' +
                         '</div>' +
                         '<p>' +
@@ -243,7 +245,7 @@ function firstLoadConversationBySenderId() {
                         '</div>' +
                         changeIconSentimentScore(score) +
                         '</br>' +
-                        '<span style="cursor:pointer; margin-left: 7px;opacity: 0.3"  id="' + a + '" onclick="showTicket(this)" class="fa fa-plus-square-o fa-2x pull-left"></span>' +
+                        showButtonAddTicketAtSender(dataReversed[i].ticket, a) +
                         '</li>'
                     );
                 }
@@ -273,13 +275,13 @@ function reloadConversationBySenderId() {
                 score = dataReversed[i].sentimentScrore;
                 if (dataReversed[i].senderid == currentPageId) {
                     $('#conversationContent').append(
-                        '<li class="right clearfix"><span class="chat-img pull-right">' +
+                        '<li onclick="checkMessageTicket(\'' + a + '\')" class="right clearfix"><span class="chat-img pull-right">' +
                         ' <img src="' + currentPageAvt + '" alt="User Avatar"/>' +
                         ' </span>' +
                         '<div class="chat-body clearfix pull-right">' +
                         ' <div class="header">' +
                         '<small class=" text-muted ">' +
-                        $.format.date(dataReversed[i].createdAt, "HH:mm")+
+                        $.format.date(dataReversed[i].createdAt, "HH:mm") +
                         '</small>' +
                         '<strong class="pull-right primary-font">' + currentPageName + '</strong>' +
                         '</div>' +
@@ -290,20 +292,20 @@ function reloadConversationBySenderId() {
                         '<span class="pull-right">' +
                         changeIconSentimentScore(score) +
                         '</br>' +
-                        '<span style="cursor:pointer; margin-right: 12px; opacity: 0.3" id="' + a + '" onclick="showTicket(this)" class="fa fa-plus-square-o fa-2x pull-right"></span>' +
+                        showButtonAddTicketAtPage(dataReversed[i].ticket, a) +
                         '</span>' +
                         '</li>'
                     )
                     ;
                 } else {
                     $('#conversationContent').append(
-                        '<li class="left clearfix"><span class="chat-img pull-left"> ' +
+                        '<li onclick="checkMessageTicket(\'' + a + '\')" class="left clearfix"><span class="chat-img pull-left"> ' +
                         '<img src="' + currentCustomerAvt + '"/> </span>' +
                         '<div class="chat-body clearfix pull-left">' +
                         '<div class="header">' +
                         '<strong class="primary-font">' + currentCustomerName + '</strong>' +
                         '<small class="pull-right text-muted">' +
-                        $.format.date(dataReversed[i].createdAt, "HH:mm")+
+                        $.format.date(dataReversed[i].createdAt, "HH:mm") +
                         '</small>' +
                         '</div>' +
                         '<p>' +
@@ -312,7 +314,7 @@ function reloadConversationBySenderId() {
                         '</div>' +
                         changeIconSentimentScore(score) +
                         '</br>' +
-                        '<span style="cursor:pointer;margin-left: 7px; opacity: 0.3"  id="' + a + '" onclick="showTicket(this)" class="fa fa-plus-square-o fa-2x pull-left"></span>' +
+                        showButtonAddTicketAtSender(dataReversed[i].ticket, a) +
                         '</li>'
                     );
                 }
@@ -375,7 +377,7 @@ function getConversationBySenderIdWithPage() {
                             '<div class="chat-body clearfix pull-right">' +
                             ' <div class="header">' +
                             '<small class=" text-muted ">' +
-                            $.format.date(dataReversed[i].createdAt, "HH:mm")+
+                            $.format.date(dataReversed[i].createdAt, "HH:mm") +
                             '</small>' +
                             '<strong class="pull-right primary-font">' + currentPageName + '</strong>' +
                             '</div>' +
@@ -386,7 +388,7 @@ function getConversationBySenderIdWithPage() {
                             '<span class="pull-right">' +
                             changeIconSentimentScore(score) +
                             '</br>' +
-                            '<span style="cursor:pointer;margin-right: 12px;opacity: 0.3" id="' + a + '" onclick="showTicket(this)" class="fa fa-plus-square-o fa-2x pull-right"></span>' +
+                            showButtonAddTicketAtPage(dataReversed[i].ticket) +
                             '</span>' +
                             '</li>'
                         )
@@ -399,7 +401,7 @@ function getConversationBySenderIdWithPage() {
                             '<div class="header">' +
                             '<strong class="primary-font">' + currentCustomerName + '</strong>' +
                             '<small class="pull-right text-muted">' +
-                            $.format.date(dataReversed[i].createdAt, "HH:mm")+
+                            $.format.date(dataReversed[i].createdAt, "HH:mm") +
                             '</small>' +
                             '</div>' +
                             '<p>' +
@@ -408,7 +410,7 @@ function getConversationBySenderIdWithPage() {
                             '</div>' +
                             changeIconSentimentScore(score) +
                             '</br>' +
-                            '<span style="cursor:pointer;margin-left: 7px;opacity: 0.3"  id="' + a + '" onclick="showTicket(this)" class="fa fa-plus-square-o fa-2x pull-left"></span>' +
+                            showButtonAddTicketAtSender(dataReversed[i].ticket) +
                             '</li>'
                         );
                     }
@@ -463,13 +465,13 @@ function getCustomerInfo(customerId) {
             $('#currentSenderName').text(currentCustomerName);
             $("#customer-picture").attr("src", data.picture);
             $('#customer-facebook-id').text(currentCustomerName);
-            $('#customer-facebook-id').attr('href','https://fb.com/' + getCustomerProfileId());
+            $('#customer-facebook-id').attr('href', 'https://fb.com/' + getCustomerProfileId());
             $('#customer-name').text(data.name);
             $('#customer-timezone').text(convertNumberToTimezone(data.timezone));
             $('#customer-gender').text(convertGender(data.gender));
             $('#customer-locale').text(convertLocale(data.locale));
             // $('#customer-note').text(data.note);
-             getCustomerProfileId();
+            getCustomerProfileId();
         }
     });
 
@@ -478,9 +480,9 @@ function getCustomerInfo(customerId) {
 function getCustomerProfileId() {
     var string = $('#customer-picture').attr('src');
 
-    var objectID = string.substring(string.lastIndexOf('/'))+1;
+    var objectID = string.substring(string.lastIndexOf('/')) + 1;
     var rs = objectID.split("_");
-    return(rs[1]);
+    return (rs[1]);
 }
 
 function createTicket(ticketId, messageId) {
@@ -751,27 +753,90 @@ function convertNumberToTimezone(number) {
 
 function convertLocale(locale) {
     var result = locale;
-    switch (locale){
-        case 'en_US': result = 'English - United States'; break;
-        case 'vi_VN': result = 'Vietnamese - Việt Nam'; break;
-        case 'en_GB': result = 'English - Global'; break;
+    switch (locale) {
+        case 'en_US':
+            result = 'English - United States';
+            break;
+        case 'vi_VN':
+            result = 'Vietnamese - Việt Nam';
+            break;
+        case 'en_GB':
+            result = 'English - Global';
+            break;
     }
     return result;
 }
 
 function convertGender(gender) {
     var result = 'Female';
-    if (gender == 'male'){
+    if (gender == 'male') {
         result = 'Male'
     }
     return result;
 }
 
-function showForm(a){
+function showForm(a) {
     $("#testbtn").css("display", "block");
 }
 
-function hideForm(a){
+function hideForm(a) {
     $("#testbtn").css("display", "none");
 }
 
+function checkMessageTicket(messageId) {
+
+    $.ajax({
+        url: '/messenger/getTicketByMessage',
+        type: "POST",
+        async: false,
+        data: {
+            messageId: messageId
+        },
+        dataType: "json",
+        success: function (data) {
+            $('#ticket-name').empty();
+            if (data.length > 0) {
+                $.each(data, function (index) {
+                    if (index > 0) {
+                        $('#ticket-name').append(", ");
+                    }
+                    $('#ticket-name').append(data[index].name);
+
+                });
+            } else {
+                $('#ticket-name').append("This message is not belong to any ticket");
+            }
+
+
+        },
+        error: function (error) {
+            alert("Some error happened");
+        }
+    });
+}
+
+function showButtonAddTicketAtSender(a, b) {
+    var result = '';
+    switch (a) {
+        case true:
+            result = '<span style="cursor:pointer; margin-left: 7px;opacity: 0.3"  id="' + b + '" onclick="checkMessageTicket(b)" class="fa fa-ticket fa-2x pull-left"></span>';
+            break;
+        case false:
+            result = '<span style="cursor:pointer; margin-left: 7px;opacity: 0.3"  id="' + b + '" onclick="showTicket(this)" class="fa fa-plus-square-o fa-2x pull-left"></span>';
+            break
+    }
+    return result;
+}
+
+function showButtonAddTicketAtPage(a,b) {
+    var result = '';
+    switch (a) {
+        case true:
+            result = '<span style="cursor:pointer; margin-right: 12px;opacity: 0.3" id="' + b + '" onclick="checkMessageTicket(b)" class="fa fa-ticket fa-2x pull-right"></span>';
+            break;
+        case false:
+            result = '<span style="cursor:pointer; margin-right: 12px;opacity: 0.3" id="' + b + '" onclick="showTicket(this)" class="fa fa-plus-square-o fa-2x pull-right"></span>';
+            break
+    }
+    return result;
+}

@@ -64,5 +64,10 @@ public class TicketImp implements TicketService {
         return ticketRepository.getTicketUser(userid);
     }
 
+    @Override
+    public List<TicketEntity> getTicketByMessageId(String messageId) {
+        return ticketRepository.getTicketsByMessageId(messageId);
+    }
+
 
 }
