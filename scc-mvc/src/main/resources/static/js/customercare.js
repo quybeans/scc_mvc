@@ -151,9 +151,10 @@ function getAllPageAccount() {
                 )
             });
             setOnclickReplyAccount(data[0].pageid, data[0].name, data[0].accesstoken);
-            getAllFBAccount();
         }
+
     });
+    getAllFBAccount();
 }
 
 //Get all posts
@@ -416,14 +417,17 @@ function getCommentById(postid) {
     $('#post-box').find("*").removeClass("active");
     $('#' + postid).addClass('active');
     $('#comment-page-current').val(commentListCurPage);
-    getCommentByPostIdwPage(postid, 1);
+    getCommentByPostIdwPage(postid, 1,"");
 }
 
 //Get comment by id
-function getCommentByPostIdwPage(postId, page) {
+function getCommentByPostIdwPage(postId, page, searchContent) {
+
     var url;
-    if (sortCommentBy == 2)  url = 'comment/bypostid/negSort';
-    else if (sortCommentBy == 3) url = 'comment/bypostid/timeSort';
+    if (searchContent.length>0) url='/comment/bypostid/search';
+    else if (sortCommentBy == 2)  url = '/comment/bypostid/negSort';
+    else if (sortCommentBy == 3) url = '/comment/bypostid/timeSort';
+
     else url = 'comment/bypostid';
 
     $('#comment-box').empty();
@@ -431,7 +435,7 @@ function getCommentByPostIdwPage(postId, page) {
     $.ajax({
         url: url,
         type: "GET",
-        data: {postid: postId, page: page},
+        data: {postid: postId, page: page, content: searchContent},
         dataType: "json",
         success: function (data) {
             $('#comment-box').empty();
@@ -454,7 +458,7 @@ function getCommentByPostIdwPage(postId, page) {
                     async: false,
                     success: function (ticket) {
                         if (ticket != null) isTicket = true;
-                        btnTicket = '<button class="btn btn-default btn-xs inline" style="margin-left: 10px;margin-top: -10px; border: 1px solid lightgreen; background-color: transparent;color: lightgreen">' + ticket.name + '</button>';
+                        btnTicket = '<a href=followticket?ticketid='+ticket.id+' class="btn btn-default btn-xs inline" style="margin-left: 10px;margin-top: -10px; border: 1px solid lightgreen; background-color: transparent;color: lightgreen">' + ticket.name + '</a>';
                     }
                 });
 
@@ -486,49 +490,54 @@ function getCommentByPostIdwPage(postId, page) {
         }
     });
 }
+// //Search comment by content
+// function searchByContent(postId, content, page) {
+//     $('#comment-box').html('<div style=" padding-left: 10px"><span style="color: cornflowerblue;" class="fa fa-circle-o-notch fa-spin"></span> &nbsp;Loading comments ...</div>');
+//     $.ajax({
+//         url: 'comment/bypostid/search',
+//         type: "GET",
+//         data: {postid: postId, page: page, content: content},
+//         dataType: "json",
+//         success: function (data) {
+//             $('#comment-box').empty();
+//             $.each(data, function (index) {
+//                 var senIcon = sadicon;
+//                 if (data[index].sentimentScore == 1)
+//                     senIcon = happyicon;
+//                 if (data[index].sentimentScore == 3)
+//                     senIcon = questionicon;
+//                 var cmtId = "'" + postId + "_" + data[index].id + "'";
+//
+//                 $('#comment-box').append(
+//                     '<div class="cmt" >'
+//                     + '<div class="col-lg-11 cmtContent">' +
+//                     '<img onload="http://localhost:9000/img/user_img.jpg" src="http://graph.facebook.com/' + data[index].createdBy + '/picture" alt="user image">'
+//                     + '<p class="message" style="margin-top: -53px">'
+//                     + '<a href="https:/fb.com/' + data[index].createdBy + '" target="_blank">'
+//                     + data[index].createdByName
+//                     + '<small class="text-muted" style="margin-left: 10px">'
+//                     + jQuery.format.prettyDate(new Date(data[index].createdAt))
+//                     + '</small>'
+//                     + ' </a>'
+//                     + '<p style="margin-left: 65px;margin-top: -10px " onclick="getticket(' + data[index].id + ',' + postId + ')">' + data[index].content + '</p>'
+//                     + '</p>'
+//                     // Day la nut reply
+//                     + '<button  onclick="replyToComment(' + cmtId + ');getReplyByCommentId(' + data[index].id + ');" class="btn btn-default btn-xs inline"' +
+//                     ' style="margin-left: 65px;margin-top: -10px; "><span class="glyphicon glyphicon-send"' +
+//                     ' style="color:gray "  title="Reply to this comment"   data-placement="bottom" ' +
+//                     'data-toggle="tooltip" ></span></button>'
+//                     + '</div>'
+//                     + '<div class="col-lg-1" style="margin-top: 30px">' + '<small class="' + senIcon + '" style="font-size: 20px;"></small>'
+//                     + '</div>'
+//                     + '</div>')
+//             });
+//         }
+//     })
+// }
+
 //Search comment by content
 function searchByContent(postId, content, page) {
-    $('#comment-box').html('<div style=" padding-left: 10px"><span style="color: cornflowerblue;" class="fa fa-circle-o-notch fa-spin"></span> &nbsp;Loading comments ...</div>');
-    $.ajax({
-        url: 'comment/bypostid/search',
-        type: "GET",
-        data: {postid: postId, page: page, content: content},
-        dataType: "json",
-        success: function (data) {
-            $('#comment-box').empty();
-            $.each(data, function (index) {
-                var senIcon = sadicon;
-                if (data[index].sentimentScore == 1)
-                    senIcon = happyicon;
-                if (data[index].sentimentScore == 3)
-                    senIcon = questionicon;
-                var cmtId = "'" + postId + "_" + data[index].id + "'";
-
-                $('#comment-box').append(
-                    '<div class="cmt" >'
-                    + '<div class="col-lg-11 cmtContent">' +
-                    '<img onload="http://localhost:9000/img/user_img.jpg" src="http://graph.facebook.com/' + data[index].createdBy + '/picture" alt="user image">'
-                    + '<p class="message" style="margin-top: -53px">'
-                    + '<a href="https:/fb.com/' + data[index].createdBy + '" target="_blank">'
-                    + data[index].createdByName
-                    + '<small class="text-muted" style="margin-left: 10px">'
-                    + jQuery.format.prettyDate(new Date(data[index].createdAt))
-                    + '</small>'
-                    + ' </a>'
-                    + '<p style="margin-left: 65px;margin-top: -10px " onclick="getticket(' + data[index].id + ',' + postId + ')">' + data[index].content + '</p>'
-                    + '</p>'
-                    // Day la nut reply
-                    + '<button  onclick="replyToComment(' + cmtId + ');getReplyByCommentId(' + data[index].id + ');" class="btn btn-default btn-xs inline"' +
-                    ' style="margin-left: 65px;margin-top: -10px; "><span class="glyphicon glyphicon-send"' +
-                    ' style="color:gray "  title="Reply to this comment"   data-placement="bottom" ' +
-                    'data-toggle="tooltip" ></span></button>'
-                    + '</div>'
-                    + '<div class="col-lg-1" style="margin-top: 30px">' + '<small class="' + senIcon + '" style="font-size: 20px;"></small>'
-                    + '</div>'
-                    + '</div>')
-            });
-        }
-    })
+    getCommentByPostIdwPage(postId,page,content);
 }
 
 //On post click
@@ -1059,21 +1068,21 @@ function countComment(postid) {
 function nextCommentPage() {
     commentListCurPage = commentListCurPage + 1;
     $('#comment-page-current').val(commentListCurPage);
-    getCommentByPostIdwPage(currentPost, commentListCurPage);
+    getCommentByPostIdwPage(currentPost, commentListCurPage,"");
 }
 
 function previousCommentPage() {
     if (commentListCurPage == 1) return;
     commentListCurPage = commentListCurPage - 1;
     $('#comment-page-current').val(commentListCurPage);
-    getCommentByPostIdwPage(currentPost, commentListCurPage);
+    getCommentByPostIdwPage(currentPost, commentListCurPage,"");
 }
 
 function checkNumberInputAndEnter(e) {
     commentListCurPage = parseInt($('#comment-page-current').val());
     if (e.keyCode == 13) {
         $(this).blur();
-        getCommentByPostIdwPage(currentPost, commentListCurPage);
+        getCommentByPostIdwPage(currentPost, commentListCurPage,"");
     }
 
 }

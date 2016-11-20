@@ -9,6 +9,7 @@ import com.scc.ticketmanagement.exentities.ExtendComments;
 import com.scc.ticketmanagement.exentities.FaceBookPage;
 import com.scc.ticketmanagement.repositories.*;
 import com.scc.ticketmanagement.services.CommentService;
+import com.scc.ticketmanagement.services.UserService;
 import com.scc.ticketmanagement.utilities.Constant;
 import com.scc.ticketmanagement.utilities.FacebookUtility;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.sql.Timestamp;
 import java.util.*;
 
 /**
@@ -30,8 +32,6 @@ public class WebServiceController {
     private static final String ACCESS_TOKEN_KITTY = "EAACEdEose0cBABbQIYIAjEagu1dsZAlAGzzx8xCasf6EH1TrlNuhfXMGRDn5I8lZAU2ReDRc2udIpn5RpZCnlrlxrKjnNOrngPOFjhG7XhwaozLnimI5PxjCzkrLkRzii9vbCshoyrvsA9ipxIKYeWjZAqi0rr98TZBEZCMk4ASgZDZD";
     public static FaceBookPage page = new FaceBookPage("177872845972148","Kitty Bang Bang",ACCESS_TOKEN_KITTY);
 
-    @Autowired
-    private CommentService commentService;
 
     @Autowired
     private PostRepository postRepository;
@@ -46,15 +46,14 @@ public class WebServiceController {
     private FacebookaccountRepository facebookaccountRepository;
 
     @Autowired
-    private BrandPageRepository brandPageRepository;
-
-    @Autowired
     private PageRepository pageRepository;
 
+
     @Autowired
-    private TicketRepository ticketRepository;
+    private UserService userService;
 
-
+    @Autowired
+    private UserCommentRepository userCommentRepository;
 
     @RequestMapping("commentbypost")
     public List<CommentEntity> commentsByPost(@RequestParam("postId") String postId){
@@ -115,10 +114,36 @@ public class WebServiceController {
     }
     //Post a comment
     @RequestMapping("commentOnObj")
-    public boolean postsById(@RequestParam("objId") String objId,
+    public boolean postsById(HttpServletRequest request,
+                             @RequestParam("objId") String objId,
                              @RequestParam("message") String message,
                              @RequestParam("token") String token){
-        return FacebookUtility.commentOnObj(objId,message,token);
+
+        HttpSession session = request.getSession(false);
+        if (session!=null) {
+            String username = (String) session.getAttribute("username");
+            UserEntity user = userService.getUserByUsername(username);
+            UserCommentEntity userCommentEntity = new UserCommentEntity();
+            CommentEntity commentEntity = new CommentEntity();
+
+
+            String commentid = FacebookUtility.commentOnObj(objId,message,token);
+            if(commentid!=null) {
+                userCommentEntity.setUserid(user.getUserid());
+                userCommentEntity.setCommentid(FacebookUtility.getShortObjectId(commentid));
+                userCommentEntity.setPostid(FacebookUtility.getShortObjectId(objId));
+
+                commentEntity.setId(FacebookUtility.getShortObjectId(commentid));
+                commentEntity.setPostId(FacebookUtility.getShortObjectId(objId));
+                commentEntity.setCreatedByName("Pending from crawler");
+                commentEntity.setContent(message);
+                commentEntity.setCreatedBy("0");
+                commentRepository.save(commentEntity);
+                userCommentRepository.save(userCommentEntity);
+                return true;
+            }
+        }
+        return false;
     }
 
     @RequestMapping("allFbAccount")
