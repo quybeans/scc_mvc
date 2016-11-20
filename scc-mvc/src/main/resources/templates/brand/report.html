@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Brand infomation</title>
+    <header class="main-header" th:include="Head::header"></header>
+    <aside class="main-sidebar" th:include="SideBar::aside"></aside>
+
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="content-wrapper">
+    <section class="content">
+        <div style="margin-top: 10px;margin-bottom: 10px;background-color: white; min-height: 300px; padding: 10px 20px 0px 0px">
+            <div class="col-lg-12">
+                <div class="col-lg-3 col-xs-6">
+                    <!-- small box -->
+                    <div class="small-box bg-primary">
+                        <div class="inner">
+                            <h3>150</h3>
+                            <p>Facebook pages</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-facebook"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">Manage <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-xs-6">
+                    <!--Users dashs-->
+                    <div class="small-box bg-green">
+                        <div class="inner">
+                            <h3>1500</h3>
+                            <p>Direct messages</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-comments"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">Manage <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-xs-6">
+                    <!--Users dashs-->
+                    <div class="small-box bg-aqua">
+                        <div class="inner">
+                            <h3>150</h3>
+                            <p>Users</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-user"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">Manage <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-xs-6">
+                    <!--Users dashs-->
+                    <div class="small-box bg-yellow">
+                        <div class="inner">
+                            <h3>150</h3>
+                            <p>Tickets</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-tags"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">Manage <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Facebook</h3>
+
+                    </div>
+                    <div class="box-body">
+                        <div class="col-lg-3">
+                            <canvas id="countries" width="150px" height="150px"></canvas>
+                        </div>
+                        <div class="col-lg-3">
+                            <div id="chart-legend" class="chart-legend">
+                                <div><span class="fa fa-square" style="color: #ffbf00;margin-right: 10px"></span>Question
+                                </div>
+                                <div><span class="fa fa-square" style="color:#CD2D00;margin-right: 10px"></span>Negative
+                                </div>
+                                <div><span class="fa fa-square" style="color:#1AD018;margin-right: 10px"></span>Positive
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                    <div class="box-footer">
+                        <div class="col-lg-2" style="text-align: center">Comments pie chart</div>
+                    </div>
+                    <!-- /.box-footer-->
+                </div>
+            </div>
+
+        </div>
+
+
+    </section>
+</div>
+
+</div>
+<script src="/js/Chart.bundle.js"></script>
+<script>
+    var options = {
+        responsive: false,
+        maintainAspectRatio: false,
+        legend: {
+            display: false
+        },
+    };
+    var data = {
+        labels: [
+            "Question",
+            "Negative",
+            "Positive"
+        ],
+        datasets: [
+            {
+                data: [300, 50, 100],
+                backgroundColor: [
+                    "#ffbf00",
+                    "#CD2D00",
+                    "#1AD018"
+                ],
+                hoverBackgroundColor: [
+                    "#ffbf00",
+                    "#CD2D00",
+                    "#1AD018"
+                ]
+            }]
+    };
+    var ctx = document.getElementById("countries").getContext("2d");
+    var myPieChart = new Chart(ctx, {
+        type: 'pie',
+        data: data,
+        options: options
+    });
+
+</script>
+</body>
+</html>

@@ -671,9 +671,9 @@ function getAllPageAccount() {
                 )
             });
             setOnclickReplyAccount(data[0].pageid, data[0].name, data[0].accesstoken);
-            getAllFBAccount();
+
         }
-    });
+    });getAllFBAccount();
 }
 
 //Ger reply for comment

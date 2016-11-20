@@ -9,6 +9,7 @@ import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
 import com.restfb.Parameter;
@@ -21,6 +22,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 
 import javax.naming.AuthenticationException;
 import java.io.IOException;
@@ -63,7 +65,7 @@ public class FacebookUtility {
      * @return
      */
 
-    public static boolean commentOnObj(String object, String message, String access_token) {
+    public static String commentOnObj(String object, String message, String access_token) {
         HttpClient httpclient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost("https://graph.facebook.com/" + object + "/comments/");
 
@@ -75,14 +77,18 @@ public class FacebookUtility {
             httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
             //Execute and get the response.
             org.apache.http.HttpResponse response = httpclient.execute(httpPost);
-            if (response != null)
-                return true;
+            if (response != null) {
+                String json = EntityUtils.toString(response.getEntity());
+                JsonObject jsonObject = new Gson().fromJson(json, JsonObject.class);
+                String rs = jsonObject.get("id").getAsString();
+                return rs;
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
 
-        return false;
+        return null;
     }
 
     /**
@@ -100,8 +106,8 @@ public class FacebookUtility {
             org.apache.http.HttpResponse response = httpclient.execute(httpPost);
 
             if (response != null) {
-                if(response.getStatusLine().getStatusCode()==200)
-                return true;
+                if (response.getStatusLine().getStatusCode() == 200)
+                    return true;
                 else {
                     System.out.println(response.getStatusLine().getStatusCode());
                     System.out.println(response);
@@ -193,6 +199,24 @@ public class FacebookUtility {
         return profile.getFrom().getId();
     }
 
+    public static String getShortObjectId(String fullObjectId) {
+        if (null == fullObjectId) {
+            return null;
+        }
 
+        String[] objectIdParts = fullObjectId.split("_");
+
+        return objectIdParts[objectIdParts.length - 1];
+    }
+
+    public static String getParentShortObjectId(String fullObjectId) {
+        if (null == fullObjectId) {
+            return null;
+        }
+
+        String[] objectIdParts = fullObjectId.split("_");
+
+        return objectIdParts[objectIdParts.length - 2];
+    }
 
 }

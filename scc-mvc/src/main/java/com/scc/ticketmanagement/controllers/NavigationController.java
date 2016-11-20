@@ -19,6 +19,12 @@ public class NavigationController {
         return "brand/index";
     }
 
+    @RequestMapping("/brand/report")
+    public String brandReport(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        return "/brand/report";
+    }
+
     @RequestMapping("/customercare")
     public String customercare() {
         return "customercare";
