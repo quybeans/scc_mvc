@@ -138,6 +138,8 @@ public class WebServiceController {
                 commentEntity.setCreatedByName("Pending from crawler");
                 commentEntity.setContent(message);
                 commentEntity.setCreatedBy("0");
+                commentEntity.setCreatedAt( new Timestamp(System.currentTimeMillis()));
+
                 commentRepository.save(commentEntity);
                 userCommentRepository.save(userCommentEntity);
                 return true;

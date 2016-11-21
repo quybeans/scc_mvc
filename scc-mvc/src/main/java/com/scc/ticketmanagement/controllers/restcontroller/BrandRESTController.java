@@ -5,6 +5,7 @@ import com.scc.ticketmanagement.Entities.BrandEntity;
 import com.scc.ticketmanagement.Entities.ProfileEntity;
 import com.scc.ticketmanagement.Entities.UserEntity;
 import com.scc.ticketmanagement.repositories.*;
+import com.scc.ticketmanagement.services.MessageService;
 import com.scc.ticketmanagement.services.ProfileService;
 import com.scc.ticketmanagement.services.UserService;
 
@@ -24,6 +25,9 @@ import java.util.List;
 
 @RestController
 public class BrandRESTController {
+
+    @Autowired
+    MessageService messageService;
 
     @Autowired
     private UserRepository userRepository;
@@ -100,15 +104,16 @@ public class BrandRESTController {
             if (username != null) {
                 int brandid = userService.getBrandIdByUsername(username);
                 long pageCount = brandPageRepository.countPageByBrandId(brandid);
-                long messagecount = 1;
+                long messageCount = messageService.getNumberOfMessageInBrand(brandid);
                 long userCount = userRepository.countUserByBrandID(brandid);
                 long ticketCount = ticketRepository.coutnTicketByBrandId(brandid);
                 long commentCount = commentRepository.countCommentByBrandId(brandid);
                 long postCount = postRepository.countPostByBrandId(brandid);
+
                 //1: page, 2: mess, 3:user, 4: ticket
                 List<Long> rs = new ArrayList<>();
                 rs.add(pageCount);
-                rs.add(messagecount);
+                rs.add(messageCount);
                 rs.add(userCount);
                 rs.add(ticketCount);
                 rs.add(commentCount);

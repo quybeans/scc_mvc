@@ -233,12 +233,12 @@ public class MessengerRESTController {
     }
 
     @RequestMapping(value = "/getNumberOfMessageInBrand", method = RequestMethod.GET)
-    public int getNumberOfMessageInBrand(@RequestParam("brandId") int brandId){
+    public int countMessageInBrand(@RequestParam("brandId") int brandId){
         return messageService.getNumberOfMessageInBrand(brandId);
     }
 
     @RequestMapping(value = "/getNumberOfMessageInPage", method = RequestMethod.GET)
-    public int getNumberOfMessageInBrand(@RequestParam("pageId") String pageId){
+    public int counutMessageInPage(@RequestParam("pageId") String pageId){
         return messageService.getNumberOfMessageInPage(pageId);
     }
 
