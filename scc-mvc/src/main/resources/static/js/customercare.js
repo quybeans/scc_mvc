@@ -53,12 +53,14 @@ function addCommentToTicket(ticketId, cmtId) {
             alert('Success add to ticket');
         }
     })
+    $('#ticket-modal').modal('toggle');
+    getCommentById(currentPost);
 }
 
 
 //Show all ticket existed
 
-function showTicket() {
+function showTicket(cmtid) {
     $('#ticket-list').empty();
     $.ajax({
         url: '/getallticket',
@@ -69,7 +71,7 @@ function showTicket() {
                 var statusColor=getstatuscolor(data[index].statusid);
 
                 $('#ticket-list').append(
-                    '<div class="ticket">'
+                    '<div class="ticket" onclick="addCommentToTicket('+data[index].id+','+cmtid+')">'
                     + '<div class="title" style="background-color:  ' +statusColor+'">' + data[index].name + '</div>'
                     + '<div>Status:&nbsp;'
                     + '<span class="fa fa-circle" style="color:' +statusColor+'"></span>&nbsp;'
@@ -428,7 +430,7 @@ function getCommentByPostIdwPage(postId, page, searchContent) {
                     senIcon = questionicon;
                 var cmtId = "'" + postId + "_" + data[index].id + "'";
 
-                var btnTicket = '<button onclick="showTicket();currentCmt='+data[index].id+'" class="btn btn-default btn-xs inline" style="margin-left: 10px;margin-top: -10px;"><span class="fa fa-ticket" style="margin-right:10px"></span>Add to ticket</button>';
+                var btnTicket = '<button onclick="showTicket('+data[index].id+');currentCmt='+data[index].id+'" class="btn btn-default btn-xs inline" style="margin-left: 10px;margin-top: -10px;"><span class="fa fa-ticket" style="margin-right:10px"></span>Add to ticket</button>';
 
                 var isTicket = false;
                 $.ajax({
@@ -1134,12 +1136,12 @@ function countReply(commentId) {
     return rs;
 }
 
-function sortticketbytime() {
-    sortticket("/sortbytime")
+function sortticketbytime(currentCmt) {
+    sortticket("/sortbytime",currentCmt)
 }
 
 function sortticketbystatus() {
-    sortticket("/sortbystatus")
+    sortticket("/sortbystatus",currentCmt)
 }
 
 function showallticket() {
@@ -1175,7 +1177,7 @@ function showallticket() {
 
 $(document).on('change', '#tktimecheckbox', function(){
     if (this.checked) {
-        sortticketbytime()
+        sortticketbytime(currentCmt)
     }else{
         showallticket()
     }
@@ -1184,7 +1186,7 @@ $(document).on('change', '#tktimecheckbox', function(){
 
 $(document).on('change', '#tksttcheckbox', function(){
     if (this.checked) {
-        sortticketbystatus()
+        sortticketbystatus(currentCmt)
     }else{
         showallticket()
     }
@@ -1207,7 +1209,7 @@ function filterticket(){
 
 
                 $('#ticket-list').append(
-                    '<div class="ticket">'
+                    '<div class="ticket" onclick="addCommentToTicket('+data[index].id+','+currentCmt+')">'
                     + '<div class="title" style="background-color:  ' +statusColor+'">' + data[index].name + '</div>'
                     + '<div>Status:&nbsp;'
                     + '<span class="fa fa-circle" style="color:' +statusColor+'"></span>&nbsp;'
@@ -1278,7 +1280,7 @@ function getstatuscolor(statusid) {
     }
 }
 
-function sortticket(url) {
+function sortticket(url,currentCmt) {
     $.ajax({
         url:url,
         type:"GET",
@@ -1288,7 +1290,7 @@ function sortticket(url) {
                 var statusColor=getstatuscolor(data[index].statusid);
 
                 $('#ticket-list').append(
-                    '<div class="ticket">'
+                    '<div class="ticket" onclick="addCommentToTicket('+data[index].id+','+currentCmt+')">'
                     + '<div class="title" style="background-color:  ' +statusColor+'">' + data[index].name + '</div>'
                     + '<div>Status:&nbsp;'
                     + '<span class="fa fa-circle" style="color:' +statusColor+'"></span>&nbsp;'

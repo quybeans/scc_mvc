@@ -33,14 +33,14 @@ public class DuetimeChecker {
         System.out.println("Checker run at:"+new Date());
         List<TicketEntity> ticketlist= ticketRepository.findAll();
         for (TicketEntity ticket:ticketlist) {
-            if(ticket.getStatusid()==Constant.STATUS_INPROCESS){
+            if(ticket.getStatusid()==Constant.STATUS_INPROCESS || ticket.getStatusid()==Constant.STATUS_ASSIGN){
                 PriorityEntity priority = priorityReposioty.findOne(ticket.getPriority());
                 Long duetime = ticket.getDuetime().getTime() + (priority.getDuration()*60*1000);
                 Long currenttime = new Date().getTime();
                 if(duetime-currenttime<0) {
                     List<PriorityEntity> nextpriority = priorityReposioty.getNextPriority(priority.getDuration());
                     if(nextpriority.size()>0){
-                        System.out.println(ticket.getName()+" bi nang priority");
+                        System.out.println(ticket.getName()+" change priority");
                         ticket.setPriority(nextpriority.get(0).getId());
                         ticket.setDuetime(new Timestamp(new Date().getTime()));
                         ticket.setNote("This ticket is expired,System change priority to "+nextpriority.get(0).getName());

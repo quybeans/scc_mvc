@@ -32,7 +32,10 @@ $(document).ready(function () {
                 width:'10%',
                 targets: 3,
                 render: (data, type, row) => {
-                return '<h5 style="overflow: hidden; max-height: 100px;word-wrap: break-word">'+row.assigneeuser+'-'+row.assigneerole+'</h5>'
+                if(type === 'display'){
+        return '<h5 style="overflow: hidden; max-height: 100px;word-wrap: break-word">'+row.assigneeuser+'-'+row.assigneerole+'</h5>'
+                }
+               return data;
             },
     },
             {
