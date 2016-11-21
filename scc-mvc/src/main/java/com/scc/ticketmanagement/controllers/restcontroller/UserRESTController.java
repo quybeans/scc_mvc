@@ -6,7 +6,7 @@ import com.scc.ticketmanagement.exentities.ExUser;
 import com.scc.ticketmanagement.repositories.BrandRepository;
 import com.scc.ticketmanagement.repositories.UserCommentRepository;
 import com.scc.ticketmanagement.services.ProfileService;
-import com.scc.ticketmanagement.services.UserCommentService;
+//import com.scc.ticketmanagement.services.UserCommentService;
 import com.scc.ticketmanagement.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
