@@ -83,6 +83,7 @@ public class UserRESTController {
                 return listnew;
             }
         } catch (NullPointerException e) {
+            e.printStackTrace();
             return null;
         }
         return null;
