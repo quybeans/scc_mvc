@@ -70,31 +70,25 @@ $(document).ready(function () {
             if(staff){
                 return '<div class="dropdown">'
                         +'<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><i class="fa fa-cog"></i>'
-                        +'<span class="caret"></span></button> '
+                        +'</button> '
                         +'<div class="dropdown-menu" style="width: 10px">'
                         +'<li><a onclick="forwardticket('+row.id+')">Forward</a></li>'
                         +'<li><a onclick="status('+row.id+')">Change Status</a></li>'
                         +'<li><a onclick="updateticket('+row.id+')">Change Priority</a></li>'
                         +'<li><a onclick="deleteticket('+row.id+')">Delete ticket</a></li>'
                         +'</div>'
-                    // +'<button class="btn btn-success btn-xs" onclick="forwardticket('+row.id+')"><i class="fa fa-ticket"></i></button>'
-                    // +'<button class="btn btn-primary btn-xs" onclick="status('+row.id+')"><i class="fa fa-navicon"></i></button>'
-                    // +'<button class="btn btn-danger btn-xs" onclick="updateticket('+row.id+')"><i class="fa fa-pencil"></i></button>'
-                    +'</div>'
+                   +'</div>'
             }else{
                 return '<div class="dropdown">'
                     +'<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><i class="fa fa-cog"></i>'
-                    +'<span class="caret"></span></button> '
+                    +'</button> '
                     +'<div class="dropdown-menu" style="width: 10px">'
                     +'<li><a onclick="assign('+row.id+')">Assign</a></li>'
                     +'<li><a onclick="status('+row.id+')">Change Status</a></li>'
                     +'<li><a onclick="updateticket('+row.id+')">Change Priority</a></li>'
                     +'<li><a onclick="deleteticket('+row.id+')">Delete ticket</a></li>'
                     +'</div>'
-                    // +'<button class="btn btn-success btn-xs" onclick="assign('+row.id+')"><i class="fa fa-ticket"></i></button>'
-                    // +'<button class="btn btn-primary btn-xs" onclick="status('+row.id+')"><i class="fa fa-navicon"></i></button>'
-                    // +'<button class="btn btn-danger btn-xs" onclick="updateticket('+row.id+')"><i class="fa fa-pencil"></i></button>'
-                    +'</div>'
+                   +'</div>'
             }
 
         }
@@ -106,13 +100,7 @@ $(document).ready(function () {
             targets: 4,
         render: (data, type, row) => {
         if(type=== 'display'){
-            var statuscolor;
-            switch (row.statusid){
-                case 1: statuscolor='color:#ffff00'; break;
-                case 2: statuscolor='color:#00a65a'; break;
-                case 3: statuscolor='color:#500a6f'; break;
-                case 4: statuscolor='color:#01ff70'; break;
-            }
+            var statuscolor=getstatuscolor(row.statusid);
             return '<p><i class="fa fa-circle" aria-hidden="true" style="'+statuscolor+'"></i>'+'  ' +row.currentstatus+'</p>'
         }
         return data;
@@ -705,3 +693,12 @@ function deleteticket(ticketid) {
 
 }
 
+function getstatuscolor(statusid) {
+    switch (statusid){
+        case 1: return'#f4e842'; break;
+        case 2: return'#00a65a'; break;
+        case 3: return'#500a6f'; break;
+        case 4: return'gray'; break;
+        case 5: return'#000000'; break;
+    }
+}

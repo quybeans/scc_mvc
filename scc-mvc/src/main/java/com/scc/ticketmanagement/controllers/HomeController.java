@@ -57,7 +57,7 @@ public class HomeController {
 
     @RequestMapping("/login")
     public String login() {
-        return "Login";
+        return "login";
     }
 
     @RequestMapping("/Head")
@@ -129,13 +129,13 @@ public class HomeController {
         session.setAttribute("fullname", profileEntity.getFirstname() + " " + profileEntity.getLastname());
         if(userEntity.isActive()){
             if (userEntity.getRoleid() == Constant.ROLE_ADMIN) {
-                return "redirect:/admin/index";
+                return "/brand/report";
             } else if (userEntity.getRoleid() == Constant.ROLE_STAFF) {
                 return "customercare";
             } else if (userEntity.getRoleid() == Constant.ROLE_SUPERVISOR) {
                 return "manageticket";
             } else if (userEntity.getRoleid() == Constant.ROLE_BRAND) {
-                return "manageticket";
+                return "/brand/report";
             }
         }
 
@@ -152,11 +152,13 @@ public class HomeController {
             if (user != null) {
                 switch (user.getRoleid()) {
                     case Constant.ROLE_ADMIN:
-                        return "redirect:/admin/index";
+                        return "/brand/report";
                     case Constant.ROLE_STAFF:
-                        return "redirect:customercare";
+                        return "customercare";
                     case Constant.ROLE_SUPERVISOR:
-                        return "Report";
+                        return "manageticket";
+                    case Constant.ROLE_BRAND:
+                        return "/brand/report";
                 }//end switch
             }//end if user
         }//end if session

@@ -90,14 +90,14 @@ function getticket(ticketid) {
         type:"GET",
         data:{"ticketid":ticketid},
         success:function (data) {
-            var statuscolor;
+            var statuscolor= 'color:'+getstatuscolor(data.statusid);
             var statusname;
             switch (data.statusid){
-                case 1: statuscolor='color:#ffff00'; statusname="Assigned"; break;
-                case 2: statuscolor='color:#00a65a'; statusname="Inprocess"; break;
-                case 3: statuscolor='color:#500a6f'; statusname="Solved"; break;
-                case 4: statuscolor='color:gray'; statusname="Close"; break;
-                case 5: statuscolor='color:#000000'; statusname="Expired"; break;
+                case 1:  statusname="Assigned"; break;
+                case 2:  statusname="Inprocess"; break;
+                case 3:  statusname="Solved"; break;
+                case 4:  statusname="Close"; break;
+                case 5:  statusname="Expired"; break;
             }
             window.currentstatus=data.statusid;
             var createat = moment(data.createdtime).format("D/MM/YYYY, hh:mm:ss");
@@ -720,4 +720,14 @@ function countReply(commentId) {
     });
 
     return rs;
+}
+
+function getstatuscolor(statusid) {
+    switch (statusid){
+        case 1: return'#f4e842'; break;
+        case 2: return'#00a65a'; break;
+        case 3: return'#500a6f'; break;
+        case 4: return'gray'; break;
+        case 5: return'#000000'; break;
+    }
 }
