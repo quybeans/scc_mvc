@@ -34,7 +34,7 @@ var ticketdue;
 
 
 setInterval(function () {
-    if(currentstatus==2){
+    if(currentstatus==2 || currentstatus==1){
         ticketdue =moment.duration(ticketdue-1000,'milliseconds');
         if(ticketdue>0){
             $("#dueday").html("Due in "+ticketdue.hours()+":"+ticketdue.minutes()+":"+ticketdue.seconds());
