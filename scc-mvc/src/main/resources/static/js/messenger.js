@@ -15,6 +15,8 @@ var currentCustomerAvt = '';
 var currentPageName = '';
 var currentPageAvt = '';
 var isFirstLoadPage = true;
+var currentMessageId = '0';
+
 
 function getParameterByName(name, url) {
     if (!url) {
@@ -32,6 +34,8 @@ function getParameterByName(name, url) {
 
 $(document).ready(function () {
 
+    getalluser();
+    getallpriorityofbrand();
 
     var senderid = getParameterByName('senderid');
     var messageId = getParameterByName('messageid');
@@ -199,9 +203,9 @@ function firstLoadConversationBySenderId() {
             // $('#conversation-content-loading-icon').removeClass("hidden");
             $('#conversationContent').empty();
             var dataReversed = data.reverse();
-            var a;
+            var messageId;
             $.each(dataReversed, function (i) {
-                a = dataReversed[i].id;
+                messageId = dataReversed[i].id;
                 score = dataReversed[i].sentimentScrore;
                 if (dataReversed[i].senderid == currentPageId) {
                     $('#conversationContent').append(
@@ -223,7 +227,7 @@ function firstLoadConversationBySenderId() {
                         '<span class="pull-right">' +
                         changeIconSentimentScore(score) +
                         '</br>' +
-                        showButtonAddTicketAtPage(dataReversed[i].ticket, a) +
+                        showButtonAddTicketAtPage(dataReversed[i].ticket, messageId) +
                         '</span>' +
                         '</li>'
                     )
@@ -245,7 +249,7 @@ function firstLoadConversationBySenderId() {
                         '</div>' +
                         changeIconSentimentScore(score) +
                         '</br>' +
-                        showButtonAddTicketAtSender(dataReversed[i].ticket, a) +
+                        showButtonAddTicketAtSender(dataReversed[i].ticket, messageId) +
                         '</li>'
                     );
                 }
@@ -269,13 +273,13 @@ function reloadConversationBySenderId() {
         success: function (data) {
             $('#conversationContent').empty();
             var dataReversed = data.reverse();
-            var a;
+            var messageId;
             $.each(dataReversed, function (i) {
-                a = dataReversed[i].id;
+                messageId = dataReversed[i].id;
                 score = dataReversed[i].sentimentScrore;
                 if (dataReversed[i].senderid == currentPageId) {
                     $('#conversationContent').append(
-                        '<li onclick="checkMessageTicket(\'' + a + '\')" class="right clearfix"><span class="chat-img pull-right">' +
+                        '<li onclick="checkMessageTicket(\'' + messageId + '\')" class="right clearfix"><span class="chat-img pull-right">' +
                         ' <img src="' + currentPageAvt + '" alt="User Avatar"/>' +
                         ' </span>' +
                         '<div class="chat-body clearfix pull-right">' +
@@ -292,14 +296,14 @@ function reloadConversationBySenderId() {
                         '<span class="pull-right">' +
                         changeIconSentimentScore(score) +
                         '</br>' +
-                        showButtonAddTicketAtPage(dataReversed[i].ticket, a) +
+                        showButtonAddTicketAtPage(dataReversed[i].ticket, messageId) +
                         '</span>' +
                         '</li>'
                     )
                     ;
                 } else {
                     $('#conversationContent').append(
-                        '<li onclick="checkMessageTicket(\'' + a + '\')" class="left clearfix"><span class="chat-img pull-left"> ' +
+                        '<li onclick="checkMessageTicket(\'' + messageId + '\')" class="left clearfix"><span class="chat-img pull-left"> ' +
                         '<img src="' + currentCustomerAvt + '"/> </span>' +
                         '<div class="chat-body clearfix pull-left">' +
                         '<div class="header">' +
@@ -314,7 +318,7 @@ function reloadConversationBySenderId() {
                         '</div>' +
                         changeIconSentimentScore(score) +
                         '</br>' +
-                        showButtonAddTicketAtSender(dataReversed[i].ticket, a) +
+                        showButtonAddTicketAtSender(dataReversed[i].ticket, messageId) +
                         '</li>'
                     );
                 }
@@ -364,14 +368,14 @@ function getConversationBySenderIdWithPage() {
             success: function (data) {
                 $('#conversationContent').empty();
                 var dataReversed = data.reverse();
-                var a;
+                var messageId;
 
                 $.each(dataReversed, function (i) {
-                    a = dataReversed[i].id;
+                    messageId = dataReversed[i].id;
                     score = dataReversed[i].sentimentScrore;
                     if (dataReversed[i].senderid == currentPageId) {
                         $('#conversationContent').append(
-                            '<li class="right clearfix"><span class="chat-img pull-right">' +
+                            '<li onclick="checkMessageTicket(\'' + messageId + '\')" class="right clearfix"><span class="chat-img pull-right">' +
                             ' <img src="' + currentPageAvt + '" alt="User Avatar"/>' +
                             ' </span>' +
                             '<div class="chat-body clearfix pull-right">' +
@@ -388,14 +392,14 @@ function getConversationBySenderIdWithPage() {
                             '<span class="pull-right">' +
                             changeIconSentimentScore(score) +
                             '</br>' +
-                            showButtonAddTicketAtPage(dataReversed[i].ticket) +
+                            showButtonAddTicketAtPage(dataReversed[i].ticket, messageId) +
                             '</span>' +
                             '</li>'
                         )
                         ;
                     } else {
                         $('#conversationContent').append(
-                            '<li class="left clearfix"><span class="chat-img pull-left"> ' +
+                            '<li onclick="checkMessageTicket(\'' + messageId + '\')" class="left clearfix"><span class="chat-img pull-left"> ' +
                             '<img src="' + currentCustomerAvt + '"/> </span>' +
                             '<div class="chat-body clearfix pull-left">' +
                             '<div class="header">' +
@@ -410,7 +414,7 @@ function getConversationBySenderIdWithPage() {
                             '</div>' +
                             changeIconSentimentScore(score) +
                             '</br>' +
-                            showButtonAddTicketAtSender(dataReversed[i].ticket) +
+                            showButtonAddTicketAtSender(dataReversed[i].ticket, messageId) +
                             '</li>'
                         );
                     }
@@ -536,25 +540,59 @@ function changeIconSentimentScore(score) {
     return result;
 }
 
+// function showTicket(a) {
+//     var messageId = a.id;
+//     currentMessageId = a.id;
+//     $('#ticket-list').empty();
+//     $.ajax({
+//         url: '/getallticket',
+//         type: "GET",
+//         dataType: "json",
+//         success: function (data) {
+//             $.each(data, function (index) {
+//                 var statusColor = 'solved';
+//                 if (data[index].statusid == 3) statusColor = 'process';
+//                 else if (data[index].statusid == 2) statusColor = 'assigned';
+//
+//
+//                 $('#ticket-list').append(
+//                     '<div id="' + data[index].id + '" class="ticket" onclick="createTicket(' + data[index].id + ', \'' + messageId + '\')">'
+//                     + '<div class="title ' + statusColor + '">' + data[index].name + '</div>'
+//                     + '<div>Status:&nbsp;'
+//                     + '<span class="fa fa-circle"></span>&nbsp;'
+//                     + data[index].currentstatus
+//                     + '</div>'
+//                     + '<div>Created by:&nbsp;<span style="color: black; font-weight: bold">'
+//                     + data[index].createbyuser
+//                     + '</span></div>'
+//                     + '<div>Current assignee:&nbsp;<span style="color: black; font-weight: bold">' + data[index].assigneeuser + '</span>'
+//                     + '</div>'
+//                     + '<div></div>'
+//                     + '</div>'
+//                 )
+//             })
+//         }
+//     });
+//     $('#ticket-modal').modal('toggle');
+// }
+
 function showTicket(a) {
-    var messageId = a.id;
     $('#ticket-list').empty();
+    var messageId = a.id;
+    currentMessageId = a.id;
     $.ajax({
         url: '/getallticket',
         type: "GET",
         dataType: "json",
         success: function (data) {
             $.each(data, function (index) {
-                var statusColor = 'solved';
-                if (data[index].statusid == 3) statusColor = 'process';
-                else if (data[index].statusid == 2) statusColor = 'assigned';
-
+                var statusColor=getstatuscolor(data[index].statusid);
 
                 $('#ticket-list').append(
-                    '<div id="' + data[index].id + '" class="ticket" onclick="createTicket(' + data[index].id + ', \'' + messageId + '\')">'
-                    + '<div class="title ' + statusColor + '">' + data[index].name + '</div>'
+                    '<div class="ticket" onclick="createTicket('+data[index].id+',\''+currentMessageId+'\')">'
+                    + '<div class="title" style="background-color:  ' +statusColor+'">' + data[index].name + '</div>'
                     + '<div>Status:&nbsp;'
-                    + '<span class="fa fa-circle"></span>&nbsp;'
+                    + '<span class="fa fa-circle" style="color:' +statusColor+'"></span>&nbsp;'
                     + data[index].currentstatus
                     + '</div>'
                     + '<div>Created by:&nbsp;<span style="color: black; font-weight: bold">'
@@ -569,7 +607,9 @@ function showTicket(a) {
         }
     });
     $('#ticket-modal').modal('toggle');
+
 }
+
 
 function searchConversation() {
     // clearInterval(currentInterval);
@@ -801,12 +841,18 @@ function checkMessageTicket(messageId) {
                         $('#ticket-name').append(", ");
                     }
                     $('#ticket-name').append(data[index].name);
+                    $('#ticket-name-link').attr("href" , "/followticket?ticketid=" + data[index].id) ;
+                    $('#ticket-name-link').attr("target" , "_blank") ;
                     $('#ticket-assigner').html(data[index].createbyuser);
                     $('#ticket-assignee').html(data[index].assigneeuser);
 
                 });
             } else {
                 $('#ticket-name').append("This message is not belong to any ticket");
+                $('#ticket-name-link').attr("href" , "#") ;
+                $('#ticket-name-link').attr("target" , "") ;
+                $('#ticket-assigner').html("");
+                $('#ticket-assignee').html("");
             }
 
 
@@ -841,4 +887,185 @@ function showButtonAddTicketAtPage(a,b) {
             break
     }
     return result;
+}
+
+// /modal/
+
+
+function sortticketbytime(currentCmt) {
+    sortticket("/sortbytime",currentCmt)
+}
+
+function sortticketbystatus() {
+    sortticket("/sortbystatus",currentCmt)
+}
+
+function showallticket() {
+    $('#ticket-list').empty();
+    $.ajax({
+        url: '/getallticket',
+        type: "GET",
+        dataType: "json",
+        success: function (data) {
+            $.each(data, function (index) {
+                var statusColor=getstatuscolor(data[index].statusid);
+
+                $('#ticket-list').append(
+                    '<div class="ticket">'
+                    + '<div class="title" style="background-color:  ' +statusColor+'">' + data[index].name + '</div>'
+                    + '<div>Status:&nbsp;'
+                    + '<span class="fa fa-circle" style="color:' +statusColor+'"></span>&nbsp;'
+                    + data[index].currentstatus
+                    + '</div>'
+                    + '<div>Created by:&nbsp;<span style="color: black; font-weight: bold">'
+                    + data[index].createbyuser
+                    + '</span></div>'
+                    + '<div>Current assignee:&nbsp;<span style="color: black; font-weight: bold">'+data[index].assigneeuser+'</span>'
+                    + '</div>'
+                    + '<div></div>'
+                    + '</div>'
+                )
+            })
+        }
+    });
+
+}
+
+$(document).on('change', '#tktimecheckbox', function(){
+    if (this.checked) {
+        sortticketbytime(currentMessageId)
+    }else{
+        showallticket()
+    }
+
+});
+
+$(document).on('change', '#tksttcheckbox', function(){
+    if (this.checked) {
+        sortticketbystatus(currentMessageId)
+    }else{
+        showallticket()
+    }
+
+});
+
+function filterticket(){
+    var status= $("#filterstatus").val();
+    var priority= $("#filterpriority").val();
+    var createdby= $("#filtercreatedby").val();
+    var assignee=$("#filterassignee").val();
+    $.ajax({
+        url:"/filterticket",
+        type:"POST",
+        data:{"status":status,"priority":priority,"createdby":createdby,"assignee":assignee},
+        success:function (data) {
+            $('#ticket-list').empty();
+            $.each(data, function (index) {
+                var statusColor=getstatuscolor(data[index].statusid);
+
+
+                $('#ticket-list').append(
+                    '<div class="ticket" onclick="createTicket('+data[index].id+',\''+currentMessageId+'\')">'
+                    + '<div class="title" style="background-color:  ' +statusColor+'">' + data[index].name + '</div>'
+                    + '<div>Status:&nbsp;'
+                    + '<span class="fa fa-circle" style="color:' +statusColor+'"></span>&nbsp;'
+                    + data[index].currentstatus
+                    + '</div>'
+                    + '<div>Created by:&nbsp;<span style="color: black; font-weight: bold">'
+                    + data[index].createbyuser
+                    + '</span></div>'
+                    + '<div>Current assignee:&nbsp;<span style="color: black; font-weight: bold">'+data[index].assigneeuser+'</span>'
+                    + '</div>'
+                    + '<div></div>'
+                    + '</div>'
+                )
+            })
+        },
+        error:function () {
+            alert("filter fail")
+        }
+
+    })
+}
+
+function getallpriorityofbrand() {
+    $.ajax({
+        url: "/getallpriorityofbrand",
+        type: "GET",
+        success: function (data) {
+            for (var i = 0; i < data.length; i++) {
+                $("#filterpriority").append(
+                    '<option value="' + data[i].id + '">' + data[i].name + '</option>'
+                )
+            }
+        },
+        error: function () {
+            alert("fail to load priority for update")
+        }
+    })
+}
+
+function getalluser() {
+    $.ajax({
+        url: "getalluser",
+        type: "GET",
+        success: function (data) {
+            for (var i = 0; i < data.length; i++){
+                $("#filtercreatedby").append(
+                    '<option value="' + data[i].userid + '">' + data[i].firstname + ' ' + data[i].lastname + '</option>'
+                );
+                $("#filterassignee").append(
+                    '<option value="' + data[i].userid + '">' + data[i].firstname + ' ' + data[i].lastname + '</option>'
+                );
+            }
+
+        },
+        error: function () {
+            alert("Fail to load list user");
+        }
+    })
+}
+
+function getstatuscolor(statusid) {
+    switch (statusid){
+        case 1: return'#ffff00'; break;
+        case 2: return'#00a65a'; break;
+        case 3: return'#500a6f'; break;
+        case 4: return'gray'; break;
+        case 5: return'#000000'; break;
+    }
+}
+
+function sortticket(url,currentMessageId) {
+    $.ajax({
+        url:url,
+        type:"GET",
+        success:function (data) {
+            $('#ticket-list').empty();
+            $.each(data, function (index) {
+                var statusColor=getstatuscolor(data[index].statusid);
+
+                $('#ticket-list').append(
+                    '<div class="ticket" onclick="createTicket('+data[index].id+',\''+currentMessageId+'\')">'
+                    + '<div class="title" style="background-color:  ' +statusColor+'">' + data[index].name + '</div>'
+                    + '<div>Status:&nbsp;'
+                    + '<span class="fa fa-circle" style="color:' +statusColor+'"></span>&nbsp;'
+                    + data[index].currentstatus
+                    + '</div>'
+                    + '<div>Created by:&nbsp;<span style="color: black; font-weight: bold">'
+                    + data[index].createbyuser
+                    + '</span></div>'
+                    + '<div>Current assignee:&nbsp;<span style="color: black; font-weight: bold">'+data[index].assigneeuser+'</span>'
+                    + '</div>'
+                    + '<div></div>'
+                    + '</div>'
+                )
+
+
+            })
+        },
+        error:function () {
+            alert("Fail to")
+        }
+    })
 }

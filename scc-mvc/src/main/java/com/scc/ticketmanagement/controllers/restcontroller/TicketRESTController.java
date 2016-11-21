@@ -37,13 +37,13 @@ public class TicketRESTController {
             if (rs != null) {
                 TicketEntity tk = ticketService.getTicketByID(rs);
                 String username = (String) session.getAttribute("username");
-                int branid= userService.getUserByUsername(username).getBrandid();
-                if (branid==tk.getBrandId())
-                return tk;
+                int branid = userService.getUserByUsername(username).getBrandid();
+                if (branid == tk.getBrandId())
+                    return tk;
             }
             return null;
         } catch (NullPointerException e) {
-//            System.out.println("Null ticketitem");
+            e.printStackTrace();
             return null;
         }
     }
