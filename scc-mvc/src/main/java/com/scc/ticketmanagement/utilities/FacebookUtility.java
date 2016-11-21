@@ -141,7 +141,15 @@ public class FacebookUtility {
 
         HttpResponse response = httpclient.execute(httpPost);
 
-        return response.toString();
+        if (response != null) {
+            String json = EntityUtils.toString(response.getEntity());
+            JsonObject jsonObject = new Gson().fromJson(json, JsonObject.class);
+            String rs = jsonObject.get("message_id").getAsString();
+            System.out.println("result" + rs);
+            return rs;
+        }
+
+        return null;
     }
 
     public static class Payload {

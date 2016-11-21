@@ -199,9 +199,9 @@ function firstLoadConversationBySenderId() {
             // $('#conversation-content-loading-icon').removeClass("hidden");
             $('#conversationContent').empty();
             var dataReversed = data.reverse();
-            var a;
+            var messageId;
             $.each(dataReversed, function (i) {
-                a = dataReversed[i].id;
+                messageId = dataReversed[i].id;
                 score = dataReversed[i].sentimentScrore;
                 if (dataReversed[i].senderid == currentPageId) {
                     $('#conversationContent').append(
@@ -223,7 +223,7 @@ function firstLoadConversationBySenderId() {
                         '<span class="pull-right">' +
                         changeIconSentimentScore(score) +
                         '</br>' +
-                        showButtonAddTicketAtPage(dataReversed[i].ticket, a) +
+                        showButtonAddTicketAtPage(dataReversed[i].ticket, messageId) +
                         '</span>' +
                         '</li>'
                     )
@@ -245,7 +245,7 @@ function firstLoadConversationBySenderId() {
                         '</div>' +
                         changeIconSentimentScore(score) +
                         '</br>' +
-                        showButtonAddTicketAtSender(dataReversed[i].ticket, a) +
+                        showButtonAddTicketAtSender(dataReversed[i].ticket, messageId) +
                         '</li>'
                     );
                 }
@@ -269,13 +269,13 @@ function reloadConversationBySenderId() {
         success: function (data) {
             $('#conversationContent').empty();
             var dataReversed = data.reverse();
-            var a;
+            var messageId;
             $.each(dataReversed, function (i) {
-                a = dataReversed[i].id;
+                messageId = dataReversed[i].id;
                 score = dataReversed[i].sentimentScrore;
                 if (dataReversed[i].senderid == currentPageId) {
                     $('#conversationContent').append(
-                        '<li onclick="checkMessageTicket(\'' + a + '\')" class="right clearfix"><span class="chat-img pull-right">' +
+                        '<li onclick="checkMessageTicket(\'' + messageId + '\')" class="right clearfix"><span class="chat-img pull-right">' +
                         ' <img src="' + currentPageAvt + '" alt="User Avatar"/>' +
                         ' </span>' +
                         '<div class="chat-body clearfix pull-right">' +
@@ -292,14 +292,14 @@ function reloadConversationBySenderId() {
                         '<span class="pull-right">' +
                         changeIconSentimentScore(score) +
                         '</br>' +
-                        showButtonAddTicketAtPage(dataReversed[i].ticket, a) +
+                        showButtonAddTicketAtPage(dataReversed[i].ticket, messageId) +
                         '</span>' +
                         '</li>'
                     )
                     ;
                 } else {
                     $('#conversationContent').append(
-                        '<li onclick="checkMessageTicket(\'' + a + '\')" class="left clearfix"><span class="chat-img pull-left"> ' +
+                        '<li onclick="checkMessageTicket(\'' + messageId + '\')" class="left clearfix"><span class="chat-img pull-left"> ' +
                         '<img src="' + currentCustomerAvt + '"/> </span>' +
                         '<div class="chat-body clearfix pull-left">' +
                         '<div class="header">' +
@@ -314,7 +314,7 @@ function reloadConversationBySenderId() {
                         '</div>' +
                         changeIconSentimentScore(score) +
                         '</br>' +
-                        showButtonAddTicketAtSender(dataReversed[i].ticket, a) +
+                        showButtonAddTicketAtSender(dataReversed[i].ticket, messageId) +
                         '</li>'
                     );
                 }
@@ -364,14 +364,14 @@ function getConversationBySenderIdWithPage() {
             success: function (data) {
                 $('#conversationContent').empty();
                 var dataReversed = data.reverse();
-                var a;
+                var messageId;
 
                 $.each(dataReversed, function (i) {
-                    a = dataReversed[i].id;
+                    messageId = dataReversed[i].id;
                     score = dataReversed[i].sentimentScrore;
                     if (dataReversed[i].senderid == currentPageId) {
                         $('#conversationContent').append(
-                            '<li class="right clearfix"><span class="chat-img pull-right">' +
+                            '<li onclick="checkMessageTicket(\'' + messageId + '\')" class="right clearfix"><span class="chat-img pull-right">' +
                             ' <img src="' + currentPageAvt + '" alt="User Avatar"/>' +
                             ' </span>' +
                             '<div class="chat-body clearfix pull-right">' +
@@ -388,14 +388,14 @@ function getConversationBySenderIdWithPage() {
                             '<span class="pull-right">' +
                             changeIconSentimentScore(score) +
                             '</br>' +
-                            showButtonAddTicketAtPage(dataReversed[i].ticket) +
+                            showButtonAddTicketAtPage(dataReversed[i].ticket, messageId) +
                             '</span>' +
                             '</li>'
                         )
                         ;
                     } else {
                         $('#conversationContent').append(
-                            '<li class="left clearfix"><span class="chat-img pull-left"> ' +
+                            '<li onclick="checkMessageTicket(\'' + messageId + '\')" class="left clearfix"><span class="chat-img pull-left"> ' +
                             '<img src="' + currentCustomerAvt + '"/> </span>' +
                             '<div class="chat-body clearfix pull-left">' +
                             '<div class="header">' +
@@ -410,7 +410,7 @@ function getConversationBySenderIdWithPage() {
                             '</div>' +
                             changeIconSentimentScore(score) +
                             '</br>' +
-                            showButtonAddTicketAtSender(dataReversed[i].ticket) +
+                            showButtonAddTicketAtSender(dataReversed[i].ticket, messageId) +
                             '</li>'
                         );
                     }
@@ -801,12 +801,18 @@ function checkMessageTicket(messageId) {
                         $('#ticket-name').append(", ");
                     }
                     $('#ticket-name').append(data[index].name);
+                    $('#ticket-name-link').attr("href" , "/followticket?ticketid=" + data[index].id) ;
+                    $('#ticket-name-link').attr("target" , "_blank") ;
                     $('#ticket-assigner').html(data[index].createbyuser);
                     $('#ticket-assignee').html(data[index].assigneeuser);
 
                 });
             } else {
                 $('#ticket-name').append("This message is not belong to any ticket");
+                $('#ticket-name-link').attr("href" , "#") ;
+                $('#ticket-name-link').attr("target" , "") ;
+                $('#ticket-assigner').html("");
+                $('#ticket-assignee').html("");
             }
 
 
@@ -842,3 +848,5 @@ function showButtonAddTicketAtPage(a,b) {
     }
     return result;
 }
+
+

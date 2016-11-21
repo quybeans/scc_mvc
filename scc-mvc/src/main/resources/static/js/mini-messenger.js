@@ -355,6 +355,8 @@ function register_popup(id, name) {
         }
     });
 
+
+    setRead(currentPageId, id);
     var reload = function reload() {
         if (isFirstLoadDone){
             $.ajax({
@@ -543,8 +545,23 @@ function sendMessage(customerId, pageId) {
     $('#replyText' + customerId).val("");
 
 }
+function setRead(pageId, senderId) {
+    $.ajax({
+        url: '/messenger/setConversationRead',
+        type: "POST",
+        data: {
+            pageId: pageId,
+            senderId: senderId
+        },
+        dataType: "json",
+        success: function (data) {
 
+        }
+    });
+}
 
 $( document ).ready(function() {
     calculate_popups();
 });
+
+
