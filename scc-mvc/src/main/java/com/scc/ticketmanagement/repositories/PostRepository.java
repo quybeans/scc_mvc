@@ -20,6 +20,8 @@ public interface PostRepository extends JpaRepository<PostEntity, String> {
 
     List<PostEntity> findByCreatedByOrderByCreatedAtDesc(String id);
     List<PostEntity> findByCreatedBy(String id);
+    Page<PostEntity> findByCreatedByIn(List<String> listpage, Pageable page);
+    List<PostEntity> findByCreatedByInAndContentContaining(List<String> listpage, String content);
 
     @Query("SELECT COUNT(c) from CommentEntity c where c.sentimentScore=1 and c.postId= :postId")
      int findPosCountByPostId(@Param("postId") String postId);
@@ -36,7 +38,6 @@ public interface PostRepository extends JpaRepository<PostEntity, String> {
     @Query("SELECT p from PostEntity p where p.content like %:content%")
     List<PostEntity> findPostByContent(@Param("content")String content);
 
-    Page<PostEntity> findByCreatedByIn(List<String> listpage, Pageable page);
-
-    List<PostEntity> findByCreatedByInAndContentContaining(List<String> listpage, String content);
+    @Query("SELECT COUNT(p.id) from PostEntity p where p.createdBy in (SELECT bp.pageid from BrandpageEntity bp where bp.brandid= :brandid)")
+   long countPostByBrandId(@Param("brandid")int brandid);
 }

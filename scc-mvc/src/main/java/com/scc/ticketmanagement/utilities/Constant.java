@@ -35,4 +35,8 @@ public class Constant {
 
     public static final String CRAWLER_TOKEN_SETTINGS = "crawler_token";
     public static final String CRAWLER_TIME_LIMIT = "crawler_time_limit";
+
+    public static final int SENTIMENT_POSITIVE = 1;
+    public static final int SENTIMENT_NEGATIVE = 2;
+    public static final int SENTIMENT_QUESTION = 3;
 }
