@@ -4,12 +4,13 @@ import com.scc.ticketmanagement.Entities.*;
 import com.scc.ticketmanagement.ServiceImp.TicketIteamServiceImp;
 import com.scc.ticketmanagement.exentities.Conversation;
 import com.scc.ticketmanagement.exentities.ExMessage;
-import com.scc.ticketmanagement.repositories.ContactRepository;
-import com.scc.ticketmanagement.repositories.UserRepository;
+import com.scc.ticketmanagement.exentities.ExtendTicket;
+import com.scc.ticketmanagement.repositories.*;
 import com.scc.ticketmanagement.services.MessageItemService;
 import com.scc.ticketmanagement.services.MessageService;
 import com.scc.ticketmanagement.services.PageService;
 import com.scc.ticketmanagement.services.TicketService;
+import com.scc.ticketmanagement.utilities.Constant;
 import com.scc.ticketmanagement.utilities.FacebookUtility;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,15 @@ public class MessengerRESTController {
 
     @Autowired
     PageService pageService;
+
+    @Autowired
+    private TicketitemRepository ticketitemRepository;
+
+    @Autowired
+    ProfileRepository profileRepository;
+
+    @Autowired
+    PriorityReposioty priorityReposioty;
 
     @Autowired
     ContactRepository contactService;
@@ -217,7 +227,61 @@ public class MessengerRESTController {
     }
 
     @RequestMapping(value = "/messenger/getTicketByMessage", method = RequestMethod.POST)
-    public List<TicketEntity> getTicketByMessage(@RequestParam("messageId") String messageId) {
-        return ticketService.getTicketByMessageId(messageId);
+    public List<ExtendTicket> getTicketByMessage(@RequestParam("messageId") String messageId) {
+        List<ExtendTicket> result = getExtendTicketList(ticketService.getTicketByMessageId(messageId));
+        return result;
+    }
+
+
+    private List<ExtendTicket> getExtendTicketList(List<TicketEntity> ticketlist){
+        List<ExtendTicket> listextendticket = new ArrayList<ExtendTicket>();
+        for (TicketEntity tk: ticketlist) {
+            ExtendTicket extendticket = new ExtendTicket();
+            extendticket.setCountitem(ticketitemRepository.counTicketItem(tk.getId()));
+            extendticket.setAssignee(tk.getAssignee());
+            extendticket.setName(tk.getName());
+            extendticket.setActive(tk.getActive());
+            extendticket.setCreatedby(tk.getCreatedby());
+            extendticket.setId(tk.getId());
+            extendticket.setStatusid(tk.getStatusid());
+            extendticket.setCreatedtime(tk.getCreatedtime());
+            extendticket.setNote(tk.getNote());
+
+
+            //Get UserEntity cua ng tao ra ticket
+            UserEntity createTicketUser =userRepository.findOne(extendticket.getCreatedby());
+            //Get ProfileEntity cua ng tao ra ticket
+            ProfileEntity createTicketProfile = profileRepository.findOne(createTicketUser.getUserid());
+            //Get Fullname cua ng ta ticket de set vao extendTicket
+            extendticket.setCreatebyuser(createTicketProfile.getFirstname() + " " +createTicketProfile.getLastname());
+
+            //Get UserEntity cua ng duoc assign  ticket
+            UserEntity assigneeUser =userRepository.findOne(extendticket.getAssignee());
+            //Get ProfileEntity cua ng duoc assign  ticket
+            ProfileEntity assigneeTicketProfile = profileRepository.findOne(assigneeUser.getUserid());
+            //Get Fullname cua ng ta ticket de set vao extendTicket
+            extendticket.setAssigneeuser(assigneeTicketProfile.getFirstname() + " " + assigneeTicketProfile.getLastname());
+            switch (assigneeUser.getRoleid()){
+                case Constant.ROLE_ADMIN: extendticket.setAssigneerole("Admin"); break;
+                case Constant.ROLE_BRAND: extendticket.setAssigneerole("Brand Manager"); break;
+                case Constant.ROLE_STAFF: extendticket.setAssigneerole("Staff"); break;
+                case Constant.ROLE_SUPERVISOR: extendticket.setAssigneerole("Supervisor"); break;
+            }
+
+            switch (extendticket.getStatusid()){
+                case Constant.STATUS_ASSIGN: extendticket.setCurrentstatus("Assigned"); break;
+                case Constant.STATUS_INPROCESS: extendticket.setCurrentstatus("Inprocess"); break;
+                case Constant.STATUS_CLOSE: extendticket.setCurrentstatus("Close"); break;
+                case Constant.STATUS_SOLVED: extendticket.setCurrentstatus("Solved"); break;
+                case Constant.STATUS_EXPIRED: extendticket.setCurrentstatus("Expired"); break;
+            }
+
+            //lay ten priority cua ticket
+            PriorityEntity priority = priorityReposioty.findOne(tk.getPriority());
+            extendticket.setCurrentpriority(priority.getName());
+            listextendticket.add(extendticket);
+
+        }
+        return listextendticket;
     }
 }
