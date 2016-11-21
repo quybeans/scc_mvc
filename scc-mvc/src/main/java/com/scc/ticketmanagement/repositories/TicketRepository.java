@@ -34,6 +34,11 @@ public interface TicketRepository extends JpaRepository<TicketEntity,Integer>,Jp
     @Query("select t from TicketEntity t where t.assignee=:userid or t.createdby=:userid")
     List<TicketEntity> getListTicketOfUser(@Param("userid") Integer userid);
 
+
     @Query("SELECT t FROM TicketEntity t where t.id IN (SELECT i.ticketid FROM TicketitemEntity i where i.messageid IN (SELECT m.itemId FROM MessageitemEntity m where messageIdStart = :messageId))")
     List<TicketEntity> getTicketsByMessageId(@Param("messageId") String messageId);
+
+    @Query("select COUNT(t) from TicketEntity t where t.brandId=:brandid")
+    long  coutnTicketByBrandId(@Param("brandid") Integer brandid);
+
 }

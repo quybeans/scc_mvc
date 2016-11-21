@@ -18,4 +18,8 @@ public interface BrandPageRepository extends JpaRepository<BrandpageEntity, Inte
     //Find all page by brandId
     @Query("SELECT b.pageid FROM BrandpageEntity b WHERE b.brandid = :brandId")
     List<String> getAllPagesByBrandid(@Param("brandId") Integer brandId);
+
+    //Count pages that brand have
+    @Query("SELECT COUNT(b) FROM BrandpageEntity b WHERE b.brandid = :brandId")
+    int countPageByBrandId(@Param("brandId") Integer brandId);
 }

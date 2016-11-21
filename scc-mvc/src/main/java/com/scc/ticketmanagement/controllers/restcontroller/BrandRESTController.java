@@ -4,7 +4,9 @@ import com.scc.ticketmanagement.Entities.BrandEntity;
 
 import com.scc.ticketmanagement.Entities.ProfileEntity;
 import com.scc.ticketmanagement.Entities.UserEntity;
+import com.scc.ticketmanagement.repositories.BrandPageRepository;
 import com.scc.ticketmanagement.repositories.BrandRepository;
+import com.scc.ticketmanagement.repositories.TicketRepository;
 import com.scc.ticketmanagement.repositories.UserRepository;
 import com.scc.ticketmanagement.services.ProfileService;
 import com.scc.ticketmanagement.services.UserService;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by QuyBean on 10/31/2016.
@@ -35,6 +39,12 @@ public class BrandRESTController {
 
     @Autowired
     private ProfileService profileService;
+
+    @Autowired
+    private BrandPageRepository brandPageRepository;
+
+    @Autowired
+    private TicketRepository ticketRepository;
 
     @RequestMapping("brand/getBrandInfo")
     public BrandEntity getBrandInfo(HttpServletRequest request) {
@@ -79,6 +89,29 @@ public class BrandRESTController {
         return false;
     }
 
+    @RequestMapping("/brand/bigOverview")
+    public List<Long> overView(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        if (session != null) {
+            String username = (String) session.getAttribute("username");
+            if (username != null) {
+                int brandid = userService.getBrandIdByUsername(username);
+                long pageCount = brandPageRepository.countPageByBrandId(brandid);
+                long messagecount = 1;
+                long userCount = userRepository.countUserByBrandID(brandid);
+                long ticketCount = ticketRepository.coutnTicketByBrandId(brandid);
+                //1: page, 2: mess, 3:user, 4: ticket
+                List<Long> rs = new ArrayList<>();
+                rs.add(pageCount);
+                rs.add(messagecount);
+                rs.add(userCount);
+                rs.add(ticketCount);
+
+                return rs;
+            }
+        }
+        return null;
+    }
 
 }
 
