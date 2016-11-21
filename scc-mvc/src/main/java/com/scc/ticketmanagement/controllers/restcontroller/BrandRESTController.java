@@ -4,10 +4,7 @@ import com.scc.ticketmanagement.Entities.BrandEntity;
 
 import com.scc.ticketmanagement.Entities.ProfileEntity;
 import com.scc.ticketmanagement.Entities.UserEntity;
-import com.scc.ticketmanagement.repositories.BrandPageRepository;
-import com.scc.ticketmanagement.repositories.BrandRepository;
-import com.scc.ticketmanagement.repositories.TicketRepository;
-import com.scc.ticketmanagement.repositories.UserRepository;
+import com.scc.ticketmanagement.repositories.*;
 import com.scc.ticketmanagement.services.ProfileService;
 import com.scc.ticketmanagement.services.UserService;
 
@@ -45,6 +42,12 @@ public class BrandRESTController {
 
     @Autowired
     private TicketRepository ticketRepository;
+
+    @Autowired
+    private CommentRepository commentRepository;
+
+    @Autowired
+    private PostRepository postRepository;
 
     @RequestMapping("brand/getBrandInfo")
     public BrandEntity getBrandInfo(HttpServletRequest request) {
@@ -100,18 +103,46 @@ public class BrandRESTController {
                 long messagecount = 1;
                 long userCount = userRepository.countUserByBrandID(brandid);
                 long ticketCount = ticketRepository.coutnTicketByBrandId(brandid);
+                long commentCount = commentRepository.countCommentByBrandId(brandid);
+                long postCount = postRepository.countPostByBrandId(brandid);
                 //1: page, 2: mess, 3:user, 4: ticket
                 List<Long> rs = new ArrayList<>();
                 rs.add(pageCount);
                 rs.add(messagecount);
                 rs.add(userCount);
                 rs.add(ticketCount);
+                rs.add(commentCount);
+                rs.add(postCount);
 
                 return rs;
             }
         }
         return null;
     }
+
+    @RequestMapping("/brand/commentstatic")
+    public List<Long> commentStatic(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        if (session != null) {
+            String username = (String) session.getAttribute("username");
+            if (username != null) {
+                int brandid = userService.getBrandIdByUsername(username);
+                long negCount = commentRepository.countCommentByBrandIdwSen(brandid,2);
+                long posCount = commentRepository.countCommentByBrandIdwSen(brandid,Constant.SENTIMENT_POSITIVE);
+                long quesCoount = commentRepository.countCommentByBrandIdwSen(brandid,Constant.SENTIMENT_QUESTION);
+
+                //1: posCount, 2: negCount, 3:quesCoount
+                List<Long> rs = new ArrayList<>();
+                rs.add(posCount);
+                rs.add(negCount);
+                rs.add(quesCoount);
+
+                return rs;
+            }
+        }
+        return null;
+    }
+
 
 }
 

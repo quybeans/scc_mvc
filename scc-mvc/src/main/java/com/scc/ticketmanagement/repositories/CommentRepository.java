@@ -39,4 +39,13 @@ public interface CommentRepository extends JpaRepository<CommentEntity,String> {
     @Query("SELECT COUNT(*) FROM CommentEntity c where c.postId in (SELECT p.id FROM PostEntity p where p.createdBy = :pageId)")
     long countAllCommentFromPage(@Param("pageId") String pageId);
 
+    @Query("SELECT COUNT(*) from CommentEntity c  where c.postId in(" +
+            "(select p.id from PostEntity p where p.createdBy in" +
+            "(SELECT bp.pageid from BrandpageEntity bp where bp.brandid= :brandid)))")
+    long countCommentByBrandId(@Param("brandid") int brandId);
+
+    @Query("SELECT COUNT(*) from CommentEntity c  where c.sentimentScore =:sentiment AND c.postId in(" +
+            "(select p.id from PostEntity p where p.createdBy in" +
+            "(SELECT bp.pageid from BrandpageEntity bp where bp.brandid =:brandid)))")
+    long countCommentByBrandIdwSen(@Param("brandid") int brandId,@Param("sentiment") int sentiment);
 }

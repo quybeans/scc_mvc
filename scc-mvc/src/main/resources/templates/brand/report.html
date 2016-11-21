@@ -7,20 +7,72 @@
     <aside class="main-sidebar" th:include="SideBar::aside"></aside>
     <script src="/js/Chart.bundle.js"></script>
     <script>
-        
+        //Starup var for barchar
+        var postCount =1;
+        var negCount =1;
+        var quesCount =1;
+
+        //Startup
+        startup();
+        function startup() {
+            overView();
+        }
+
+        function overView() {
+            $.ajax({
+                url: '/brand/bigOverview',
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    $("#page-count").html(data[0]);
+                    $("#mess-count").html(data[1]);
+                    $("#user-count").html(data[2]);
+                    $("#ticket-count").html(data[3]);
+                    $("#comment-count").html(data[4])
+                    $("#post-count").html(data[5])
+
+                }
+            })
+        };
+
+        function commentCount() {
+            $.ajax({
+                url: '/brand/commentstatic',
+                type: "GET",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    postCount = parseInt(data[0]) ;
+                    negCount = parseInt(data[1]) ;
+                    quesCount = parseInt(data[2]) ;
+                    var totalCount = parseInt(data[2]) + parseInt(data[1]) +parseInt(data[0]);
+
+                    $("#tbl_post").html(data[0]);
+                    $("#tbl_neg").html(data[1]);
+                    $("#tbl_quest").html(data[2]);
+
+                    $("#tbl_post_percent").html(Math.floor((parseInt(data[0]) / totalCount) * 100)+"%");
+                    $("#tbl_neg_percent").html(Math.floor((parseInt(data[1]) / totalCount) * 100)+"%");
+                    $("#tbl_quest_percent").html(Math.floor((parseInt(data[2]) / totalCount) * 100)+"%");
+
+
+
+                }
+            })
+        }
     </script>
 
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="content-wrapper">
     <section class="content">
-        <div style="margin-top: 10px;margin-bottom: 10px;background-color: white; min-height: 300px; padding: 10px 20px 0px 0px">
+        <div style="height: 80vh; margin-top: 10px;margin-bottom: 10px;background-color: white; min-height: 300px; padding: 10px 20px 0px 0px">
             <div class="col-lg-12">
                 <div class="col-lg-3 col-xs-6">
                     <!-- small box -->
                     <div class="small-box bg-primary">
                         <div class="inner">
-                            <h3>150</h3>
+                            <h3 id="page-count">150</h3>
                             <p>Facebook pages</p>
                         </div>
                         <div class="icon">
@@ -33,7 +85,7 @@
                     <!--Users dashs-->
                     <div class="small-box bg-green">
                         <div class="inner">
-                            <h3>1500</h3>
+                            <h3 id="mess-count">1500</h3>
                             <p>Direct messages</p>
                         </div>
                         <div class="icon">
@@ -46,7 +98,7 @@
                     <!--Users dashs-->
                     <div class="small-box bg-aqua">
                         <div class="inner">
-                            <h3>150</h3>
+                            <h3 id="user-count">150</h3>
                             <p>Users</p>
                         </div>
                         <div class="icon">
@@ -59,7 +111,7 @@
                     <!--Users dashs-->
                     <div class="small-box bg-yellow">
                         <div class="inner">
-                            <h3>150</h3>
+                            <h3 id="ticket-count">150</h3>
                             <p>Tickets</p>
                         </div>
                         <div class="icon">
@@ -72,27 +124,86 @@
             <div class="col-lg-12">
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Facebook</h3>
+                        <h3 class="box-title"><span class="fa fa-facebook-square" style="margin-right: 10px; color: #3b5998"></span>Facebook overview</h3>
 
                     </div>
-                    <div class="box-body">
+                    <div class="box-body" style="  position: relative; height: 100%; overflow: hidden">
                         <div class="col-lg-3">
-                            <canvas id="countries" width="150px" height="150px"></canvas>
+                           <canvas id="countries" width="150px" height="150px"></canvas>
+                            <div style="margin-left: 10px; margin-top: 15px; font-style: italic; font-weight: bold">Pie chart all comments</div>
                         </div>
-                        <div class="col-lg-3">
-                            <div id="chart-legend" class="chart-legend">
+                        <div class="col-lg-2" style="height: 200px; position: static; border-right: 1px solid lightgray">
+                            <div id="chart-legend" style="height: 100%">
                                 <div><span class="fa fa-square" style="color: #ffbf00;margin-right: 10px"></span>Question
                                 </div>
                                 <div><span class="fa fa-square" style="color:#CD2D00;margin-right: 10px"></span>Negative
                                 </div>
                                 <div><span class="fa fa-square" style="color:#1AD018;margin-right: 10px"></span>Positive
                                 </div>
+                                <div style="margin-top: 50px">
+                                    <table class="table-bordered" width="100%">
+                                        <tr>
+                                            <th>Title</th>
+                                            <td style="text-align: center">No.</td>
+                                            <td style="text-align: center">%</td>
+
+                                        </tr>
+                                        <tr>
+                                        <tr>
+                                            <th>Question</th>
+                                            <td style="text-align: center" id="tbl_quest">0</td>
+                                        <td style="text-align: center" id="tbl_quest_percent">0</td>
+                                           </tr>
+                                        <tr>
+                                            <th>Negative</th>
+                                            <td style="text-align: center" id="tbl_neg">0</td>
+                                            <td style="text-align: center" id="tbl_neg_percent">0</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Positive</th>
+                                            <td style="text-align: center" id="tbl_post">0</td>
+                                            <td style="text-align: center" id="tbl_post_percent">0</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-4">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-blue"><i class="fa fa-pencil "></i></span>
+
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Total posts</span>
+                                    <span class="info-box-number"><span id="post-count">150</span><small> posts</small></span>
+                                </div>
+                                <!-- /.info-box-content -->
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-4">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-aqua"><i class="fa fa-comment-o"></i></span>
+
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Total comments</span>
+                                    <span class="info-box-number"><span id="comment-count">90</span><small> comments</small></span>
+                                </div>
+                                <!-- /.info-box-content -->
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-4">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-green"><i class="fa fa-comments"></i></span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Total message</span>
+                                    <span class="info-box-number"><span id="message-count">90</span><small> message</small></span>
+                                </div>
+                                <!-- /.info-box-content -->
                             </div>
                         </div>
                     </div>
                     <!-- /.box-body -->
                     <div class="box-footer">
-                        <div class="col-lg-2" style="text-align: center">Comments pie chart</div>
+
                     </div>
                     <!-- /.box-footer-->
                 </div>
@@ -108,6 +219,7 @@
 
 </body>
 <script>
+    commentCount();
     var options = {
         responsive: false,
         maintainAspectRatio: false,
@@ -123,7 +235,7 @@
         ],
         datasets: [
             {
-                data: [300, 50, 100],
+                data: [quesCount, negCount, postCount],
                 backgroundColor: [
                     "#ffbf00",
                     "#CD2D00",

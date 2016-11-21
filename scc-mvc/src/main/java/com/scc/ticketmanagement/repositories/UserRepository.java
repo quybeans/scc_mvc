@@ -60,7 +60,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
                                @Param("brandid") Integer brandid);
 
     @Query("SELECT Count(u) FROM UserEntity u WHERE u.brandid=:brandid")
-    long countUserByBrandID(int brandid);
+    long countUserByBrandID(@Param("brandid") int brandid);
 
 
     @Query("SELECT Count(u) FROM UserEntity u")
