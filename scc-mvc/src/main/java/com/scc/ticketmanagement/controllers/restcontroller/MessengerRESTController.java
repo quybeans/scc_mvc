@@ -232,6 +232,16 @@ public class MessengerRESTController {
         return result;
     }
 
+    @RequestMapping(value = "/getNumberOfMessageInBrand", method = RequestMethod.GET)
+    public int getNumberOfMessageInBrand(@RequestParam("brandId") int brandId){
+        return messageService.getNumberOfMessageInBrand(brandId);
+    }
+
+    @RequestMapping(value = "/getNumberOfMessageInPage", method = RequestMethod.GET)
+    public int getNumberOfMessageInBrand(@RequestParam("pageId") String pageId){
+        return messageService.getNumberOfMessageInPage(pageId);
+    }
+
 
     private List<ExtendTicket> getExtendTicketList(List<TicketEntity> ticketlist){
         List<ExtendTicket> listextendticket = new ArrayList<ExtendTicket>();
@@ -284,4 +294,6 @@ public class MessengerRESTController {
         }
         return listextendticket;
     }
+
+
 }

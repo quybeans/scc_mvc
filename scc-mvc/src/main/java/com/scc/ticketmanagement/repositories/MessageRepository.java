@@ -65,4 +65,10 @@ public interface MessageRepository extends JpaRepository<MessageEntity, String> 
     @Query("SELECT count(m) FROM MessageEntity m WHERE m.messageRead = FALSE AND m.receiverid = :receiverId")
     Integer getNumberOfUnreadMessageInPage(@Param("receiverId") String receiverId);
 
+    @Query("SELECT count(m) FROM MessageEntity m where m.senderid IN (SELECT b.pageid FROM BrandpageEntity b where b.brandid =:brandId) or m.receiverid IN (SELECT b.pageid FROM BrandpageEntity b where b.brandid =:brandId)")
+    Integer getNumberOfMessageInBrand(@Param("brandId") Integer brandId);
+
+    @Query("SELECT count(m) FROM MessageEntity m where m.receiverid =:pageId or m.senderid =:pageId")
+    Integer getNumberOfMessageInPage(@Param("pageId") String pageId);
+
 }

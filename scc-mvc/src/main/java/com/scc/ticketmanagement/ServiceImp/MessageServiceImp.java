@@ -163,4 +163,14 @@ public class MessageServiceImp implements MessageService {
     public Integer getNumberOfUnreadMessageInPage(String receiverId) {
         return messageRepository.getNumberOfUnreadMessageInPage(receiverId);
     }
+
+    @Override
+    public Integer getNumberOfMessageInBrand(int brandId) {
+        return messageRepository.getNumberOfMessageInBrand(brandId);
+    }
+
+    @Override
+    public Integer getNumberOfMessageInPage(String pageId) {
+        return messageRepository.getNumberOfMessageInPage(pageId);
+    }
 }

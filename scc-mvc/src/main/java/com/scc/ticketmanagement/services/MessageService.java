@@ -12,14 +12,10 @@ import java.util.List;
 public interface MessageService {
     List<MessageEntity> getAllConversations();
     MessageEntity getMessageById(String messageId);
-
     List<Conversation> getAllConversationsByPageId(String pageId);
-
     List<String> getAllSenderIdByPageID(String pageId);
-
     List<MessageEntity> getMessageDesc(String receiverId, String senderId);
     List<MessageEntity> getMessageAsc(String receiverId, String senderId);
-
     Page<MessageEntity> getMessageDescWithPage(String receiverId, String senderId, Integer page);
     Page<MessageEntity> getMessageDescWithPageSize(String receiverId, String senderId, Integer page);
     Page<MessageEntity> getMessageAscWithPage(String receiverId, String senderId, Integer page);
@@ -29,5 +25,6 @@ public interface MessageService {
     void setConversationRead(String receiverId, String senderId);
     Integer getNumberOfUnreadMessageInConversation(String receiverId, String senderId);
     Integer getNumberOfUnreadMessageInPage(String receiverId);
-
+    Integer getNumberOfMessageInBrand(int brandId);
+    Integer getNumberOfMessageInPage(String pageId);
 }
