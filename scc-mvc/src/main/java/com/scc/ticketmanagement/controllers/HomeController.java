@@ -127,17 +127,19 @@ public class HomeController {
         session.setAttribute("username", userEntity.getUsername());
         ProfileEntity profileEntity = profileService.getProfileByID(userEntity.getUserid());
         session.setAttribute("fullname", profileEntity.getFirstname() + " " + profileEntity.getLastname());
-
-        if (userEntity.getRoleid() == Constant.ROLE_ADMIN) {
-            return "redirect:/admin/index";
-        } else if (userEntity.getRoleid() == Constant.ROLE_STAFF) {
-            return "customercare";
-        } else if (userEntity.getRoleid() == Constant.ROLE_SUPERVISOR) {
-            return "manageticket";
-        } else if (userEntity.getRoleid() == Constant.ROLE_BRAND) {
-            return "manageticket";
+        if(userEntity.isActive()){
+            if (userEntity.getRoleid() == Constant.ROLE_ADMIN) {
+                return "redirect:/admin/index";
+            } else if (userEntity.getRoleid() == Constant.ROLE_STAFF) {
+                return "customercare";
+            } else if (userEntity.getRoleid() == Constant.ROLE_SUPERVISOR) {
+                return "manageticket";
+            } else if (userEntity.getRoleid() == Constant.ROLE_BRAND) {
+                return "manageticket";
+            }
         }
-        return "404";
+
+        return "login";
     }
 
     @RequestMapping("/")

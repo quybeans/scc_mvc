@@ -365,7 +365,7 @@ function assign(ticketid) {
             $("#assign").html("");
             for (var i =0;i<data.length;i++){
                 $("#assign").append(
-                    '<option value="'+data[i].userid+'">'+data[i].firstname+ ' ' +data[i].lastname +'-'+data[i].role+'</option>'
+                    '<option value="'+data[i].userid+'">'+data[i].firstname+ ' ' +data[i].lastname +' - '+data[i].role+'</option>'
                 );
 
             }
@@ -578,7 +578,7 @@ function forwardticket(ticketid) {
             $("#forward").html("");
             for (var i = 0; i < data.length; i++)
                 $("#forward").append(
-                    '<option value="'+data[i].userid+'">'+data[i].firstname+ ' ' +data[i].lastname +'-'+data[i].role+'</option>'
+                    '<option value="'+data[i].userid+'">'+data[i].firstname+ ' ' +data[i].lastname +' - '+data[i].role+'</option>'
                 );
         },
         error: function () {
