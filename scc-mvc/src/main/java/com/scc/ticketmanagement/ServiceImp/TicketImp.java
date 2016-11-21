@@ -69,5 +69,10 @@ public class TicketImp implements TicketService {
         return ticketRepository.getTicketsByMessageId(messageId);
     }
 
+    @Override
+    public Integer countUserClosedTicket(Integer assignee,Timestamp createdtime) {
+        return ticketRepository.countUserClosedTicket(assignee,createdtime);
+    }
+
 
 }

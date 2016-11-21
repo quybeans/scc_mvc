@@ -160,7 +160,7 @@ function assign(ticketid) {
 
         },
         error:function () {
-            alert("Fail to load list user");
+
         }
     })
 
@@ -174,12 +174,10 @@ function assign(ticketid) {
             data:{"ticketid":ticketid,"assignee":assignee,"assignnote":assignnote},
             type:"POST",
             success:function (data) {
-                alert("assign ticket successful"+data.assignee);
                 $('#assignModal').modal('toggle');
                 table.ajax.reload();
             },
             error:function () {
-                alert("fail to assign ticket");
             }
         })
     })
@@ -198,11 +196,9 @@ function status(ticketid) {
             success:function (data) {
                 table.ajax.reload();
                 $('#statusModal').modal('toggle');
-                alert("change status successfull!");
 
             },
             error:function () {
-                alert("fail to change ticket status");
             }
         })
     })
@@ -223,7 +219,6 @@ function updateticket(ticketid) {
             }
         },
         error: function () {
-            alert("fail to load priority for update")
         }
     })
 
@@ -248,12 +243,10 @@ function updateticket(ticketid) {
             data: {"ticketid": ticketid,"ticketnote":ticketnote,"ticketpriority":ticketpriority},
             success: function (data) {
                 table.ajax.reload();
-                alert("update ticket successful!");
                 $('#changeticketModal').modal('toggle');
 
             },
             error: function () {
-                alert("Fail ne");
             }
         })
     })
@@ -285,7 +278,6 @@ function getallpriority() {
             }
         },
         error: function () {
-            alert("Fail to load brand priority");
         }
     })
 }
@@ -301,10 +293,8 @@ function updatepriority(id) {
         type: "POST",
         data: {"priorityid": id, "priorityduration": duration, "priorityname": name},
         success: function (data) {
-            alert("update priority successfully" + data.duration);
         },
         error: function () {
-            alert("fail to update priority");
         }
     })
 }
@@ -313,7 +303,6 @@ function updatepriority(id) {
 function createpriority() {
     var priorityname = $('#newpriorityname').val();
     var priorityduration = $('#newpriorityduration').val();
-    alert(priorityname + "  " + priorityduration)
     $.ajax({
         url: "/createpriority",
         type: "POST",
@@ -324,7 +313,6 @@ function createpriority() {
             $('#newpriorityduration').val("");
         },
         error: function () {
-            alert("Fail to create priority")
             $('#newpriorityname').val("");
             $('#newpriorityduration').val("");
         }
@@ -338,11 +326,9 @@ function deletepriority(id) {
         type: "POST",
         data: {"priorityid": id},
         success: function () {
-            alert("Delete priotiry" + id + " successfull");
             getallpriority();
         },
         error: function () {
-            alert("Fail to delete priority");
         }
     })
 }
@@ -378,7 +364,6 @@ function showticket(cmtid) {
             )
         },
         error:function () {
-            alert("Fail to get ticket comment");
         }
     })
 
@@ -412,7 +397,6 @@ function showticket(cmtid) {
             }
         },
         error:function () {
-            alert("Fail to load reply")
         }
     })
 }
@@ -431,7 +415,6 @@ function newticket() {
                 );
         },
         error:function () {
-            alert("Fail to load list user");
         }
     })
 
@@ -447,7 +430,6 @@ function newticket() {
             }
         },
         error: function () {
-            alert("fail to load priority for update")
         }
     })
 
@@ -463,12 +445,10 @@ function newticket() {
             data:{"ticketname":ticketname,"priority":priority,"note":note,"assignee":assignee},
             success:function (data) {
                 table.ajax.reload();
-                alert("create ticket: "+data.id+" successful!");
                 $('#createticketModal').modal('toggle');
 
             },
             error:function () {
-                alert("fail to create ticket");
             }
         })
     })
@@ -532,7 +512,6 @@ function getticketrequestcount() {
             )
         },
         error:function () {
-            alert("fail to count ticket request of current user")
         }
     })
     
@@ -570,7 +549,6 @@ function ticketrequest(userid) {
 
         },
         error:function () {
-            alert("fail to load ticket request")
         }
     })
 }
@@ -583,10 +561,8 @@ function acceptrequest(requestid) {
         success:function () {
             table.ajax.reload();
             $("#ticketrequestModal").modal('toggle');
-            alert("accept request successfully");
         },
         error:function(){
-            alert("fail to accept request")
         }
     })
 }
@@ -598,10 +574,8 @@ function denirequest(requestid) {
         data:{"requestid":requestid},
         success:function () {
             $("#ticketrequestModal").modal('toggle');
-            alert("accept request successfully");
         },
         error:function(){
-            alert("fail to accept request")
         }
     })
 }
@@ -619,7 +593,6 @@ function forwardticket(ticketid) {
                 );
         },
         error: function () {
-            alert("Fail to load list user");
         }
     })
     $('#btnForward').unbind().click(function () {
@@ -630,11 +603,9 @@ function forwardticket(ticketid) {
             type: "POST",
             data: {"ticketid": ticketid, "forwarduser": forwarduser, "forwardnote": forwardnote},
             success: function (data) {
-                alert("Forward ticket: " + data.ticketid + " to user: " + data.assignee)
                 $("#forwardModal").modal('toggle');
             },
             error: function () {
-                alert("Fail to forward ticket")
             }
         })
     })
@@ -654,7 +625,6 @@ function createstaffticket(){
             }
         },
         error: function () {
-            alert("fail to load priority for update")
         }
     })
 
@@ -667,12 +637,10 @@ function createstaffticket(){
             type:"POST",
             data:{"ticketname":ticketname,"ticketpriority":ticketpriority,"ticketnote":ticketnote},
             success:function () {
-                alert("Create ticket for staff successfull")
                 $("#createticketstaffModal").modal('toggle');
                 table.ajax.reload();
             },
             error:function () {
-                alert("fail to create ticket for staff")
             }
         })
     })
@@ -684,10 +652,9 @@ function deleteticket(ticketid) {
         type:"POST",
         data:{"ticketid":ticketid},
         success:function () {
-            alert("Delete ticket successfull")
+            table.ajax.reload();
         },
         error:function () {
-            alert("Fail to delete ticket")
         }
     })
 

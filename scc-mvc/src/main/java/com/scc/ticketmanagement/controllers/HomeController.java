@@ -11,6 +11,7 @@ import com.scc.ticketmanagement.repositories.TicketStatusChangeRepository;
 import com.scc.ticketmanagement.repositories.UserRepository;
 import com.scc.ticketmanagement.services.FacebookaccountService;
 import com.scc.ticketmanagement.services.ProfileService;
+import com.scc.ticketmanagement.services.TicketService;
 import com.scc.ticketmanagement.services.UserService;
 import com.scc.ticketmanagement.utilities.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -44,8 +47,12 @@ public class HomeController {
 
     @Autowired
     UserService userService;
+
     @Autowired
     FacebookaccountService fbService;
+
+    @Autowired
+    TicketService ticketService;
 
     @Autowired
     private BrandRepository brandRepository;
@@ -208,5 +215,12 @@ public class HomeController {
         return "followticket";
     }
 
-
+    @RequestMapping("/testcount")
+        public String count() throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        Date d = sdf.parse("14/11/2016");
+        System.out.println(d);
+        System.out.println(ticketService.countUserClosedTicket(16,new Timestamp(d.getTime())));
+        return "login";
+        }
 }
