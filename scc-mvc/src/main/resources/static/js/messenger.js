@@ -801,6 +801,8 @@ function checkMessageTicket(messageId) {
                         $('#ticket-name').append(", ");
                     }
                     $('#ticket-name').append(data[index].name);
+                    $('#ticket-assigner').html(data[index].createbyuser);
+                    $('#ticket-assignee').html(data[index].assigneeuser);
 
                 });
             } else {
@@ -815,14 +817,14 @@ function checkMessageTicket(messageId) {
     });
 }
 
-function showButtonAddTicketAtSender(a, b) {
+function showButtonAddTicketAtSender(isTicket, messageId) {
     var result = '';
-    switch (a) {
+    switch (isTicket) {
         case true:
-            result = '<span style="cursor:pointer; margin-left: 7px;opacity: 0.3"  id="' + b + '" onclick="checkMessageTicket(b)" class="fa fa-ticket fa-2x pull-left"></span>';
+            result = '<span style="cursor:pointer; margin-left: 7px;opacity: 0.3"  id="' + messageId + '" onclick="checkMessageTicket(messageId)" class="fa fa-ticket fa-2x pull-left"></span>';
             break;
         case false:
-            result = '<span style="cursor:pointer; margin-left: 7px;opacity: 0.3"  id="' + b + '" onclick="showTicket(this)" class="fa fa-plus-square-o fa-2x pull-left"></span>';
+            result = '<span style="cursor:pointer; margin-left: 7px;opacity: 0.3"  id="' + messageId + '" onclick="showTicket(this)" class="fa fa-plus-square-o fa-2x pull-left"></span>';
             break
     }
     return result;
