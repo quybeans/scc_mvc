@@ -43,7 +43,7 @@ public class TicketRESTController {
             }
             return null;
         } catch (NullPointerException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             return null;
         }
     }

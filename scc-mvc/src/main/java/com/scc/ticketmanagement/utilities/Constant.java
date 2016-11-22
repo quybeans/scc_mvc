@@ -4,6 +4,8 @@ package com.scc.ticketmanagement.utilities;
  * Created by Thien on 9/26/2016.
  */
 public class Constant {
+    public static final String SCC_CRAWLER_HOST = "http://localhost:8080";
+
 
     //Scc-Staff
     public static final String APP_ID = "341786092825787";
