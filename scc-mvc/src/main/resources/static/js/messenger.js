@@ -75,6 +75,10 @@ $(document).ready(function () {
         if (e.keyCode == 13)
             $('#btn-search-conversation').click();
     });
+    showCustomerInfo();
+
+
+
 });
 
 function getAllConversation(a) {
@@ -218,7 +222,7 @@ function firstLoadConversationBySenderId() {
                         // moment(dataReversed[i].createdAt).fromNow() +
                         $.format.date(dataReversed[i].createdAt, "HH:mm") +
                         '</small>' +
-                        '<strong class="pull-right primary-font">' + currentPageName + '</strong>' +
+                        '<a class="pull-right primary-font">' + currentPageName + '</a>' +
                         '</div>' +
                         '<p style="text-align: right">' +
                         dataReversed[i].content +
@@ -238,12 +242,12 @@ function firstLoadConversationBySenderId() {
                         '<img src="' + currentCustomerAvt + '"/> </span>' +
                         '<div class="chat-body clearfix pull-left">' +
                         '<div class="header">' +
-                        '<strong class="primary-font">' + currentCustomerName + '</strong>' +
+                        '<a class="primary-font">' + currentCustomerName + '</a>' +
                         '<small class="pull-right text-muted">' +
                         $.format.date(dataReversed[i].createdAt, "HH:mm") +
                         '</small>' +
                         '</div>' +
-                        '<p>' +
+                        '<p  class="sender-chat-content">' +
                         dataReversed[i].content +
                         '</p>' +
                         '</div>' +
@@ -287,7 +291,7 @@ function reloadConversationBySenderId() {
                         '<small class=" text-muted ">' +
                         $.format.date(dataReversed[i].createdAt, "HH:mm") +
                         '</small>' +
-                        '<strong class="pull-right primary-font">' + currentPageName + '</strong>' +
+                        '<a class="pull-right primary-font">' + currentPageName + '</a>' +
                         '</div>' +
                         '<p style="text-align: right">' +
                         dataReversed[i].content +
@@ -307,12 +311,12 @@ function reloadConversationBySenderId() {
                         '<img src="' + currentCustomerAvt + '"/> </span>' +
                         '<div class="chat-body clearfix pull-left">' +
                         '<div class="header">' +
-                        '<strong class="primary-font">' + currentCustomerName + '</strong>' +
+                        '<a class="primary-font">' + currentCustomerName + '</a>' +
                         '<small class="pull-right text-muted">' +
                         $.format.date(dataReversed[i].createdAt, "HH:mm") +
                         '</small>' +
                         '</div>' +
-                        '<p>' +
+                        '<p  class="sender-chat-content">' +
                         dataReversed[i].content +
                         '</p>' +
                         '</div>' +
@@ -383,7 +387,7 @@ function getConversationBySenderIdWithPage() {
                             '<small class=" text-muted ">' +
                             $.format.date(dataReversed[i].createdAt, "HH:mm") +
                             '</small>' +
-                            '<strong class="pull-right primary-font">' + currentPageName + '</strong>' +
+                            '<a class="pull-right primary-font">' + currentPageName + '</a>' +
                             '</div>' +
                             '<p style="text-align: right">' +
                             dataReversed[i].content +
@@ -403,12 +407,12 @@ function getConversationBySenderIdWithPage() {
                             '<img src="' + currentCustomerAvt + '"/> </span>' +
                             '<div class="chat-body clearfix pull-left">' +
                             '<div class="header">' +
-                            '<strong class="primary-font">' + currentCustomerName + '</strong>' +
+                            '<a class="primary-font">' + currentCustomerName + '</a>' +
                             '<small class="pull-right text-muted">' +
                             $.format.date(dataReversed[i].createdAt, "HH:mm") +
                             '</small>' +
                             '</div>' +
-                            '<p>' +
+                            '<p class="sender-chat-content">' +
                             dataReversed[i].content +
                             '</p>' +
                             '</div>' +
@@ -834,26 +838,37 @@ function checkMessageTicket(messageId) {
         },
         dataType: "json",
         success: function (data) {
-            $('#ticket-name').empty();
-            if (data.length > 0) {
-                $.each(data, function (index) {
-                    if (index > 0) {
-                        $('#ticket-name').append(", ");
-                    }
-                    $('#ticket-name').append(data[index].name);
-                    $('#ticket-name-link').attr("href" , "/followticket?ticketid=" + data[index].id) ;
-                    $('#ticket-name-link').attr("target" , "_blank") ;
-                    $('#ticket-assigner').html(data[index].createbyuser);
-                    $('#ticket-assignee').html(data[index].assigneeuser);
+            // $('#ticket-name').empty();
+            // if (data.length > 0) {
+            //     $.each(data, function (index) {
+            //         if (index > 0) {
+            //             $('#ticket-name').append(", ");
+            //         }
+            //         $('#ticket-name').append(data[index].name);
+            //         $('#ticket-name-link').attr("href" , "/followticket?ticketid=" + data[index].id) ;
+            //         $('#ticket-name-link').attr("target" , "_blank") ;
+            //         $('#ticket-assigner').html(data[index].createbyuser);
+            //         $('#ticket-assignee').html(data[index].assigneeuser);
+            //
+            //     });
+            // } else {
+            //     $('#ticket-name').append("This message is not belong to any ticket");
+            //     $('#ticket-name-link').attr("href" , "#") ;
+            //     $('#ticket-name-link').attr("target" , "") ;
+            //     $('#ticket-assigner').html("");
+            //     $('#ticket-assignee').html("");
+            // }
+            $.each(data, function (index){
+                var ticketLink = window.open('/followticket?ticketid=' + data[index].id, '_blank');
+                if (ticketLink) {
+                    //Browser has allowed it to be opened
+                    ticketLink.focus();
+                } else {
+                    //Browser has blocked it
+                    alert('Please allow popups for this website');
+                }
+            });
 
-                });
-            } else {
-                $('#ticket-name').append("This message is not belong to any ticket");
-                $('#ticket-name-link').attr("href" , "#") ;
-                $('#ticket-name-link').attr("target" , "") ;
-                $('#ticket-assigner').html("");
-                $('#ticket-assignee').html("");
-            }
 
 
         },
@@ -880,26 +895,36 @@ function showButtonAddTicketAtPage(a,b) {
     var result = '';
     switch (a) {
         case true:
-            result = '<span style="cursor:pointer; margin-right: 12px;opacity: 0.3" id="' + b + '" onclick="checkMessageTicket(b)" class="fa fa-ticket fa-2x pull-right"></span>';
+            result = '<span style="cursor:pointer; margin-right: 12px;opacity: 0.3" id="' + b + '" onclick="checkMessageTicket(b)" class="fa fa-ticket fa-2x pull-right" title="Show ticket"></span>';
             break;
         case false:
-            result = '<span style="cursor:pointer; margin-right: 12px;opacity: 0.3" id="' + b + '" onclick="showTicket(this)" class="fa fa-plus-square-o fa-2x pull-right"></span>';
+            result = '<span style="cursor:pointer; margin-right: 12px;opacity: 0.3" id="' + b + '" onclick="showTicket(this)" class="fa fa-plus-square-o fa-2x pull-right" title="Add ticket"></span>';
             break
     }
     return result;
 }
 
-// /modal/
+function showCustomerInfo(){
+    $('#customer-button').addClass("active");
+    $('#ticket-button').removeClass("active");
+    $('#ticket-info-tab').hide();
+    $('#customer-info-tab').show();
+}
 
+function showTicketInfo() {
+    $('#ticket-button').addClass("active");
+    $('#customer-button').removeClass("active");
+    $('#customer-info-tab').hide();
+    $('#ticket-info-tab').show();
+}
 
+/*Ticket Filter*/
 function sortticketbytime(currentCmt) {
     sortticket("/sortbytime",currentCmt)
 }
-
 function sortticketbystatus() {
     sortticket("/sortbystatus",currentCmt)
 }
-
 function showallticket() {
     $('#ticket-list').empty();
     $.ajax({
@@ -930,7 +955,6 @@ function showallticket() {
     });
 
 }
-
 $(document).on('change', '#tktimecheckbox', function(){
     if (this.checked) {
         sortticketbytime(currentMessageId)
@@ -939,7 +963,6 @@ $(document).on('change', '#tktimecheckbox', function(){
     }
 
 });
-
 $(document).on('change', '#tksttcheckbox', function(){
     if (this.checked) {
         sortticketbystatus(currentMessageId)
@@ -948,7 +971,6 @@ $(document).on('change', '#tksttcheckbox', function(){
     }
 
 });
-
 function filterticket(){
     var status= $("#filterstatus").val();
     var priority= $("#filterpriority").val();
@@ -987,7 +1009,6 @@ function filterticket(){
 
     })
 }
-
 function getallpriorityofbrand() {
     $.ajax({
         url: "/getallpriorityofbrand",
@@ -1004,7 +1025,6 @@ function getallpriorityofbrand() {
         }
     })
 }
-
 function getalluser() {
     $.ajax({
         url: "/getalluser",
@@ -1025,7 +1045,6 @@ function getalluser() {
         }
     })
 }
-
 function getstatuscolor(statusid) {
     switch (statusid){
         case 1: return'#ffff00'; break;
@@ -1035,7 +1054,6 @@ function getstatuscolor(statusid) {
         case 5: return'#000000'; break;
     }
 }
-
 function sortticket(url,currentMessageId) {
     $.ajax({
         url:url,
@@ -1069,3 +1087,4 @@ function sortticket(url,currentMessageId) {
         }
     })
 }
+/*End Ticket Filter*/

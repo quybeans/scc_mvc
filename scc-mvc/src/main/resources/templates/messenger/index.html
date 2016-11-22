@@ -275,8 +275,16 @@
             <!--Cot ben phai. Thong tin cua khach hang-->
             <div class="col-md-3" id="customer-info" style="background-color: white; height: 92vh">
 
+
+                <div class="container">
+                    <ul class="nav nav-tabs" style="height: 46px">
+                        <li id="customer-button" onclick="showCustomerInfo();"><a>Customer Info</a></li>
+                        <li id="ticket-button" onclick="showTicketInfo();"><a>Ticket Info</a></li>
+                    </ul>
+                </div>
+
                 <!--Thong tin khach hang-->
-                <div class="col-md-3 box box-primary" class="">
+                <div id="customer-info-tab" class="col-md-3 box box-primary" class="">
                     <div class="box-body box-profile">
                         <img  id="customer-picture"
                              class="profile-user-img img-responsive img-circle" style="height: 150px;width: 150px; border: none" src="" alt="">
@@ -310,18 +318,12 @@
                     <!-- /.box-body -->
                 </div>
                 <!--Thong tin ticket-->
-                <div class="col-md-3 box box-primary" class="" style="border-top: 2px solid lightblue;">
+                <div id="ticket-info-tab" class="col-md-3 box box-primary" class="">
                     <div class="box-body box-profile">
-                        <h1 class="customer-username text-center">Ticket</h1>
-                        <ul class="list-group list-group-unbordered">
+                        <h4 class="text-center">Tickets of this customer</h4>
+                        <ul id="ticket-information-list" class="list-group list-group-unbordered">
                             <li class="list-group-item" style="text-align: center">
-                                <a id="ticket-name-link" href="#" style="text-align: center" target=""><b id="ticket-name">Select a message to see it's ticket</b></a>
-                            </li>
-                            <li class="list-group-item">
-                                <b>Assigner</b> <a id="ticket-assigner" class="pull-right"></a>
-                            </li>
-                            <li class="list-group-item">
-                                <b>Assignee</b> <a id="ticket-assignee" class="pull-right"></a>
+                                <a href="#" style="text-align: center" target=""><b>There is no ticket in this conversation</b></a>
                             </li>
                         </ul>
                     </div>
