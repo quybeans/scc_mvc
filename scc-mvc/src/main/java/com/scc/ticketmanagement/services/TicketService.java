@@ -2,6 +2,8 @@ package com.scc.ticketmanagement.services;
 
 import com.scc.ticketmanagement.Entities.TicketEntity;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,4 +19,5 @@ public interface TicketService {
     TicketEntity getTicketByID(Integer ticketid);
     List<TicketEntity> getTicketUser(Integer userid);
     List<TicketEntity> getTicketByMessageId(String messageId);
+    Integer countUserClosedTicket(Integer assignee,Timestamp createdtime);
 }

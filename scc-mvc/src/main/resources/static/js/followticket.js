@@ -90,14 +90,14 @@ function getticket(ticketid) {
         type:"GET",
         data:{"ticketid":ticketid},
         success:function (data) {
-            var statuscolor;
+            var statuscolor= 'color:'+getstatuscolor(data.statusid);
             var statusname;
             switch (data.statusid){
-                case 1: statuscolor='color:#ffff00'; statusname="Assigned"; break;
-                case 2: statuscolor='color:#00a65a'; statusname="Inprocess"; break;
-                case 3: statuscolor='color:#500a6f'; statusname="Solved"; break;
-                case 4: statuscolor='color:gray'; statusname="Close"; break;
-                case 5: statuscolor='color:#000000'; statusname="Expired"; break;
+                case 1:  statusname="Assigned"; break;
+                case 2:  statusname="Inprocess"; break;
+                case 3:  statusname="Solved"; break;
+                case 4:  statusname="Close"; break;
+                case 5:  statusname="Expired"; break;
             }
             window.currentstatus=data.statusid;
             var createat = moment(data.createdtime).format("D/MM/YYYY, hh:mm:ss");
@@ -128,7 +128,7 @@ function getticket(ticketid) {
 
         },
         error: function () {
-            alert("fail to get ticket");
+
         }
 
     })
@@ -272,7 +272,7 @@ function loadticketitem(ticketid) {
             }
         },
         error: function () {
-            alert("fail to load ticket item")
+
         }
     })
 }
@@ -316,7 +316,7 @@ function getCommentReply(comId) {
 
         },
         error:function () {
-            alert("fail to load reply");
+
         }
     })
 }
@@ -333,7 +333,7 @@ function getassignerinfo(userid) {
             $("#assigneremail").html("Email: "+data.email);
         },
         error: function () {
-            alert("fail to get user profile");
+
         }
     })
 }
@@ -350,7 +350,7 @@ function getassigneeinfo(userid){
             $("#assigneeemail").html("Email: "+data.email);
         },
         error: function () {
-            alert("fail to get user profile");
+
         }
     })
 }
@@ -365,14 +365,14 @@ function assign(ticketid) {
             $("#assign").html("");
             for (var i =0;i<data.length;i++){
                 $("#assign").append(
-                    '<option value="'+data[i].userid+'">'+data[i].firstname+ ' ' +data[i].lastname +'-'+data[i].role+'</option>'
+                    '<option value="'+data[i].userid+'">'+data[i].firstname+ ' ' +data[i].lastname +' - '+data[i].role+'</option>'
                 );
 
             }
 
         },
         error:function () {
-            alert("Fail to load list user");
+
         }
     })
 
@@ -386,14 +386,15 @@ function assign(ticketid) {
             data:{"ticketid":ticketid,"assignee":assignee,"assignnote":assignnote},
             type:"POST",
             success:function (data) {
-                alert("assign ticket successful"+data.assignee);
+
                 $("#historycheckbox").prop("checked", false);
                 $('#assignModal').modal('toggle');
                 getticket(ticketid)
                 loadticketitem(ticketid)
             },
             error:function () {
-                alert("fail to assign ticket");
+
+
             }
         })
     })
@@ -412,13 +413,13 @@ function status(ticketid) {
             type:"POST",
             success:function (data) {
                 $('#statusModal').modal('toggle');
-                alert("change status successfull!");
+
                 $("#historycheckbox").prop("checked", false);
                 getticket(ticketid)
                 loadticketitem(ticketid)
             },
             error:function () {
-                alert("fail to change ticket status");
+
             }
         })
     })
@@ -439,7 +440,7 @@ function updateticket(ticketid) {
             }
         },
         error: function () {
-            alert("fail to load priority for update")
+
         }
     })
 
@@ -463,7 +464,7 @@ function updateticket(ticketid) {
             type: "POST",
             data: {"ticketid": ticketid,"ticketnote":ticketnote,"ticketpriority":ticketpriority},
             success: function (data) {
-                alert("update ticket successful!");
+
                 $("#historycheckbox").prop("checked", false);
                 $('#changeticketModal').modal('toggle');
                 getticket(ticketid)
@@ -471,7 +472,7 @@ function updateticket(ticketid) {
                 getticketduetime(ticketid)
             },
             error: function () {
-                alert("Fail ne");
+
             }
         })
     })
@@ -511,7 +512,7 @@ function reopenticket(ticketid) {
         type:"POST",
         data:{"ticketid":ticketid},
         success:function () {
-            alert("reopen ticket successfull");
+
             $('#ticketitem').html("");
             $("#historycheckbox").prop("checked", false);
             getticket(ticketid)
@@ -519,7 +520,7 @@ function reopenticket(ticketid) {
             loadticketitem(ticketid)
         },
         error:function () {
-            alert("reopen fail");
+
         }
     })
 }
@@ -533,14 +534,14 @@ function approve(ticketid) {
             data:{"ticketid":ticketid,"status":4,"statusnote":"This ticket is solved"},
             success:function () {
 
-                alert("approve ticket successfull");
+
                 $('#ticketitem').html("");
                 getticket(ticketid)
                 getticketduetime(ticketid)
                 loadticketitem(ticketid)
             },
             error:function () {
-                alert("approve fail");
+
             }
         })
     }
@@ -555,14 +556,14 @@ function reject(ticketid) {
             type:"POST",
             data:{"ticketid":ticketid,"status":1,"statusnote":"This ticket is not done yet"},
             success:function () {
-                alert("Reject ticket successfull");
+
                 $('#ticketitem').html("");
                 getticket(ticketid)
                 getticketduetime(ticketid)
                 loadticketitem(ticketid)
             },
             error:function () {
-                alert("approve fail");
+
             }
         })
     }
@@ -578,11 +579,11 @@ function forwardticket(ticketid) {
             $("#forward").html("");
             for (var i = 0; i < data.length; i++)
                 $("#forward").append(
-                    '<option value="'+data[i].userid+'">'+data[i].firstname+ ' ' +data[i].lastname +'-'+data[i].role+'</option>'
+                    '<option value="'+data[i].userid+'">'+data[i].firstname+ ' ' +data[i].lastname +' - '+data[i].role+'</option>'
                 );
         },
         error: function () {
-            alert("Fail to load list user");
+
         }
     })
     $('#btnForward').unbind().click(function () {
@@ -593,11 +594,11 @@ function forwardticket(ticketid) {
             type: "POST",
             data: {"ticketid": ticketid, "forwarduser": forwarduser, "forwardnote": forwardnote},
             success: function (data) {
-                alert("Forward ticket: " + data.ticketid + " to user: " + data.assignee)
+
                 $("#forwardModal").modal('toggle');
             },
             error: function () {
-                alert("Fail to forward ticket")
+
             }
         })
     })
@@ -615,7 +616,7 @@ function replyToComment(objId) {
             loadticketitem(ticketid);
         }
         else {
-            alert("Enter some thing to comment..")
+            
         }
     });
 }
@@ -764,4 +765,14 @@ function countReply(commentId) {
     });
 
     return rs;
+}
+
+function getstatuscolor(statusid) {
+    switch (statusid){
+        case 1: return'#f4e842'; break;
+        case 2: return'#00a65a'; break;
+        case 3: return'#500a6f'; break;
+        case 4: return'gray'; break;
+        case 5: return'#000000'; break;
+    }
 }

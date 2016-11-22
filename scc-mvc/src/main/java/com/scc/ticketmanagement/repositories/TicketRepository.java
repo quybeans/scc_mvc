@@ -9,6 +9,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import sun.security.krb5.internal.Ticket;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -41,4 +43,7 @@ public interface TicketRepository extends JpaRepository<TicketEntity,Integer>,Jp
     @Query("select COUNT(t) from TicketEntity t where t.brandId=:brandid")
     long  coutnTicketByBrandId(@Param("brandid") Integer brandid);
 
+    @Query("SELECT count(t) FROM TicketEntity t where t.assignee=:assignee and t.statusid=4 and t.id in(select tc.ticketid From TicketstatuschangeEntity tc where tc.statusid=4 and  cast(tc.createdat as date)=:createdtime )")
+    Integer countUserClosedTicket(@Param("assignee") Integer assignee,
+                                  @Param("createdtime") Timestamp createdtime);
 }

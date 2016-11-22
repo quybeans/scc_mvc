@@ -138,8 +138,14 @@ public class TicketController {
             listticket=ticketRepository.getStaffTicketOrderByPriority(user.getUserid(),user.getBrandid());
         }
 
-
-       return getExtendTicketList(listticket);
+        List<ExtendTicket> extendTicketlist=getExtendTicketList(listticket);
+        Collections.sort(extendTicketlist, new Comparator<ExtendTicket>() {
+            @Override
+            public int compare(ExtendTicket o1, ExtendTicket o2) {
+                return o2.getCreatedtime().compareTo(o1.getCreatedtime());
+            }
+        });
+       return extendTicketlist;
     }
 
 

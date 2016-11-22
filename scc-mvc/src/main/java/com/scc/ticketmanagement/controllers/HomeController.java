@@ -11,6 +11,7 @@ import com.scc.ticketmanagement.repositories.TicketStatusChangeRepository;
 import com.scc.ticketmanagement.repositories.UserRepository;
 import com.scc.ticketmanagement.services.FacebookaccountService;
 import com.scc.ticketmanagement.services.ProfileService;
+import com.scc.ticketmanagement.services.TicketService;
 import com.scc.ticketmanagement.services.UserService;
 import com.scc.ticketmanagement.utilities.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -44,8 +47,12 @@ public class HomeController {
 
     @Autowired
     UserService userService;
+
     @Autowired
     FacebookaccountService fbService;
+
+    @Autowired
+    TicketService ticketService;
 
     @Autowired
     private BrandRepository brandRepository;
@@ -57,7 +64,7 @@ public class HomeController {
 
     @RequestMapping("/login")
     public String login() {
-        return "Login";
+        return "login";
     }
 
     @RequestMapping("/Head")
@@ -127,17 +134,19 @@ public class HomeController {
         session.setAttribute("username", userEntity.getUsername());
         ProfileEntity profileEntity = profileService.getProfileByID(userEntity.getUserid());
         session.setAttribute("fullname", profileEntity.getFirstname() + " " + profileEntity.getLastname());
-
-        if (userEntity.getRoleid() == Constant.ROLE_ADMIN) {
-            return "redirect:/admin/index";
-        } else if (userEntity.getRoleid() == Constant.ROLE_STAFF) {
-            return "customercare";
-        } else if (userEntity.getRoleid() == Constant.ROLE_SUPERVISOR) {
-            return "manageticket";
-        } else if (userEntity.getRoleid() == Constant.ROLE_BRAND) {
-            return "manageticket";
+        if(userEntity.isActive()){
+            if (userEntity.getRoleid() == Constant.ROLE_ADMIN) {
+                return "/brand/report";
+            } else if (userEntity.getRoleid() == Constant.ROLE_STAFF) {
+                return "customercare";
+            } else if (userEntity.getRoleid() == Constant.ROLE_SUPERVISOR) {
+                return "manageticket";
+            } else if (userEntity.getRoleid() == Constant.ROLE_BRAND) {
+                return "/brand/report";
+            }
         }
-        return "404";
+
+        return "login";
     }
 
     @RequestMapping("/")
@@ -150,11 +159,13 @@ public class HomeController {
             if (user != null) {
                 switch (user.getRoleid()) {
                     case Constant.ROLE_ADMIN:
-                        return "redirect:/admin/index";
+                        return "/brand/report";
                     case Constant.ROLE_STAFF:
-                        return "redirect:customercare";
+                        return "customercare";
                     case Constant.ROLE_SUPERVISOR:
-                        return "Report";
+                        return "manageticket";
+                    case Constant.ROLE_BRAND:
+                        return "/brand/report";
                 }//end switch
             }//end if user
         }//end if session
@@ -204,5 +215,12 @@ public class HomeController {
         return "followticket";
     }
 
-
+    @RequestMapping("/testcount")
+        public String count() throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        Date d = sdf.parse("14/11/2016");
+        System.out.println(d);
+        System.out.println(ticketService.countUserClosedTicket(16,new Timestamp(d.getTime())));
+        return "login";
+        }
 }

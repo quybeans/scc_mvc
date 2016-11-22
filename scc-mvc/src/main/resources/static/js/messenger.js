@@ -1007,7 +1007,7 @@ function getallpriorityofbrand() {
 
 function getalluser() {
     $.ajax({
-        url: "getalluser",
+        url: "/getalluser",
         type: "GET",
         success: function (data) {
             for (var i = 0; i < data.length; i++){
