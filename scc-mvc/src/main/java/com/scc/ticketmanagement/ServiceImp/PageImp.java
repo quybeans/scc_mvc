@@ -3,9 +3,12 @@ package com.scc.ticketmanagement.ServiceImp;
 import com.scc.ticketmanagement.Entities.PageEntity;
 import com.scc.ticketmanagement.repositories.PageRepository;
 import com.scc.ticketmanagement.services.PageService;
+import com.scc.ticketmanagement.utilities.CommonUtility;
+import com.scc.ticketmanagement.utilities.Constant;
 import com.scc.ticketmanagement.utilities.FacebookUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 
@@ -29,7 +32,7 @@ public class PageImp implements PageService {
                 page.setName(pageName);
                 page.setAccesstoken(pageAccessToken);
                 page.setCategory(category);
-                page.setCrawler(true);
+                page.setCrawler(false);
                 page.setType("Facebook");
                 page.setActive(FacebookUtility.subscribePageToWebhook(pageId,pageAccessToken));
             } else {
@@ -37,8 +40,10 @@ public class PageImp implements PageService {
                 page.setCategory(category);
                 page.setType("Facebook");
                 page.setActive(FacebookUtility.subscribePageToWebhook(pageId,pageAccessToken));
+
             }
             pageRepository.save(page);
+
         } catch (NullPointerException e) {
             e.printStackTrace();
         } catch (Exception e){
@@ -105,5 +110,7 @@ public class PageImp implements PageService {
     public String getPageAccessTokenByPageId(String pageId) {
         return pageRepository.getPageById(pageId).getAccesstoken();
     }
+
+
 
 }

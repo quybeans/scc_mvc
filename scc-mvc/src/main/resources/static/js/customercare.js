@@ -612,7 +612,7 @@ function createticket(comtID, postID) {
     })
 
     $.ajax({
-        url: "getalluser",
+        url: "/getalluser",
         type: "GET",
         success: function (data) {
             $("#assignee").html("");

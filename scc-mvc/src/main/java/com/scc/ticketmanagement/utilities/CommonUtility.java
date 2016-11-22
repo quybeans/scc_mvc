@@ -1,5 +1,11 @@
 package com.scc.ticketmanagement.utilities;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.HttpClients;
+
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -22,6 +28,22 @@ public class CommonUtility {
             }
             return hashtext;
         } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static HttpResponse makeHttpRequest(String url)
+    {
+        try{
+        HttpClient httpclient = HttpClients.createDefault();
+        HttpGet httpGet = new HttpGet(url);
+        System.out.println(url);
+        org.apache.http.HttpResponse response = httpclient.execute(httpGet);
+
+        return response;}
+        catch (Exception e)
+        {
             e.printStackTrace();
         }
         return null;
