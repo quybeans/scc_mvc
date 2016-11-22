@@ -1144,36 +1144,6 @@ function sortticketbystatus() {
     sortticket("/sortbystatus",currentCmt)
 }
 
-function showallticket() {
-    $('#ticket-list').empty();
-    $.ajax({
-        url: '/getallticket',
-        type: "GET",
-        dataType: "json",
-        success: function (data) {
-            $.each(data, function (index) {
-                var statusColor=getstatuscolor(data[index].statusid);
-
-                $('#ticket-list').append(
-                    '<div class="ticket">'
-                    + '<div class="title" style="background-color:  ' +statusColor+'">' + data[index].name + '</div>'
-                    + '<div>Status:&nbsp;'
-                    + '<span class="fa fa-circle" style="color:' +statusColor+'"></span>&nbsp;'
-                    + data[index].currentstatus
-                    + '</div>'
-                    + '<div>Created by:&nbsp;<span style="color: black; font-weight: bold">'
-                    + data[index].createbyuser
-                    + '</span></div>'
-                    + '<div>Current assignee:&nbsp;<span style="color: black; font-weight: bold">'+data[index].assigneeuser+'</span>'
-                    + '</div>'
-                    + '<div></div>'
-                    + '</div>'
-                )
-            })
-        }
-    });
-
-}
 
 $(document).on('change', '#tktimecheckbox', function(){
     if (this.checked) {
@@ -1272,7 +1242,7 @@ function getalluser() {
 
 function getstatuscolor(statusid) {
     switch (statusid){
-        case 1: return'#ffff00'; break;
+        case 1: return'#f4e842'; break;
         case 2: return'#00a65a'; break;
         case 3: return'#500a6f'; break;
         case 4: return'gray'; break;
