@@ -232,6 +232,21 @@ public class MessengerRESTController {
         return result;
     }
 
+    @RequestMapping(value = "/messenger/getListTicketByConversation", method = RequestMethod.GET)
+    public List<TicketEntity> getTicketByMessage(@RequestParam("senderId") String senderId,
+                                                 @RequestParam("pageId") String pageId) {
+        List<MessageEntity> conversation = messageService.getMessageAsc(pageId, senderId);
+        List<TicketEntity> result = new ArrayList<>();
+        TicketEntity ticket;
+        for (MessageEntity message: conversation) {
+            ticketService.getTicketByMessageId(message.getId());
+            ticket = new TicketEntity();
+
+            result.add(ticket);
+        }
+        return result;
+    }
+
     @RequestMapping(value = "/getNumberOfMessageInBrand", method = RequestMethod.GET)
     public int getNumberOfMessageInBrand(@RequestParam("brandId") int brandId){
         return messageService.getNumberOfMessageInBrand(brandId);
