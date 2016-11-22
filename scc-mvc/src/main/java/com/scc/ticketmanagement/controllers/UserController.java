@@ -163,12 +163,14 @@ public class UserController {
                                       @RequestParam("txtUsername") String username
             , @RequestParam("txtPassword") String password
             , @RequestParam("ddlRole") String role
+            , @RequestParam("ddlBrand") String brandid
             , @RequestParam("rdGender") String gender
             , @RequestParam("txtFirstname") String firstname
             , @RequestParam("txtLastname") String lastname
             , @RequestParam("txtAddress") String address
             , @RequestParam("txtPhone") String phone
-            , @RequestParam("txtEmail") String email) {
+            , @RequestParam("txtEmail") String email
+            , @RequestParam("rdrPage") String redirect) {
 
         HttpSession session = request.getSession();
         String loginUser = (String) session.getAttribute("username");
@@ -181,10 +183,13 @@ public class UserController {
             newUser.setPassword(CommonUtility.hashStringToMD5(password));
             if (role.equals("sup")) newUser.setRoleid(Constant.ROLE_SUPERVISOR);
             else if (role.equals("staff")) newUser.setRoleid(Constant.ROLE_STAFF);
+            else if (role.equals("brand")) newUser.setRoleid(Constant.ROLE_BRAND);
             newUser.setActive(true);
             //  newUser.setProfileid(1);
             newUser.setCreatedby(loginuser.getUserid());
-            newUser.setBrandid(loginuser.getBrandid());
+            if(brandid.length()>0){newUser.setBrandid(Integer.parseInt(brandid));
+            }
+            else newUser.setBrandid(loginuser.getBrandid());
         }
         if (userRepository.save(newUser) != null) {
 
@@ -209,6 +214,6 @@ public class UserController {
 
 
         }
-        return "redirect:/brand/user";
+        return "redirect:"+redirect;
     }
 }

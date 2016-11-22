@@ -685,15 +685,31 @@ function getReplyByCommentId(commentId) {
         type: "GET",
         data: {postId: commentId},
         dataType: "json",
+        async: false,
         success: function (data) {
             $('#reply-list').empty();
             $.each(data, function (index) {
+                var createdByUser = "";
+
+                $.ajax({
+                    url: "/comment/checkUserReply",
+                    type: "GET",
+                    data: {commentId: data[index].id},
+                    dataType: "text",
+                    async: false,
+                    success: function (username) {
+                        if (username.length > 0) {
+                            createdByUser = '<span style="padding-left: 4px; padding-right: 4px; color:cornflowerblue; margin-left: 10px; border: 1px solid cornflowerblue; border-radius: 3px">' + username + '</span>';
+                        }
+                    }
+                });
+
                 $('#reply-list').append(
-                    '<div class="cmt" style="max-height:10vh;">'
+                    '<div class="cmt" style="max-height:15vh;">'
                     + '<div class="cmtContent">'
                     + '<img src="http://graph.facebook.com/' + data[index].createdBy + '/picture" height="50px" width="50px">'
                     + '<p class="message">'
-                    + '<a>' + data[index].createdByName + '</a>'
+                    + '<a>' + data[index].createdByName + createdByUser + '</a>'
                     + '<p style="margin-left: 65px; margin-top: -10px">' + data[index].content + '</p>'
                     + '</p>'
                     + '</div>'
@@ -704,6 +720,34 @@ function getReplyByCommentId(commentId) {
         }
     })
 }
+// //Ger reply for comment
+// function getReplyByCommentId(commentId) {
+//     $('#reply-list').empty();
+//     $('#reply-list').html('Loading....');
+//     $.ajax({
+//         url: '/commentbypost',
+//         type: "GET",
+//         data: {postId: commentId},
+//         dataType: "json",
+//         success: function (data) {
+//             $('#reply-list').empty();
+//             $.each(data, function (index) {
+//                 $('#reply-list').append(
+//                     '<div class="cmt" style="max-height:10vh;">'
+//                     + '<div class="cmtContent">'
+//                     + '<img src="http://graph.facebook.com/' + data[index].createdBy + '/picture" height="50px" width="50px">'
+//                     + '<p class="message">'
+//                     + '<a>' + data[index].createdByName + '</a>'
+//                     + '<p style="margin-left: 65px; margin-top: -10px">' + data[index].content + '</p>'
+//                     + '</p>'
+//                     + '</div>'
+//                     + '</div>'
+//                 )
+//             })
+//
+//         }
+//     })
+// }
 
 function countReply(commentId) {
 

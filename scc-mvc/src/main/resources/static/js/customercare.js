@@ -68,13 +68,13 @@ function showTicket(cmtid) {
         dataType: "json",
         success: function (data) {
             $.each(data, function (index) {
-                var statusColor=getstatuscolor(data[index].statusid);
+                var statusColor = getstatuscolor(data[index].statusid);
 
                 $('#ticket-list').append(
-                    '<div class="ticket" onclick="addCommentToTicket('+data[index].id+','+cmtid+')">'
-                    + '<div class="title" style="background-color:  ' +statusColor+'">' + data[index].name + '</div>'
+                    '<div class="ticket" onclick="addCommentToTicket(' + data[index].id + ',' + cmtid + ')">'
+                    + '<div class="title" style="background-color:  ' + statusColor + '">' + data[index].name + '</div>'
                     + '<div>Status:&nbsp;'
-                    + '<span class="fa fa-circle" style="color:' +statusColor+'"></span>&nbsp;'
+                    + '<span class="fa fa-circle" style="color:' + statusColor + '"></span>&nbsp;'
                     + data[index].currentstatus
                     + '</div>'
                     + '<div>Created by:&nbsp;<span style="color: black; font-weight: bold">'
@@ -100,7 +100,7 @@ function setOnclickReplyAccount(imgsrc, name, token) {
 }
 
 //get All Facebook account belong to user
-function getAllFBAccount()  {
+function getAllFBAccount() {
     $.ajax({
         url: '/allFbAccount',
         type: "GET",
@@ -250,15 +250,31 @@ function getReplyByCommentId(commentId) {
         type: "GET",
         data: {postId: commentId},
         dataType: "json",
+        async: false,
         success: function (data) {
             $('#reply-list').empty();
             $.each(data, function (index) {
+                var createdByUser = "";
+
+                $.ajax({
+                    url: "/comment/checkUserReply",
+                    type: "GET",
+                    data: {commentId: data[index].id},
+                    dataType: "text",
+                    async: false,
+                    success: function (username) {
+                        if (username.length > 0) {
+                            createdByUser = '<span style="padding-left: 4px; padding-right: 4px; color:cornflowerblue; margin-left: 10px; border: 1px solid cornflowerblue; border-radius: 3px">' + username + '</span>';
+                        }
+                    }
+                });
+
                 $('#reply-list').append(
-                    '<div class="cmt" style="max-height:10vh;">'
+                    '<div class="cmt" style="max-height:15vh;">'
                     + '<div class="cmtContent">'
                     + '<img src="http://graph.facebook.com/' + data[index].createdBy + '/picture" height="50px" width="50px">'
                     + '<p class="message">'
-                    + '<a>' + data[index].createdByName + '</a>'
+                    + '<a>' + data[index].createdByName + createdByUser + '</a>'
                     + '<p style="margin-left: 65px; margin-top: -10px">' + data[index].content + '</p>'
                     + '</p>'
                     + '</div>'
@@ -266,8 +282,11 @@ function getReplyByCommentId(commentId) {
                 )
             })
 
-        }
-    })
+           }
+
+    });
+
+
 }
 //Get comments for posts
 // function getCommentById(postId,page) {
@@ -400,14 +419,14 @@ function getCommentById(postid) {
     $('#post-box').find("*").removeClass("active");
     $('#' + postid).addClass('active');
     $('#comment-page-current').val(commentListCurPage);
-    getCommentByPostIdwPage(postid, 1,"");
+    getCommentByPostIdwPage(postid, 1, "");
 }
 
 //Get comment by id
 function getCommentByPostIdwPage(postId, page, searchContent) {
 
     var url;
-    if (searchContent.length>0) url='/comment/bypostid/search';
+    if (searchContent.length > 0) url = '/comment/bypostid/search';
     else if (sortCommentBy == 2)  url = '/comment/bypostid/negSort';
     else if (sortCommentBy == 3) url = '/comment/bypostid/timeSort';
 
@@ -430,7 +449,7 @@ function getCommentByPostIdwPage(postId, page, searchContent) {
                     senIcon = questionicon;
                 var cmtId = "'" + postId + "_" + data[index].id + "'";
 
-                var btnTicket = '<button onclick="showTicket('+data[index].id+');currentCmt='+data[index].id+'" class="btn btn-default btn-xs inline" style="margin-left: 10px;margin-top: -10px;"><span class="fa fa-ticket" style="margin-right:10px"></span>Add to ticket</button>';
+                var btnTicket = '<button onclick="showTicket(' + data[index].id + ');currentCmt=' + data[index].id + '" class="btn btn-default btn-xs inline" style="margin-left: 10px;margin-top: -10px;"><span class="fa fa-ticket" style="margin-right:10px"></span>Add to ticket</button>';
 
                 var isTicket = false;
                 $.ajax({
@@ -441,7 +460,7 @@ function getCommentByPostIdwPage(postId, page, searchContent) {
                     async: false,
                     success: function (ticket) {
                         if (ticket != null) isTicket = true;
-                        btnTicket = '<a href=followticket?ticketid='+ticket.id+' class="btn btn-default btn-xs inline" style="margin-left: 10px;margin-top: -10px; border: 1px solid lightgreen; background-color: transparent;color: lightgreen">' + ticket.name + '</a>';
+                        btnTicket = '<button class="btn btn-default btn-xs inline" style="margin-left: 10px;margin-top: -10px; border: 1px solid lightgreen; background-color: transparent;color: lightgreen"><a style="color:lightgreen" href=followticket?ticketid=' + ticket.id + '>' + ticket.name + '</a></button>';
                     }
                 });
 
@@ -520,7 +539,7 @@ function getCommentByPostIdwPage(postId, page, searchContent) {
 
 //Search comment by content
 function searchByContent(postId, content, page) {
-    getCommentByPostIdwPage(postId,page,content);
+    getCommentByPostIdwPage(postId, page, content);
 }
 
 //On post click
@@ -1051,21 +1070,21 @@ function countComment(postid) {
 function nextCommentPage() {
     commentListCurPage = commentListCurPage + 1;
     $('#comment-page-current').val(commentListCurPage);
-    getCommentByPostIdwPage(currentPost, commentListCurPage,"");
+    getCommentByPostIdwPage(currentPost, commentListCurPage, "");
 }
 
 function previousCommentPage() {
     if (commentListCurPage == 1) return;
     commentListCurPage = commentListCurPage - 1;
     $('#comment-page-current').val(commentListCurPage);
-    getCommentByPostIdwPage(currentPost, commentListCurPage,"");
+    getCommentByPostIdwPage(currentPost, commentListCurPage, "");
 }
 
 function checkNumberInputAndEnter(e) {
     commentListCurPage = parseInt($('#comment-page-current').val());
     if (e.keyCode == 13) {
         $(this).blur();
-        getCommentByPostIdwPage(currentPost, commentListCurPage,"");
+        getCommentByPostIdwPage(currentPost, commentListCurPage, "");
     }
 
 }
@@ -1137,11 +1156,11 @@ function countReply(commentId) {
 }
 
 function sortticketbytime(currentCmt) {
-    sortticket("/sortbytime",currentCmt)
+    sortticket("/sortbytime", currentCmt)
 }
 
 function sortticketbystatus() {
-    sortticket("/sortbystatus",currentCmt)
+    sortticket("/sortbystatus", currentCmt)
 }
 
 function showallticket() {
@@ -1152,19 +1171,19 @@ function showallticket() {
         dataType: "json",
         success: function (data) {
             $.each(data, function (index) {
-                var statusColor=getstatuscolor(data[index].statusid);
+                var statusColor = getstatuscolor(data[index].statusid);
 
                 $('#ticket-list').append(
                     '<div class="ticket">'
-                    + '<div class="title" style="background-color:  ' +statusColor+'">' + data[index].name + '</div>'
+                    + '<div class="title" style="background-color:  ' + statusColor + '">' + data[index].name + '</div>'
                     + '<div>Status:&nbsp;'
-                    + '<span class="fa fa-circle" style="color:' +statusColor+'"></span>&nbsp;'
+                    + '<span class="fa fa-circle" style="color:' + statusColor + '"></span>&nbsp;'
                     + data[index].currentstatus
                     + '</div>'
                     + '<div>Created by:&nbsp;<span style="color: black; font-weight: bold">'
                     + data[index].createbyuser
                     + '</span></div>'
-                    + '<div>Current assignee:&nbsp;<span style="color: black; font-weight: bold">'+data[index].assigneeuser+'</span>'
+                    + '<div>Current assignee:&nbsp;<span style="color: black; font-weight: bold">' + data[index].assigneeuser + '</span>'
                     + '</div>'
                     + '<div></div>'
                     + '</div>'
@@ -1175,57 +1194,57 @@ function showallticket() {
 
 }
 
-$(document).on('change', '#tktimecheckbox', function(){
+$(document).on('change', '#tktimecheckbox', function () {
     if (this.checked) {
         sortticketbytime(currentCmt)
-    }else{
+    } else {
         showallticket()
     }
 
 });
 
-$(document).on('change', '#tksttcheckbox', function(){
+$(document).on('change', '#tksttcheckbox', function () {
     if (this.checked) {
         sortticketbystatus(currentCmt)
-    }else{
+    } else {
         showallticket()
     }
 
 });
 
-function filterticket(){
-   var status= $("#filterstatus").val();
-    var priority= $("#filterpriority").val();
-    var createdby= $("#filtercreatedby").val();
-    var assignee=$("#filterassignee").val();
+function filterticket() {
+    var status = $("#filterstatus").val();
+    var priority = $("#filterpriority").val();
+    var createdby = $("#filtercreatedby").val();
+    var assignee = $("#filterassignee").val();
     $.ajax({
-        url:"/filterticket",
-        type:"POST",
-        data:{"status":status,"priority":priority,"createdby":createdby,"assignee":assignee},
-        success:function (data) {
+        url: "/filterticket",
+        type: "POST",
+        data: {"status": status, "priority": priority, "createdby": createdby, "assignee": assignee},
+        success: function (data) {
             $('#ticket-list').empty();
             $.each(data, function (index) {
-                var statusColor=getstatuscolor(data[index].statusid);
+                var statusColor = getstatuscolor(data[index].statusid);
 
 
                 $('#ticket-list').append(
-                    '<div class="ticket" onclick="addCommentToTicket('+data[index].id+','+currentCmt+')">'
-                    + '<div class="title" style="background-color:  ' +statusColor+'">' + data[index].name + '</div>'
+                    '<div class="ticket" onclick="addCommentToTicket(' + data[index].id + ',' + currentCmt + ')">'
+                    + '<div class="title" style="background-color:  ' + statusColor + '">' + data[index].name + '</div>'
                     + '<div>Status:&nbsp;'
-                    + '<span class="fa fa-circle" style="color:' +statusColor+'"></span>&nbsp;'
+                    + '<span class="fa fa-circle" style="color:' + statusColor + '"></span>&nbsp;'
                     + data[index].currentstatus
                     + '</div>'
                     + '<div>Created by:&nbsp;<span style="color: black; font-weight: bold">'
                     + data[index].createbyuser
                     + '</span></div>'
-                    + '<div>Current assignee:&nbsp;<span style="color: black; font-weight: bold">'+data[index].assigneeuser+'</span>'
+                    + '<div>Current assignee:&nbsp;<span style="color: black; font-weight: bold">' + data[index].assigneeuser + '</span>'
                     + '</div>'
                     + '<div></div>'
                     + '</div>'
                 )
             })
         },
-        error:function () {
+        error: function () {
             alert("filter fail")
         }
 
@@ -1254,7 +1273,7 @@ function getalluser() {
         url: "getalluser",
         type: "GET",
         success: function (data) {
-            for (var i = 0; i < data.length; i++){
+            for (var i = 0; i < data.length; i++) {
                 $("#filtercreatedby").append(
                     '<option value="' + data[i].userid + '">' + data[i].firstname + ' ' + data[i].lastname + '</option>'
                 );
@@ -1271,35 +1290,45 @@ function getalluser() {
 }
 
 function getstatuscolor(statusid) {
-    switch (statusid){
-        case 1: return'#ffff00'; break;
-        case 2: return'#00a65a'; break;
-        case 3: return'#500a6f'; break;
-        case 4: return'gray'; break;
-        case 5: return'#000000'; break;
+    switch (statusid) {
+        case 1:
+            return '#ffff00';
+            break;
+        case 2:
+            return '#00a65a';
+            break;
+        case 3:
+            return '#500a6f';
+            break;
+        case 4:
+            return 'gray';
+            break;
+        case 5:
+            return '#000000';
+            break;
     }
 }
 
-function sortticket(url,currentCmt) {
+function sortticket(url, currentCmt) {
     $.ajax({
-        url:url,
-        type:"GET",
-        success:function (data) {
+        url: url,
+        type: "GET",
+        success: function (data) {
             $('#ticket-list').empty();
             $.each(data, function (index) {
-                var statusColor=getstatuscolor(data[index].statusid);
+                var statusColor = getstatuscolor(data[index].statusid);
 
                 $('#ticket-list').append(
-                    '<div class="ticket" onclick="addCommentToTicket('+data[index].id+','+currentCmt+')">'
-                    + '<div class="title" style="background-color:  ' +statusColor+'">' + data[index].name + '</div>'
+                    '<div class="ticket" onclick="addCommentToTicket(' + data[index].id + ',' + currentCmt + ')">'
+                    + '<div class="title" style="background-color:  ' + statusColor + '">' + data[index].name + '</div>'
                     + '<div>Status:&nbsp;'
-                    + '<span class="fa fa-circle" style="color:' +statusColor+'"></span>&nbsp;'
+                    + '<span class="fa fa-circle" style="color:' + statusColor + '"></span>&nbsp;'
                     + data[index].currentstatus
                     + '</div>'
                     + '<div>Created by:&nbsp;<span style="color: black; font-weight: bold">'
                     + data[index].createbyuser
                     + '</span></div>'
-                    + '<div>Current assignee:&nbsp;<span style="color: black; font-weight: bold">'+data[index].assigneeuser+'</span>'
+                    + '<div>Current assignee:&nbsp;<span style="color: black; font-weight: bold">' + data[index].assigneeuser + '</span>'
                     + '</div>'
                     + '<div></div>'
                     + '</div>'
@@ -1308,7 +1337,7 @@ function sortticket(url,currentCmt) {
 
             })
         },
-        error:function () {
+        error: function () {
             alert("Fail to")
         }
     })

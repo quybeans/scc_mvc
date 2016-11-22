@@ -6,6 +6,7 @@ import com.scc.ticketmanagement.services.PageService;
 import com.scc.ticketmanagement.utilities.CommonUtility;
 import com.scc.ticketmanagement.utilities.Constant;
 import com.scc.ticketmanagement.utilities.FacebookUtility;
+import org.apache.tomcat.util.bcel.Const;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,7 +44,8 @@ public class PageImp implements PageService {
 
             }
             pageRepository.save(page);
-
+            //Crawl
+            CommonUtility.makeAsyncHttpRequest(Constant.SCC_CRAWLER_HOST+"/crawl/manualStartCrawl?pageId="+pageId);
         } catch (NullPointerException e) {
             e.printStackTrace();
         } catch (Exception e){

@@ -5,10 +5,14 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClients;
+import org.asynchttpclient.AsyncHttpClient;
+import org.asynchttpclient.DefaultAsyncHttpClient;
+import org.asynchttpclient.Response;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.concurrent.Future;
 
 /**
  * Created by QuyBean on 11/16/2016.
@@ -49,4 +53,9 @@ public class CommonUtility {
         return null;
     }
 
+    public static void makeAsyncHttpRequest(String url)
+    {
+        AsyncHttpClient asyncHttpClient = new DefaultAsyncHttpClient();
+        asyncHttpClient.prepareGet(url).execute();
+    }
 }

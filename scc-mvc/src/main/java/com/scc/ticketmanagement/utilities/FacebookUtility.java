@@ -106,8 +106,11 @@ public class FacebookUtility {
             org.apache.http.HttpResponse response = httpclient.execute(httpPost);
 
             if (response != null) {
-                if (response.getStatusLine().getStatusCode() == 200)
+                if (response.getStatusLine().getStatusCode() == 200) {
+                    System.out.println("RESULT:");
+                    System.out.println(response.getEntity());
                     return true;
+                }
                 else {
                     System.out.println(response.getStatusLine().getStatusCode());
                     System.out.println(response);

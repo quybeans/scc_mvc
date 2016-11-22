@@ -89,7 +89,11 @@
             <artifactId>google-http-client-jackson2</artifactId>
             <version>${google-http-client.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.asynchttpclient</groupId>
+            <artifactId>async-http-client</artifactId>
+            <version>2.1.0-alpha1</version>
+        </dependency>
 
     </dependencies>
 
