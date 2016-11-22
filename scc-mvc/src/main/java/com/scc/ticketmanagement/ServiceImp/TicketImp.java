@@ -1,5 +1,6 @@
 package com.scc.ticketmanagement.ServiceImp;
 
+import com.scc.ticketmanagement.Entities.MessageEntity;
 import com.scc.ticketmanagement.Entities.TicketEntity;
 import com.scc.ticketmanagement.repositories.TicketRepository;
 import com.scc.ticketmanagement.services.TicketService;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -25,7 +27,7 @@ public class TicketImp implements TicketService {
     }
 
     @Override
-    public void changeStatusTicket(Integer ticketID,Integer statusID) {
+    public void changeStatusTicket(Integer ticketID, Integer statusID) {
         TicketEntity ticketEntity = ticketRepository.findOne(ticketID);
         ticketEntity.setStatusid(statusID);
         ticketRepository.save(ticketEntity);
@@ -33,7 +35,7 @@ public class TicketImp implements TicketService {
 
     @Override
     public void deactiveTicket(Integer ticketID) {
-            TicketEntity ticketEntity = ticketRepository.findOne(ticketID);
+        TicketEntity ticketEntity = ticketRepository.findOne(ticketID);
         ticketEntity.setActive(false);
         ticketRepository.save(ticketEntity);
 
@@ -50,12 +52,12 @@ public class TicketImp implements TicketService {
     }
 
     @Override
-    public void assignticket(Integer ticketid,Integer assignee){
-        ticketRepository.assignTicket(ticketid,assignee);
+    public void assignticket(Integer ticketid, Integer assignee) {
+        ticketRepository.assignTicket(ticketid, assignee);
     }
 
     @Override
-    public TicketEntity getTicketByID(Integer ticketid){
+    public TicketEntity getTicketByID(Integer ticketid) {
         return ticketRepository.findOne(ticketid);
     }
 
@@ -65,13 +67,26 @@ public class TicketImp implements TicketService {
     }
 
     @Override
-    public List<TicketEntity> getTicketByMessageId(String messageId) {
+    public List<TicketEntity> getListTicketByConversation(String messageId) {
         return ticketRepository.getTicketsByMessageId(messageId);
     }
 
     @Override
-    public Integer countUserClosedTicket(Integer assignee,Timestamp createdtime) {
-        return ticketRepository.countUserClosedTicket(assignee,createdtime);
+    public List<TicketEntity> getListTicketByConversation(List<MessageEntity> conversation) {
+        List<TicketEntity> result = new ArrayList<>();
+        TicketEntity ticket;
+        for (MessageEntity message : conversation) {
+            ticket = ticketRepository.getTicketByMessageId(message.getId());
+            if (ticket != null) {
+                result.add(ticket);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public Integer countUserClosedTicket(Integer assignee, Timestamp createdtime) {
+        return ticketRepository.countUserClosedTicket(assignee, createdtime);
     }
 
 

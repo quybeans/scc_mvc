@@ -31,7 +31,6 @@ function getParameterByName(name, url) {
 }
 
 
-
 $(document).ready(function () {
 
     getalluser();
@@ -76,7 +75,6 @@ $(document).ready(function () {
             $('#btn-search-conversation').click();
     });
     showCustomerInfo();
-
 
 
 });
@@ -590,13 +588,13 @@ function showTicket(a) {
         dataType: "json",
         success: function (data) {
             $.each(data, function (index) {
-                var statusColor=getstatuscolor(data[index].statusid);
+                var statusColor = getstatuscolor(data[index].statusid);
 
                 $('#ticket-list').append(
-                    '<div class="ticket" onclick="createTicket('+data[index].id+',\''+currentMessageId+'\')">'
-                    + '<div class="title" style="background-color:  ' +statusColor+'">' + data[index].name + '</div>'
+                    '<div class="ticket" onclick="createTicket(' + data[index].id + ',\'' + currentMessageId + '\')">'
+                    + '<div class="title" style="background-color:  ' + statusColor + '">' + data[index].name + '</div>'
                     + '<div>Status:&nbsp;'
-                    + '<span class="fa fa-circle" style="color:' +statusColor+'"></span>&nbsp;'
+                    + '<span class="fa fa-circle" style="color:' + statusColor + '"></span>&nbsp;'
                     + data[index].currentstatus
                     + '</div>'
                     + '<div>Created by:&nbsp;<span style="color: black; font-weight: bold">'
@@ -838,27 +836,7 @@ function checkMessageTicket(messageId) {
         },
         dataType: "json",
         success: function (data) {
-            // $('#ticket-name').empty();
-            // if (data.length > 0) {
-            //     $.each(data, function (index) {
-            //         if (index > 0) {
-            //             $('#ticket-name').append(", ");
-            //         }
-            //         $('#ticket-name').append(data[index].name);
-            //         $('#ticket-name-link').attr("href" , "/followticket?ticketid=" + data[index].id) ;
-            //         $('#ticket-name-link').attr("target" , "_blank") ;
-            //         $('#ticket-assigner').html(data[index].createbyuser);
-            //         $('#ticket-assignee').html(data[index].assigneeuser);
-            //
-            //     });
-            // } else {
-            //     $('#ticket-name').append("This message is not belong to any ticket");
-            //     $('#ticket-name-link').attr("href" , "#") ;
-            //     $('#ticket-name-link').attr("target" , "") ;
-            //     $('#ticket-assigner').html("");
-            //     $('#ticket-assignee').html("");
-            // }
-            $.each(data, function (index){
+            $.each(data, function (index) {
                 var ticketLink = window.open('/followticket?ticketid=' + data[index].id, '_blank');
                 if (ticketLink) {
                     //Browser has allowed it to be opened
@@ -868,7 +846,6 @@ function checkMessageTicket(messageId) {
                     alert('Please allow popups for this website');
                 }
             });
-
 
 
         },
@@ -891,7 +868,7 @@ function showButtonAddTicketAtSender(isTicket, messageId) {
     return result;
 }
 
-function showButtonAddTicketAtPage(a,b) {
+function showButtonAddTicketAtPage(a, b) {
     var result = '';
     switch (a) {
         case true:
@@ -904,7 +881,7 @@ function showButtonAddTicketAtPage(a,b) {
     return result;
 }
 
-function showCustomerInfo(){
+function showCustomerInfo() {
     $('#customer-button').addClass("active");
     $('#ticket-button').removeClass("active");
     $('#ticket-info-tab').hide();
@@ -916,14 +893,45 @@ function showTicketInfo() {
     $('#customer-button').removeClass("active");
     $('#customer-info-tab').hide();
     $('#ticket-info-tab').show();
+    getListTicketByConversation();
+}
+
+function getListTicketByConversation() {
+    $('#ticket-information-list').empty();
+    $.ajax({
+        url: '/messenger/getListTicketByConversation',
+        type: "GET",
+        async: false,
+        data: {
+            senderId: currentCustomer,
+            pageId: currentPageId
+        },
+        dataType: "json",
+        success: function (data) {
+            $.each(data, function (index) {
+                $('#ticket-information-list').append(
+                    '<li class="list-group-item" style="text-align: center">' +
+                    '<a href="/followticket?ticketid='+ data[index].id +'" target="_blank" style="text-align: center" target=""><b>'+
+                        data[index].name +
+                    '</a>' +
+                    '</li>'
+                );
+            });
+
+
+        },
+        error: function (error) {
+            alert("Some error happened");
+        }
+    });
 }
 
 /*Ticket Filter*/
 function sortticketbytime(currentCmt) {
-    sortticket("/sortbytime",currentCmt)
+    sortticket("/sortbytime", currentCmt)
 }
 function sortticketbystatus() {
-    sortticket("/sortbystatus",currentCmt)
+    sortticket("/sortbystatus", currentCmt)
 }
 function showallticket() {
     $('#ticket-list').empty();
@@ -933,19 +941,19 @@ function showallticket() {
         dataType: "json",
         success: function (data) {
             $.each(data, function (index) {
-                var statusColor=getstatuscolor(data[index].statusid);
+                var statusColor = getstatuscolor(data[index].statusid);
 
                 $('#ticket-list').append(
                     '<div class="ticket">'
-                    + '<div class="title" style="background-color:  ' +statusColor+'">' + data[index].name + '</div>'
+                    + '<div class="title" style="background-color:  ' + statusColor + '">' + data[index].name + '</div>'
                     + '<div>Status:&nbsp;'
-                    + '<span class="fa fa-circle" style="color:' +statusColor+'"></span>&nbsp;'
+                    + '<span class="fa fa-circle" style="color:' + statusColor + '"></span>&nbsp;'
                     + data[index].currentstatus
                     + '</div>'
                     + '<div>Created by:&nbsp;<span style="color: black; font-weight: bold">'
                     + data[index].createbyuser
                     + '</span></div>'
-                    + '<div>Current assignee:&nbsp;<span style="color: black; font-weight: bold">'+data[index].assigneeuser+'</span>'
+                    + '<div>Current assignee:&nbsp;<span style="color: black; font-weight: bold">' + data[index].assigneeuser + '</span>'
                     + '</div>'
                     + '<div></div>'
                     + '</div>'
@@ -955,55 +963,55 @@ function showallticket() {
     });
 
 }
-$(document).on('change', '#tktimecheckbox', function(){
+$(document).on('change', '#tktimecheckbox', function () {
     if (this.checked) {
         sortticketbytime(currentMessageId)
-    }else{
+    } else {
         showallticket()
     }
 
 });
-$(document).on('change', '#tksttcheckbox', function(){
+$(document).on('change', '#tksttcheckbox', function () {
     if (this.checked) {
         sortticketbystatus(currentMessageId)
-    }else{
+    } else {
         showallticket()
     }
 
 });
-function filterticket(){
-    var status= $("#filterstatus").val();
-    var priority= $("#filterpriority").val();
-    var createdby= $("#filtercreatedby").val();
-    var assignee=$("#filterassignee").val();
+function filterticket() {
+    var status = $("#filterstatus").val();
+    var priority = $("#filterpriority").val();
+    var createdby = $("#filtercreatedby").val();
+    var assignee = $("#filterassignee").val();
     $.ajax({
-        url:"/filterticket",
-        type:"POST",
-        data:{"status":status,"priority":priority,"createdby":createdby,"assignee":assignee},
-        success:function (data) {
+        url: "/filterticket",
+        type: "POST",
+        data: {"status": status, "priority": priority, "createdby": createdby, "assignee": assignee},
+        success: function (data) {
             $('#ticket-list').empty();
             $.each(data, function (index) {
-                var statusColor=getstatuscolor(data[index].statusid);
+                var statusColor = getstatuscolor(data[index].statusid);
 
 
                 $('#ticket-list').append(
-                    '<div class="ticket" onclick="createTicket('+data[index].id+',\''+currentMessageId+'\')">'
-                    + '<div class="title" style="background-color:  ' +statusColor+'">' + data[index].name + '</div>'
+                    '<div class="ticket" onclick="createTicket(' + data[index].id + ',\'' + currentMessageId + '\')">'
+                    + '<div class="title" style="background-color:  ' + statusColor + '">' + data[index].name + '</div>'
                     + '<div>Status:&nbsp;'
-                    + '<span class="fa fa-circle" style="color:' +statusColor+'"></span>&nbsp;'
+                    + '<span class="fa fa-circle" style="color:' + statusColor + '"></span>&nbsp;'
                     + data[index].currentstatus
                     + '</div>'
                     + '<div>Created by:&nbsp;<span style="color: black; font-weight: bold">'
                     + data[index].createbyuser
                     + '</span></div>'
-                    + '<div>Current assignee:&nbsp;<span style="color: black; font-weight: bold">'+data[index].assigneeuser+'</span>'
+                    + '<div>Current assignee:&nbsp;<span style="color: black; font-weight: bold">' + data[index].assigneeuser + '</span>'
                     + '</div>'
                     + '<div></div>'
                     + '</div>'
                 )
             })
         },
-        error:function () {
+        error: function () {
             alert("filter fail")
         }
 
@@ -1030,7 +1038,7 @@ function getalluser() {
         url: "/getalluser",
         type: "GET",
         success: function (data) {
-            for (var i = 0; i < data.length; i++){
+            for (var i = 0; i < data.length; i++) {
                 $("#filtercreatedby").append(
                     '<option value="' + data[i].userid + '">' + data[i].firstname + ' ' + data[i].lastname + '</option>'
                 );
@@ -1046,34 +1054,44 @@ function getalluser() {
     })
 }
 function getstatuscolor(statusid) {
-    switch (statusid){
-        case 1: return'#ffff00'; break;
-        case 2: return'#00a65a'; break;
-        case 3: return'#500a6f'; break;
-        case 4: return'gray'; break;
-        case 5: return'#000000'; break;
+    switch (statusid) {
+        case 1:
+            return '#ffff00';
+            break;
+        case 2:
+            return '#00a65a';
+            break;
+        case 3:
+            return '#500a6f';
+            break;
+        case 4:
+            return 'gray';
+            break;
+        case 5:
+            return '#000000';
+            break;
     }
 }
-function sortticket(url,currentMessageId) {
+function sortticket(url, currentMessageId) {
     $.ajax({
-        url:url,
-        type:"GET",
-        success:function (data) {
+        url: url,
+        type: "GET",
+        success: function (data) {
             $('#ticket-list').empty();
             $.each(data, function (index) {
-                var statusColor=getstatuscolor(data[index].statusid);
+                var statusColor = getstatuscolor(data[index].statusid);
 
                 $('#ticket-list').append(
-                    '<div class="ticket" onclick="createTicket('+data[index].id+',\''+currentMessageId+'\')">'
-                    + '<div class="title" style="background-color:  ' +statusColor+'">' + data[index].name + '</div>'
+                    '<div class="ticket" onclick="createTicket(' + data[index].id + ',\'' + currentMessageId + '\')">'
+                    + '<div class="title" style="background-color:  ' + statusColor + '">' + data[index].name + '</div>'
                     + '<div>Status:&nbsp;'
-                    + '<span class="fa fa-circle" style="color:' +statusColor+'"></span>&nbsp;'
+                    + '<span class="fa fa-circle" style="color:' + statusColor + '"></span>&nbsp;'
                     + data[index].currentstatus
                     + '</div>'
                     + '<div>Created by:&nbsp;<span style="color: black; font-weight: bold">'
                     + data[index].createbyuser
                     + '</span></div>'
-                    + '<div>Current assignee:&nbsp;<span style="color: black; font-weight: bold">'+data[index].assigneeuser+'</span>'
+                    + '<div>Current assignee:&nbsp;<span style="color: black; font-weight: bold">' + data[index].assigneeuser + '</span>'
                     + '</div>'
                     + '<div></div>'
                     + '</div>'
@@ -1082,7 +1100,7 @@ function sortticket(url,currentMessageId) {
 
             })
         },
-        error:function () {
+        error: function () {
             alert("Fail to")
         }
     })

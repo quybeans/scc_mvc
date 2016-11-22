@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.naming.AuthenticationException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import javax.servlet.http.HttpSession;
 
@@ -142,7 +140,7 @@ public class MessengerRESTController {
             exMessage.setSeq(message.getSeq());
             exMessage.setMessageRead(message.getMessageRead());
             exMessage.setSentimentScrore(message.getSentimentScrore());
-            exMessage.setTicket(ticketService.getTicketByMessageId(message.getId()).size() != 0);
+            exMessage.setTicket(ticketService.getListTicketByConversation(message.getId()).size() != 0);
             result.add(exMessage);
         }
 
@@ -228,7 +226,7 @@ public class MessengerRESTController {
 
     @RequestMapping(value = "/messenger/getTicketByMessage", method = RequestMethod.POST)
     public List<ExtendTicket> getTicketByMessage(@RequestParam("messageId") String messageId) {
-        List<ExtendTicket> result = getExtendTicketList(ticketService.getTicketByMessageId(messageId));
+        List<ExtendTicket> result = getExtendTicketList(ticketService.getListTicketByConversation(messageId));
         return result;
     }
 
@@ -236,14 +234,12 @@ public class MessengerRESTController {
     public List<TicketEntity> getTicketByMessage(@RequestParam("senderId") String senderId,
                                                  @RequestParam("pageId") String pageId) {
         List<MessageEntity> conversation = messageService.getMessageAsc(pageId, senderId);
-        List<TicketEntity> result = new ArrayList<>();
-        TicketEntity ticket;
-        for (MessageEntity message: conversation) {
-            ticketService.getTicketByMessageId(message.getId());
-            ticket = new TicketEntity();
+        List<TicketEntity> result = ticketService.getListTicketByConversation(conversation);
+        Comparator<TicketEntity> comp = (TicketEntity a, TicketEntity b) -> {
+            return b.getCreatedtime().compareTo(a.getCreatedtime());
+        };
 
-            result.add(ticket);
-        }
+        Collections.sort(result, comp);
         return result;
     }
 
