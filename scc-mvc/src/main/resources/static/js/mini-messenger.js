@@ -339,17 +339,20 @@ function register_popup(id, name) {
                 '</div>' +
                 '<div class="input-group"><input id="replyText' + id + '" type="text" placeholder="Type a message..." class="form form-control"><span id="btn-reply' + id + '" onclick="sendMessage(\'' + id + '\', \'' + currentPageId + '\')" class="input-group-addon"><i class="fa fa-reply"></i></span></div>' +
                 '</div>';
+
+
             $('body').append(element3);
             $('#replyText' + id).keypress(function (e) {
                 if (e.keyCode == 13)
                     $('#btn-reply' + id).click();
             });
 
-            $('#popup' +id).scrollTop(300);
+
 
             popups.unshift(id);
-
             calculate_popups();
+            $('#popup' + id).scrollTop($('#popup' + id).height() + 1000);
+
 
             isFirstLoadDone = true;
         }
@@ -421,7 +424,7 @@ function register_popup(id, name) {
                 }
             });
         }
-    }
+    };
     setInterval(reload,3000);
 
 

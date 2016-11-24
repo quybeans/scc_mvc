@@ -15,7 +15,7 @@ public class ContactServiceImp implements ContactService {
 
     @Override
     public ContactEntity get(String id) {
-        return contactRepository.getOne(id);
+        return contactRepository.getContactById(id);
     }
 
     @Override
@@ -33,6 +33,16 @@ public class ContactServiceImp implements ContactService {
         if (contact!= null){
             contact.setName(name);
             contact.setPicture(picture);
+        }
+
+        return contactRepository.saveAndFlush(contact);
+    }
+
+    @Override
+    public ContactEntity saveNote(String fbId, String name) {
+        ContactEntity contact = contactRepository.findOne(fbId);
+        if (contact!= null){
+            contact.setNote(name);
         }
 
         return contactRepository.saveAndFlush(contact);

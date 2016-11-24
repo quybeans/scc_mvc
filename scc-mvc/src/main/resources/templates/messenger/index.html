@@ -292,25 +292,28 @@
                         <h1 id="customer-name" class="customer-username text-center"></h1>
                         <ul class="list-group list-group-unbordered">
                             <li class="list-group-item">
-                                <b>Profile</b> <a id="customer-facebook-id" class="pull-right" target="_blank"></a>
+                                <i class="fa fa-user" aria-hidden="true"></i>  <b>Profile</b> <a id="customer-facebook-id" class="pull-right" target="_blank"></a>
                             </li>
                             <li class="list-group-item">
-                                <b>Language</b> <a id="customer-locale" class="pull-right"></a>
+                                <i class="fa fa-language" aria-hidden="true"></i> <b>Language</b> <a id="customer-locale" class="pull-right"></a>
                             </li>
                             <li class="list-group-item">
-                                <b>Timezone</b> <a id="customer-timezone" class="pull-right"></a>
+                                <i class="fa fa-clock-o" aria-hidden="true"></i> <b>Timezone</b> <a id="customer-timezone" class="pull-right"></a>
                             </li>
                             <li class="list-group-item">
-                                <b>Gender</b> <a id="customer-gender" class="pull-right"></a>
+                                <i class="fa fa-venus-mars" aria-hidden="true"></i>  <b>Gender</b> <a id="customer-gender" class="pull-right"></a>
                             </li>
-                            <!--<form>-->
-                                <!--<li class="list-group-item">-->
-                                    <!--<b>Note</b> <a onmouseover="showForm(this);" onmouseout="hideForm(this);"-->
-                                                   <!--id="customer-note"-->
-                                                   <!--class="pull-right"></a>-->
-                                <!--</li>-->
-                                <!--<button id="testbtn" style="display: none" value="Add">Add</button>-->
-                            <!--</form>-->
+                            <li class="list-group-item">
+                                <span class="fa fa-pencil-square-o"></span> <b>Note</b>
+                                <!--<a  id="customer-note"/>-->
+                            </li>
+                            <p id="p-customer-note"><a id="customer-note"></a> <span onclick="showEditNoteForm()" class="fa fa-pencil-square-o" title="Edit this note" style="cursor: pointer; margin-left: 10px"></span></p>
+                            <div id="edit-note-div" style="display: none">
+                                <textarea id="customer-note-edit" rows="3" cols="35" name="comment" class="form form-control" maxlength="200"></textarea>
+                                <button onclick="saveNote()" id="customer-note-edit-button" class="btn btn-primary pull-right" >Save</button>
+                                <button onclick="hideEditNoteForm()" id="" class="btn btn-warning pull-right" >Cancel</button>
+                            </div>
+
                         </ul>
 
                         <!--<a href="#" class="btn btn-primary btn-block"><b>Follow</b></a>-->
@@ -321,7 +324,7 @@
                 <div id="ticket-info-tab" class="col-md-3 box box-primary" class="">
                     <div class="box-body box-profile">
                         <h4 class="text-center">Tickets of this customer</h4>
-                        <ul id="ticket-information-list" class="list-group list-group-unbordered">
+                        <ul id="ticket-information-list" class="list-group list-group-unbordered" s>
                             <li class="list-group-item" style="text-align: center">
                                 <a href="#" style="text-align: center" target=""><b>There is no ticket in this conversation</b></a>
                             </li>

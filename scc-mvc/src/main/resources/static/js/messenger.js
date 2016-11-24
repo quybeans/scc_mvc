@@ -74,6 +74,7 @@ $(document).ready(function () {
         if (e.keyCode == 13)
             $('#btn-search-conversation').click();
     });
+
     showCustomerInfo();
 
 
@@ -342,6 +343,7 @@ function getConversationBySenderId(pageId, senderId) {
     document.getElementById('replyText').select();
 
     getCustomerInfo(senderId);
+    getListTicketByConversation();
 
     clearInterval(currentInterval);
 
@@ -458,6 +460,7 @@ function sendMessage() {
 }
 
 function getCustomerInfo(customerId) {
+    hideEditNoteForm();
     $.ajax({
         url: '/messenger/getCustomerInfo',
         type: "POST",
@@ -466,6 +469,7 @@ function getCustomerInfo(customerId) {
         },
         dataType: "json",
         success: function (data) {
+
             currentCustomerName = data.name;
             currentCustomerAvt = data.picture;
             $('#currentSenderName').text(currentCustomerName);
@@ -476,10 +480,48 @@ function getCustomerInfo(customerId) {
             $('#customer-timezone').text(convertNumberToTimezone(data.timezone));
             $('#customer-gender').text(convertGender(data.gender));
             $('#customer-locale').text(convertLocale(data.locale));
-            // $('#customer-note').text(data.note);
-            getCustomerProfileId();
+            if (!data.note){
+                $('#customer-note').text("Make a note for this customer");
+            }else{
+                $('#customer-note').text(data.note);
+            }
+            $('#customer-note-edit').text(data.note);
+
         }
     });
+
+}
+
+function showEditNoteForm() {
+    $('#p-customer-note').hide();
+    $('#customer-note-edit').text($('#customer-note').text());
+    $('#edit-note-div').show();
+
+}
+
+function hideEditNoteForm() {
+    $('#p-customer-note').show();
+    $('#edit-note-div').hide();
+
+}
+
+
+function saveNote() {
+   var content = $('#customer-note-edit').val();
+    $.ajax({
+        url: '/messenger/saveNote',
+        type: "POST",
+        data: {
+            customerId: currentCustomer,
+            content: content
+        },
+        dataType: "json",
+        success: function (data) {
+            getCustomerInfo(currentCustomer);
+        }
+    });
+
+
 
 }
 
