@@ -51,8 +51,8 @@ setInterval(function () {
         }else{
             $("#dueday").html(
                 '<div class="btn-group">'
-                +'<button class="btn btn-default" onclick="approve('+ticketid+')" style="width: 80px"> Close</button>'
-                +'<button class="btn btn-default" onclick="reject('+ticketid+')" style="width: 80px"> Reassign</button>'
+                +'<button class="btn btn-success" onclick="approve('+ticketid+')" style="width: 80px"> Close</button>'
+                +'<button class="btn btn-danger" onclick="reject('+ticketid+')" style="width: 80px"> Reassign</button>'
                 +'</div>'
             )
         }
@@ -94,7 +94,7 @@ function getticket(ticketid) {
             var statusname;
             switch (data.statusid){
                 case 1:  statusname="Assigned"; break;
-                case 2:  statusname="Inprocess"; break;
+                case 2:  statusname="In progress"; break;
                 case 3:  statusname="Solved"; break;
                 case 4:  statusname="Close"; break;
                 case 5:  statusname="Expired"; break;
@@ -113,13 +113,13 @@ function getticket(ticketid) {
             $("#getassignee").html('<h4><i  class="fa fa-chevron-right" onclick="getassigneeinfo('+data.assignee+')"></i><b style="margin-left: 5px">Assignee:</b> '+data.assigneeuser+'</h4>');
             var groupbtn;
             if(staff){
-                groupbtn = '<button class="btn btn-success" style="width: 70px" onclick="forwardticket('+data.id+')">Foward</button>'
-                    +'<button class="btn btn-primary" style="width: 70px" onclick="status('+data.id+')">Status</button>'
-                    +'<button class=" btn btn-danger" style="width: 70px" onclick="updateticket('+data.id+')">Priority</button>'
+                groupbtn = '<button class="btn btn-default" style="width: 70px" onclick="forwardticket('+data.id+')">Foward</button>'
+                    +'<button class="btn btn-default" style="width: 70px" onclick="status('+data.id+')">Status</button>'
+                    +'<button class=" btn btn-default" style="width: 70px" onclick="updateticket('+data.id+')">Priority</button>'
             }else{
-                groupbtn = '<button class="btn btn-success" style="width: 70px" onclick="assign('+data.id+')">Assign</button>'
-                    +'<button class="btn btn-primary" style="width: 70px" onclick="status('+data.id+')">Status</button>'
-                    +'<button class=" btn btn-danger" style="width: 70px" onclick="updateticket('+data.id+')">Priority</button>'
+                groupbtn = '<button class="btn btn-default" style="width: 70px" onclick="assign('+data.id+')">Assign</button>'
+                    +'<button class="btn btn-default" style="width: 70px" onclick="status('+data.id+')">Status</button>'
+                    +'<button class=" btn btn-default" style="width: 70px" onclick="updateticket('+data.id+')">Priority</button>'
             }
 
             $("#ticketbutton").html(
@@ -235,7 +235,7 @@ function loadticketitem(ticketid) {
                     var status;
                     switch (data[index].history.statusid){
                         case 1: status='<a>'+data[index].history.userid+'</a>' +' assigned this ticket to ' +'<a>'+data[index].history.assignee+'</a>'; break;
-                        case 2: status='<a>'+data[index].history.userid+'</a>' +' change this ticket to '+'<span style="color:#00a65a ">Inprocess</span>'; break;
+                        case 2: status='<a>'+data[index].history.userid+'</a>' +' change this ticket to '+'<span style="color:#00a65a ">In progress</span>'; break;
                         case 3: status='<a>'+data[index].history.userid+'</a>' +' change this ticket to '+'<span style="color:#500a6f ">Solved</span>'; break;
                         case 4: status='<a>'+data[index].history.userid+'</a>' +' Close this ticket '; break;
                         case 5: status='This ticket is expired '; break;
@@ -485,13 +485,13 @@ function getcurrentuser() {
         success:function (data) {
             if(data.roleid==4){
                 $("#status").html(
-                    '<option value="2" >Inprocess</option>'
+                    '<option value="2" >In progress</option>'
                     +'<option value="3" >Solved</option>'
                 )
                 window.staff=true;
             }else{
                 $("#status").html(
-                    '<option value="2" >Inprocess</option>'
+                    '<option value="2" >In progress</option>'
                     +'<option value="3" >Solved</option>'
                     +'<option value="4" >Close</option>'
                 )

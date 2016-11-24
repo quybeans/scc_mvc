@@ -33,7 +33,7 @@ $(document).ready(function () {
                 targets: 3,
                 render: (data, type, row) => {
                 if(type === 'display'){
-        return '<h5 style="overflow: hidden; max-height: 100px;word-wrap: break-word">'+row.assigneeuser+'-'+row.assigneerole+'</h5>'
+        return '<h5 style="overflow: hidden; max-height: 100px;word-wrap: break-word">'+row.assigneeuser+' - '+row.assigneerole+'</h5>'
                 }
                return data;
             },
@@ -70,7 +70,7 @@ $(document).ready(function () {
             if(staff){
                 return '<div class="dropdown">'
                         +'<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><i class="fa fa-cog"></i>'
-                        +'</button> '
+                        +'Edit </button> '
                         +'<div class="dropdown-menu" style="width: 10px">'
                         +'<li><a onclick="forwardticket('+row.id+')">Forward</a></li>'
                         +'<li><a onclick="status('+row.id+')">Change Status</a></li>'
@@ -81,7 +81,7 @@ $(document).ready(function () {
             }else{
                 return '<div class="dropdown">'
                     +'<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><i class="fa fa-cog"></i>'
-                    +'</button> '
+                    +'Edit </button> '
                     +'<div class="dropdown-menu" style="width: 10px">'
                     +'<li><a onclick="assign('+row.id+')">Assign</a></li>'
                     +'<li><a onclick="status('+row.id+')">Change Status</a></li>'
@@ -101,7 +101,7 @@ $(document).ready(function () {
         render: (data, type, row) => {
         if(type=== 'display'){
             var statuscolor=getstatuscolor(row.statusid);
-            return '<p><i class="fa fa-circle" aria-hidden="true" style="'+statuscolor+'"></i>'+'  ' +row.currentstatus+'</p>'
+            return '<p><i class="fa fa-circle" aria-hidden="true" style="color:'+statuscolor+'"></i>'+'  ' +row.currentstatus+'</p>'
         }
         return data;
     },
@@ -466,7 +466,7 @@ function getcurrentuser() {
                     +'<i class="fa fa-plus" aria-hidden="true" ></i> <strong>New Ticket</strong>'
                     +'</button>'
                 $("#status").html(
-                    '<option value="2" >Inprocess</option>'
+                    '<option value="2" >In progress</option>'
                     +'<option value="3" >Solved</option>'
                 )
                 window.staff=true;
@@ -475,7 +475,7 @@ function getcurrentuser() {
                     +'<i class="fa fa-plus" aria-hidden="true" ></i> <strong>New Ticket</strong>'
                     +'</button>'
                 $("#status").html(
-                    '<option value="2" >Inprocess</option>'
+                    '<option value="2" >In progress</option>'
                     +'<option value="3" >Solved</option>'
                     +'<option value="4" >Close</option>'
                 )
@@ -483,11 +483,11 @@ function getcurrentuser() {
             }
             $("#topbtn").append(
                 btn
-                +'<button class="btn btn-info btn-md " type="button" onclick="configpriority()">'
+                +'<button class="btn btn-info btn-md " style="margin-left: 3px" type="button" onclick="configpriority()">'
                 +'<i class="fa fa-cogs" aria-hidden="true"></i> <strong>Config Priority</strong>'
                 +'</button>'
 
-                +'<button style="width: 170px" class="btn btn-primary btn-md " type="button" onclick="ticketrequest('+data.userid+')">'
+                +'<button style="width: 170px;margin-left: 3px" class="btn btn-primary btn-md " type="button" onclick="ticketrequest('+data.userid+')">'
                 +'<div id="ticketrequestbtn">'
                 +'<i class="fa fa-flag" aria-hidden="true"></i> '
                 +'<strong>Ticket Request</strong>'

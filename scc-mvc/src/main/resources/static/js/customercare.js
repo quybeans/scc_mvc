@@ -848,7 +848,7 @@ function getticket(comID) {
                         status = "change " + data[i].ticketid + " to open";
                         break;
                     case 4:
-                        status = "change " + data[i].ticketid + " to inprogess";
+                        status = "change " + data[i].ticketid + " to In progress";
                         break;
                     case 5:
                         status = "change " + data[i].ticketid + " to solving";
