@@ -17,45 +17,96 @@
 <div class="wrapper">
     <div class="content-wrapper" style="max-height: 90vh;overflow: hidden">
         <!--MODALS GO HERE-->
+        <div id="reply-comment-item" style="display:none">
+            <div style="margin-left: 70px; margin-bottom: 10px">
+                <div class="cmt"
+                     style="background-color: whitesmoke; border-left: 2px solid lightgray; border-top: none">
+                    <div class="cmtContent" style="margin-left: 5px;">
+                        <div class="dropup " style=" position: absolute">
+                            <button data-toggle="dropdown" id="ddlPageList"
+                                    class="btn btn-default btn-xs dropdown-toggle" id="menu2"
+                                    style=" border-radius: 0; margin-top:10px; font-size: 12px; width: 35px; height: 35px; background-color: transparent">
+                            </button>
 
+                            <ul class="dropdown-menu" id="list-fb-account" style="border: 1px solid lightblue">
+                                <li class="dropdown-header" id='list-fb-page-account'style="text-align: center">Page account</li>
+                                <li class="dropdown-header" id='list-fb-user-account'style="text-align: center">Facebook account</li>
+                                <li class="dropdown-header" style="text-align: center">&#9660; Choose an account to reply</li>
+                            </ul>
+
+                        </div>
+                        <img id="reply-img" src="http://graph.facebook.com/111/picture" style="  width: 35px; height: 35px; border: 1px solid blue">
+                        <p class="message" style="margin-left: 50px; margin-top: -40px" >
+                            <a id="reply-name" style="font-weight: bold" onclick="$('#menu1').show()">Mobile World
+                            </a>
+
+                        <div style="margin-left: 50px; margin-top: -10px">
+                            <input onkeyup="onReplyEnterHit(event)" id="txtReplyBox" value=""
+                                   placeholder="Write a reply..."
+                                   type="text"
+                                   style="font-size:14px; color:black; width:90%; height: 25px; background-color: transparent;border:0; border-bottom: 1px solid blue; outline: none">
+                        </div>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="modal fade" id="replyModal" role="dialog">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-sm">
                 <!-- Modal content-->
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Reply to comment</h4>
+                        <h4 class="modal-title">Click on an account to change</h4>
                     </div>
                     <div class="modal-body" style=" height: auto;">
 
-                        <div id="reply-list" class="cmtList" style="max-height: 45vh; overflow-y: auto; border-bottom: none">
-
-                        </div>
-                        <input type="hidden" id="reply-token" value="">
-                        <div class="dropdown">
-                            <button class="btn btn-info dropdown-toggle" style="width: 180px; margin-top: 10px"
-                                    type="button" data-toggle="dropdown">
-                                <img width="30px" id='reply-img' height="30px" style="border-radius: 3px"
-                                     src="http://globalgamejam.org/sites/default/files/styles/game_sidebar__normal/public/game/featured_image/promo_5.png?itok=9dymM8JD"
-                                     alt="user image">
-                                <p class="inline" id="reply-name"> Reply as... </p>  <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" id="list-fb-account">
-                                <!--This is facebook account list-->
-                            </ul>
-                        </div>
-                        <textarea style="margin-top: 10px" placeholder="Write a reply...." type="text"
-                                  class="form-control" rows="3" id="txtReply"></textarea>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-primary " id="btnReply"><i id="send-progress"
-                                                                          class="fa fa-paper-plane"></i>&nbsp;Reply
-                        </button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
         </div>
+        <!--<div class="modal fade" id="replyModal" role="dialog">-->
+        <!--<div class="modal-dialog">-->
+        <!--&lt;!&ndash; Modal content&ndash;&gt;-->
+        <!--<div class="modal-content">-->
+        <!--<div class="modal-header">-->
+        <!--<button type="button" class="close" data-dismiss="modal">&times;</button>-->
+        <!--<h4 class="modal-title">Reply to comment</h4>-->
+        <!--</div>-->
+        <!--<div class="modal-body" style=" height: auto;">-->
+
+        <!--<div id="reply-list" class="cmtList"-->
+        <!--style="max-height: 45vh; overflow-y: auto; border-bottom: none">-->
+
+        <!--</div>-->
+        <!--<input type="hidden" id="reply-token" value="">-->
+        <!--<div class="dropdown">-->
+        <!--<button class="btn btn-info dropdown-toggle" style="width: 180px; margin-top: 10px"-->
+        <!--type="button" data-toggle="dropdown">-->
+        <!--<img width="30px" id='reply-img' height="30px" style="border-radius: 3px"-->
+        <!--src="http://globalgamejam.org/sites/default/files/styles/game_sidebar__normal/public/game/featured_image/promo_5.png?itok=9dymM8JD"-->
+        <!--alt="user image">-->
+        <!--<p class="inline" id="reply-name"> Reply as... </p>  <span class="caret"></span>-->
+        <!--</button>-->
+        <!--<ul class="dropdown-menu" id="list-fb-account">-->
+        <!--&lt;!&ndash;This is facebook account list&ndash;&gt;-->
+        <!--</ul>-->
+        <!--</div>-->
+        <!--<textarea style="margin-top: 10px" placeholder="Write a reply...." type="text"-->
+        <!--class="form-control" rows="3" id="txtReply"></textarea>-->
+        <!--</div>-->
+        <!--<div class="modal-footer">-->
+        <!--<button class="btn btn-primary " id="btnReply"><i id="send-progress"-->
+        <!--class="fa fa-paper-plane"></i>&nbsp;Reply-->
+        <!--</button>-->
+        <!--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
 
         <div class="modal fade" id="createModal" role="dialog">
             <div class="modal-dialog">
@@ -244,14 +295,14 @@
                             <div class="inline">Sort by :</div>
                             <div class=" inline" style="margin-right: 10px">
 
-                                <label><input name="radiobtn"  type="radio" id="tksttcheckbox" >
-                                Status</label>
+                                <label><input name="radiobtn" type="radio" id="tksttcheckbox">
+                                    Status</label>
                             </div>
                             <div class=" inline" style="margin-right: 10px">
-                                <label><input name="radiobtn" type="radio" id="tktimecheckbox" >Time</label>
+                                <label><input name="radiobtn" type="radio" id="tktimecheckbox">Time</label>
                             </div>
 
-                            <div >
+                            <div>
                                 Status:
                                 <select id="filterstatus">
                                     <option></option>
@@ -275,7 +326,8 @@
                                 <select id="filterassignee">
                                     <option></option>
                                 </select>
-                                <button class="btn btn-default" onclick="filterticket()" ><i class="fa fa-filter"></i>Filter</button>
+                                <button class="btn btn-default" onclick="filterticket()"><i class="fa fa-filter"></i>Filter
+                                </button>
                             </div>
 
                         </div>

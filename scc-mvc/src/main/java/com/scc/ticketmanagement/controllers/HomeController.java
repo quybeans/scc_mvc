@@ -136,7 +136,7 @@ public class HomeController {
         session.setAttribute("fullname", profileEntity.getFirstname() + " " + profileEntity.getLastname());
         if(userEntity.isActive()){
             if (userEntity.getRoleid() == Constant.ROLE_ADMIN) {
-                return "/brand/report";
+                return "/admin/index";
             } else if (userEntity.getRoleid() == Constant.ROLE_STAFF) {
                 return "customercare";
             } else if (userEntity.getRoleid() == Constant.ROLE_SUPERVISOR) {
@@ -159,7 +159,7 @@ public class HomeController {
             if (user != null) {
                 switch (user.getRoleid()) {
                     case Constant.ROLE_ADMIN:
-                        return "/brand/report";
+                        return "/admin/index";
                     case Constant.ROLE_STAFF:
                         return "customercare";
                     case Constant.ROLE_SUPERVISOR:

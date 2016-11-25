@@ -141,16 +141,14 @@
     cursor: pointer;
     max-heightheight: 20vh;
     overflow: hidden;
-    border-bottom: 1px solid lightgray;
+    border-top: 1px solid lightgray;
     margin-bottom: 0px;
     margin-top: 0px;
     padding: 0px 0px 0px 0px;
     margin-right: 0px;
 }
 
-.cmtList :hover {
-    background-color: #F2F2F2;
-}
+
 
 .cmtList .cmtContent > img {
     width: 50px;

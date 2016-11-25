@@ -13,6 +13,7 @@ var postListCurPage = 1;
 var commentListCurPage = 1;
 var currentPost;
 var currentCmt;
+var currentCmtwReply = new Array();
 //Sort setting 1: by question, 2: by neg, 3: by time
 var sortCommentBy = 1;
 startup();
@@ -26,11 +27,18 @@ function startup() {
     getalluser();
 }
 
+//On reply press enter button
+function onReplyEnterHit(event){
+    if(event.keyCode == 13){
+        var replyString = $('#txtReplyBox').val();
+        if(replyString.length<=0){alert("Enter something..");return};
+    }
+}
+
+
 //Reply to comment
 function replyToComment(objId) {
-
     $('#send-progress').attr('class', 'fa fa-paper-plane');
-    $('#replyModal').modal('toggle');
     $('#btnReply').unbind().click(function () {
         var token = $('#reply-token').val();
         if ($('#txtReply').val().length > 0) {
@@ -59,7 +67,6 @@ function addCommentToTicket(ticketId, cmtId) {
 
 
 //Show all ticket existed
-
 function showTicket(cmtid) {
     $('#ticket-list').empty();
     $.ajax({
@@ -97,25 +104,13 @@ function setOnclickReplyAccount(imgsrc, name, token) {
     $('#reply-img').attr("src", "http://graph.facebook.com/" + imgsrc + "/picture");
     $('#reply-name').html(name);
     $('#reply-token').val(token);
-}
 
-//get All Facebook account belong to user
-function getAllFBAccount() {
-    $.ajax({
-        url: '/allFbAccount',
-        type: "GET",
-        dataType: "json",
-        success: function (data) {
-            $('#list-fb-account').append('<li class="dropdown-header" style="text-align: center">Facebook account</li>');
-            $.each(data, function (index) {
-                $('#list-fb-account').append(
-                    '<li onclick="setOnclickReplyAccount(' + data[index].facebookuserid + ',\'' + data[index].facebookusername + '\',\'' + data[index].accesstoken + '\')">'
-                    + '<a><img height="30px" width="30px" style="border-radius: 3px" src="http://graph.facebook.com/' + data[index].facebookuserid + '/picture" alt="user image"> &nbsp;' + data[index].facebookusername + '</a>' +
-                    '</li>'
-                )
-            })
-        }
-    });
+    $.each(currentCmtwReply,function (index, value ) {
+
+        getReplyByCommentId(value);
+    })
+
+
 }
 
 //get All Facebook account belong to user
@@ -125,9 +120,8 @@ function getAllPageAccount() {
         type: "GET",
         dataType: "json",
         success: function (data) {
-            $('#list-fb-account').append('<li class="dropdown-header" style="text-align: center">Page account</li>');
             $.each(data, function (index) {
-                $('#list-fb-account').append(
+                $('#list-fb-page-account').after(
                     '<li onclick="setOnclickReplyAccount(' + data[index].pageid + ',\'' + data[index].name + '\',\'' + data[index].accesstoken + '\')">'
                     + '<a><img height="30px" width="30px" style="border-radius: 3px" src="http://graph.facebook.com/' + data[index].pageid + '/picture" alt="user image"> &nbsp;' + data[index].name + '</a>' +
                     '</li>'
@@ -137,7 +131,21 @@ function getAllPageAccount() {
         }
 
     });
-    getAllFBAccount();
+    $.ajax({
+        url: '/allFbAccount',
+        type: "GET",
+        dataType: "json",
+        success: function (data) {
+            $.each(data, function (index) {
+                $('#list-fb-user-account').after(
+                    '<li onclick="setOnclickReplyAccount(' + data[index].facebookuserid + ',\'' + data[index].facebookusername + '\',\'' + data[index].accesstoken + '\')">'
+                    + '<a><img height="30px" width="30px" style="border-radius: 3px" src="http://graph.facebook.com/' + data[index].facebookuserid + '/picture" alt="user image"> &nbsp;' + data[index].facebookusername + '</a>' +
+                    '</li>'
+                )
+            })
+
+        }
+    });
 }
 
 //Get all posts
@@ -243,8 +251,11 @@ function getAllPosts(pagelist, pageno) {
 
 //Ger reply for comment
 function getReplyByCommentId(commentId) {
-    $('#reply-list').empty();
-    $('#reply-list').html('Loading....');
+    var replyItem = $('#reply-comment-item').html();
+    currentCmtwReply.push(commentId);
+
+    $('#' + commentId + '-replies').empty();
+    $('#' + commentId + '-replies').html('Loading....');
     $.ajax({
         url: '/commentbypost',
         type: "GET",
@@ -252,10 +263,9 @@ function getReplyByCommentId(commentId) {
         dataType: "json",
         async: false,
         success: function (data) {
-            $('#reply-list').empty();
+            $('#' + commentId + '-replies').empty();
             $.each(data, function (index) {
                 var createdByUser = "";
-
                 $.ajax({
                     url: "/comment/checkUserReply",
                     type: "GET",
@@ -269,147 +279,40 @@ function getReplyByCommentId(commentId) {
                     }
                 });
 
-                $('#reply-list').append(
-                    '<div class="cmt" style="max-height:15vh;">'
-                    + '<div class="cmtContent">'
-                    + '<img src="http://graph.facebook.com/' + data[index].createdBy + '/picture" height="50px" width="50px">'
-                    + '<p class="message">'
-                    + '<a>' + data[index].createdByName + createdByUser + '</a>'
-                    + '<p style="margin-left: 65px; margin-top: -10px">' + data[index].content + '</p>'
+                $('#' + commentId + '-replies').append(
+                    '<div style="margin-left: 70px"><div class="cmt" style=" border-left: 1px solid lightgray; border-top: none">'
+                    + '<div class="cmtContent" style="margin-left: 5px">'
+                    + '<img src="http://graph.facebook.com/' + data[index].createdBy + '/picture" style="  width: 35px; height: 35px;">'
+                    + '<p class="message" style="margin-left: 50px; margin-top: -40px">'
+                    + '<a>' + data[index].createdByName + createdByUser + '</a>' + '<small class="text-muted" style="margin-left: 10px">' + jQuery.format.prettyDate(new Date(data[index].createdAt)) + '</small>'
+                    + '<p style="margin-left: 50px; margin-top: -10px">' + data[index].content + '</p>'
                     + '</p>'
                     + '</div>'
-                    + '</div>'
+                    + '</div></div>'
                 )
-            })
+                // $('#'+commentId).after(
+                //     '<div class="cmt" style="max-height:15vh;">'
+                //     + '<div class="cmtContent">'
+                //     + '<img src="http://graph.facebook.com/' + data[index].createdBy + '/picture" height="50px" width="50px">'
+                //     + '<p class="message">'
+                //     + '<a>' + data[index].createdByName + createdByUser + '</a>'
+                //     + '<p style="margin-left: 65px; margin-top: -10px">' + data[index].content + '</p>'
+                //     + '</p>'
+                //     + '</div>'
+                //     + '</div>'
+                // )
+            });
+            $('#' + commentId + '-replies').append(
+                replyItem
+            )
 
-           }
+        }
 
     });
 
 
 }
-//Get comments for posts
-// function getCommentById(postId,page) {
-//     var happycount = 0;
-//     var sadcount = 0;
-//     $('#comment-box').empty();
-//     $('#comment-box').html('Loading....');
-//     getPostById(postId);
-//
-//     $.ajax({
-//         url: 'post/sentimentcount',
-//         type: "GET",
-//         data: {postid: postId},
-//         dataType: "json",
-//         success: function (result) {happycount=result[0];sadcount=result[1]}});
-//
-//     $.ajax({
-//         url: 'comment/getallcomment',
-//         type: "GET",
-//         data: {postid: postId, page:page},
-//         dataType: "json",
-//         success: function (result) {
-//
-//             // Pagination
-//             var data = result.content;
-//             commentPagination(parsseInt(result.totalPages),postId);
-//
-//
-//             $('#comment-box').empty();
-//             $.each(data, function (index) {
-//                  var senIcon = sadicon;
-//                 if (data[index].sentimentScore == 1)
-//                     senIcon = happyicon;
-//
-//
-//
-//                 var cmtId = "'" + postId + "_" + data[index].id + "'";
-//                 // groupbutton chua 2 nut là reply, danh tag
-//                 var groupbutton = '<button  onclick="replyToComment(' + cmtId + ');getReplyByCommentId(' + data[index].id + ');" class="btn btn-default btn-xs inline"' +
-//                     ' style="margin-left: 65px;margin-top: -10px; "><span class="glyphicon glyphicon-send"' +
-//                     ' style="color:gray "  title="Reply to this comment"   data-placement="bottom" ' +
-//                     'data-toggle="tooltip" ></span></button>'
-//
-//                     + '<button  onclick="showtagcomment(' + data[index].id + ')" class="btn btn-default btn-xs inline"' +
-//                     ' style="margin-top: -10px;" ><span class="fa fa-tag"' +
-//                     ' style="color:gray "  title="Tag this comment to attribute"   data-placement="bottom" ' +
-//                     'data-toggle="popover" ></span></button>';
-//
-//                 //khi comment la mot ticket
-//                 if (data[index].ticket) {
-//
-//                     //Them nut change stt
-//                     groupbutton += '<button class="btn btn-default btn-xs inline" onclick="status(' + data[index].id + ')"' +
-//                         ' style="margin-top: -10px; "><span style="color:gray " ' +
-//                         'title="Change ticket status" data-toggle="tooltip"  data-placement="bottom" ' +
-//                         ' class="fa fa-navicon"></span></button>'
-//
-//                     //khi nguoi dang nhap duoi quyen staff
-//                     if (data[index].staff) {
-//                         //them nut forward ticket
-//                         groupbutton += '<button class="btn btn-default btn-xs inline" onclick="forwardticket(' + data[index].id + ')"' +
-//                             ' style="margin-top: -10px; "><span style="color:gray " ' +
-//                             'title="Forward this ticket to another staff" data-toggle="tooltip"  data-placement="bottom" ' +
-//                             ' class="fa fa-group"></span></button>'
-//                         if (!data[index].ticketofstaff) {
-//                             groupbutton = "";
-//                         }
-//                         //khi nguoi dang nhap duoi quyen khac
-//                     } else {
-//                         //Them nut assign
-//                         groupbutton += '<button class="btn btn-default btn-xs inline" onclick="assign(' + data[index].id + ')"' +
-//                             ' style="margin-top: -10px; "><span style="color:gray " ' +
-//                             'title="Assign this ticket to staff" data-toggle="tooltip"  data-placement="bottom" ' +
-//                             ' class="fa fa-ticket"></span></button>'
-//                     }
-//
-//                     //khi comment chua phai la ticket
-//                 } else {
-//                     //khi nguoi dang nhap duoi quyen staff
-//                     if (data[index].staff) {
-//                         //them nut assign cho ban than no
-//                         groupbutton += '<button class="btn btn-default btn-xs inline" onclick="createTicketForTheStaff(' + data[index].id + ',' + data[index].postId + ')" ' +
-//                             ' style="margin-top: -10px; "><span style="color:gray " ' +
-//                             'title="Create new ticket for yourself" data-toggle="tooltip"  data-placement="bottom" ' +
-//                             ' class="fa fa-plus-square"></span></button>'
-//
-//                         //khi nguoi dang nhap duoi quyen khac
-//                     } else {
-//                         //them nut create ticket
-//                         groupbutton += '<button  onclick="createticket(' + data[index].id + ',' + data[index].postId + ');" class="btn btn-default btn-xs inline"' +
-//                             ' style="margin-top: -10px; "><span class="fa fa-plus"' +
-//                             ' style="color:gray "  title="Reply to this comment"   data-placement="bottom" ' +
-//                             'data-toggle="tooltip" ></span></button>'
-//                     }
-//                 }
-//                 $('#comment-box').append(
-//                     '<div  class="cmt" >'
-//                     + '<div class="col-lg-10 cmtContent">' +
-//                     '<img onload="http://localhost:9000/img/user_img.jpg" src="http://graph.facebook.com/' + data[index].createdBy + '/picture" alt="user image">'
-//                     + '<p class="message">'
-//                     + '<a>'
-//                     + data[index].createdByName
-//                     + '<small class="text-muted" style="margin-left: 10px">'
-//                     + jQuery.format.prettyDate(new Date(data[index].createdAt))
-//                     + '</small>'
-//                     + ' </a>'
-//                     + '<p style="margin-left: 65px;margin-top: -10px " onclick="getticket(' + data[index].id + ',' + postId + ')">' + data[index].content + '</p>'
-//                     + '</p>'
-//                     //Day la nut reply
-// //                                +'<button onclick="replyToComment('+cmtId+')" class="btn btn-default btn-xs inline" style="margin-left: 65px;margin-top: -10px; "><span class="glyphicon glyphicon-send" style="color:gray "  title="Reply to this comment"   data-placement="bottom" data-toggle="tooltip" ></span></button>'
-//                     + groupbutton
-//                     + '</div>'
-//                     + '<div class="col-lg-2" style="margin-top: 30px">' + '<small class="' + senIcon + '" style="font-size: 20px;"></small>'
-//                     + '</div>'
-//                     + '</div>')
-//             });
-//
-//             $("#happy-count").html(happycount);
-//             $("#sad-count").html(sadcount);
-//         }
-//     });
-//
-// }
+
 
 //ON POST CLICK
 function getCommentById(postid) {
@@ -466,7 +369,7 @@ function getCommentByPostIdwPage(postId, page, searchContent) {
 
 
                 $('#comment-box').append(
-                    '<div class="cmt" >'
+                    '<div class="cmt">'
                     + '<div class="col-lg-11 cmtContent">' +
                     '<img onload="http://localhost:9000/img/user_img.jpg" src="http://graph.facebook.com/' + data[index].createdBy + '/picture" alt="user image">'
                     + '<p class="message" style="margin-top: -53px">'
@@ -479,7 +382,7 @@ function getCommentByPostIdwPage(postId, page, searchContent) {
                     + '<p style="margin-left: 65px;margin-top: -10px " onclick="getticket(' + data[index].id + ',' + postId + ')">' + data[index].content + '</p>'
                     + '</p>'
                     // Day la nut reply
-                    + '<button  onclick="replyToComment(' + cmtId + ');getReplyByCommentId(' + "'" + data[index].id + "'" + ');" class="btn btn-default btn-xs inline"' +
+                        + '<button id="btn-get-reply" onclick="getReplyByCommentId(' + "'" + data[index].id + "'" + ');" class="btn btn-default btn-xs inline"' +
                     ' style="margin-left: 65px;margin-top: -10px; "><span class="glyphicon glyphicon-comment"' +
                     ' style="color:gray;margin-right: 10px "  title="Reply to this comment"   data-placement="bottom" ' +
                     'data-toggle="tooltip" ></span>' + countReply(data[index].id) + ' replies</button>'
@@ -487,55 +390,12 @@ function getCommentByPostIdwPage(postId, page, searchContent) {
                     + '</div>'
                     + '<div class="col-lg-1" style="margin-top: 30px">' + '<small class="' + senIcon + '" style="font-size: 20px;"></small>'
                     + '</div>'
-                    + '</div>')
+                    + '</div><div  id="' + data[index].id + '-replies"></div>');
             });
         }
     });
 }
-// //Search comment by content
-// function searchByContent(postId, content, page) {
-//     $('#comment-box').html('<div style=" padding-left: 10px"><span style="color: cornflowerblue;" class="fa fa-circle-o-notch fa-spin"></span> &nbsp;Loading comments ...</div>');
-//     $.ajax({
-//         url: 'comment/bypostid/search',
-//         type: "GET",
-//         data: {postid: postId, page: page, content: content},
-//         dataType: "json",
-//         success: function (data) {
-//             $('#comment-box').empty();
-//             $.each(data, function (index) {
-//                 var senIcon = sadicon;
-//                 if (data[index].sentimentScore == 1)
-//                     senIcon = happyicon;
-//                 if (data[index].sentimentScore == 3)
-//                     senIcon = questionicon;
-//                 var cmtId = "'" + postId + "_" + data[index].id + "'";
-//
-//                 $('#comment-box').append(
-//                     '<div class="cmt" >'
-//                     + '<div class="col-lg-11 cmtContent">' +
-//                     '<img onload="http://localhost:9000/img/user_img.jpg" src="http://graph.facebook.com/' + data[index].createdBy + '/picture" alt="user image">'
-//                     + '<p class="message" style="margin-top: -53px">'
-//                     + '<a href="https:/fb.com/' + data[index].createdBy + '" target="_blank">'
-//                     + data[index].createdByName
-//                     + '<small class="text-muted" style="margin-left: 10px">'
-//                     + jQuery.format.prettyDate(new Date(data[index].createdAt))
-//                     + '</small>'
-//                     + ' </a>'
-//                     + '<p style="margin-left: 65px;margin-top: -10px " onclick="getticket(' + data[index].id + ',' + postId + ')">' + data[index].content + '</p>'
-//                     + '</p>'
-//                     // Day la nut reply
-//                     + '<button  onclick="replyToComment(' + cmtId + ');getReplyByCommentId(' + data[index].id + ');" class="btn btn-default btn-xs inline"' +
-//                     ' style="margin-left: 65px;margin-top: -10px; "><span class="glyphicon glyphicon-send"' +
-//                     ' style="color:gray "  title="Reply to this comment"   data-placement="bottom" ' +
-//                     'data-toggle="tooltip" ></span></button>'
-//                     + '</div>'
-//                     + '<div class="col-lg-1" style="margin-top: 30px">' + '<small class="' + senIcon + '" style="font-size: 20px;"></small>'
-//                     + '</div>'
-//                     + '</div>')
-//             });
-//         }
-//     })
-// }
+
 
 //Search comment by content
 function searchByContent(postId, content, page) {
@@ -1293,12 +1153,22 @@ function getalluser() {
 
 function getstatuscolor(statusid) {
 
-    switch (statusid){
-        case 1: return'#f4e842'; break;
-        case 2: return'#00a65a'; break;
-        case 3: return'#500a6f'; break;
-        case 4: return'gray'; break;
-        case 5: return'#000000'; break;
+    switch (statusid) {
+        case 1:
+            return '#f4e842';
+            break;
+        case 2:
+            return '#00a65a';
+            break;
+        case 3:
+            return '#500a6f';
+            break;
+        case 4:
+            return 'gray';
+            break;
+        case 5:
+            return '#000000';
+            break;
 
     }
 }
