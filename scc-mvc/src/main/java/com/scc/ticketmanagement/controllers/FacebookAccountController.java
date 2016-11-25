@@ -94,6 +94,7 @@ public class FacebookAccountController {
                              @RequestParam("facebookAccountId") int accountId,
                              @RequestParam("btnAction") String button) {
         System.out.println(button);
+        System.out.println(accountId);
         HttpSession session = request.getSession(false);
         int userId = -1;
         if (session != null) {
@@ -105,6 +106,8 @@ public class FacebookAccountController {
             userfacebookaccountService.deactivate(userId, accountId);
         } else if (button.equals("Activate")) {
             userfacebookaccountService.activate(userId, accountId);
+        }else if (button.equals("Delete")) {
+            userfacebookaccountService.deleteAccount(userId, accountId);
         }
         return "redirect:/facebook-account/index";
     }

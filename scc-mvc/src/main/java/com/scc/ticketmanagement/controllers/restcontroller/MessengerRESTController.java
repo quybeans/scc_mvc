@@ -12,6 +12,7 @@ import com.scc.ticketmanagement.utilities.FacebookUtility;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,7 +31,7 @@ import java.util.*;
 public class MessengerRESTController {
 
     @Autowired
-    UserRepository userRepository;
+    UserService userService;
 
     @Autowired
     MessageService messageService;
@@ -58,6 +59,9 @@ public class MessengerRESTController {
 
     @Autowired
     TicketService ticketService;
+
+    @Autowired
+    UserMessageService userMessageService;
 
     @RequestMapping(value = "/getAllConversations", method = RequestMethod.GET)
     public List<MessageEntity> getAllConversations() {
@@ -125,6 +129,7 @@ public class MessengerRESTController {
 
         List<ExMessage> result = new ArrayList<>();
         ExMessage exMessage;
+        UserMessageEntity user = null;
         for (MessageEntity message : messages.getContent()) {
             exMessage = new ExMessage();
             exMessage.setId(message.getId());
@@ -138,6 +143,10 @@ public class MessengerRESTController {
             exMessage.setMessageRead(message.getMessageRead());
             exMessage.setSentimentScrore(message.getSentimentScrore());
             exMessage.setTicket(ticketService.getListTicketByConversation(message.getId()).size() != 0);
+            user = userMessageService.get(message.getId());
+            if (user!=null){
+                exMessage.setSendBy(userService.getUserByID(user.getUserId()).getUsername());
+            }
             result.add(exMessage);
         }
 
@@ -145,23 +154,29 @@ public class MessengerRESTController {
     }
 
     @RequestMapping(value = "/messenger/sendMessageToCustomer", method = RequestMethod.POST)
-    public String sendMessage(@RequestParam("pageId") String pageId,
+    public String sendMessage(HttpServletRequest request, @RequestParam("pageId") String pageId,
                               @RequestParam("receiverId") String receiverId,
                               @RequestParam("content") String content) {
 
-        System.out.println(pageId);
-        System.out.println(receiverId);
-        System.out.println(content);
-        String accessToken = pageService.getPageAccessTokenByPageId(pageId);
-        String sentMessage = "";
-        if (accessToken != null && !accessToken.equals("")) {
-            try {
-                sentMessage = FacebookUtility.sendMessage(content, receiverId, accessToken);
-            } catch (Exception e) {
-                e.printStackTrace();
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            int currentUserId = this.getCurrentUserId(session);
+
+            String accessToken = pageService.getPageAccessTokenByPageId(pageId);
+            String sentMessage = "";
+            if (accessToken != null && !accessToken.equals("")) {
+                try {
+                    sentMessage = FacebookUtility.sendMessage(content, receiverId, accessToken);
+                    userMessageService.create(sentMessage,currentUserId );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
+            return sentMessage;
         }
-        return sentMessage;
+
+
+        return null;
     }
 
     @RequestMapping(value = "/messenger/getCustomerInfo", method = RequestMethod.POST)
@@ -178,7 +193,7 @@ public class MessengerRESTController {
     public MessageEntity setRead(@RequestParam("pageId") String pageId,
                                  @RequestParam("senderId") String senderId) {
         MessageEntity messageEntity = messageService.getLastMessage(pageId, senderId);
-        if (messageEntity != null && messageEntity.getMessageRead() == false) {
+        if (messageEntity != null && !messageEntity.getMessageRead()) {
             messageService.setMessageRead(messageEntity.getId());
         }
         return messageEntity;
@@ -193,7 +208,7 @@ public class MessengerRESTController {
 
         HttpSession session = request.getSession();
         String loginUser = (String) session.getAttribute("username");
-        UserEntity user = userRepository.findUserByUsername(loginUser);
+        UserEntity user = userService.getUserByUsername(loginUser);
         TicketitemEntity result = null;
         MessageitemEntity messageitemEntity = messageItemService.startTicket(messageId);
         if (messageitemEntity != null) {
@@ -223,8 +238,7 @@ public class MessengerRESTController {
 
     @RequestMapping(value = "/messenger/getTicketByMessage", method = RequestMethod.POST)
     public List<ExtendTicket> getTicketByMessage(@RequestParam("messageId") String messageId) {
-        List<ExtendTicket> result = getExtendTicketList(ticketService.getListTicketByConversation(messageId));
-        return result;
+        return getExtendTicketList(ticketService.getListTicketByConversation(messageId));
     }
 
     @RequestMapping(value = "/messenger/getListTicketByConversation", method = RequestMethod.GET)
@@ -279,14 +293,14 @@ public class MessengerRESTController {
 
 
             //Get UserEntity cua ng tao ra ticket
-            UserEntity createTicketUser = userRepository.findOne(extendticket.getCreatedby());
+            UserEntity createTicketUser = userService.getUserByID(extendticket.getCreatedby());
             //Get ProfileEntity cua ng tao ra ticket
             ProfileEntity createTicketProfile = profileRepository.findOne(createTicketUser.getUserid());
             //Get Fullname cua ng ta ticket de set vao extendTicket
             extendticket.setCreatebyuser(createTicketProfile.getFirstname() + " " + createTicketProfile.getLastname());
 
             //Get UserEntity cua ng duoc assign  ticket
-            UserEntity assigneeUser = userRepository.findOne(extendticket.getAssignee());
+            UserEntity assigneeUser = userService.getUserByID(extendticket.getAssignee());
             //Get ProfileEntity cua ng duoc assign  ticket
             ProfileEntity assigneeTicketProfile = profileRepository.findOne(assigneeUser.getUserid());
             //Get Fullname cua ng ta ticket de set vao extendTicket
@@ -333,5 +347,11 @@ public class MessengerRESTController {
         return listextendticket;
     }
 
-
+    private int getCurrentUserId(HttpSession session) {
+        String username = (String) session.getAttribute("username");
+        if (username == null) {
+            return 0;
+        }
+        return userService.getUserByUsername(username).getUserid();
+    }
 }

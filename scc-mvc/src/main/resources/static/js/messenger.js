@@ -221,7 +221,7 @@ function firstLoadConversationBySenderId() {
                         // moment(dataReversed[i].createdAt).fromNow() +
                         $.format.date(dataReversed[i].createdAt, "HH:mm") +
                         '</small>' +
-                        '<a class="pull-right primary-font">' + currentPageName + '</a>' +
+                        '<a class="pull-right primary-font" style="margin-left: 10px">' + dataReversed[i].sendBy +  ' - ' + currentPageName + '</a>' +
                         '</div>' +
                         '<p style="text-align: right">' +
                         dataReversed[i].content +
@@ -290,7 +290,7 @@ function reloadConversationBySenderId() {
                         '<small class=" text-muted ">' +
                         $.format.date(dataReversed[i].createdAt, "HH:mm") +
                         '</small>' +
-                        '<a class="pull-right primary-font">' + currentPageName + '</a>' +
+                        '<a class="pull-right primary-font" style="margin-left: 10px">' + dataReversed[i].sendBy +  ' - ' + currentPageName + '</a>' +
                         '</div>' +
                         '<p style="text-align: right">' +
                         dataReversed[i].content +
@@ -387,7 +387,7 @@ function getConversationBySenderIdWithPage() {
                             '<small class=" text-muted ">' +
                             $.format.date(dataReversed[i].createdAt, "HH:mm") +
                             '</small>' +
-                            '<a class="pull-right primary-font">' + currentPageName + '</a>' +
+                            '<a class="pull-right primary-font" style="margin-left: 10px">' + dataReversed[i].sendBy +  ' - ' + currentPageName + '</a>' +
                             '</div>' +
                             '<p style="text-align: right">' +
                             dataReversed[i].content +
@@ -472,7 +472,7 @@ function getCustomerInfo(customerId) {
 
             currentCustomerName = data.name;
             currentCustomerAvt = data.picture;
-            $('#currentSenderName').text(currentCustomerName);
+            $('#currentSenderName').text(currentCustomerName + ' - ' + currentPageName);
             $("#customer-picture").attr("src", data.picture);
             $('#customer-facebook-id').text(currentCustomerName);
             $('#customer-facebook-id').attr('href', 'https://fb.com/' + getCustomerProfileId());
@@ -480,9 +480,9 @@ function getCustomerInfo(customerId) {
             $('#customer-timezone').text(convertNumberToTimezone(data.timezone));
             $('#customer-gender').text(convertGender(data.gender));
             $('#customer-locale').text(convertLocale(data.locale));
-            if (!data.note){
+            if (!data.note) {
                 $('#customer-note').text("Make a note for this customer");
-            }else{
+            } else {
                 $('#customer-note').text(data.note);
             }
             $('#customer-note-edit').text(data.note);
@@ -507,7 +507,7 @@ function hideEditNoteForm() {
 
 
 function saveNote() {
-   var content = $('#customer-note-edit').val();
+    var content = $('#customer-note-edit').val();
     $.ajax({
         url: '/messenger/saveNote',
         type: "POST",
@@ -520,7 +520,6 @@ function saveNote() {
             getCustomerInfo(currentCustomer);
         }
     });
-
 
 
 }
@@ -951,11 +950,15 @@ function getListTicketByConversation() {
         dataType: "json",
         success: function (data) {
             $.each(data, function (index) {
+                var statusColor = getstatuscolor(data[index].statusid);
                 $('#ticket-information-list').append(
-                    '<li class="list-group-item" style="text-align: center">' +
-                    '<a href="/followticket?ticketid='+ data[index].id +'" target="_blank" style="text-align: center" target=""><b>'+
-                        data[index].name +
+                    '<li class="list-group-item">' +
+                    '<a  href="/followticket?ticketid=' + data[index].id + '" target="_blank" target="" title="'+data[index].name +'" style=" overflow: hidden;white-space: nowrap; text-overflow: ellipsis;width: 100px;">' +
+                    data[index].name +
                     '</a>' +
+                    '<span class="pull-right" style="margin-left: 5px; width: 45px">'+ convertStatusNumberToString(data[index].statusid ) +'</span>' +
+                    '<span class="fa fa-circle pull-right"  style="margin-top: 3px;color:' + statusColor + '"></span>'+
+
                     '</li>'
                 );
             });
@@ -1146,5 +1149,26 @@ function sortticket(url, currentMessageId) {
             alert("Fail to")
         }
     })
+}
+function convertStatusNumberToString(statusid) {
+    var result = '';
+    switch (statusid){
+        case 1:
+            result = 'Assigned   ';
+            break;
+        case 2:
+            result = 'In progress';
+            break;
+        case 3:
+            result = 'Solved     ';
+            break;
+        case 4:
+            result = 'Closed     ';
+            break;
+        case 5:
+            result = 'Expired    ';
+            break;
+    }
+    return result;
 }
 /*End Ticket Filter*/

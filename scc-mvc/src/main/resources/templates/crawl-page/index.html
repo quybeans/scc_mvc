@@ -6,6 +6,9 @@
     <header class="main-header" th:include="Head::header"></header>
     <aside class="main-sidebar" th:include="SideBar::aside"></aside>
 
+    <link rel="stylesheet" href="/css/jquery-ui.css">
+    <link rel="stylesheet" href="/css/popup-confirm.css">
+    <script src="/js/jquery-ui.js"></script>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -43,12 +46,15 @@
                             <td th:text="${pagesCrawler.type}"></td>
                             <td th:text="${pagesCrawler.category}"></td>
                             <td th:switch="${pagesCrawler.crawler}">
-                                <button class="btn btn-danger" type="submit" name="btnAction"
+                                <button class="btn btn-warning" type="submit" name="btnAction"
                                         value="Deactivate"
                                         th:case="true">Deactivate
                                 </button>
                                 <button class="btn btn-primary" type="submit" name="btnAction" value="Activate"
                                         th:case="false">Activate
+                                </button>
+                                <button class="btn btn-danger" type="button" name="btnAction" id="btnDelete" onclick="showConfirm(this);"
+                                        th:value="${pagesCrawler.pageid}">Delete
                                 </button>
                             </td>
                         </form>
@@ -104,6 +110,10 @@
 
         </section>
     </div>
+</div>
+
+<div id="dialog-confirm" title="Delete this crawl page?" style="display: none">
+    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>This crawl page will be permanently deleted and cannot be recovered. Are you sure?</p>
 </div>
 
 </div>
@@ -203,6 +213,38 @@
                 alert("Invalid link");
             }
         })
+    }
+
+    function showConfirm(element) {
+        $( function() {
+            $( "#dialog-confirm" ).dialog({
+                resizable: false,
+                height: "auto",
+                width: 400,
+                modal: true,
+                buttons: {
+                    "Delete": function() {
+                        $.ajax({
+                            url: '/crawl-page/deactivateCrawlerPage',
+                            type: "POST",
+                            dataType: "json",
+                            data: {
+                                pageId: element.value,
+                                btnAction: 'Delete'
+                            },
+                            success: function (data) {
+
+                            }
+                        });
+                        $( this ).dialog( "close" );
+                        location.reload();
+                    },
+                    Cancel: function() {
+                        $( this ).dialog( "close" );
+                    }
+                }
+            });
+        } );
     }
 
 </script>

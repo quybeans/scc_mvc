@@ -14,4 +14,5 @@ public interface UserfacebookaccountService {
     UserfacebookaccountEntity update(int userId, int facebookAccountId);
     UserfacebookaccountEntity deactivate(int userId, int facebookAccountId);
     UserfacebookaccountEntity activate(int userId, int facebookAccountId);
+    Integer deleteAccount(int userId, int facebookAccountId);
 }

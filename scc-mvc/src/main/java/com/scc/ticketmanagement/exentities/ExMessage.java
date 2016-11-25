@@ -7,6 +7,15 @@ import com.scc.ticketmanagement.Entities.MessageEntity;
  */
 public class ExMessage extends MessageEntity {
     private boolean ticket;
+    private String sendBy;
+
+    public String getSendBy() {
+        return sendBy;
+    }
+
+    public void setSendBy(String sendBy) {
+        this.sendBy = sendBy;
+    }
 
     public boolean isTicket() {
         return ticket;

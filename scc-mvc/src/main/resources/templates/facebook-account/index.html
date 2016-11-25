@@ -3,7 +3,10 @@
       xmlns:fb="http://www.facebook.com/2008/fbml">
 <head>
     <title>Manage page</title>
-
+    <link rel="stylesheet" href="/css/facebookaccount.css">
+    <link rel="stylesheet" href="/css/jquery-ui.css">
+    <link rel="stylesheet" href="/css/popup-confirm.css">
+    <script src="/js/jquery-ui.js"></script>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -44,13 +47,19 @@
                                 <a th:href="@{'http://www.fb.com/' + ${account.facebookuserid}}"
                                    th:text="${account.facebookusername}"></a>
                             </td>
-
                             <td th:switch="${account.active}">
-                                <button class="btn btn-danger" type="submit" name="btnAction" value="Deactivate"
+                                <span  th:case="true"><span class="fa fa fa-circle active"></span>Active</span>
+                                <span  th:case="false"><span class="fa fa fa-circle inactive"></span>Inactive</span>
+                            </td>
+                            <td th:switch="${account.active}">
+                                <button class="btn btn-warning" type="submit" name="btnAction" value="Deactivate"
                                         th:case="true">Deactivate
                                 </button>
                                 <button class="btn btn-primary" type="submit" name="btnAction" value="Activate"
                                         th:case="false">Activate
+                                </button>
+                                <button class="btn btn-danger" type="button" name="btnAction" id="btnDelete" onclick="showConfirm(this);"
+                                        th:value="${account.facebookaccountid}">Delete
                                 </button>
                             </td>
                         </form>
@@ -99,6 +108,10 @@
                 </div>
 
             </div>
+        </div>
+
+        <div id="dialog-confirm" title="Delete this account?" style="display: none">
+            <p><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>This account will be permanently deleted and cannot be recovered. Are you sure?</p>
         </div>
 
     </div>
@@ -212,7 +225,42 @@
 
         }
 
+        function showConfirm(element) {
+//        $('#btnDelete').click(function( event ) {
+//            event.preventDefault();
+//        });
+//        element.preventDefault();
 
+            $( function() {
+                $( "#dialog-confirm" ).dialog({
+                    resizable: false,
+                    height: "auto",
+                    width: 400,
+                    modal: true,
+                    buttons: {
+                        "Delete": function() {
+                            $.ajax({
+                                url: '/facebook-account/deactivateFbAccount',
+                                type: "POST",
+                                dataType: "json",
+                                data: {
+                                    facebookAccountId: element.value,
+                                    btnAction: 'Delete'
+                                },
+                                success: function (data) {
+
+                                }
+                            });
+                            $( this ).dialog( "close" );
+                            location.reload();
+                        },
+                        Cancel: function() {
+                            $( this ).dialog( "close" );
+                        }
+                    }
+                });
+            } );
+        }
     </script>
 </div>
 </body>

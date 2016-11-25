@@ -92,7 +92,7 @@
 .chat li.right .chat-body {
     padding: 5px 5px 5px 10px;
     margin-right: 10px;
-    background-color: #bae8ed;
+    background-color: #d3f5f7;
     border-radius: 5px;
     max-width: 75%;
     min-width: 33%;
@@ -475,9 +475,30 @@ input[type=number]::-webkit-outer-spin-button {
 
 #ticket-button{
     cursor: pointer;
-    width: 110px;
+    width: 140px;
 }
 
 #ticket-button a{
     text-align: center;
+}
+
+.container{
+    margin-left: -31px;
+}
+
+#customer-button{
+    width: 145px;
+    text-align: center;
+    cursor: pointer;
+}
+
+
+#customer-button{
+     width: 145px;
+     text-align: center;
+     cursor: pointer;
+ }
+
+#customer-note{
+    color: #090b0c;
 }

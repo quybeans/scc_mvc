@@ -89,4 +89,5 @@ public class BrandpageEntity {
         result = 31 * result + (crawl ? 1 : 0);
         return result;
     }
+
 }

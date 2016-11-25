@@ -15,6 +15,7 @@
       <mapping class="com.scc.ticketmanagement.Entities.PostEntity"/>
       <mapping class="com.scc.ticketmanagement.Entities.MessageitemEntity"/>
       <mapping class="com.scc.ticketmanagement.Entities.BrandpageEntity"/>
+      <mapping class="com.scc.ticketmanagement.Entities.UserMessageEntity"/>
       <!-- DB schema will be updated if needed -->
     <!-- <property name="hbm2ddl.auto">update</property> -->
   </session-factory>

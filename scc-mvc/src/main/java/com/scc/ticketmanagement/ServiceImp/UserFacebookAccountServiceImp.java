@@ -69,5 +69,10 @@ public class UserFacebookAccountServiceImp implements UserfacebookaccountService
         return entity;
     }
 
+    @Override
+    public Integer deleteAccount(int userId, int facebookAccountId) {
+        return repository.deleteAccount(userId, facebookAccountId);
+    }
+
 
 }
