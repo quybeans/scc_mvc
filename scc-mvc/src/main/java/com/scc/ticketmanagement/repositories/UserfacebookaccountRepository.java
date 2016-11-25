@@ -2,8 +2,10 @@ package com.scc.ticketmanagement.repositories;
 
 import com.scc.ticketmanagement.Entities.UserfacebookaccountEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,4 +22,9 @@ public interface UserfacebookaccountRepository extends JpaRepository<Userfaceboo
     List<UserfacebookaccountEntity> getUserfacebookaccountsByUserId(@Param("userId") Integer userId);
 
 
+    @Transactional
+    @Modifying
+    @Query("DELETE  FROM UserfacebookaccountEntity u WHERE u.userid =:userId AND u.facebookaccountid =:facebookAccountId")
+    Integer deleteAccount(@Param("userId") Integer userId,
+                          @Param("facebookAccountId") Integer facebookAccountId);
 }

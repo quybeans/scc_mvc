@@ -14,6 +14,7 @@ public class Conversation {
     private String lastMessageId;
     private Timestamp sentTime;
     private boolean read;
+    private String createdBy;
 
     public String getMessageId() {
         return messageId;
@@ -95,5 +96,13 @@ public class Conversation {
 
     public void setSenderPicture(String senderPicture) {
         this.senderPicture = senderPicture;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 }

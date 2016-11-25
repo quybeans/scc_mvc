@@ -152,6 +152,8 @@ public class PageController {
         } else if (button.equals("Activate")) {
             pageService.activatePage(pageId);
             brandPageService.addBrandPageToManage(brandId, pageId);
+        }else if (button.equals("Delete")) {
+            brandPageService.deleteBrandPageByBrandIdAndPageId(brandId, pageId);
         }
         return "redirect:/page/index";
     }
@@ -174,6 +176,8 @@ public class PageController {
         } else if (button.equals("Activate")) {
             pageService.activateCrawlerPage(pageId);
             brandPageService.addBrandPageToCrawl(brandId, pageId);
+        }else if (button.equals("Delete")) {
+            brandPageService.deleteBrandPageByBrandIdAndPageId(brandId, pageId);
         }
         return "redirect:/crawl-page/index";
     }

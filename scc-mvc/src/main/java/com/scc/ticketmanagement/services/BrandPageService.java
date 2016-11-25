@@ -8,4 +8,5 @@ public interface BrandPageService {
     public void addBrandPageToCrawl(int brandId, String pageId);
     public void removeBrandPageToManage(int brandId, String pageId);
     public void removeBrandPageToCrawl(int brandId, String pageId);
+    public int deleteBrandPageByBrandIdAndPageId(int brandId, String pageId);
 }

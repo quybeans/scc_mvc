@@ -55,6 +55,11 @@ public class BrandPageServiceImp implements BrandPageService {
     }
 
     @Override
+    public int deleteBrandPageByBrandIdAndPageId(int brandId, String pageId) {
+        return brandPageRepository.deleteBrandPageByPageIdAndBrandId(brandId, pageId);
+    }
+
+    @Override
     public void addBrandPageToCrawl(int brandId, String pageId) {
         BrandpageEntity brandpage = null;
         try {

@@ -23,7 +23,7 @@ public interface PageRepository extends JpaRepository<PageEntity, String> {
     List<PageEntity> getAllPageByBrandId(@Param("brandId") Integer brandId);
 
     @Query("select p from PageEntity p where p.pageid IN " +
-            "(SELECT m.pageid FROM BrandpageEntity m, BrandEntity b WHERE m.brandid = b.id AND b.id = :brandId AND m.manage = TRUE)" +
+            "(SELECT m.pageid FROM BrandpageEntity m, BrandEntity b WHERE m.brandid = b.id AND b.id = :brandId AND (m.crawl = TRUE AND m.manage = TRUE))" +
             "AND p.accesstoken !='' AND p.active = TRUE")
     List<PageEntity> getAllActivePageByBrandId(@Param("brandId") Integer brandId);
 
@@ -32,8 +32,10 @@ public interface PageRepository extends JpaRepository<PageEntity, String> {
     List<PageEntity> getAllShowPostPageByBrandId(@Param("brandId") Integer brandId);
 
     @Query("select p from PageEntity p where p.pageid IN " +
-            "(SELECT m.pageid FROM BrandpageEntity m, BrandEntity b WHERE m.brandid = b.id AND b.id = :brandId)")
+            "(SELECT m.pageid FROM BrandpageEntity m, BrandEntity b WHERE m.brandid = b.id AND b.id = :brandId AND (m.crawl = TRUE AND m.manage = FALSE))")
     List<PageEntity> getAllCrawlerPageByBrandId(@Param("brandId") Integer brandId);
+
+
 
     List<PageEntity> findByPageidIn(List<String> pageid);
 }
