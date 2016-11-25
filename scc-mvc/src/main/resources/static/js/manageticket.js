@@ -15,7 +15,7 @@ $(document).ready(function () {
         sAjaxDataProp : "",
         columns: [
             {title: "ID", data:"id",visible:false},
-            {title: "Name",data:"name" },
+            {title: "Title",data:"name" },
             {title: "Created By",data:"createbyuser"},
             {title: "Assignee",data:"assigneeuser"},
             {title: "Status",data:"currentstatus"},

@@ -592,7 +592,8 @@ public class TicketController {
             extendticket.setStatusid(tk.getStatusid());
             extendticket.setCreatedtime(tk.getCreatedtime());
             extendticket.setNote(tk.getNote());
-
+            extendticket.setPriority(tk.getPriority());
+            extendticket.setStatusid(tk.getStatusid());
 
             //Get UserEntity cua ng tao ra ticket
             UserEntity createTicketUser =userRepository.findOne(extendticket.getCreatedby());

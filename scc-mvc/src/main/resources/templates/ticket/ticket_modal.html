@@ -1,0 +1,142 @@
+
+<div class="modal fade" id="ticket-modal" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Tickets in the system</h4>
+                <div>
+                    <div class="input-group pull-right" style="width: 50%">
+                        <input type="text" onkeyup="searchticketbyname($('#searchticket').val())" class="form-control" placeholder="Search Ticket Name" id="searchticket">
+                        <span class="input-group-btn" id="createbtn">
+
+
+                        </span>
+                    </div>
+
+                </div >
+
+
+
+                </div>
+
+            <div class="modal-body" style="max-height: 500px;overflow: auto">
+                <table class="table table-hover" >
+                    <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th onclick="sortticket('createbyuser')">Created by</th>
+                        <th onclick="sortticket('assignee')">Assignee</th>
+                        <th onclick="sortticket('statusid')">Status</th>
+                        <th onclick="sortticket('priority')" >Priority</th>
+                        <th onclick="sortticket('createdtime')">Created Time</th>
+                    </tr>
+                    </thead>
+                    <tbody id="ticket-list">
+
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="modal-footer">
+                <div style="" class="pull-right" >
+                    Status:
+                    <select id="filterstatus">
+                        <option></option>
+                        <option value="1">
+                            Assigned
+                        </option>
+                        <option value="2">InProcess</option>
+                        <option value="3">Solved</option>
+                        <option value="4">Close</option>
+                        <option value="5">Expired</option>
+                    </select>
+                    Priority:
+                    <select id="filterpriority">
+                        <option></option>
+                    </select>
+                    Created by:
+                    <select id="filtercreatedby">
+                        <option></option>
+                    </select>
+                    Assignee:
+                    <select id="filterassignee">
+                        <option></option>
+                    </select>
+                    <button class="btn btn-default" onclick="filterticket()" ><i class="fa fa-filter"></i>Filter</button>
+                    <button class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="createticketModal" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Create Ticket</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form group">
+                    <label for="newticketname">Title</label>
+                    <input spellcheck="false" type="text" class="form-control" id="newticketname"/>
+                </div>
+                <div class="form group">
+                    <label for="newticketpriority"> Priority</label>
+                    <select id="newticketpriority" class="form-control" >
+                    </select>
+                </div>
+                <div class="form group">
+                    <label for="assignee"> Assignee</label>
+                    <select id="newticketassignee" class="form-control" >
+                    </select>
+                </div>
+                <div class="form group">
+                    <label for="newticketnote">Note</label>
+                    <textarea spellcheck="false" class="form-control" id="newticketnote"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary " id="btnCreateTicket">Create Ticket</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="createticketstaffModal" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Create Ticket For you</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form group">
+                    <label for="newticketstaffname">Title</label>
+                    <input type="text" class="form-control" id="newticketstaffname"/>
+                </div>
+                <div class="form group">
+                    <label for="newticketstaffpriority"> Priority</label>
+                    <select id="newticketstaffpriority" class="form-control" >
+                    </select>
+                </div>
+                <div class="form group">
+                    <label for="newticketstaffnote">Note</label>
+                    <textarea class="form-control" id="newticketstaffnote"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary " id="btnCreatestaffTicket">Create Ticket</button>
+            </div>
+        </div>
+
+    </div>
+</div>
