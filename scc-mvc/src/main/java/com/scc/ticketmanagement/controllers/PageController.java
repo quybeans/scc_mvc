@@ -1,5 +1,6 @@
 package com.scc.ticketmanagement.controllers;
 
+import com.scc.ticketmanagement.Entities.BrandpageEntity;
 import com.scc.ticketmanagement.Entities.PageEntity;
 import com.scc.ticketmanagement.Entities.UserEntity;
 import com.scc.ticketmanagement.services.BrandPageService;
@@ -48,7 +49,13 @@ public class PageController {
         HttpSession session = request.getSession(false);
         int brandId = this.getCurrentUserBrandId(session);
 
-        List<PageEntity> pages = pageService.getPagesByBrandId(brandId);
+        List<PageEntity> pages = pageService.getAllActivePageByBrandId(brandId);
+        for (PageEntity page: pages) {
+            BrandpageEntity brandpage = pageService.getBrandPageByBrandIdAndPageId(brandId,page.getPageid());
+            if (brandpage != null){
+                page.setActive(brandpage.isCrawl() && brandpage.isManage());
+            }
+        }
         model.addAttribute("pages", pages);
 
         List<PageEntity> crawlerPages = pageService.getCrawlerPagesByBrandId(brandId);
@@ -128,7 +135,7 @@ public class PageController {
         System.out.println(pageName);
         System.out.println(pageCategory);
 
-        pageService.createPage(pageName, pageId, "", pageCategory);
+        pageService.createPage(pageName, pageId, null, pageCategory);
         brandPageService.addBrandPageToCrawl(brandId, pageId);
         return "Add page to crawl successfully";
     }

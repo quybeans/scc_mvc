@@ -1,5 +1,6 @@
 package com.scc.ticketmanagement.repositories;
 
+import com.scc.ticketmanagement.Entities.BrandpageEntity;
 import com.scc.ticketmanagement.Entities.PageEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -19,12 +20,15 @@ public interface PageRepository extends JpaRepository<PageEntity, String> {
 
     @Query("select p from PageEntity p where p.pageid IN " +
             "(SELECT m.pageid FROM BrandpageEntity m, BrandEntity b WHERE m.brandid = b.id AND b.id = :brandId)" +
-            "AND p.accesstoken !='' ")
+            "AND p.accesstoken  is not null ")
     List<PageEntity> getAllPageByBrandId(@Param("brandId") Integer brandId);
+
+    @Query("select b from BrandpageEntity b where b.brandid=:brandId and b.pageid =:pageId")
+    BrandpageEntity getBrandPageByBrandIdAndPageId(@Param("brandId") Integer brandId, @Param("pageId") String pageId);
 
     @Query("select p from PageEntity p where p.pageid IN " +
             "(SELECT m.pageid FROM BrandpageEntity m, BrandEntity b WHERE m.brandid = b.id AND b.id = :brandId AND (m.crawl = TRUE AND m.manage = TRUE))" +
-            "AND p.accesstoken !='' AND p.active = TRUE")
+            "AND p.accesstoken is not null")
     List<PageEntity> getAllActivePageByBrandId(@Param("brandId") Integer brandId);
 
     @Query("select p from PageEntity p where p.pageid IN " +

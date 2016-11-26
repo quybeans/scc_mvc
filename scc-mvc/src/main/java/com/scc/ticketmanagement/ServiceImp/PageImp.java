@@ -1,5 +1,6 @@
 package com.scc.ticketmanagement.ServiceImp;
 
+import com.scc.ticketmanagement.Entities.BrandpageEntity;
 import com.scc.ticketmanagement.Entities.PageEntity;
 import com.scc.ticketmanagement.repositories.PageRepository;
 import com.scc.ticketmanagement.services.PageService;
@@ -31,13 +32,17 @@ public class PageImp implements PageService {
                 page = new PageEntity();
                 page.setPageid(pageId);
                 page.setName(pageName);
-                page.setAccesstoken(pageAccessToken);
+                if(pageAccessToken != null){
+                    page.setAccesstoken(pageAccessToken);
+                }
                 page.setCategory(category);
                 page.setCrawler(false);
                 page.setType("Facebook");
                 page.setActive(FacebookUtility.subscribePageToWebhook(pageId,pageAccessToken));
             } else {
-                page.setAccesstoken(pageAccessToken);
+                if(pageAccessToken != null){
+                    page.setAccesstoken(pageAccessToken);
+                }
                 page.setCategory(category);
                 page.setType("Facebook");
                 page.setActive(FacebookUtility.subscribePageToWebhook(pageId,pageAccessToken));
@@ -113,6 +118,10 @@ public class PageImp implements PageService {
         return pageRepository.getPageById(pageId).getAccesstoken();
     }
 
+    @Override
+    public BrandpageEntity getBrandPageByBrandIdAndPageId(int brandId, String pageId) {
+        return pageRepository.getBrandPageByBrandIdAndPageId(brandId, pageId) ;
+    }
 
 
 }

@@ -1,5 +1,6 @@
 package com.scc.ticketmanagement.services;
 
+import com.scc.ticketmanagement.Entities.BrandpageEntity;
 import com.scc.ticketmanagement.Entities.PageEntity;
 
 import java.util.List;
@@ -20,4 +21,6 @@ public interface PageService {
     void activatePage(String pageUid);
     void activateCrawlerPage(String pageUid);
     String getPageAccessTokenByPageId(String pageId);
+
+    BrandpageEntity getBrandPageByBrandIdAndPageId(int brandId, String pageId);
 }

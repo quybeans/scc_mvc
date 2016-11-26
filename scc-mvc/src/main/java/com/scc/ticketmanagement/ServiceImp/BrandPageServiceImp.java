@@ -40,6 +40,7 @@ public class BrandPageServiceImp implements BrandPageService {
         BrandpageEntity brandpage = brandPageRepository.getBrandPageByBrandIdAndPageId(brandId, pageId);
         if (brandpage != null){
             brandpage.setManage(false);
+            brandpage.setCrawl(false);
             brandPageRepository.save(brandpage);
         }
 
@@ -68,10 +69,11 @@ public class BrandPageServiceImp implements BrandPageService {
                 brandpage = new BrandpageEntity();
                 brandpage.setBrandid(brandId);
                 brandpage.setPageid(pageId);
+                brandpage.setCrawl(true);
+                brandPageRepository.save(brandpage);
             }
 
-            brandpage.setCrawl(true);
-            brandPageRepository.save(brandpage);
+
         } catch (NullPointerException e) {
             e.printStackTrace();
         }

@@ -266,36 +266,38 @@ function register_popup(id, name) {
     // element = element + '<div class="popup-head-left">' + name + '</div>';
     // element = element + '<div class="popup-head-right"><a href="javascript:close_popup(\'' + id + '\');">&#10005;</a></div>';
     // element = element + '<div style="clear: both"></div></div><div class="popup-messages"></div></div>';
-
+    var pageId = currentPageId;
+    var pageName = currentPageName;
+    var pageAvt = currentPageAvt;
     var isFirstLoadDone = false;
     var senderAvt = $('#sender-picture'+ id).val();
     $.ajax({
         url: '/messenger/getConversationBySenderIdWithPage',
         type: "POST",
         data: {
-            pageId: currentPageId,
+            pageId: pageId,
             senderId: id,
             pageNum: 1
         },
         dataType: "json",
         success: function (data) {
-            var chatMessage = '<input type="hidden" id="chatOfPage' + currentPageId + '" value="' + currentPageId + '"/>';
+            var chatMessage = '<input type="hidden" id="chatOfPage' + pageId + '" value="' + pageId + '"/>';
             var dataReversed = data.reverse();
             var a;
             $.each(dataReversed, function (i) {
                 a = dataReversed[i].id;
                 score = dataReversed[i].sentimentScrore;
-                if (dataReversed[i].senderid == currentPageId) {
+                if (dataReversed[i].senderid == pageId) {
                     chatMessage = chatMessage.concat(
                         '<li class="right clearfix"><span class="chat-img pull-right">' +
-                        ' <img src="' + currentPageAvt + '" alt="User Avatar"/>' +
+                        ' <img src="' + pageAvt + '" alt="User Avatar"/>' +
                         ' </span>' +
                         '<div style="margin-right: 5px" class="chat-body clearfix pull-right">' +
                         ' <div class="header">' +
                         '<small class=" text-muted ">' +
                         $.format.date(dataReversed[i].createdAt, "HH:mm") +
                         '</small>' +
-                        '<strong class="pull-right primary-font">'+currentPageName+'</strong>' +
+                        '<strong class="pull-right primary-font">'+pageName+'</strong>' +
                         '</div>' +
                         '<p style=" ">' +
                         dataReversed[i].content +
@@ -326,7 +328,7 @@ function register_popup(id, name) {
             });
 
             var fullScreenLink = 'http://localhost:9000/messenger/ticket?senderid=' + id +
-            '&receiverid=' + currentPageId + '&messageid=null&messageEnd=null';
+            '&receiverid=' + pageId + '&messageid=null&messageEnd=null';
 
             var element3 = '<div class="popup-box chat-popup" id="' + id + '">' +
                 '<div class="popup-head">' +
@@ -366,29 +368,29 @@ function register_popup(id, name) {
                 url: '/messenger/getConversationBySenderIdWithPage',
                 type: "POST",
                 data: {
-                    pageId: currentPageId,
+                    pageId: pageId,
                     senderId: id,
                     pageNum: 1
                 },
                 dataType: "json",
                 success: function (data) {
                     $('#ul'+id).empty();
-                    var chatMessage = '<input type="hidden" id="chatOfPage' + currentPageId + '" value="' + currentPageId + '"/>';
+                    var chatMessage = '<input type="hidden" id="chatOfPage' + pageId + '" value="' + pageId + '"/>';
                     var dataReversed = data.reverse();
                     var a;
                     $.each(dataReversed, function (i) {
                         a = dataReversed[i].id;
-                        if (dataReversed[i].senderid == currentPageId) {
+                        if (dataReversed[i].senderid == pageId) {
                             chatMessage = chatMessage.concat(
                                 '<li class="right clearfix"><span class="chat-img pull-right">' +
-                                ' <img src="' + currentPageAvt + '" alt="User Avatar"/>' +
+                                ' <img src="' + pageAvt + '" alt="User Avatar"/>' +
                                 ' </span>' +
                                 '<div style="margin-right: 5px" class="chat-body clearfix pull-right">' +
                                 ' <div class="header">' +
                                 '<small class=" text-muted ">' +
                                 $.format.date(dataReversed[i].createdAt, "HH:mm") +
                                 '</small>' +
-                                '<strong class="pull-right primary-font">'+currentPageName+'</strong>' +
+                                '<strong class="pull-right primary-font">'+pageName+'</strong>' +
                                 '</div>' +
                                 '<p style=" ">' +
                                 dataReversed[i].content +
