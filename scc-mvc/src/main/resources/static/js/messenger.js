@@ -221,7 +221,7 @@ function firstLoadConversationBySenderId() {
                         // moment(dataReversed[i].createdAt).fromNow() +
                         $.format.date(dataReversed[i].createdAt, "HH:mm") +
                         '</small>' +
-                        '<a class="pull-right primary-font" style="margin-left: 10px">' + dataReversed[i].sendBy +  ' - ' + currentPageName + '</a>' +
+                        '<a class="pull-right primary-font" style="margin-left: 10px"><span style="border: 1px solid blue; padding: 0px 5px 0px 5px; margin-right: 5px;border-radius: 3px">' + dataReversed[i].sendBy + '</span>' + currentPageName + '</a>' +
                         '</div>' +
                         '<p style="text-align: right">' +
                         dataReversed[i].content +
@@ -290,7 +290,7 @@ function reloadConversationBySenderId() {
                         '<small class=" text-muted ">' +
                         $.format.date(dataReversed[i].createdAt, "HH:mm") +
                         '</small>' +
-                        '<a class="pull-right primary-font" style="margin-left: 10px">' + dataReversed[i].sendBy +  ' - ' + currentPageName + '</a>' +
+                        '<a class="pull-right primary-font" style="margin-left: 10px"><span style="border: 1px solid blue; padding: 0px 5px 0px 5px; margin-right: 5px;border-radius: 3px">' + dataReversed[i].sendBy + '</span>'  + currentPageName + '</a>' +
                         '</div>' +
                         '<p style="text-align: right">' +
                         dataReversed[i].content +
@@ -387,7 +387,7 @@ function getConversationBySenderIdWithPage() {
                             '<small class=" text-muted ">' +
                             $.format.date(dataReversed[i].createdAt, "HH:mm") +
                             '</small>' +
-                            '<a class="pull-right primary-font" style="margin-left: 10px"><span style="border: 1px solid blue; padding: 0px 5px 0px 5px; border-radius: 3px">' + dataReversed[i].sendBy + '</span>' + ' - ' + currentPageName + '</a>' +
+                            '<a class="pull-right primary-font" style="margin-left: 10px"><span style="border: 1px solid blue; padding: 0px 5px 0px 5px; margin-right: 5px; border-radius: 3px">' + dataReversed[i].sendBy + '</span>' + currentPageName + '</a>' +
                             '</div>' +
                             '<p style="text-align: right">' +
                             dataReversed[i].content +
