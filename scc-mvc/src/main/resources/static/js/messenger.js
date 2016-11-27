@@ -15,7 +15,7 @@ var currentCustomerAvt = '';
 var currentPageName = '';
 var currentPageAvt = '';
 var isFirstLoadPage = true;
-var currentMessageId = '0';
+var currentCmt = '0';
 
 
 function getParameterByName(name, url) {
@@ -585,7 +585,7 @@ function changeIconSentimentScore(score) {
 
 // function showTicket(a) {
 //     var messageId = a.id;
-//     currentMessageId = a.id;
+//     currentCmt = a.id;
 //     $('#ticket-list').empty();
 //     $.ajax({
 //         url: '/getallticket',
@@ -620,36 +620,9 @@ function changeIconSentimentScore(score) {
 // }
 
 function showTicket(a) {
-    $('#ticket-list').empty();
-    var messageId = a.id;
-    currentMessageId = a.id;
-    $.ajax({
-        url: '/getallticket',
-        type: "GET",
-        dataType: "json",
-        success: function (data) {
-            $.each(data, function (index) {
-                var statusColor = getstatuscolor(data[index].statusid);
-
-                $('#ticket-list').append(
-                    '<div class="ticket" onclick="createTicket(' + data[index].id + ',\'' + currentMessageId + '\')">'
-                    + '<div class="title" style="background-color:  ' + statusColor + '">' + data[index].name + '</div>'
-                    + '<div>Status:&nbsp;'
-                    + '<span class="fa fa-circle" style="color:' + statusColor + '"></span>&nbsp;'
-                    + data[index].currentstatus
-                    + '</div>'
-                    + '<div>Created by:&nbsp;<span style="color: black; font-weight: bold">'
-                    + data[index].createbyuser
-                    + '</span></div>'
-                    + '<div>Current assignee:&nbsp;<span style="color: black; font-weight: bold">' + data[index].assigneeuser + '</span>'
-                    + '</div>'
-                    + '<div></div>'
-                    + '</div>'
-                )
-            })
-        }
-    });
+    currentCmt =  a.id;
     $('#ticket-modal').modal('toggle');
+    showallticket();
 
 }
 
@@ -972,184 +945,7 @@ function getListTicketByConversation() {
 }
 
 /*Ticket Filter*/
-function sortticketbytime(currentCmt) {
-    sortticket("/sortbytime", currentCmt)
-}
-function sortticketbystatus() {
-    sortticket("/sortbystatus", currentCmt)
-}
-function showallticket() {
-    $('#ticket-list').empty();
-    $.ajax({
-        url: '/getallticket',
-        type: "GET",
-        dataType: "json",
-        success: function (data) {
-            $.each(data, function (index) {
-                var statusColor = getstatuscolor(data[index].statusid);
 
-                $('#ticket-list').append(
-                    '<div class="ticket">'
-                    + '<div class="title" style="background-color:  ' + statusColor + '">' + data[index].name + '</div>'
-                    + '<div>Status:&nbsp;'
-                    + '<span class="fa fa-circle" style="color:' + statusColor + '"></span>&nbsp;'
-                    + data[index].currentstatus
-                    + '</div>'
-                    + '<div>Created by:&nbsp;<span style="color: black; font-weight: bold">'
-                    + data[index].createbyuser
-                    + '</span></div>'
-                    + '<div>Current assignee:&nbsp;<span style="color: black; font-weight: bold">' + data[index].assigneeuser + '</span>'
-                    + '</div>'
-                    + '<div></div>'
-                    + '</div>'
-                )
-            })
-        }
-    });
-
-}
-$(document).on('change', '#tktimecheckbox', function () {
-    if (this.checked) {
-        sortticketbytime(currentMessageId)
-    } else {
-        showallticket()
-    }
-
-});
-$(document).on('change', '#tksttcheckbox', function () {
-    if (this.checked) {
-        sortticketbystatus(currentMessageId)
-    } else {
-        showallticket()
-    }
-
-});
-function filterticket() {
-    var status = $("#filterstatus").val();
-    var priority = $("#filterpriority").val();
-    var createdby = $("#filtercreatedby").val();
-    var assignee = $("#filterassignee").val();
-    $.ajax({
-        url: "/filterticket",
-        type: "POST",
-        data: {"status": status, "priority": priority, "createdby": createdby, "assignee": assignee},
-        success: function (data) {
-            $('#ticket-list').empty();
-            $.each(data, function (index) {
-                var statusColor = getstatuscolor(data[index].statusid);
-
-
-                $('#ticket-list').append(
-                    '<div class="ticket" onclick="createTicket(' + data[index].id + ',\'' + currentMessageId + '\')">'
-                    + '<div class="title" style="background-color:  ' + statusColor + '">' + data[index].name + '</div>'
-                    + '<div>Status:&nbsp;'
-                    + '<span class="fa fa-circle" style="color:' + statusColor + '"></span>&nbsp;'
-                    + data[index].currentstatus
-                    + '</div>'
-                    + '<div>Created by:&nbsp;<span style="color: black; font-weight: bold">'
-                    + data[index].createbyuser
-                    + '</span></div>'
-                    + '<div>Current assignee:&nbsp;<span style="color: black; font-weight: bold">' + data[index].assigneeuser + '</span>'
-                    + '</div>'
-                    + '<div></div>'
-                    + '</div>'
-                )
-            })
-        },
-        error: function () {
-            alert("filter fail")
-        }
-
-    })
-}
-function getallpriorityofbrand() {
-    $.ajax({
-        url: "/getallpriorityofbrand",
-        type: "GET",
-        success: function (data) {
-            for (var i = 0; i < data.length; i++) {
-                $("#filterpriority").append(
-                    '<option value="' + data[i].id + '">' + data[i].name + '</option>'
-                )
-            }
-        },
-        error: function () {
-            alert("fail to load priority for update")
-        }
-    })
-}
-function getalluser() {
-    $.ajax({
-        url: "/getalluser",
-        type: "GET",
-        success: function (data) {
-            for (var i = 0; i < data.length; i++) {
-                $("#filtercreatedby").append(
-                    '<option value="' + data[i].userid + '">' + data[i].firstname + ' ' + data[i].lastname + '</option>'
-                );
-                $("#filterassignee").append(
-                    '<option value="' + data[i].userid + '">' + data[i].firstname + ' ' + data[i].lastname + '</option>'
-                );
-            }
-
-        },
-        error: function () {
-            alert("Fail to load list user");
-        }
-    })
-}
-function getstatuscolor(statusid) {
-    switch (statusid) {
-        case 1:
-            return '#ffff00';
-            break;
-        case 2:
-            return '#00a65a';
-            break;
-        case 3:
-            return '#500a6f';
-            break;
-        case 4:
-            return 'gray';
-            break;
-        case 5:
-            return '#000000';
-            break;
-    }
-}
-function sortticket(url, currentMessageId) {
-    $.ajax({
-        url: url,
-        type: "GET",
-        success: function (data) {
-            $('#ticket-list').empty();
-            $.each(data, function (index) {
-                var statusColor = getstatuscolor(data[index].statusid);
-
-                $('#ticket-list').append(
-                    '<div class="ticket" onclick="createTicket(' + data[index].id + ',\'' + currentMessageId + '\')">'
-                    + '<div class="title" style="background-color:  ' + statusColor + '">' + data[index].name + '</div>'
-                    + '<div>Status:&nbsp;'
-                    + '<span class="fa fa-circle" style="color:' + statusColor + '"></span>&nbsp;'
-                    + data[index].currentstatus
-                    + '</div>'
-                    + '<div>Created by:&nbsp;<span style="color: black; font-weight: bold">'
-                    + data[index].createbyuser
-                    + '</span></div>'
-                    + '<div>Current assignee:&nbsp;<span style="color: black; font-weight: bold">' + data[index].assigneeuser + '</span>'
-                    + '</div>'
-                    + '<div></div>'
-                    + '</div>'
-                )
-
-
-            })
-        },
-        error: function () {
-            alert("Fail to")
-        }
-    })
-}
 function convertStatusNumberToString(statusid) {
     var result = '';
     switch (statusid){
