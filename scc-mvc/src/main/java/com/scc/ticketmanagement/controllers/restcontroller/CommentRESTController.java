@@ -5,6 +5,7 @@ import com.scc.ticketmanagement.Entities.UserCommentEntity;
 import com.scc.ticketmanagement.Entities.UserEntity;
 import com.scc.ticketmanagement.repositories.UserCommentRepository;
 import com.scc.ticketmanagement.services.CommentService;
+import com.scc.ticketmanagement.services.UserCommentService;
 import com.scc.ticketmanagement.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

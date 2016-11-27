@@ -64,10 +64,10 @@
     </script>
 
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-blue sidebar-mini" style="overflow: hidden">
 <div class="content-wrapper">
-    <section class="content">
-        <div style="height: 80vh; margin-top: 10px;margin-bottom: 10px;background-color: white; min-height: 300px; padding: 10px 20px 0px 0px">
+    <section class="content" style="height: 120vh; overflow-y: scroll">
+        <div style="height: 150vh; margin-top: 10px;margin-bottom: 10px;background-color: white; min-height: 500px; padding: 10px 20px 0px 0px">
             <div class="col-lg-12">
                 <div class="col-lg-3 col-xs-6">
                     <!-- small box -->
@@ -210,6 +210,94 @@
                 </div>
             </div>
 
+
+            <div class="col-lg-12" >
+                <div class="box box-warning">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><span class="fa fa-ticket" style="margin-right: 10px; color: #f39c12 "></span>Ticket overview</h3>
+
+                    </div>
+                    <div class="box-body" style="  position: relative; height: 100%; overflow: hidden">
+                        <div class="col-lg-3">
+                            <canvas id="countries" width="150px" height="150px"></canvas>
+                            <div style="margin-left: 10px; margin-top: 15px; font-style: italic; font-weight: bold">Pie chart all comments</div>
+                        </div>
+                        <div class="col-lg-2" style="height: 200px; position: static; border-right: 1px solid lightgray">
+                            <div id="chart-legend" style="height: 100%">
+                                <div><span class="fa fa-square" style="color: #ffbf00;margin-right: 10px"></span>Question
+                                </div>
+                                <div><span class="fa fa-square" style="color:#CD2D00;margin-right: 10px"></span>Negative
+                                </div>
+                                <div><span class="fa fa-square" style="color:#1AD018;margin-right: 10px"></span>Positive
+                                </div>
+                                <div style="margin-top: 50px">
+                                    <table class="table-bordered" width="100%">
+                                        <tr>
+                                            <th>Title</th>
+                                            <td style="text-align: center">No.</td>
+                                            <td style="text-align: center">%</td>
+
+                                        </tr>
+                                        <tr>
+                                        <tr>
+                                            <th>Question</th>
+                                            <td style="text-align: center" id="tbl_quest">0</td>
+                                            <td style="text-align: center" id="tbl_quest_percent">0</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Negative</th>
+                                            <td style="text-align: center" id="tbl_neg">0</td>
+                                            <td style="text-align: center" id="tbl_neg_percent">0</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Positive</th>
+                                            <td style="text-align: center" id="tbl_post">0</td>
+                                            <td style="text-align: center" id="tbl_post_percent">0</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-4">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-blue"><i class="fa fa-pencil "></i></span>
+
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Total posts</span>
+                                    <span class="info-box-number"><span id="post-count">0</span><small> posts</small></span>
+                                </div>
+                                <!-- /.info-box-content -->
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-4">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-aqua"><i class="fa fa-comment-o"></i></span>
+
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Total comments</span>
+                                    <span class="info-box-number"><span id="comment-count">0</span><small> comments</small></span>
+                                </div>
+                                <!-- /.info-box-content -->
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-4">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-green"><i class="fa fa-comments"></i></span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Total messages</span>
+                                    <span class="info-box-number"><span id="message-count">0</span><small> message</small></span>
+                                </div>
+                                <!-- /.info-box-content -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                    <div class="box-footer">
+
+                    </div>
+                    <!-- /.box-footer-->
+                </div>
+            </div>
         </div>
 
 

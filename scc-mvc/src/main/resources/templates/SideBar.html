@@ -143,15 +143,25 @@
                 +'      </a>'
                 +'      </li>'
 
+        var accountBar = '<li class="header" style="text-align: center">FACEBOOK PAGE & ACCOUNT</li>'
+            +'<li class="treeview">'
+            +'      <a href="/facebook-account/index">'
+            +'      <i class="fa fa-facebook"></i>'
+            +'      <span>Manage Account</span>'
+            +'<span class="pull-right-container">'
+            +'      <i class="fa fa-angle-left pull-right"></i>'
+            +'      </span>'
+            +'      </a>'
+            +'      </li>';
 
-        checkuserrole()
+        checkuserrole();
         function checkuserrole() {
             $.ajax({
                 url:"/getcurrentuser",
                 type:"GET",
                 success:function (data) {
                     if(data.roleid==4){
-                        $(".sidebar-menu").html(CustomerCareBar);
+                        $(".sidebar-menu").html(CustomerCareBar+ accountBar);
                     }else if(data.roleid==3){
                         $(".sidebar-menu").html(CustomerCareBar + FaceBookBar);
                     }else if(data.roleid==2){
