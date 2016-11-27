@@ -532,7 +532,7 @@ function getCustomerProfileId() {
     return (rs[1]);
 }
 
-function createTicket(ticketId, messageId) {
+function addMessageToTicket(ticketId, messageId) {
     $.ajax({
         url: '/messenger/addTicket',
         type: "POST",
@@ -599,7 +599,7 @@ function changeIconSentimentScore(score) {
 //
 //
 //                 $('#ticket-list').append(
-//                     '<div id="' + data[index].id + '" class="ticket" onclick="createTicket(' + data[index].id + ', \'' + messageId + '\')">'
+//                     '<div id="' + data[index].id + '" class="ticket" onclick="addMessageToTicket(' + data[index].id + ', \'' + messageId + '\')">'
 //                     + '<div class="title ' + statusColor + '">' + data[index].name + '</div>'
 //                     + '<div>Status:&nbsp;'
 //                     + '<span class="fa fa-circle"></span>&nbsp;'

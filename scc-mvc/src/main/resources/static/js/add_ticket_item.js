@@ -170,7 +170,7 @@ function appendTicket(data) {
     if (currentCmt.includes("mid")){
         alert(data.id);
         $('#ticket-list').append(
-            '<tr onclick="createTicket('+data.id+',\'' + currentCmt + '\')">'
+            '<tr onclick="addMessageToTicket('+data.id+',\'' + currentCmt + '\')">'
             +'<td>'+data.name+'</td>'
             +'<td>'+data.createbyuser+'</td>'
             +'<td>'+data.assigneeuser+'</td>'
