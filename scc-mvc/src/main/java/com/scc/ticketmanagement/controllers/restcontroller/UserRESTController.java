@@ -5,6 +5,7 @@ import com.scc.ticketmanagement.Entities.UserEntity;
 import com.scc.ticketmanagement.exentities.ExUser;
 import com.scc.ticketmanagement.repositories.BrandRepository;
 import com.scc.ticketmanagement.repositories.UserCommentRepository;
+import com.scc.ticketmanagement.repositories.UserMessageRepository;
 import com.scc.ticketmanagement.services.ProfileService;
 //import com.scc.ticketmanagement.services.UserCommentService;
 import com.scc.ticketmanagement.services.UserCommentService;
@@ -37,7 +38,8 @@ public class UserRESTController {
     @Autowired
     private UserCommentRepository userCommentRepository;
 
-
+    @Autowired
+    private UserMessageRepository userMessageRepository;
     @RequestMapping("user/getUserDetail")
     public UserEntity getUser(int userId) {
         UserEntity userEntity = userService.getUserByID(userId);
@@ -114,6 +116,23 @@ public class UserRESTController {
         return rs;
     }
 
+    @RequestMapping("user/countmessagemadelast7day")
+    public List<Long> countMessageMadeLast7Days(int userId) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        Date date = Calendar.getInstance().getTime();
+        dateFormat.format(date);
+        List<Long> rs = new ArrayList<>();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DAY_OF_YEAR, 1);
+        for (int i = 0; i <= 6; i++) {
+            cal.add(Calendar.DAY_OF_YEAR, -1);
+            rs.add(countMessage(userId,dateFormat.format(cal.getTime())));
+        }
+        Collections.reverse(rs);
+        return rs;
+    }
+
     @RequestMapping("user/countAllComment")
     public long countComment(int userId, String date) {
         try {
@@ -138,6 +157,37 @@ public class UserRESTController {
 
 
             return userCommentRepository.countCommentMadeByUserByTime(userId, new Timestamp(cal2.getTimeInMillis()), new Timestamp(cal.getTimeInMillis()));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    @RequestMapping("user/countAllMessage")
+    public long countMessage(int userId, String date) {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+            Date parsedDate = dateFormat.parse(date);
+            Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
+
+
+            Calendar cal = Calendar.getInstance(); // locale-specific
+            cal.setTime(timestamp);
+            cal.set(Calendar.HOUR_OF_DAY, 23);
+            cal.set(Calendar.MINUTE, 59);
+            cal.set(Calendar.SECOND, 59);
+            cal.set(Calendar.MILLISECOND, 59);
+
+            Calendar cal2 = Calendar.getInstance(); // locale-specific
+            cal2.setTime(timestamp);
+            cal2.set(Calendar.HOUR_OF_DAY, 0);
+            cal2.set(Calendar.MINUTE, 0);
+            cal2.set(Calendar.SECOND, 0);
+            cal2.set(Calendar.MILLISECOND, 0);
+
+
+            return userMessageRepository.countMessageByUserAndDate(userId, new Timestamp(cal2.getTimeInMillis()), new Timestamp(cal.getTimeInMillis()));
 
         } catch (Exception e) {
             e.printStackTrace();
