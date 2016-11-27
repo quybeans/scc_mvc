@@ -165,7 +165,7 @@ function loadticketitem(ticketid) {
                         +'<a>'+data[index].addedby+'</a>'+' added this comment to ticket'
                         +'</h3>'
                         +'<div class="timeline-body">'
-                        +'<img style="border-radius: 50px" onload="http://localhost:9000/img/user_img.jpg" src="http://graph.facebook.com/' + data[index].comment.createdBy + '/picture" alt="user image">'
+                        +'<img style="border-radius: 3px; height: 50px; width: 50px " onload="http://localhost:9000/img/user_img.jpg" src="http://graph.facebook.com/' + data[index].comment.createdBy + '/picture" alt="user image">'
                         + '<p class="message" style="margin-top: -53px">'
                         + '<a style="margin-left: 70px" href="https:/fb.com/' + data[index].comment.createdBy + '" target="_blank">'
                         + data[index].comment.createdByName
