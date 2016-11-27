@@ -153,10 +153,10 @@ function getAllConversationsByPageId(pageId) {
                         $('#messagesList').append(
                             '<div class="item" style="position: relative" id="conversation' + i + '" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId + '\')">'
                             + '<div>' +
-                            '<img class="senderAvt" src="' + data[i].senderPicture + '"><div class="conversation-sender-name text-info pull-left">' + data[i].senderName + '</div>' +
+                            '<img class="senderAvt" src="' + data[i].senderPicture + '"><div class="conversation-sender-name pull-left">' + data[i].senderName + '</div>' +
                             '<div class="sentTime text-muted pull-right"> ' + $.format.date(data[i].sentTime, "HH:mm") + '</div>' +
                             '</div>'
-                            + '<div class="crop text-info">' + data[i].lastMessage + '</div>'
+                            + '<div class="crop">' + data[i].lastMessage + '</div>'
                             + '</div>'
                         )
                     } else {

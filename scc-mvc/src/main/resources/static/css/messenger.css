@@ -169,7 +169,7 @@
     margin-right: 0px;
 }
 
-.cmtbox {
+.mess-cmtbox {
     height: 95vh;
     padding: 0 0 2%;
     background-color: white;
@@ -435,7 +435,7 @@ input[type=number]::-webkit-outer-spin-button {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    width: 270px;
+    width: 245px;
 }
 
 ​.addTicket{
