@@ -41,7 +41,8 @@
                             </a>
 
                         <div style="margin-left: 50px; margin-top: -10px">
-                            <input onkeyup="onReplyEnterHit(event)" id="txtReplyBox" value=""
+                        <input type="hidden" id="reply-token" value="">
+                            <input onkeyup="onReplyEnterHit(event,$(this))" id="txtReplyBox" value=""
                                    placeholder="Write a reply..."
                                    type="text"
                                    style="font-size:14px; color:black; width:90%; height: 25px; background-color: transparent;border:0; border-bottom: 1px solid blue; outline: none">

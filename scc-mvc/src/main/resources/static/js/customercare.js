@@ -28,10 +28,19 @@ function startup() {
 }
 
 //On reply press enter button
-function onReplyEnterHit(event){
-    if(event.keyCode == 13){
-        var replyString = $('#txtReplyBox').val();
-        if(replyString.length<=0){alert("Enter something..");return};
+function onReplyEnterHit(event, txtBox) {
+    if (event.keyCode == 13) {
+        var boxdiv = txtBox.closest('.reply-box');
+        var replyString = txtBox.val();
+        if (replyString.length <= 0) {
+            alert("Enter something..");
+            return
+        }
+        ;
+        var replyCommentId = boxdiv.attr("id").split("-")[0];
+        var replyToken = boxdiv.find("#reply-token").val();
+        sendComment(replyCommentId, replyString, replyToken);
+        txtBox.val("");
     }
 }
 
@@ -104,13 +113,13 @@ function setOnclickReplyAccount(imgsrc, name, token) {
     $('#reply-img').attr("src", "http://graph.facebook.com/" + imgsrc + "/picture");
     $('#reply-name').html(name);
     $('#reply-token').val(token);
+    refreshReplyBox();
+}
 
-    $.each(currentCmtwReply,function (index, value ) {
-
+function refreshReplyBox() {
+    $.each(currentCmtwReply, function (index, value) {
         getReplyByCommentId(value);
     })
-
-
 }
 
 //get All Facebook account belong to user
@@ -197,7 +206,7 @@ function findPostByContent(pagelist) {
 }
 
 function getAllPosts(pagelist, pageno) {
-    if (pageno == 1)$('#post-box').html('</br><div style="margin-right: 10px; text-align: center;font-size: 30px; width: 100%; height: 100%;"><span style=" color: cornflowerblue; " class="fa fa-circle-o-notch fa-spin"></span>Loading...</div>');
+    if (pageno == 1) $('#post-box').html('</br><div style="margin-right: 10px; text-align: center;font-size: 30px; width: 100%; height: 100%;"><span style=" color: cornflowerblue; " class="fa fa-circle-o-notch fa-spin"></span>Loading...</div>');
     if (pagelist.length != 0) {
         $.ajax({
             // url: '/allPostsByBrand',
@@ -259,7 +268,7 @@ function getReplyByCommentId(commentId) {
     $.ajax({
         url: '/commentbypost',
         type: "GET",
-        data: {postId: commentId},
+        data: {postId: commentId.split("_")[1]},
         dataType: "json",
         async: false,
         success: function (data) {
@@ -303,7 +312,8 @@ function getReplyByCommentId(commentId) {
                 // )
             });
             $('#' + commentId + '-replies').append(
-                replyItem
+                '<div id="' + commentId + '-reply-box" class="reply-box">' +
+                replyItem + '</div>'
             )
 
         }
@@ -330,7 +340,7 @@ function getCommentByPostIdwPage(postId, page, searchContent) {
 
     var url;
     if (searchContent.length > 0) url = '/comment/bypostid/search';
-    else if (sortCommentBy == 2)  url = '/comment/bypostid/negSort';
+    else if (sortCommentBy == 2) url = '/comment/bypostid/negSort';
     else if (sortCommentBy == 3) url = '/comment/bypostid/timeSort';
 
     else url = 'comment/bypostid';
@@ -382,7 +392,7 @@ function getCommentByPostIdwPage(postId, page, searchContent) {
                     + '<p style="margin-left: 65px;margin-top: -10px " onclick="getticket(' + data[index].id + ',' + postId + ')">' + data[index].content + '</p>'
                     + '</p>'
                     // Day la nut reply
-                        + '<button id="btn-get-reply" onclick="getReplyByCommentId(' + "'" + data[index].id + "'" + ');" class="btn btn-default btn-xs inline"' +
+                    + '<button id="btn-get-reply" onclick="getReplyByCommentId(' + "'" + postId + "_" + data[index].id + "'" + ');" class="btn btn-default btn-xs inline"' +
                     ' style="margin-left: 65px;margin-top: -10px; "><span class="glyphicon glyphicon-comment"' +
                     ' style="color:gray;margin-right: 10px "  title="Reply to this comment"   data-placement="bottom" ' +
                     'data-toggle="tooltip" ></span>' + countReply(data[index].id) + ' replies</button>'
@@ -390,7 +400,7 @@ function getCommentByPostIdwPage(postId, page, searchContent) {
                     + '</div>'
                     + '<div class="col-lg-1" style="margin-top: 30px">' + '<small class="' + senIcon + '" style="font-size: 20px;"></small>'
                     + '</div>'
-                    + '</div><div  id="' + data[index].id + '-replies"></div>');
+                    + '</div><div  id="' + postId + "_" + data[index].id + '-replies"></div>');
             });
         }
     });
@@ -461,12 +471,13 @@ function sendComment(objId, message, token) {
         url: '/commentOnObj',
         type: "POST",
         data: {objId: objId, message: message, token: token},
-        dataType: "json",
+        dataType: "text",
+
         success: function (data) {
-            $('#send-progress').attr('class', 'fa fa-check');
-            $('#txtComment').val('');
-            $('#txtReply').val('');
-            $('#replyModal').modal('hide');
+            if (data!=null) {
+                getReplyByCommentId(data);
+
+            }
         }
     });
 }

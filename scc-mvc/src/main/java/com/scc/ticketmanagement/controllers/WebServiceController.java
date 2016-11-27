@@ -114,7 +114,7 @@ public class WebServiceController {
     }
     //Post a comment
     @RequestMapping("commentOnObj")
-    public boolean postsById(HttpServletRequest request,
+    public String postsById(HttpServletRequest request,
                              @RequestParam("objId") String objId,
                              @RequestParam("message") String message,
                              @RequestParam("token") String token){
@@ -142,10 +142,10 @@ public class WebServiceController {
 
                 commentRepository.save(commentEntity);
                 userCommentRepository.save(userCommentEntity);
-                return true;
+                return objId;
             }
         }
-        return false;
+        return null;
     }
 
     @RequestMapping("allFbAccount")
