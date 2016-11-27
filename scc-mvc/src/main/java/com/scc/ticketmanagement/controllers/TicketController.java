@@ -563,8 +563,9 @@ public class TicketController {
     public List<ExtendTicket> filterticket(@RequestParam("status") Integer status,
                                            @RequestParam("priority") Integer priority,
                                            @RequestParam("createdby") Integer createdby,
-                                           @RequestParam("assignee") Integer assignee) {
-        System.out.println("status: " + status + " priority: " + priority + " created by:" + createdby + " assignee: " + assignee);
+                                           @RequestParam("assignee") Integer assignee,
+                                           HttpServletRequest request) {
+
         TicketSpecification spec = new TicketSpecification(new FilterCriteria("statusid", "%", status));
         TicketSpecification spec1 = new TicketSpecification(new FilterCriteria("priority", "%", priority));
         TicketSpecification spec2 = new TicketSpecification(new FilterCriteria("createdby", "%", createdby));
@@ -581,9 +582,11 @@ public class TicketController {
         if (assignee != null) {
             spec3 = new TicketSpecification(new FilterCriteria("assignee", ":", assignee));
         }
-
-
-        List<TicketEntity> listticket = ticketRepository.findAll(Specifications.where(spec).and(spec1).and(spec2).and(spec3));
+        HttpSession session = request.getSession();
+        String loginUser = (String) session.getAttribute("username");
+        UserEntity user = userRepository.findUserByUsername(loginUser);
+        TicketSpecification spec4 = new TicketSpecification(new FilterCriteria("brandId", ":", user.getBrandid()));
+        List<TicketEntity> listticket = ticketRepository.findAll(Specifications.where(spec).and(spec1).and(spec2).and(spec3).and(spec4));
 
 
         return getExtendTicketList(listticket);

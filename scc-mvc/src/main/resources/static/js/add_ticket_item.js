@@ -167,18 +167,18 @@ function getstatuscolor(statusid) {
 
 function appendTicket(data) {
     var statuscolor=getstatuscolor(data.statusid);
-    if (currentCmt.includes("mid")){
-        $('#ticket-list').append(
-            '<tr onclick="addMessageToTicket('+data.id+',\'' + currentCmt + '\')">'
-            +'<td>'+data.name+'</td>'
-            +'<td>'+data.createbyuser+'</td>'
-            +'<td>'+data.assigneeuser+'</td>'
-            +'<td><i class="fa fa-circle" aria-hidden="true" style="color:'+statuscolor+';margin-right: 5px"></i>'+data.currentstatus+'</td>'
-            +'<td>'+data.currentpriority+'</td>'
-            +'<td>'+moment(data.createdtime).format("hh:mm:ss, D/MM/YYYY")+'</td>'
-            +'</tr>'
-        )
-    }else {
+    // if (currentCmt.includes('mid')){
+    //     $('#ticket-list').append(
+    //         '<tr onclick="addMessageToTicket('+data.id+',\'' + currentCmt + '\')">'
+    //         +'<td>'+data.name+'</td>'
+    //         +'<td>'+data.createbyuser+'</td>'
+    //         +'<td>'+data.assigneeuser+'</td>'
+    //         +'<td><i class="fa fa-circle" aria-hidden="true" style="color:'+statuscolor+';margin-right: 5px"></i>'+data.currentstatus+'</td>'
+    //         +'<td>'+data.currentpriority+'</td>'
+    //         +'<td>'+moment(data.createdtime).format("hh:mm:ss, D/MM/YYYY")+'</td>'
+    //         +'</tr>'
+    //     )
+    // }else {
         $('#ticket-list').append(
             '<tr onclick="addCommentToTicket('+data.id+','+currentCmt+')">'
             +'<td>'+data.name+'</td>'
@@ -189,7 +189,7 @@ function appendTicket(data) {
             +'<td>'+moment(data.createdtime).format("hh:mm:ss, D/MM/YYYY")+'</td>'
             +'</tr>'
         )
-    }
+    // }
 
 
 
@@ -338,8 +338,8 @@ function getcurrentloginuser() {
 function searchticketbyname(searchkey) {
     var searchlist=[];
     for(var m=0; m<tickets.length; m++){
-        var ticketname=tickets[m].name;
-        if(ticketname.includes(searchkey)){
+        var ticketname=tickets[m].name.toLowerCase();
+        if(ticketname.includes(searchkey.toLowerCase())){
             searchlist.push(tickets[m]);
         }
     }
