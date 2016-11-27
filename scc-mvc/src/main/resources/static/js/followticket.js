@@ -711,7 +711,7 @@ function getReplyByCommentId(commentId) {
 
                 $('#' + commentId + '-replies').append(
                     '<div style="margin-left: 70px"><div class="cmt" style=" border-left: 1px solid lightgray; border-top: none">'
-                    + '<div class="cmtContent" style="margin-left: 5px">'
+                    + '<div class="cmtContent" style="margin-left: 5px;background-color: white;width: 713px;height: 45px;">'
                     + '<img src="http://graph.facebook.com/' + data[index].createdBy + '/picture" style="  width: 35px; height: 35px;">'
                     + '<p class="message" style="margin-left: 50px; margin-top: -40px">'
                     + '<a>' + data[index].createdByName + createdByUser + '</a>' + '<small class="text-muted" style="margin-left: 10px">' + jQuery.format.prettyDate(new Date(data[index].createdAt)) + '</small>'
