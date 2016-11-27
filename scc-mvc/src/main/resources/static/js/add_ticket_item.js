@@ -122,7 +122,7 @@ function getallpriorityofbrand() {
             }
         },
         error: function () {
-            alert("fail to load priority for update")
+            // alert("fail to load priority for update")
         }
     })
 }
@@ -148,7 +148,7 @@ function getalluser() {
 
         },
         error: function () {
-            alert("Fail to load list user");
+            // alert("Fail to load list user");
         }
     })
 }
@@ -168,7 +168,6 @@ function getstatuscolor(statusid) {
 function appendTicket(data) {
     var statuscolor=getstatuscolor(data.statusid);
     if (currentCmt.includes("mid")){
-        alert(data.id);
         $('#ticket-list').append(
             '<tr onclick="addMessageToTicket('+data.id+',\'' + currentCmt + '\')">'
             +'<td>'+data.name+'</td>'

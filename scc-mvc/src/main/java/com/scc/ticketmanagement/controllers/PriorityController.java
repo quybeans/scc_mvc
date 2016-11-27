@@ -32,11 +32,19 @@ public class PriorityController {
 
     @RequestMapping("/getallpriorityofbrand")
     public List<PriorityEntity> getallpriorityofbrand(HttpServletRequest request){
-        HttpSession session = request.getSession();
-        String loginUser = (String) session.getAttribute("username");
-        UserEntity user = userRepository.findUserByUsername(loginUser);
-        List<PriorityEntity> listpriority = priorityReposioty.findBybrandid(user.getBrandid());
-        return listpriority;
+        HttpSession session = request.getSession(false);
+        List<PriorityEntity> returnResult = null;
+        if (session!= null){
+            String loginUser = (String) session.getAttribute("username");
+            if (loginUser !=null){
+                UserEntity user = userRepository.findUserByUsername(loginUser);
+                List<PriorityEntity> listpriority = priorityReposioty.findBybrandid(user.getBrandid());
+                returnResult =  listpriority;
+            }
+
+        }
+       return returnResult;
+
     }
 
     @RequestMapping("/updatepriority")

@@ -26,8 +26,16 @@ public class NavigationController {
     }
 
     @RequestMapping("/customercare")
-    public String customercare() {
-        return "customercare";
+    public String customercare(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        String returnUrl = "redirect:/login";
+        if (session != null) {
+            String username = (String) session.getAttribute("username");
+            if (username != null) {
+                returnUrl = "customercare";
+            }
+        }
+        return returnUrl;
     }
 
     @RequestMapping("/admin/index")
