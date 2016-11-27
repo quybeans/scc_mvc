@@ -26,12 +26,12 @@ public class ProfileController {
     @Autowired
     ProfileService profileService;
 
-    @RequestMapping("/UserProfile")
+    @RequestMapping("/profile/index")
     public String getUserProfile(@RequestParam("profileid") Integer profileID,
                                  Model model){
         ProfileEntity profileEntity = profileService.getProfileByID(profileID);
-        model.addAttribute("profile",profileEntity);
-        return "Profile";
+        model.addAttribute("profiles",profileEntity);
+        return "/profile/index";
     }
 
     @RequestMapping("/UpdateProfile")
