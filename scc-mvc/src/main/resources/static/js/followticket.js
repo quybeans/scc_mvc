@@ -7,7 +7,8 @@ var duration;
 var staff;
 var happyicon = 'fa fa-smile-o pull-right happy';
 var sadicon = 'fa fa-frown-o pull-right sad';
-var questionicon = 'fa fa-question-circle-o pull-right question'
+var questionicon = 'fa fa-question-circle-o pull-right question';
+var currentCmtwReply = new Array();
 getcurrentuser()
 loadticketitem(ticketid)
 getAllPageAccount();
@@ -176,14 +177,16 @@ function loadticketitem(ticketid) {
                         + '<p style="margin-left: 85px;margin-top: -10px ">' + data[index].comment.content + '</p>'
                         + '</p>'
                     // Day la nut reply
-                    + '<button  onclick="replyToComment(' + objid + ');getReplyByCommentId(' + "'" + data[index].comment.id + "'" + ');" class="btn btn-default btn-xs inline"' +
+                    + '<button  onclick="replyToComment(' + objid + ');getReplyByCommentId(' + "'" + data[index].comment.postId + "_" + data[index].comment.id + "'" + ');" class="btn btn-default btn-xs inline"' +
                     ' style="margin-left: 65px;margin-top: -10px; "><span class="glyphicon glyphicon-comment"' +
                     ' style="color:gray;margin-right: 10px "  title="Reply to this comment"   data-placement="bottom" ' +
                     'data-toggle="tooltip" ></span>' + countReply(data[index].comment.id) + ' replies</button>'
                     + '<small class="' + senIcon + '" style="font-size: 20px;margin-top: -50px"></small>'
                     +'</div>'
                     +'</div>'
+
                      +'</li>'
+                        + '</div><div  id="' + data[index].comment.postId + "_" + data[index].comment.id + '-replies"></div>'
                 }
                 if(data[index].message!==null){
                     var avt;
@@ -607,7 +610,6 @@ function forwardticket(ticketid) {
 function replyToComment(objId) {
 
     $('#send-progress').attr('class', 'fa fa-paper-plane');
-    $('#replyModal').modal('toggle');
     $('#btnReply').unbind().click(function () {
         var token = $('#reply-token').val();
         if ($('#txtReply').val().length > 0) {
@@ -616,7 +618,7 @@ function replyToComment(objId) {
             loadticketitem(ticketid);
         }
         else {
-            
+
         }
     });
 }
@@ -679,19 +681,21 @@ function getAllPageAccount() {
 
 //Ger reply for comment
 function getReplyByCommentId(commentId) {
-    $('#reply-list').empty();
-    $('#reply-list').html('Loading....');
+    var replyItem = $('#reply-comment-item').html();
+    currentCmtwReply.push(commentId);
+
+    $('#' + commentId + '-replies').empty();
+    $('#' + commentId + '-replies').html('Loading....');
     $.ajax({
         url: '/commentbypost',
         type: "GET",
-        data: {postId: commentId},
+        data: {postId: commentId.split("_")[1]},
         dataType: "json",
         async: false,
         success: function (data) {
-            $('#reply-list').empty();
+            $('#' + commentId + '-replies').empty();
             $.each(data, function (index) {
                 var createdByUser = "";
-
                 $.ajax({
                     url: "/comment/checkUserReply",
                     type: "GET",
@@ -705,21 +709,39 @@ function getReplyByCommentId(commentId) {
                     }
                 });
 
-                $('#reply-list').append(
-                    '<div class="cmt" style="max-height:15vh;">'
-                    + '<div class="cmtContent">'
-                    + '<img src="http://graph.facebook.com/' + data[index].createdBy + '/picture" height="50px" width="50px">'
-                    + '<p class="message">'
-                    + '<a>' + data[index].createdByName + createdByUser + '</a>'
-                    + '<p style="margin-left: 65px; margin-top: -10px">' + data[index].content + '</p>'
+                $('#' + commentId + '-replies').append(
+                    '<div style="margin-left: 70px"><div class="cmt" style=" border-left: 1px solid lightgray; border-top: none">'
+                    + '<div class="cmtContent" style="margin-left: 5px">'
+                    + '<img src="http://graph.facebook.com/' + data[index].createdBy + '/picture" style="  width: 35px; height: 35px;">'
+                    + '<p class="message" style="margin-left: 50px; margin-top: -40px">'
+                    + '<a>' + data[index].createdByName + createdByUser + '</a>' + '<small class="text-muted" style="margin-left: 10px">' + jQuery.format.prettyDate(new Date(data[index].createdAt)) + '</small>'
+                    + '<p style="margin-left: 50px; margin-top: -10px">' + data[index].content + '</p>'
                     + '</p>'
                     + '</div>'
-                    + '</div>'
+                    + '</div></div>'
                 )
-            })
+                // $('#'+commentId).after(
+                //     '<div class="cmt" style="max-height:15vh;">'
+                //     + '<div class="cmtContent">'
+                //     + '<img src="http://graph.facebook.com/' + data[index].createdBy + '/picture" height="50px" width="50px">'
+                //     + '<p class="message">'
+                //     + '<a>' + data[index].createdByName + createdByUser + '</a>'
+                //     + '<p style="margin-left: 65px; margin-top: -10px">' + data[index].content + '</p>'
+                //     + '</p>'
+                //     + '</div>'
+                //     + '</div>'
+                // )
+            });
+            $('#' + commentId + '-replies').append(
+                '<div   id="' + commentId + '-reply-box" class="reply-box">' +
+                replyItem + '</div>'
+            )
 
         }
-    })
+
+    });
+
+
 }
 // //Ger reply for comment
 // function getReplyByCommentId(commentId) {
@@ -774,5 +796,23 @@ function getstatuscolor(statusid) {
         case 3: return'#500a6f'; break;
         case 4: return'gray'; break;
         case 5: return'#000000'; break;
+    }
+}
+
+function onReplyEnterHit(event, txtBox) {
+    if (event.keyCode == 13) {
+        var boxdiv = txtBox.closest('.reply-box');
+        var replyString = txtBox.val();
+        if (replyString.length <= 0) {
+            alert("Enter something..");
+            return
+        }
+        ;
+        var replyCommentId = boxdiv.attr("id").split("-")[0];
+        var replyToken = boxdiv.find("#reply-token").val();
+        sendComment(replyCommentId, replyString, replyToken);
+        txtBox.val("");
+
+        loadticketitem(ticketid);
     }
 }

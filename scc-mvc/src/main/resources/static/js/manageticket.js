@@ -4,6 +4,9 @@
  */
 var table = null;
 var staff;
+getcurrentuser();
+getticketrequestcount();
+
 
 $(document).ready(function () {
     table= $("#table").DataTable({
@@ -28,6 +31,26 @@ $(document).ready(function () {
         ],
 
         columnDefs:[
+            {
+
+                targets: 6,
+                render: (data, type, row) => {
+                if(type === 'display'){
+        return '<h5>'+row.currentpriority+'</h5>'
+    }
+    return data;
+},
+},
+            {
+
+                targets: 2,
+                render: (data, type, row) => {
+                if(type === 'display'){
+        return '<h5>'+row.createbyuser+'</h5>'
+                                     }
+                    return data;
+                },
+            },
             {
                 width:'10%',
                 targets: 3,
@@ -57,7 +80,7 @@ $(document).ready(function () {
             targets: 5,
         render: (data, type, row) => {
         if(type=== 'display'){
-            return moment(row.createdtime).format("D/MM/YYYY h:mm:ss");
+            return '<h5>'+moment(row.createdtime).format("D/MM/YYYY h:mm:ss")+'</h5>';
         }
         return moment(data).format("D/MM/YYYY");
     },
@@ -101,7 +124,7 @@ $(document).ready(function () {
         render: (data, type, row) => {
         if(type=== 'display'){
             var statuscolor=getstatuscolor(row.statusid);
-            return '<p><i class="fa fa-circle" aria-hidden="true" style="color:'+statuscolor+'"></i>'+'  ' +row.currentstatus+'</p>'
+            return '<h5><i class="fa fa-circle" aria-hidden="true" style="color:'+statuscolor+'"></i>'+'  ' +row.currentstatus+'</h5>'
         }
         return data;
     },
@@ -141,8 +164,7 @@ $(document).ready(function () {
 });
 
 
-getcurrentuser();
-getticketrequestcount();
+
 //assign ticket
 function assign(ticketid) {
     //Load list user de assign

@@ -131,47 +131,44 @@
         </div>
 
 
-        <div class="modal fade" id="replyModal" role="dialog">
-            <div class="modal-dialog">
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Reply to comment</h4>
-                    </div>
-                    <div class="modal-body" style=" height: auto;">
 
-                        <div id="reply-list" class="cmtList" style="max-height: 45vh; overflow-y: scroll;">
+        <input type="hidden" th:value="${ticketid}" id="ticketid"/>
 
-                        </div>
-                        <input type="hidden" id="reply-token" value="">
-                        <div class="dropdown">
-                            <button class="btn btn-info dropdown-toggle" style="width: 180px; margin-top: 10px"
-                                    type="button" data-toggle="dropdown">
-                                <img width="30px" id='reply-img' height="30px" style="border-radius: 3px"
-                                     src="http://globalgamejam.org/sites/default/files/styles/game_sidebar__normal/public/game/featured_image/promo_5.png?itok=9dymM8JD"
-                                     alt="user image">
-                                <p class="inline" id="reply-name"> Reply as... </p>  <span class="caret"></span>
+        <div id="reply-comment-item" style="display:none;margin-top: 5px">
+            <div style="margin-left: 70px;width: 720px">
+                <div class="cmt"
+                     style="background-color: whitesmoke; border-top: none">
+                    <div class="cmtContent" style="margin-left: 5px;">
+                        <div class="dropup " style=" position: absolute">
+                            <button data-toggle="dropdown" id="ddlPageList"
+                                    class="btn btn-default btn-xs dropdown-toggle" id="menu2"
+                                    style=" border-radius: 0; font-size: 12px; width: 35px; height: 35px; background-color: transparent">
                             </button>
-                            <ul class="dropdown-menu" id="list-fb-account">
-                                <!--This is facebook account list-->
+
+                            <ul class="dropdown-menu" id="list-fb-account" style="border: 1px solid lightblue">
+                                <li class="dropdown-header" id='list-fb-page-account'style="text-align: center">Page account</li>
+                                <li class="dropdown-header" id='list-fb-user-account'style="text-align: center">Facebook account</li>
+                                <li class="dropdown-header" style="text-align: center">&#9660; Choose an account to reply</li>
                             </ul>
+
                         </div>
-                        <textarea style="margin-top: 10px" placeholder="Write a reply...." type="text"
-                                  class="form-control" rows="3" id="txtReply"></textarea>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-primary " id="btnReply"><i id="send-progress"
-                                                                          class="fa fa-paper-plane"></i>&nbsp;Reply
-                        </button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <img id="reply-img" src="http://graph.facebook.com/111/picture" style="  width: 35px; height: 35px; border: 1px solid blue">
+                        <p class="message" style="margin-left: 50px; margin-top: -40px" >
+                            <a id="reply-name" style="font-weight: bold" onclick="$('#menu1').show()">Mobile World
+                            </a>
+
+                        <div style="margin-left: 50px; margin-top: -10px">
+                            <input type="hidden" id="reply-token" value="">
+                            <input onkeyup="onReplyEnterHit(event,$(this))" id="txtReplyBox" value=""
+                                   placeholder="Write a reply..."
+                                   type="text"
+                                   style="font-size:14px; color:black; width:90%; height: 25px; background-color: transparent;border:0; outline: none">
+                        </div>
+                        </p>
                     </div>
                 </div>
             </div>
         </div>
-
-        <input type="hidden" th:value="${ticketid}" id="ticketid"/>
-
 
         <section class="col-lg-9 " style="overflow: auto;max-height: 630px">
            <ul class="timeline" id="ticketitem" >
