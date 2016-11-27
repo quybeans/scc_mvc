@@ -46,6 +46,9 @@ public interface TicketRepository extends JpaRepository<TicketEntity,Integer>,Jp
     @Query("select COUNT(t) from TicketEntity t where t.brandId=:brandid")
     long  coutnTicketByBrandId(@Param("brandid") Integer brandid);
 
+    @Query("select COUNT(t) from TicketEntity t where t.brandId=:brandid AND t.statusid=:status")
+    long  countTicketByBrandIdandStatus(@Param("brandid") Integer brandid,@Param("status") Integer status);
+
     @Query("SELECT count(t) FROM TicketEntity t where t.assignee=:assignee and t.statusid=4 and t.id in(select tc.ticketid From TicketstatuschangeEntity tc where tc.statusid=4 and  cast(tc.createdat as date)=:createdtime )")
     Integer countUserClosedTicket(@Param("assignee") Integer assignee,
                                   @Param("createdtime") Timestamp createdtime);

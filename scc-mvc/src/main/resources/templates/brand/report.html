@@ -12,6 +12,12 @@
         var negCount =1;
         var quesCount =1;
 
+        var tik1 =0;
+        var tik2 =0;
+        var tik3 =0;
+        var tik4 =0;
+        var tik5 =0;
+
         //Startup
         startup();
         function startup() {
@@ -55,6 +61,38 @@
                     $("#tbl_post_percent").html(Math.floor((parseInt(data[0]) / totalCount) * 100)+"%");
                     $("#tbl_neg_percent").html(Math.floor((parseInt(data[1]) / totalCount) * 100)+"%");
                     $("#tbl_quest_percent").html(Math.floor((parseInt(data[2]) / totalCount) * 100)+"%");
+
+
+
+                }
+            })
+        }
+
+        function ticketOverView() {
+            $.ajax({
+                url: '/ticket/overviewClassify',
+                type: "GET",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    tik1 = parseInt(data[0]) ;
+                    tik2 = parseInt(data[1]) ;
+                    tik3 = parseInt(data[2]) ;
+                    tik4 = parseInt(data[3]) ;
+                    tik5 = parseInt(data[4]) ;
+                    var totalCount = parseInt(data[1]) + parseInt(data[0]) + parseInt(data[2]) +parseInt(data[3])+parseInt(data[4]);
+
+                    $("#tbl_tik_1").html(data[0]);
+                    $("#tbl_tik_2").html(data[1]);
+                    $("#tbl_tik_3").html(data[2]);
+                    $("#tbl_tik_4").html(data[3]);
+                    $("#tbl_tik_5").html(data[4]);
+
+                    $("#tbl_tik_percent_1").html(Math.floor((parseInt(data[0]) / totalCount) * 100)+"%");
+                    $("#tbl_tik_percent_2").html(Math.floor((parseInt(data[1]) / totalCount) * 100)+"%");
+                    $("#tbl_tik_percent_3").html(Math.floor((parseInt(data[2]) / totalCount) * 100)+"%");
+                    $("#tbl_tik_percent_4").html(Math.floor((parseInt(data[3]) / totalCount) * 100)+"%");
+                    $("#tbl_tik_percent_5").html(Math.floor((parseInt(data[4]) / totalCount) * 100)+"%");
 
 
 
@@ -219,16 +257,20 @@
                     </div>
                     <div class="box-body" style="  position: relative; height: 100%; overflow: hidden">
                         <div class="col-lg-3">
-                            <canvas id="countries" width="150px" height="150px"></canvas>
-                            <div style="margin-left: 10px; margin-top: 15px; font-style: italic; font-weight: bold">Pie chart all comments</div>
+                            <canvas id="ticket-pie-chart" width="150px" height="230px"></canvas>
+                            <div style="margin-left: 10px; margin-top: 15px; font-style: italic; font-weight: bold">Pie chart all tickets</div>
                         </div>
                         <div class="col-lg-2" style="height: 200px; position: static; border-right: 1px solid lightgray">
                             <div id="chart-legend" style="height: 100%">
-                                <div><span class="fa fa-square" style="color: #ffbf00;margin-right: 10px"></span>Question
+                                <div><span class="fa fa-square" style="color: #f4e842;margin-right: 10px"></span>Assigned
                                 </div>
-                                <div><span class="fa fa-square" style="color:#CD2D00;margin-right: 10px"></span>Negative
+                                <div><span class="fa fa-square" style="color:#00a65a;margin-right: 10px"></span>Inprogress
                                 </div>
-                                <div><span class="fa fa-square" style="color:#1AD018;margin-right: 10px"></span>Positive
+                                <div><span class="fa fa-square" style="color:#500a6f;margin-right: 10px"></span>Solved
+                                </div>
+                                <div><span class="fa fa-square" style="color:gray;margin-right: 10px"></span>Closed
+                                </div>
+                                <div><span class="fa fa-square" style="color:#000000;margin-right: 10px"></span>Expired
                                 </div>
                                 <div style="margin-top: 50px">
                                     <table class="table-bordered" width="100%">
@@ -240,19 +282,29 @@
                                         </tr>
                                         <tr>
                                         <tr>
-                                            <th>Question</th>
-                                            <td style="text-align: center" id="tbl_quest">0</td>
-                                            <td style="text-align: center" id="tbl_quest_percent">0</td>
+                                            <th>Assigned</th>
+                                            <td style="text-align: center" id="tbl_tik_1">0</td>
+                                            <td style="text-align: center" id="tbl_tik_percent_1">0</td>
                                         </tr>
                                         <tr>
-                                            <th>Negative</th>
-                                            <td style="text-align: center" id="tbl_neg">0</td>
-                                            <td style="text-align: center" id="tbl_neg_percent">0</td>
+                                            <th>Inprogress</th>
+                                            <td style="text-align: center" id="tbl_tik_2">0</td>
+                                            <td style="text-align: center" id="tbl_tik_percent_2">0</td>
                                         </tr>
                                         <tr>
-                                            <th>Positive</th>
-                                            <td style="text-align: center" id="tbl_post">0</td>
-                                            <td style="text-align: center" id="tbl_post_percent">0</td>
+                                            <th>Solved</th>
+                                            <td style="text-align: center" id="tbl_tik_3">0</td>
+                                            <td style="text-align: center" id="tbl_tik_percent_3">0</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Closed</th>
+                                            <td style="text-align: center" id="tbl_tik_4">0</td>
+                                            <td style="text-align: center" id="tbl_tik_percent_4">0</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Expired</th>
+                                            <td style="text-align: center" id="tbl_tik_5">0</td>
+                                            <td style="text-align: center" id="tbl_tik_percent_5">0</td>
                                         </tr>
                                     </table>
                                 </div>
@@ -309,6 +361,7 @@
 </body>
 <script>
     commentCount();
+    ticketOverView();
     var options = {
         responsive: false,
         maintainAspectRatio: false,
@@ -344,5 +397,39 @@
         options: options
     });
 
+    //For ticketcount
+    var ticketData = {
+        labels: [
+            "Assigned",
+            "Inprogress",
+            "Solved",
+            "Closed",
+            "Expired"
+        ],
+        datasets: [
+            {
+                data: [tik1,tik2, tik3, tik4, tik5],
+                backgroundColor: [
+                    "#f4e842 ",
+                    "#00a65a",
+                    "#500a6f",
+                    "#D3D3D3",
+                    "#000000",
+                ],
+                hoverBackgroundColor: [
+                    "#f4e842 ",
+                    "#00a65a",
+                    "#500a6f",
+                    "#D3D3D3",
+                    "#000000",
+                ]
+            }]
+    };
+    var ctxTicket = document.getElementById("ticket-pie-chart").getContext("2d");
+    var ticketPieChart = new Chart(ctxTicket, {
+        type: 'pie',
+        data: ticketData,
+        options: options
+    });
 </script>
 </html>
