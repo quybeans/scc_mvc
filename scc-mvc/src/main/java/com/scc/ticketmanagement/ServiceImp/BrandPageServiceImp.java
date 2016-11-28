@@ -69,9 +69,10 @@ public class BrandPageServiceImp implements BrandPageService {
                 brandpage = new BrandpageEntity();
                 brandpage.setBrandid(brandId);
                 brandpage.setPageid(pageId);
-                brandpage.setCrawl(true);
-                brandPageRepository.save(brandpage);
+
             }
+            brandpage.setCrawl(true);
+            brandPageRepository.save(brandpage);
 
 
         } catch (NullPointerException e) {
