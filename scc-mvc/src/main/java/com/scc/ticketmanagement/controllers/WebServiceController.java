@@ -139,7 +139,12 @@ public class WebServiceController {
                 commentEntity.setContent(message);
                 commentEntity.setCreatedBy("0");
                 commentEntity.setCreatedAt( new Timestamp(System.currentTimeMillis()));
-
+                TokenInfo tokenInfo = findTokenInfo(token);
+                if(tokenInfo!=null)
+                {
+                    commentEntity.setCreatedBy(tokenInfo.id);
+                    commentEntity.setCreatedByName(tokenInfo.name);
+                }
                 commentRepository.save(commentEntity);
                 userCommentRepository.save(userCommentEntity);
                 return objId;
@@ -188,7 +193,31 @@ public class WebServiceController {
         return "nothing";
     }
 
+    public TokenInfo findTokenInfo(String token)
+    {
+        PageEntity page = pageRepository.findByAccessToken(token);
+        TokenInfo tokenInfo = new TokenInfo();
+        if(page!=null)
+        {
+            tokenInfo.id = page.getPageid();
+            tokenInfo.name = page.getName();
+        }
+        else{
+            FacebookaccountEntity fbaccount = facebookaccountRepository.findByAccessToken(token);
+            if(fbaccount!=null)
+            {
+                tokenInfo.id = fbaccount.getFacebookuserid();
+                tokenInfo.name = fbaccount.getFacebookusername();
+            }
+        }
+        return tokenInfo;
+    }
 
 
+    public class TokenInfo
+    {
+        private String id;
+        private String name;
+    }
 
 }
