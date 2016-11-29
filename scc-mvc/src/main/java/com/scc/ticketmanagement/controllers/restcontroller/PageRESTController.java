@@ -43,11 +43,12 @@ public class PageRESTController {
         {
             List<PageEntity> pages = pageRepository.getAllShowPostPageByBrandId(userService.getUserByID(userid).getBrandid());
             List<PageEntity> rs = new ArrayList<>();
-            for (PageEntity page : pages)
-            {
-                if (page.isCrawler())
-                rs.add(page);
-            }
+//            for (PageEntity page : pages)
+//            {
+//                if (page.isCrawler())
+//                rs.add(page);
+//            }
+            rs = pageRepository.getAllActivePageByBrandId(userService.getUserByID(userid).getBrandid());
             return rs;
         }
         return null;
