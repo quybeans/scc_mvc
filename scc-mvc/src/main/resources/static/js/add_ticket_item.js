@@ -180,7 +180,7 @@ function appendTicket(data) {
     //     )
     // }else {
         $('#ticket-list').append(
-            '<tr onclick="addCommentToTicket('+data.id+','+currentCmt+')">'
+            '<tr onclick=addCommentToTicket('+data.id+',"'+currentCmt+'")>'
             +'<td>'+data.name+'</td>'
             +'<td>'+data.createbyuser+'</td>'
             +'<td>'+data.assigneeuser+'</td>'
