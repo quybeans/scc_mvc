@@ -546,6 +546,7 @@ function ticketrequest(userid) {
         type:"GET",
         data:{"assignee":userid},
         success:function (data) {
+            $("#request").empty();
             if(data.length!=0){
                 for(var i=0;i<data.length;i++){
                     $("#request").append(
