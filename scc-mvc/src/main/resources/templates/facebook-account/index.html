@@ -47,17 +47,17 @@
                                 <a th:href="@{'http://www.fb.com/' + ${account.facebookuserid}}"
                                    th:text="${account.facebookusername}"></a>
                             </td>
+                            <!--<td th:switch="${account.active}">-->
+                                <!--<span  th:case="true"><span class="fa fa fa-circle active"></span>Active</span>-->
+                                <!--<span  th:case="false"><span class="fa fa fa-circle inactive"></span>Inactive</span>-->
+                            <!--</td>-->
                             <td th:switch="${account.active}">
-                                <span  th:case="true"><span class="fa fa fa-circle active"></span>Active</span>
-                                <span  th:case="false"><span class="fa fa fa-circle inactive"></span>Inactive</span>
-                            </td>
-                            <td th:switch="${account.active}">
-                                <button class="btn btn-warning" type="submit" name="btnAction" value="Deactivate"
-                                        th:case="true">Deactivate
-                                </button>
-                                <button class="btn btn-primary" type="submit" name="btnAction" value="Activate"
-                                        th:case="false">Activate
-                                </button>
+                                <!--<button class="btn btn-warning" type="submit" name="btnAction" value="Deactivate"-->
+                                        <!--th:case="true">Deactivate-->
+                                <!--</button>-->
+                                <!--<button class="btn btn-primary" type="submit" name="btnAction" value="Activate"-->
+                                        <!--th:case="false">Activate-->
+                                <!--</button>-->
                                 <button class="btn btn-danger" type="button" name="btnAction" id="btnDelete" onclick="showConfirm(this);"
                                         th:value="${account.facebookaccountid}">Delete
                                 </button>
