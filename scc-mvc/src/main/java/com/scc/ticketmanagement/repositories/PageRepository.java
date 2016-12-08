@@ -36,7 +36,7 @@ public interface PageRepository extends JpaRepository<PageEntity, String> {
     List<PageEntity> getAllShowPostPageByBrandId(@Param("brandId") Integer brandId);
 
     @Query("select p from PageEntity p where p.pageid IN " +
-            "(SELECT m.pageid FROM BrandpageEntity m, BrandEntity b WHERE m.brandid = b.id AND b.id = :brandId AND (m.crawl = TRUE AND m.manage = FALSE))")
+            "(SELECT m.pageid FROM BrandpageEntity m, BrandEntity b WHERE m.brandid = b.id AND b.id = :brandId)")
     List<PageEntity> getAllCrawlerPageByBrandId(@Param("brandId") Integer brandId);
     @Query("SELECT p FROm PageEntity p where p.accesstoken=:accesstoken")
     PageEntity findByAccessToken(@Param("accesstoken")String accesstoken);

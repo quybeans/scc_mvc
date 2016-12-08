@@ -45,7 +45,7 @@
                             </td>
                             <td th:text="${pagesCrawler.type}"></td>
                             <td th:text="${pagesCrawler.category}"></td>
-                            <td th:switch="${pagesCrawler.crawler}">
+                            <td th:switch="${pagesCrawler.active}">
                                 <button class="btn btn-warning" type="submit" name="btnAction"
                                         value="Deactivate"
                                         th:case="true">Deactivate

@@ -167,29 +167,32 @@ function getstatuscolor(statusid) {
 
 function appendTicket(data) {
     var statuscolor=getstatuscolor(data.statusid);
-    // if (currentCmt.includes('mid')){
-    //     $('#ticket-list').append(
-    //         '<tr onclick="addMessageToTicket('+data.id+',\'' + currentCmt + '\')">'
-    //         +'<td>'+data.name+'</td>'
-    //         +'<td>'+data.createbyuser+'</td>'
-    //         +'<td>'+data.assigneeuser+'</td>'
-    //         +'<td><i class="fa fa-circle" aria-hidden="true" style="color:'+statuscolor+';margin-right: 5px"></i>'+data.currentstatus+'</td>'
-    //         +'<td>'+data.currentpriority+'</td>'
-    //         +'<td>'+moment(data.createdtime).format("hh:mm:ss, D/MM/YYYY")+'</td>'
-    //         +'</tr>'
-    //     )
-    // }else {
-        $('#ticket-list').append(
-            '<tr onclick=addCommentToTicket('+data.id+',"'+currentCmt+'")>'
-            +'<td>'+data.name+'</td>'
-            +'<td>'+data.createbyuser+'</td>'
-            +'<td>'+data.assigneeuser+'</td>'
-            +'<td><i class="fa fa-circle" aria-hidden="true" style="color:'+statuscolor+';margin-right: 5px"></i>'+data.currentstatus+'</td>'
-            +'<td>'+data.currentpriority+'</td>'
-            +'<td>'+moment(data.createdtime).format("hh:mm:ss, D/MM/YYYY")+'</td>'
-            +'</tr>'
-        )
-    // }
+    if (currentCmt!=null){
+        if (currentCmt.includes('mid')){
+            $('#ticket-list').append(
+                '<tr style="cursor: pointer" onclick="addMessageToTicket('+data.id+',\'' + currentCmt + '\')">'
+                +'<td>'+data.name+'</td>'
+                +'<td>'+data.createbyuser+'</td>'
+                +'<td>'+data.assigneeuser+'</td>'
+                +'<td><i class="fa fa-circle" aria-hidden="true" style="color:'+statuscolor+';margin-right: 5px"></i>'+data.currentstatus+'</td>'
+                +'<td>'+data.currentpriority+'</td>'
+                +'<td>'+moment(data.createdtime).format("hh:mm:ss, D/MM/YYYY")+'</td>'
+                +'</tr>'
+            )
+        }else {
+            $('#ticket-list').append(
+                '<tr style="cursor: pointer" onclick="addCommentToTicket('+data.id+','+currentCmt+')">'
+                +'<td>'+data.name+'</td>'
+                +'<td>'+data.createbyuser+'</td>'
+                +'<td>'+data.assigneeuser+'</td>'
+                +'<td><i class="fa fa-circle" aria-hidden="true" style="color:'+statuscolor+';margin-right: 5px"></i>'+data.currentstatus+'</td>'
+                +'<td>'+data.currentpriority+'</td>'
+                +'<td>'+moment(data.createdtime).format("hh:mm:ss, D/MM/YYYY")+'</td>'
+                +'</tr>'
+            )
+        }
+    }
+
 
 
 

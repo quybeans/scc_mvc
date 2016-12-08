@@ -12,7 +12,7 @@ var graphImage = "https://graph.facebook.com/";
 var postListCurPage = 1;
 var commentListCurPage = 1;
 var currentPost;
-var currentCmt;
+var currentCmt = '0';
 var currentCmtwReply = new Array();
 //Sort setting 1: by question, 2: by neg, 3: by time
 var sortCommentBy = 1;
@@ -359,7 +359,7 @@ function getCommentByPostIdwPage(postId, page, searchContent) {
                     senIcon = questionicon;
                 var cmtId = "'" + postId + "_" + data[index].id + "'";
 
-                var btnTicket = '<button onclick=showTicketModal(' + data[index].id + ');currentCmt="' + data[index].id + '" class="btn btn-default btn-xs inline" style="margin-left: 10px;margin-top: -10px;"><span class="fa fa-ticket" style="margin-right:10px"></span>Add to ticket</button>';
+                var btnTicket = '<button onclick="showTicketModal(' + data[index].id + ');currentCmt=\'' + data[index].id + '\'" class="btn btn-default btn-xs inline" style="margin-left: 10px;margin-top: -10px;"><span class="fa fa-ticket" style="margin-right:10px"></span>Add to ticket</button>';
 
                 var isTicket = false;
                 $.ajax({

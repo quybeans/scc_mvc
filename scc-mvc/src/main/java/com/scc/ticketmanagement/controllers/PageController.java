@@ -2,6 +2,7 @@ package com.scc.ticketmanagement.controllers;
 
 import com.scc.ticketmanagement.Entities.BrandpageEntity;
 import com.scc.ticketmanagement.Entities.PageEntity;
+import com.scc.ticketmanagement.Entities.TicketEntity;
 import com.scc.ticketmanagement.Entities.UserEntity;
 import com.scc.ticketmanagement.services.BrandPageService;
 import com.scc.ticketmanagement.services.PageService;
@@ -19,7 +20,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.naming.AuthenticationException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Collections;
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * Created by Thien on 10/12/2016.
@@ -49,7 +52,7 @@ public class PageController {
         HttpSession session = request.getSession(false);
         int brandId = this.getCurrentUserBrandId(session);
 
-        List<PageEntity> pages = pageService.getAllActivePageByBrandId(brandId);
+        List<PageEntity> pages = pageService.getPagesByBrandId(brandId);
         for (PageEntity page: pages) {
             BrandpageEntity brandpage = pageService.getBrandPageByBrandIdAndPageId(brandId,page.getPageid());
             if (brandpage != null){
@@ -58,8 +61,8 @@ public class PageController {
         }
         model.addAttribute("pages", pages);
 
-        List<PageEntity> crawlerPages = pageService.getCrawlerPagesByBrandId(brandId);
-        model.addAttribute("crawlerPages", crawlerPages);
+//        List<PageEntity> crawlerPages = pageService.getCrawlerPagesByBrandId(brandId);
+//        model.addAttribute("crawlerPages", crawlerPages);
         return "page/index";
     }
 
@@ -73,6 +76,31 @@ public class PageController {
         int brandId = this.getCurrentUserBrandId(session);
 
         List<PageEntity> crawlerPages = pageService.getCrawlerPagesByBrandId(brandId);
+
+        for (ListIterator<PageEntity> iterator = crawlerPages.listIterator(); iterator.hasNext(); ) {
+            PageEntity page = iterator.next();
+            BrandpageEntity brandpage = pageService.getBrandPageByBrandIdAndPageId(brandId,page.getPageid());
+            if (brandpage != null) {
+
+                if (brandpage.isManage()){
+                    iterator.remove();
+                }
+
+            }
+        }
+
+
+
+        for (PageEntity page: crawlerPages) {
+            System.out.println(page.getName());
+            BrandpageEntity brandpage = pageService.getBrandPageByBrandIdAndPageId(brandId,page.getPageid());
+            if (brandpage != null){
+                System.out.println(brandpage.isCrawl());
+                page.setActive(brandpage.isCrawl());
+            }
+        }
+
+
         model.addAttribute("crawlerPages", crawlerPages);
         return "crawl-page/index";
     }
@@ -178,10 +206,8 @@ public class PageController {
 
 
         if (button.equals("Deactivate")) {
-            pageService.deactivateCrawlerPage(pageId);
             brandPageService.removeBrandPageToCrawl(brandId, pageId);
         } else if (button.equals("Activate")) {
-            pageService.activateCrawlerPage(pageId);
             brandPageService.addBrandPageToCrawl(brandId, pageId);
         }else if (button.equals("Delete")) {
             brandPageService.deleteBrandPageByBrandIdAndPageId(brandId, pageId);
