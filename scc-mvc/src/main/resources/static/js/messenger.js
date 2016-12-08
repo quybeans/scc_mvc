@@ -211,30 +211,53 @@ function firstLoadConversationBySenderId() {
                 messageId = dataReversed[i].id;
                 score = dataReversed[i].sentimentScrore;
                 if (dataReversed[i].senderid == currentPageId) {
-                    $('#conversationContent').append(
-                        '<li class="right clearfix"><span class="chat-img pull-right">' +
-                        ' <img src="' + currentPageAvt + '" alt="User Avatar"/>' +
-                        ' </span>' +
-                        '<div class="chat-body clearfix pull-right">' +
-                        ' <div class="header">' +
-                        '<small class=" text-muted ">' +
-                        // moment(dataReversed[i].createdAt).fromNow() +
-                        $.format.date(dataReversed[i].createdAt, "HH:mm") +
-                        '</small>' +
-                        '<a class="pull-right primary-font" style="margin-left: 10px"><span style="border: 1px solid blue; padding: 0px 5px 0px 5px; margin-right: 5px;border-radius: 3px">' + dataReversed[i].sendBy + '</span>' + currentPageName + '</a>' +
-                        '</div>' +
-                        '<p style="text-align: right">' +
-                        dataReversed[i].content +
-                        '</p>' +
-                        '</div>' +
-                        '<span class="pull-right">' +
-                        changeIconSentimentScore(score) +
-                        '</br>' +
-                        showButtonAddTicketAtPage(dataReversed[i].ticket, messageId) +
-                        '</span>' +
-                        '</li>'
-                    )
-                    ;
+                    if (dataReversed[i].sendBy != null){
+                        $('#conversationContent').append(
+                            '<li onclick="checkMessageTicket(\'' + messageId + '\')" class="right clearfix"><span class="chat-img pull-right">' +
+                            ' <img src="' + currentPageAvt + '" alt="User Avatar"/>' +
+                            ' </span>' +
+                            '<div class="chat-body clearfix pull-right">' +
+                            ' <div class="header">' +
+                            '<small class=" text-muted ">' +
+                            $.format.date(dataReversed[i].createdAt, "HH:mm") +
+                            '</small>' +
+                            '<a class="pull-right primary-font" style="margin-left: 10px"><span style="border: 1px solid blue; padding: 0px 5px 0px 5px; margin-right: 5px; border-radius: 3px">' + dataReversed[i].sendBy + '</span>' + currentPageName + '</a>' +
+                            '</div>' +
+                            '<p style="text-align: right">' +
+                            dataReversed[i].content +
+                            '</p>' +
+                            '</div>' +
+                            '<span class="pull-right">' +
+                            changeIconSentimentScore(score) +
+                            '</br>' +
+                            showButtonAddTicketAtPage(dataReversed[i].ticket, messageId) +
+                            '</span>' +
+                            '</li>'
+                        );
+                    }else {
+                        $('#conversationContent').append(
+                            '<li onclick="checkMessageTicket(\'' + messageId + '\')" class="right clearfix"><span class="chat-img pull-right">' +
+                            ' <img src="' + currentPageAvt + '" alt="User Avatar"/>' +
+                            ' </span>' +
+                            '<div class="chat-body clearfix pull-right">' +
+                            ' <div class="header">' +
+                            '<small class=" text-muted ">' +
+                            $.format.date(dataReversed[i].createdAt, "HH:mm") +
+                            '</small>' +
+                            '<a class="pull-right primary-font" style="margin-left: 10px">' + currentPageName + '</a>' +
+                            '</div>' +
+                            '<p style="text-align: right">' +
+                            dataReversed[i].content +
+                            '</p>' +
+                            '</div>' +
+                            '<span class="pull-right">' +
+                            changeIconSentimentScore(score) +
+                            '</br>' +
+                            showButtonAddTicketAtPage(dataReversed[i].ticket, messageId) +
+                            '</span>' +
+                            '</li>'
+                        );
+                    }
                 } else {
                     $('#conversationContent').append(
                         '<li class="left clearfix"><span class="chat-img pull-left"> ' +
@@ -281,29 +304,53 @@ function reloadConversationBySenderId() {
                 messageId = dataReversed[i].id;
                 score = dataReversed[i].sentimentScrore;
                 if (dataReversed[i].senderid == currentPageId) {
-                    $('#conversationContent').append(
-                        '<li onclick="checkMessageTicket(\'' + messageId + '\')" class="right clearfix"><span class="chat-img pull-right">' +
-                        ' <img src="' + currentPageAvt + '" alt="User Avatar"/>' +
-                        ' </span>' +
-                        '<div class="chat-body clearfix pull-right">' +
-                        ' <div class="header">' +
-                        '<small class=" text-muted ">' +
-                        $.format.date(dataReversed[i].createdAt, "HH:mm") +
-                        '</small>' +
-                        '<a class="pull-right primary-font" style="margin-left: 10px"><span style="border: 1px solid blue; padding: 0px 5px 0px 5px; margin-right: 5px;border-radius: 3px">' + dataReversed[i].sendBy + '</span>'  + currentPageName + '</a>' +
-                        '</div>' +
-                        '<p style="text-align: right">' +
-                        dataReversed[i].content +
-                        '</p>' +
-                        '</div>' +
-                        '<span class="pull-right">' +
-                        changeIconSentimentScore(score) +
-                        '</br>' +
-                        showButtonAddTicketAtPage(dataReversed[i].ticket, messageId) +
-                        '</span>' +
-                        '</li>'
-                    )
-                    ;
+                        if (dataReversed[i].sendBy != null){
+                            $('#conversationContent').append(
+                                '<li onclick="checkMessageTicket(\'' + messageId + '\')" class="right clearfix"><span class="chat-img pull-right">' +
+                                ' <img src="' + currentPageAvt + '" alt="User Avatar"/>' +
+                                ' </span>' +
+                                '<div class="chat-body clearfix pull-right">' +
+                                ' <div class="header">' +
+                                '<small class=" text-muted ">' +
+                                $.format.date(dataReversed[i].createdAt, "HH:mm") +
+                                '</small>' +
+                                '<a class="pull-right primary-font" style="margin-left: 10px"><span style="border: 1px solid blue; padding: 0px 5px 0px 5px; margin-right: 5px; border-radius: 3px">' + dataReversed[i].sendBy + '</span>' + currentPageName + '</a>' +
+                                '</div>' +
+                                '<p style="text-align: right">' +
+                                dataReversed[i].content +
+                                '</p>' +
+                                '</div>' +
+                                '<span class="pull-right">' +
+                                changeIconSentimentScore(score) +
+                                '</br>' +
+                                showButtonAddTicketAtPage(dataReversed[i].ticket, messageId) +
+                                '</span>' +
+                                '</li>'
+                            );
+                        }else {
+                            $('#conversationContent').append(
+                                '<li onclick="checkMessageTicket(\'' + messageId + '\')" class="right clearfix"><span class="chat-img pull-right">' +
+                                ' <img src="' + currentPageAvt + '" alt="User Avatar"/>' +
+                                ' </span>' +
+                                '<div class="chat-body clearfix pull-right">' +
+                                ' <div class="header">' +
+                                '<small class=" text-muted ">' +
+                                $.format.date(dataReversed[i].createdAt, "HH:mm") +
+                                '</small>' +
+                                '<a class="pull-right primary-font" style="margin-left: 10px">' + currentPageName + '</a>' +
+                                '</div>' +
+                                '<p style="text-align: right">' +
+                                dataReversed[i].content +
+                                '</p>' +
+                                '</div>' +
+                                '<span class="pull-right">' +
+                                changeIconSentimentScore(score) +
+                                '</br>' +
+                                showButtonAddTicketAtPage(dataReversed[i].ticket, messageId) +
+                                '</span>' +
+                                '</li>'
+                            );
+                        }
                 } else {
                     $('#conversationContent').append(
                         '<li onclick="checkMessageTicket(\'' + messageId + '\')" class="left clearfix"><span class="chat-img pull-left"> ' +
@@ -373,34 +420,62 @@ function getConversationBySenderIdWithPage() {
                 $('#conversationContent').empty();
                 var dataReversed = data.reverse();
                 var messageId;
+                var sentBy = '';
 
                 $.each(dataReversed, function (i) {
                     messageId = dataReversed[i].id;
                     score = dataReversed[i].sentimentScrore;
+
+
                     if (dataReversed[i].senderid == currentPageId) {
-                        $('#conversationContent').append(
-                            '<li onclick="checkMessageTicket(\'' + messageId + '\')" class="right clearfix"><span class="chat-img pull-right">' +
-                            ' <img src="' + currentPageAvt + '" alt="User Avatar"/>' +
-                            ' </span>' +
-                            '<div class="chat-body clearfix pull-right">' +
-                            ' <div class="header">' +
-                            '<small class=" text-muted ">' +
-                            $.format.date(dataReversed[i].createdAt, "HH:mm") +
-                            '</small>' +
-                            '<a class="pull-right primary-font" style="margin-left: 10px"><span style="border: 1px solid blue; padding: 0px 5px 0px 5px; margin-right: 5px; border-radius: 3px">' + dataReversed[i].sendBy + '</span>' + currentPageName + '</a>' +
-                            '</div>' +
-                            '<p style="text-align: right">' +
-                            dataReversed[i].content +
-                            '</p>' +
-                            '</div>' +
-                            '<span class="pull-right">' +
-                            changeIconSentimentScore(score) +
-                            '</br>' +
-                            showButtonAddTicketAtPage(dataReversed[i].ticket, messageId) +
-                            '</span>' +
-                            '</li>'
-                        )
-                        ;
+                        if (dataReversed[i].sendBy != null){
+                            $('#conversationContent').append(
+                                '<li onclick="checkMessageTicket(\'' + messageId + '\')" class="right clearfix"><span class="chat-img pull-right">' +
+                                ' <img src="' + currentPageAvt + '" alt="User Avatar"/>' +
+                                ' </span>' +
+                                '<div class="chat-body clearfix pull-right">' +
+                                ' <div class="header">' +
+                                '<small class=" text-muted ">' +
+                                $.format.date(dataReversed[i].createdAt, "HH:mm") +
+                                '</small>' +
+                                '<a class="pull-right primary-font" style="margin-left: 10px"><span style="border: 1px solid blue; padding: 0px 5px 0px 5px; margin-right: 5px; border-radius: 3px">' + dataReversed[i].sendBy + '</span>' + currentPageName + '</a>' +
+                                '</div>' +
+                                '<p style="text-align: right">' +
+                                dataReversed[i].content +
+                                '</p>' +
+                                '</div>' +
+                                '<span class="pull-right">' +
+                                changeIconSentimentScore(score) +
+                                '</br>' +
+                                showButtonAddTicketAtPage(dataReversed[i].ticket, messageId) +
+                                '</span>' +
+                                '</li>'
+                            );
+                        }else {
+                            $('#conversationContent').append(
+                                '<li onclick="checkMessageTicket(\'' + messageId + '\')" class="right clearfix"><span class="chat-img pull-right">' +
+                                ' <img src="' + currentPageAvt + '" alt="User Avatar"/>' +
+                                ' </span>' +
+                                '<div class="chat-body clearfix pull-right">' +
+                                ' <div class="header">' +
+                                '<small class=" text-muted ">' +
+                                $.format.date(dataReversed[i].createdAt, "HH:mm") +
+                                '</small>' +
+                                '<a class="pull-right primary-font" style="margin-left: 10px">' + currentPageName + '</a>' +
+                                '</div>' +
+                                '<p style="text-align: right">' +
+                                dataReversed[i].content +
+                                '</p>' +
+                                '</div>' +
+                                '<span class="pull-right">' +
+                                changeIconSentimentScore(score) +
+                                '</br>' +
+                                showButtonAddTicketAtPage(dataReversed[i].ticket, messageId) +
+                                '</span>' +
+                                '</li>'
+                            );
+                        }
+
                     } else {
                         $('#conversationContent').append(
                             '<li onclick="checkMessageTicket(\'' + messageId + '\')" class="left clearfix"><span class="chat-img pull-left"> ' +
