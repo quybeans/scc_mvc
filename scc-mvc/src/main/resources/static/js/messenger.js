@@ -121,10 +121,10 @@ function getAllConversationsByPageId(pageId) {
                 } else {
                     $('#messagesList').append(
                         '<div class="item" style="position: relative" id="conversation' + i + '" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId + '\')">'
-                        + '<div><img class="senderAvt" src="' + data[i].senderPicture + '"><div class="conversation-sender-name text-danger pull-left unread-conversation"><b>' + data[i].senderName + '</b></div>' +
-                        '<div class="sentTime text-danger pull-right"> ' + $.format.date(data[i].sentTime, "HH:mm") + '</div>' +
+                        + '<div><img class="senderAvt" src="' + data[i].senderPicture + '"><div class="conversation-sender-name pull-left unread-conversation"><b>' + data[i].senderName + '</b></div>' +
+                        '<div class="sentTime pull-right"> ' + $.format.date(data[i].sentTime, "HH:mm") + '</div>' +
                         '</div>'
-                        + '<div class="crop text-danger unread-conversation"><b>' + data[i].lastMessage + '</b></div>'
+                        + '<div class="crop unread-conversation"><b>' + data[i].lastMessage + '</b></div>'
                         + '</div>'
                     )
                 }
@@ -162,10 +162,10 @@ function getAllConversationsByPageId(pageId) {
                     } else {
                         $('#messagesList').append(
                             '<div class="item" style="position: relative" id="conversation' + i + '" onclick="getConversationBySenderId(' + pageId + ',\'' + data[i].senderId + '\')">'
-                            + '<div><img class="senderAvt" src="' + data[i].senderPicture + '"><div class="conversation-sender-name text-danger pull-left unread-conversation"><b>' + data[i].senderName + '</b></div>' +
+                            + '<div><img class="senderAvt" src="' + data[i].senderPicture + '"><div class="conversation-sender-name pull-left unread-conversation"><b>' + data[i].senderName + '</b></div>' +
                             '<div class="sentTime text-muted pull-right"> ' + $.format.date(data[i].sentTime, "HH:mm") + '</div>' +
                             '</div>'
-                            + '<div class="crop text-danger unread-conversation"><b>' + data[i].lastMessage + '</b></div>'
+                            + '<div class="crop unread-conversation"><b>' + data[i].lastMessage + '</b></div>'
                             + '</div>'
                         )
                     }

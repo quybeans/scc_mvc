@@ -353,7 +353,7 @@ function register_popup(id, name) {
 
             popups.unshift(id);
             calculate_popups();
-            $('#popup' + id).scrollTop($('#popup' + id).height() + 1000);
+            $('#popup' + id).scrollTop($('#popup' + id).height() + 3000);
 
 
             isFirstLoadDone = true;
@@ -427,7 +427,7 @@ function register_popup(id, name) {
             });
         }
     };
-    setInterval(reload,3000);
+    setInterval(reload,500);
 
 
 
