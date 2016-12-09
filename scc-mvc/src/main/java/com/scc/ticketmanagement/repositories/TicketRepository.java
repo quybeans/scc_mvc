@@ -53,5 +53,7 @@ public interface TicketRepository extends JpaRepository<TicketEntity,Integer>,Jp
     Integer countUserClosedTicket(@Param("assignee") Integer assignee,
                                   @Param("createdtime") Timestamp createdtime);
 
+    @Query("SELECT count(t) FROM TicketEntity t where t.assignee=:assignee and t.statusid=1")
+    Integer countUnhandleTicket(@Param("assignee") Integer assignee);
 
 }

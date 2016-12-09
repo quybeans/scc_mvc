@@ -22,4 +22,5 @@ public interface TicketService {
     List<TicketEntity> getListTicketByConversation(String messageId);
     List<TicketEntity> getListTicketByConversation(List<MessageEntity> conversation);
     Integer countUserClosedTicket(Integer assignee,Timestamp createdtime);
+    Integer countUnhandleTicket(Integer assignee);
 }

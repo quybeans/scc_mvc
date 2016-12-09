@@ -70,6 +70,28 @@
             });
 
         }
+        countTicketUnhandle();
+        var myVar = setInterval(function(){ countTicketUnhandle() }, 3000);
+
+        //count ticket unhandle
+        //Get brand info
+        function countTicketUnhandle() {
+            $.ajax({
+                url: '/comment/countUnhandle',
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    $('#unread_count').html(data);
+                    if(data==0)
+                    {
+                        $('#unread_count').attr("class","label label-success");
+                    }
+                    else  $('#unread_count').attr("class","label label-danger");
+                    $('#unhand_count').html(data);
+                }
+            });
+
+        }
     </script>
     <!-- Logo -->
     <a href="#" class="logo">
@@ -90,31 +112,31 @@
 
                 <!--This is notification dropdown-->
 
-                <!--<li class="dropdown tasks-menu">-->
-                    <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown">-->
-                        <!--<i class="fa fa-bell"></i>-->
-                        <!--<span id="unread_count" class="label label-danger">9</span>-->
-                    <!--</a>-->
-                    <!--<ul class="dropdown-menu" style=" box-shadow: 5px 5px 5px #888888;">-->
-                        <!--<li class="header"><b>Notification</b></li>-->
-                        <!--<li>-->
-                            <!--<ul class="menu" id="noti-list">-->
-                                <!--<li>-->
-                                    <!--<a href="#">-->
-                                        <!--<h3>-->
-                                            <!--You have a new ticket from <b>Mr.Boss</b>-->
-                                            <!--<p class="pull right"><span class="fa fa-ticket" style="margin-right: 5px"></span>5 mins ago</p>-->
-                                        <!--</h3>-->
-                                    <!--</a>-->
-                                <!--</li>-->
+                <li class="dropdown tasks-menu">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-ticket"></i>
+                        <span id="unread_count">0</span>
+                    </a>
+                    <ul class="dropdown-menu" style=" box-shadow: 5px 5px 5px #888888;">
+                        <li class="header"><b>Ticket count</b></li>
+                        <li>
+                            <ul class="menu" >
+                                <li>
+                                    <a href="#">
+                                        <h3>
+                                            You have &nbsp; <b id="unhand_count"></b> &nbsp;unhandled ticket
 
-                            <!--</ul>-->
-                        <!--</li>-->
-                        <!--<li class="footer">-->
-                            <!--<a href="#">View all tasks</a>-->
-                        <!--</li>-->
-                    <!--</ul>-->
-                <!--</li>-->
+                                        </h3>
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </li>
+                        <li class="footer">
+                            <a href="/manageticket">Go to manage ticket.</a>
+                        </li>
+                    </ul>
+                </li>
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <span class="hidden-xs" th:text="${session.fullname}"></span>

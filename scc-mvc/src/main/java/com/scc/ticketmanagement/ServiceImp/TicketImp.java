@@ -89,5 +89,10 @@ public class TicketImp implements TicketService {
         return ticketRepository.countUserClosedTicket(assignee, createdtime);
     }
 
+    @Override
+    public Integer countUnhandleTicket(Integer assignee) {
+        return ticketRepository.countUnhandleTicket( assignee);
+    }
+
 
 }

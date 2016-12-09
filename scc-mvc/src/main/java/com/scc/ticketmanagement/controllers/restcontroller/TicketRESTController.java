@@ -65,4 +65,16 @@ public class TicketRESTController {
         return false;
     }
 
+    @RequestMapping("comment/countUnhandle")
+    public int checkUnhandle(HttpServletRequest request)
+    {
+        HttpSession session = request.getSession(false);
+        String username = (String)session.getAttribute("username");
+        int userid = userService.getUserByUsername(username).getUserid();
+        if(username !=null)
+        {
+            return ticketService.countUnhandleTicket(userid);
+        }
+        return 0;
+    }
 }
