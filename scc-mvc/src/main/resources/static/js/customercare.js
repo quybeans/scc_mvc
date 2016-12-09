@@ -33,8 +33,7 @@ function onReplyEnterHit(event, txtBox) {
         if (replyString.length <= 0) {
             alert("Enter something..");
             return
-        }
-        ;
+        };
         var replyCommentId = boxdiv.attr("id").split("-")[0];
         var replyToken = boxdiv.find("#reply-token").val();
         sendComment(replyCommentId, replyString, replyToken);
@@ -471,9 +470,12 @@ function sendComment(objId, message, token) {
         dataType: "text",
 
         success: function (data) {
-            if (data!=null) {
+            if (data.length>0) {
                 getReplyByCommentId(data);
-
+            }
+            else
+            {
+                alert("Sorry, this comments is no longer exist.");
             }
         }
     });

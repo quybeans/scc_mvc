@@ -118,7 +118,7 @@ public class WebServiceController {
                              @RequestParam("objId") String objId,
                              @RequestParam("message") String message,
                              @RequestParam("token") String token){
-
+        try{
         HttpSession session = request.getSession(false);
         if (session!=null) {
             String username = (String) session.getAttribute("username");
@@ -149,6 +149,10 @@ public class WebServiceController {
                 userCommentRepository.save(userCommentEntity);
                 return objId;
             }
+        }}catch (NullPointerException e)
+        {
+            e.printStackTrace();
+            return null;
         }
         return null;
     }
