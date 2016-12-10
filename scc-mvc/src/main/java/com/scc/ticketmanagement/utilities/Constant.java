@@ -24,6 +24,7 @@ public class Constant {
     public static final int STATUS_FORWARD = 6;
     public static final int STATUS_REOPEN = 7;
     public static final int STATUS_CREATE = 8;
+    public static final int STATUS_REASSIGN= 9;
 
     public static final boolean ACTIVE = true;
     public static final boolean DEACTIVE = false;

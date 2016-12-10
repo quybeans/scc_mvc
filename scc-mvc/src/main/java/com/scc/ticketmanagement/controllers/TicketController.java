@@ -517,6 +517,7 @@ public class TicketController {
         //Thay doi status trong ticket
         TicketEntity ticket = ticketRepository.findOne(ticketid);
         ticket.setStatusid(Constant.STATUS_ASSIGN);
+        ticket.setDuetime(new Timestamp(new Date().getTime()));
 
         ProfileEntity profile = profileRepository.findOne(user.getUserid());
         ticket.setNote(profile.getFirstname() + " " + profile.getLastname() + " Reopen this ticket ");
@@ -527,6 +528,33 @@ public class TicketController {
         statuschange.setTicketid(ticketid);
         statuschange.setChangeby(user.getUserid());
         statuschange.setStatusid(Constant.STATUS_REOPEN);
+        statuschange.setCreatedat(new Timestamp(new Date().getTime()));
+        statuschange.setNote(" ");
+        ticketStatusChangeRepository.save(statuschange);
+        return ticketRepository.save(ticket);
+    }
+
+    @RequestMapping("/reassign")
+    public TicketEntity reassign(@RequestParam("ticketid") Integer ticketid,
+                                     HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        String loginUser = (String) session.getAttribute("username");
+        UserEntity user = userRepository.findUserByUsername(loginUser);
+
+        //Thay doi status trong ticket
+        TicketEntity ticket = ticketRepository.findOne(ticketid);
+        ticket.setStatusid(Constant.STATUS_ASSIGN);
+        ticket.setDuetime(new Timestamp(new Date().getTime()));
+
+        ProfileEntity profile = profileRepository.findOne(user.getUserid());
+        ticket.setNote(profile.getFirstname() + " " + profile.getLastname() + " Reassign this ticket ");
+
+
+        //Them 1 ticket history
+        TicketstatuschangeEntity statuschange = new TicketstatuschangeEntity();
+        statuschange.setTicketid(ticketid);
+        statuschange.setChangeby(user.getUserid());
+        statuschange.setStatusid(Constant.STATUS_REASSIGN);
         statuschange.setCreatedat(new Timestamp(new Date().getTime()));
         statuschange.setNote(" ");
         ticketStatusChangeRepository.save(statuschange);

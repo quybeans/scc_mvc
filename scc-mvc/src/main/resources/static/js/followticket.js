@@ -59,7 +59,7 @@ setInterval(function () {
         }
 
     } else {
-        $("#dueday").html("");
+        $("#dueday").html('<button class="btn btn-default" onclick="reassign(' + ticketid + ')"> Reassign </button>');
     }
 
 
@@ -271,6 +271,9 @@ function loadticketitem(ticketid) {
                             break;
                         case 8:
                             status = '<a>' + data[index].history.userid + '</a>' + ' create ticket for ' + '<a>' + data[index].history.assignee + '</a>';
+                            break;
+                        case 9:
+                            status = '<a>' + data[index].history.userid + '</a>' + ' reassign this ticket ';
                             break;
                     }
                     var note = "";
@@ -547,6 +550,25 @@ function showhistory() {
 function reopenticket(ticketid) {
     $.ajax({
         url: "/reopenticket",
+        type: "POST",
+        data: {"ticketid": ticketid},
+        success: function () {
+
+            $('#ticketitem').html("");
+            $("#historycheckbox").prop("checked", false);
+            getticket(ticketid)
+            getticketduetime(ticketid)
+            loadticketitem(ticketid)
+        },
+        error: function () {
+
+        }
+    })
+}
+
+function reassign(ticketid) {
+    $.ajax({
+        url: "/reassign",
         type: "POST",
         data: {"ticketid": ticketid},
         success: function () {
@@ -869,13 +891,13 @@ function getstatuscolor(statusid) {
             return '#00a65a';
             break;
         case 3:
-            return '#500a6f';
+            return 'blue';
             break;
         case 4:
             return 'gray';
             break;
         case 5:
-            return '#000000';
+            return 'red';
             break;
     }
 }

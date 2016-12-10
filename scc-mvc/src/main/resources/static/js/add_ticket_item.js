@@ -158,9 +158,9 @@ function getstatuscolor(statusid) {
     switch (statusid){
         case 1: return'#f4e842'; break;
         case 2: return'#00a65a'; break;
-        case 3: return'#500a6f'; break;
+        case 3: return'blue'; break;
         case 4: return'gray'; break;
-        case 5: return'#000000'; break;
+        case 5: return'red'; break;
 
     }
 }
