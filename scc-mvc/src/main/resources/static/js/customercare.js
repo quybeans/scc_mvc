@@ -64,7 +64,6 @@ function addCommentToTicket(ticketId, cmtId) {
         data: {ticketId: ticketId, cmtId: cmtId},
         dataType: "json",
         success: function (data) {
-            alert('Success add to ticket');
         }
     })
     $('#ticket-modal').modal('toggle');
@@ -526,7 +525,6 @@ function createticket(comtID, postID) {
             type: "POST",
             success: function () {
                 $('#createModal').modal('toggle');
-                alert("create ticket successful");
                 getCommentById(postID);
             },
             error: function () {
@@ -563,7 +561,6 @@ function assign(comID) {
             data: {"commentid": comID, "assignee": assignee},
             type: "POST",
             success: function (data) {
-                alert("assign ticket successful" + data.commentid);
                 $('#assignModal').modal('toggle');
             },
             error: function () {
@@ -584,7 +581,6 @@ function status(comID, postID) {
             type: "POST",
             success: function (data) {
                 $('#statusModal').modal('toggle');
-                alert("change status successfull:");
             },
             error: function () {
                 alert("fail to change ticket status");
@@ -618,7 +614,6 @@ function forwardticket(comID) {
             type: "POST",
             data: {"commentid": comID, "forwarduser": forwarduser, "forwardnote": forwardnote},
             success: function (data) {
-                alert("Forward ticket: " + data.ticketid + " to user: " + data.assignee)
             },
             error: function () {
                 alert("Fail to forward ticket")
@@ -655,7 +650,6 @@ function createTicketForTheStaff(comID, postID) {
             type: "POST",
             success: function () {
                 $('#staffcreateticketModal').modal('toggle');
-                alert("create ticket successful");
                 getCommentById(postID);
             },
             error: function () {
@@ -776,7 +770,6 @@ function showtagcomment(cmtid) {
             type: "POST",
             data: {"attributename": attributename},
             success: function (data) {
-                alert("create attribute " + data.name + " successful");
                 loadcommenttag(cmtid);
                 $('#attributename').val("");
             },
@@ -824,7 +817,6 @@ function tagcomment(cmtid, attid) {
         type: "GET",
         data: {"commentid": cmtid, "tagid": attid},
         success: function (data) {
-            alert("Tag comment: " + data.commentid + " to attribuet:" + data.attributeid)
             loadcommenttag(cmtid);
         },
         error: function () {
@@ -853,7 +845,6 @@ function untagcomment(cmtid, attid) {
         type: "POST",
         data: {"commentid": cmtid, "tagid": attid},
         success: function () {
-            alert("untag comment: " + cmtid + " to attribuet:" + attid)
             loadcommenttag(cmtid);
         },
         error: function () {
